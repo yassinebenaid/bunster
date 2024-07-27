@@ -1,4 +1,4 @@
-package expr
+package lexer
 
 import (
 	"github.com/yassinebenaid/nash/token"

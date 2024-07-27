@@ -1,22 +1,31 @@
-package expr
+package lexer_test
 
 import (
 	"testing"
 
+	"github.com/yassinebenaid/nash/lexer"
 	"github.com/yassinebenaid/nash/token"
 )
 
 func TestLexer(t *testing.T) {
 	input := `
 		ls 
+		cd
+		git branch
 	`
 
-	l := New([]byte(input))
+	l := lexer.New([]byte(input))
 
 	tokens := []token.Token{
 		{Type: token.NL, Literal: "\n"},
 		{Type: token.IDENT, Literal: "ls"},
 		{Type: token.NL, Literal: "\n"},
+		{Type: token.IDENT, Literal: "cd"},
+		{Type: token.NL, Literal: "\n"},
+		{Type: token.IDENT, Literal: "git"},
+		{Type: token.IDENT, Literal: "branch"},
+		{Type: token.NL, Literal: "\n"},
+		{Type: token.EOF, Literal: "EOF"},
 	}
 
 	for i, tn := range tokens {
