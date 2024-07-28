@@ -11,8 +11,8 @@ type Lexer struct {
 	peek  byte
 }
 
-func New(in []byte) *Lexer {
-	l := &Lexer{input: in}
+func New(in []byte) Lexer {
+	l := Lexer{input: in}
 	l.readCh()
 	l.readCh()
 	return l

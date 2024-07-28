@@ -1,12 +1,59 @@
 package parser
 
 import (
-	"go/token"
-
+	"github.com/yassinebenaid/nash/ast"
 	"github.com/yassinebenaid/nash/lexer"
+	"github.com/yassinebenaid/nash/token"
 )
 
-type Pasrer struct {
-	l         *lexer.Lexer
-	tokenBuff []token.Token
+func New(l lexer.Lexer) Parser {
+	var p = Parser{
+		l: l,
+	}
+	return p
+}
+
+type Parser struct {
+	l            lexer.Lexer
+	currentToken token.Token
+	nextToken    token.Token
+}
+
+func (p *Parser) proceed() {
+	p.currentToken = p.nextToken
+	p.nextToken = p.l.NextToken()
+}
+
+func (p *Parser) ParseProgram() ast.Program {
+	var program ast.Program
+
+loop:
+	for {
+		p.proceed()
+		switch p.currentToken.Type {
+		case token.IDENT:
+			program.Nodes = append(program.Nodes, p.parseCommandCall())
+		case token.EOF:
+			break loop
+		}
+	}
+
+	return program
+}
+
+func (p *Parser) parseCommandCall() ast.CommandCall {
+	var cc ast.CommandCall
+
+	cc.Command = p.currentToken.Literal
+
+	for {
+		if p.nextToken.Type != token.IDENT {
+			break
+		}
+
+		p.proceed()
+		cc.Args = append(cc.Args, p.currentToken.Literal)
+	}
+
+	return cc
 }
