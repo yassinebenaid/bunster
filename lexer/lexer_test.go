@@ -9,22 +9,19 @@ import (
 
 func TestLexer(t *testing.T) {
 	input := `
-		ls 
-		cd
-		git branch
+		echo $HOME
+		git branch --show-current
 	`
 
 	l := lexer.New([]byte(input))
 
 	tokens := []token.Token{
 		{Type: token.NL, Literal: "\n"},
-		{Type: token.IDENT, Literal: "ls"},
+		{Type: token.IDENT, Literal: "echo"},
+		{Type: token.DOLLAR, Literal: "$"},
+		{Type: token.NAME, Literal: "HOME"},
 		{Type: token.NL, Literal: "\n"},
-		{Type: token.IDENT, Literal: "cd"},
-		{Type: token.NL, Literal: "\n"},
-		{Type: token.IDENT, Literal: "git"},
-		{Type: token.IDENT, Literal: "branch"},
-		{Type: token.NL, Literal: "\n"},
+		{Type: token.IDENT, Literal: "$"},
 		{Type: token.EOF, Literal: "EOF"},
 	}
 
