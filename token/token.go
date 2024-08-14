@@ -72,7 +72,6 @@ const (
 	COMMAND_IDENTIFIER // Just like IDENTIFIER, but contains '-' dash.
 
 	STRING_SINGLE_QUOTED // Single-quoted string
-	STRING_DOUBLE_QUOTED // Double-quoted string
 	BACKTICK_QUOTED      // Backtick-quoted string
 	NUMBER               // Integer and float numbers
 
@@ -91,7 +90,6 @@ const (
 	BACKSLASH            // '\'
 	DOLLAR               // '$'
 	DOUBLE_QUOTE         // '"'
-	SINGLE_QUOTE         // '\''
 	QUESTION             // '?'
 	EXCLAMATION          // '!'
 	HASH                 // '#'
