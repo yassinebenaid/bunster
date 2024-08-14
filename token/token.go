@@ -64,7 +64,7 @@ const (
 	REDIRECT_INPUT   // '<'
 	HERE_DOCUMENT    // '<<'
 	HERE_STRING      // '<<<'
-	FILE_DESCRIPTOR  // '>&', '<&'
+	FILE_DESCRIPTOR  // Integers after '>&', '<&', ...
 	AND_OUTPUT       // '>&'
 	AND_INPUT        // '<&'
 	DUPLICATE_OUTPUT // '2>&1'
@@ -77,6 +77,7 @@ const (
 	NUMBER               // Integer and float numbers
 
 	SEMICOLON            // ';'
+	DOUBLE_SEMICOLON     // ';;'
 	LEFT_PAREN           // '('
 	RIGHT_PAREN          // ')'
 	LEFT_BRACKET         // '['
