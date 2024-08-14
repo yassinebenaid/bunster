@@ -38,7 +38,6 @@ const (
 	EXPORT   // 'export'
 	READONLY // 'readonly'
 	UNSET    // 'unset'
-	TEST     // 'test', `[[`, `]]`
 
 	PLUS             // '+'
 	MINUS            // '-'
@@ -77,22 +76,24 @@ const (
 	BACKTICK_QUOTED      // Backtick-quoted string
 	NUMBER               // Integer and float numbers
 
-	SEMICOLON     // ';'
-	LEFT_PAREN    // '('
-	RIGHT_PAREN   // ')'
-	LEFT_BRACKET  // '['
-	RIGHT_BRACKET // ']'
-	LEFT_BRACE    // '{'
-	RIGHT_BRACE   // '}'
-	COMMA         // ','
-	COLON         // ':'
-	BACKSLASH     // '\'
-	DOLLAR        // '$'
-	DOUBLE_QUOTE  // '"'
-	SINGLE_QUOTE  // '\''
-	QUESTION      // '?'
-	EXCLAMATION   // '!'
-	HASH          // '#'
+	SEMICOLON            // ';'
+	LEFT_PAREN           // '('
+	RIGHT_PAREN          // ')'
+	LEFT_BRACKET         // '['
+	RIGHT_BRACKET        // ']'
+	DOUBLE_LEFT_BRACKET  // '[['
+	DOUBLE_RIGHT_BRACKET // ']]'
+	LEFT_BRACE           // '{'
+	RIGHT_BRACE          // '}'
+	COMMA                // ','
+	COLON                // ':'
+	BACKSLASH            // '\'
+	DOLLAR               // '$'
+	DOUBLE_QUOTE         // '"'
+	SINGLE_QUOTE         // '\''
+	QUESTION             // '?'
+	EXCLAMATION          // '!'
+	HASH                 // '#'
 
 	SPECIAL_VAR // Special variables like $?, $#, $@, $*, $$, $!, $0, $1, $2, ...
 
