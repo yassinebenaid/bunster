@@ -68,11 +68,10 @@ const (
 	AND_OUTPUT      // '>&'
 	AND_INPUT       // '<&'
 
-	IDENTIFIER         // Variable names, functions and other identifiers.
-	COMMAND_IDENTIFIER // Just like IDENTIFIER, but contains '-' dash.
+	NAME  // Variable names, functions and other identifiers.
+	FNAME // Just like NAME, but contains '-' dash.
 
 	STRING_SINGLE_QUOTED // Single-quoted string
-	BACKTICK_QUOTED      // Backtick-quoted string
 	NUMBER               // Integer and float numbers
 
 	SEMICOLON            // ';'
@@ -90,6 +89,7 @@ const (
 	BACKSLASH            // '\'
 	DOLLAR               // '$'
 	DOUBLE_QUOTE         // '"'
+	BACKTICK             // '`'
 	QUESTION             // '?'
 	EXCLAMATION          // '!'
 	HASH                 // '#'
