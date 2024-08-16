@@ -79,6 +79,8 @@ const (
 	DOUBLE_SEMICOLON         // ';;'
 	LEFT_PAREN               // '('
 	RIGHT_PAREN              // ')'
+	DOUBLE_LEFT_PAREN        // '(('
+	DOUBLE_RIGHT_PAREN       // '))'
 	LEFT_BRACKET             // '['
 	RIGHT_BRACKET            // ']'
 	DOUBLE_LEFT_BRACKET      // '[['
@@ -90,7 +92,6 @@ const (
 	BACKSLASH                // '\'
 	DOLLAR                   // '$'
 	DOUBLE_QUOTE             // '"'
-	BACKTICK                 // '`'
 	QUESTION                 // '?'
 	EXCLAMATION              // '!'
 	HASH                     // '#'
@@ -106,26 +107,15 @@ const (
 	COLON_PLUS               // ':+'
 	COLON_QUESTION           // ':?'
 	DOUBLE_SLASH             // '//'
+	DOUBLE_DOT               // '..'
 
 	SPECIAL_VAR // Special variables like $?, $#, $@, $*, $$, $!, $0, $1, $2, ...
 
-	HEREDOC_END // End marker for here document
-
-	ARRAY_ASSIGN // Array assignment: arr=(...)
-	ARRAY_ACCESS // Array access: ${arr[index]}
-
-	COMMAND_SUBSTITUTION_START    // '$(' or `` ` ``
-	COMMAND_SUBSTITUTION_END      // ')'
-	ARITHMETIC_SUBSTITUTION_START // '$(('
-	ARITHMETIC_SUBSTITUTION_END   // '))'
-
 	ESCAPE_CHAR // Escaped characters like \n, \t, \\
 
-	PARAM_EXPANSION // Parameter expansion: ${VAR}, ${VAR:-default}, etc.
-	BRACE_EXPANSION // Brace expansion: {a,b,c}, {1..10}
-	TILDE_EXPANSION // Tilde expansion: ~, ~user
+	TILDE  // '~'
 
-	ILLIGAL // unknown token or illigal
+	OTHER // anything else
 	EOF     // end of file
 )
 
