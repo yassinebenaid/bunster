@@ -57,8 +57,8 @@ const (
 	GE                  // '>='
 	AND                 // '&&'
 	OR                  // '||'
-	NOT                 // '!'
 	PIPE                // '|'
+	AMPERSAND           // '&'
 	REDIRECT_OUTPUT     // '>'
 	APPEND_OUTPUT       // '>>'
 	REDIRECT_INPUT      // '<'
@@ -68,6 +68,8 @@ const (
 	FILE_DESCRIPTOR     // 0-9 in io redirection. eg '>&', '<&', ...
 	AND_OUTPUT          // '>&'
 	AND_INPUT           // '<&'
+	PIPE_AMPERSAND      // '|&'
+	AMPER_LT            // '&>'
 
 	NAME  // Variable names, functions and other identifiers.
 	FNAME // Just like NAME, but contains '-' dash.
@@ -75,48 +77,51 @@ const (
 	STRING_SINGLE_QUOTED // Single-quoted string
 	NUMBER               // Integer and float numbers
 
-	SEMICOLON                // ';'
-	DOUBLE_SEMICOLON         // ';;'
-	LEFT_PAREN               // '('
-	RIGHT_PAREN              // ')'
-	DOUBLE_LEFT_PAREN        // '(('
-	DOUBLE_RIGHT_PAREN       // '))'
-	LEFT_BRACKET             // '['
-	RIGHT_BRACKET            // ']'
-	DOUBLE_LEFT_BRACKET      // '[['
-	DOUBLE_RIGHT_BRACKET     // ']]'
-	LEFT_BRACE               // '{'
-	RIGHT_BRACE              // '}'
-	COMMA                    // ','
-	COLON                    // ':'
-	BACKSLASH                // '\'
-	DOLLAR                   // '$'
-	DOUBLE_QUOTE             // '"'
-	QUESTION                 // '?'
-	EXCLAMATION              // '!'
-	HASH                     // '#'
-	DOLLAR_BRACE             // '${'
-	DOLLAR_BRACE_HASH        // '${#'
-	DOLLAR_BRACE_EXCLAMATION // '${!'
-	DOLLAR_PAREN             // '$('
-	DOLLAR_DOUBLE_PAREN      // '$(('
-	CIRCUMFLEX               // '^'
-	DOUBLE_CIRCUMFLEX        // '^^'
-	COLON_EQUAL              // ':='
-	COLON_MINUS              // ':-'
-	COLON_PLUS               // ':+'
-	COLON_QUESTION           // ':?'
-	DOUBLE_SLASH             // '//'
-	DOUBLE_DOT               // '..'
+	SEMICOLON            // ';'
+	DOUBLE_SEMICOLON     // ';;'
+	LEFT_PAREN           // '('
+	RIGHT_PAREN          // ')'
+	DOUBLE_LEFT_PAREN    // '(('
+	DOUBLE_RIGHT_PAREN   // '))'
+	LEFT_BRACKET         // '['
+	RIGHT_BRACKET        // ']'
+	DOUBLE_LEFT_BRACKET  // '[['
+	DOUBLE_RIGHT_BRACKET // ']]'
+	LEFT_BRACE           // '{'
+	RIGHT_BRACE          // '}'
+	COMMA                // ','
+	COLON                // ':'
+	BACKSLASH            // '\'
+	DOLLAR               // '$'
+	DOUBLE_QUOTE         // '"'
+	QUESTION             // '?'
+	EXCLAMATION          // '!'
+	DOUBLE_EXCLAMATION   // '!'
+	HASH                 // '#'
+	DOLLAR_BRACE         // '${'
+	DOLLAR_PAREN         // '$('
+	DOLLAR_DOUBLE_PAREN  // '$(('
+	LT_PAREN             // '>('
+	GT_PAREN             // '<('
+	CIRCUMFLEX           // '^'
+	DOUBLE_CIRCUMFLEX    // '^^'
+	COLON_EQUAL          // ':='
+	COLON_MINUS          // ':-'
+	COLON_PLUS           // ':+'
+	COLON_QUESTION       // ':?'
+	DOUBLE_SLASH         // '//'
+	DOUBLE_DOT           // '..'
+	INCREMENT            // '++'
+	DECREMENT            // '--'
 
 	SPECIAL_VAR // Special variables like $?, $#, $@, $*, $$, $!, $0, $1, $2, ...
 
 	ESCAPE_CHAR // Escaped characters like \n, \t, \\
 
-	TILDE  // '~'
+	TILDE // '~'
 
 	OTHER // anything else
-	EOF     // end of file
+	EOF   // end of file
 )
 
 var literals = map[TokenType]string{

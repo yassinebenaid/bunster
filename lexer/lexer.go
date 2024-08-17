@@ -1,7 +1,7 @@
 package lexer
 
 import (
-	"github.com/yassinebenaid/nash/token"
+	"github.com/yassinebenaid/nbs/token"
 )
 
 type Lexer struct {

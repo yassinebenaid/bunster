@@ -1,9 +1,9 @@
 package parser
 
 import (
-	"github.com/yassinebenaid/nash/ast"
-	"github.com/yassinebenaid/nash/lexer"
-	"github.com/yassinebenaid/nash/token"
+	"github.com/yassinebenaid/nbs/ast"
+	"github.com/yassinebenaid/nbs/lexer"
+	"github.com/yassinebenaid/nbs/token"
 )
 
 func New(l lexer.Lexer) Parser {

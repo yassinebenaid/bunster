@@ -3,8 +3,8 @@ package parser
 import (
 	"testing"
 
-	"github.com/yassinebenaid/nash/ast"
-	"github.com/yassinebenaid/nash/lexer"
+	"github.com/yassinebenaid/nbs/ast"
+	"github.com/yassinebenaid/nbs/lexer"
 )
 
 func TestCanParseCommandCall(t *testing.T) {

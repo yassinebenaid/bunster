@@ -3,8 +3,8 @@ package lexer_test
 import (
 	"testing"
 
-	"github.com/yassinebenaid/nash/lexer"
-	"github.com/yassinebenaid/nash/token"
+	"github.com/yassinebenaid/nbs/lexer"
+	"github.com/yassinebenaid/nbs/token"
 )
 
 func TestLexer(t *testing.T) {
