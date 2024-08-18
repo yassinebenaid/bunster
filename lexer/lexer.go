@@ -27,20 +27,18 @@ func (l *Lexer) NextToken() token.Token {
 
 	switch {
 	case l.ch == '\n':
-		tok.Type, tok.Literal = token.NL, "\n"
-	case isIdentifier(l.ch):
-		tok.Literal += string(l.ch)
+		tok.Type, tok.Literal = token.NEWLINE, string(l.ch)
+	case isLetter(l.ch):
+		tok.Literal = string(l.ch)
 
-		for isIdentifier(l.peek) {
+		for isLetter(l.peek) {
 			l.readCh()
 			tok.Literal += string(l.ch)
 		}
 
-		tok.Type = token.IDENT
-	case l.ch == 0:
-		tok.Type, tok.Literal = token.EOF, "EOF"
-	default:
-		tok.Type, tok.Literal = token.ILLIGAL, string(l.ch)
+		if keyword, ok := token.Keywords[tok.Literal]; ok {
+			tok.Type = keyword
+		}
 	}
 
 	l.readCh()
@@ -48,7 +46,7 @@ func (l *Lexer) NextToken() token.Token {
 	return tok
 }
 
-func isIdentifier(b byte) bool {
+func isLetter(b byte) bool {
 	return (b >= 'A' && b <= 'Z') || (b >= 'a' && b <= 'z')
 }
 

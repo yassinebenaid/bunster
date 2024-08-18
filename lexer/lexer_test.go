@@ -9,25 +9,19 @@ import (
 
 func TestLexer(t *testing.T) {
 	input := `
-		echo $HOME
-		git branch --show-current
+	    if []
 	`
 
 	l := lexer.New([]byte(input))
 
 	tokens := []token.Token{
-		{Type: token.NL, Literal: "\n"},
-		{Type: token.IDENT, Literal: "echo"},
-		{Type: token.DOLLAR, Literal: "$"},
-		{Type: token.NAME, Literal: "HOME"},
-		{Type: token.NL, Literal: "\n"},
-		{Type: token.IDENT, Literal: "$"},
-		{Type: token.EOF, Literal: "EOF"},
+		{Type: token.NEWLINE, Literal: "\n"},
+		{Type: token.IF, Literal: "if"},
 	}
 
 	for i, tn := range tokens {
 		if result := l.NextToken(); tn.Type != result.Type {
-			t.Fatalf(`wrong token type "%s", expected "%s", case#%d`, result.Type, tn.Type, i)
+			t.Fatalf(`#%d: wrong token type for %q, want=%d got=%d`, i, tn.Literal, tn.Type, result.Type)
 		} else if tn.Literal != result.Literal {
 			t.Fatalf(`wrong token litreal "%s", expected "%s", case#%d`, result.Literal, tn.Literal, i)
 		}

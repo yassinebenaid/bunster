@@ -103,15 +103,20 @@ const (
 	DECREMENT            // '--'
 	TILDE                // '~'
 
-	FILE_DESCRIPTOR      // 0-9 in io redirection. eg '>&', '<&', ...
-	NAME                 // Variable names, functions and other identifiers.
-	FNAME                // Just like NAME, but contains '-' dash.
-	STRING_SINGLE_QUOTED // Single-quoted string
-	NUMBER               // Integer and float numbers
-	BLANK                // Spaces and tabs
-	NEWLINE              //  '\n'
-	SPECIAL_VAR          // Special variables like $?, $#, $@, $*, $$, $!, $0, $1, $2, ...
-	ESCAPE_CHAR          // Escaped characters like \n, \t, \\
-	OTHER                // anything else
-	EOF                  // end of file
+	FILE_DESCRIPTOR        // 0-9 in io redirection. eg '>&', '<&', ...
+	NAME                   // Variable names, functions and other identifiers.
+	FNAME                  // Just like NAME, but contains '-' dash.
+	LITERAL_STRING         // Single-quoted string or double-quoted string without any expansion
+	PARTIAL_LITERAL_STRING // Double-quoted string before or after expansion, eg. "hello $name mate" : "hello " and " mate" are both partial literal strings
+	NUMBER                 // Integer and float numbers
+	BLANK                  // Spaces and tabs
+	NEWLINE                //  '\n'
+	SPECIAL_VAR            // Special variables like $?, $#, $@, $*, $$, $!, $0, $1, $2, ...
+	ESCAPE_CHAR            // Escaped characters like \n, \t, \\
+	OTHER                  // anything else
+	EOF                    // end of file
 )
+
+var Keywords = map[string]TokenType{
+	"if": IF,
+}
