@@ -64,6 +64,8 @@ const (
 	LT_AMPERSAND         // '<&'
 	PIPE_AMPERSAND       // '|&'
 	AMPERSAND_GT         // '&>'
+	GT_PIPE              // '>|'
+	LT_GT                // '<>'
 	SEMICOLON            // ';'
 	DOUBLE_SEMICOLON     // ';;'
 	LEFT_PAREN           // '('
@@ -113,14 +115,3 @@ const (
 	OTHER                // anything else
 	EOF                  // end of file
 )
-
-var literals = map[TokenType]string{
-	// NL:      "NEWLINE",
-	// IDENT:   "IDENTIFIER",
-	// ILLIGAL: "ILLIGAL",
-	// EOF:     "EOF",
-}
-
-func (t TokenType) String() string {
-	return literals[t]
-}
