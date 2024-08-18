@@ -10,9 +10,6 @@ type Token struct {
 const (
 	_ TokenType = iota
 
-	WHITESPACE // Spaces and tabs
-	NEWLINE    //  '\n'
-
 	IF       // 'if'
 	THEN     // 'then'
 	ELSE     // 'else'
@@ -39,44 +36,34 @@ const (
 	READONLY // 'readonly'
 	UNSET    // 'unset'
 
-	PLUS                // '+'
-	MINUS               // '-'
-	STAR                // '*'
-	SLASH               // '/'
-	PERCENT             // '%'
-	EQ                  // '='
-	PLUS_EQ             // '+='
-	MINUS_EQ            // '-='
-	STAR_EQ             // '*='
-	SLASH_EQ            // '/='
-	EQ_EQ               // '=='
-	NE                  // '!='
-	LT                  // '<'
-	LE                  // '<='
-	GT                  // '>'
-	GE                  // '>='
-	AND                 // '&&'
-	OR                  // '||'
-	PIPE                // '|'
-	AMPERSAND           // '&'
-	REDIRECT_OUTPUT     // '>'
-	APPEND_OUTPUT       // '>>'
-	REDIRECT_INPUT      // '<'
-	HERE_DOCUMENT       // '<<'
-	HERE_DOCUMENT_MINUS // '<<-'
-	HERE_STRING         // '<<<'
-	FILE_DESCRIPTOR     // 0-9 in io redirection. eg '>&', '<&', ...
-	AND_OUTPUT          // '>&'
-	AND_INPUT           // '<&'
-	PIPE_AMPERSAND      // '|&'
-	AMPER_LT            // '&>'
-
-	NAME  // Variable names, functions and other identifiers.
-	FNAME // Just like NAME, but contains '-' dash.
-
-	STRING_SINGLE_QUOTED // Single-quoted string
-	NUMBER               // Integer and float numbers
-
+	PLUS                 // '+'
+	MINUS                // '-'
+	STAR                 // '*'
+	SLASH                // '/'
+	PERCENT              // '%'
+	ASSIGN               // '='
+	PLUS_ASSIGN          // '+='
+	MINUS_ASSIGN         // '-='
+	STAR_ASSIGN          // '*='
+	SLASH_ASSIGN         // '/='
+	EQ                   // '=='
+	NOT_EQ               // '!='
+	LT                   // '<'
+	LE                   // '<='
+	GT                   // '>'
+	GE                   // '>='
+	AND                  // '&&'
+	OR                   // '||'
+	PIPE                 // '|'
+	AMPERSAND            // '&'
+	DOUBLE_GT            // '>>'
+	DOUBLE_LT            // '<<'
+	DOUBLE_LT_MINUS      // '<<-'
+	TRIPLE_LT            // '<<<'
+	GT_AMPERSAND         // '>&'
+	LT_AMPERSAND         // '<&'
+	PIPE_AMPERSAND       // '|&'
+	AMPERSAND_GT         // '&>'
 	SEMICOLON            // ';'
 	DOUBLE_SEMICOLON     // ';;'
 	LEFT_PAREN           // '('
@@ -96,7 +83,6 @@ const (
 	DOUBLE_QUOTE         // '"'
 	QUESTION             // '?'
 	EXCLAMATION          // '!'
-	DOUBLE_EXCLAMATION   // '!'
 	HASH                 // '#'
 	DOLLAR_BRACE         // '${'
 	DOLLAR_PAREN         // '$('
@@ -105,7 +91,7 @@ const (
 	GT_PAREN             // '<('
 	CIRCUMFLEX           // '^'
 	DOUBLE_CIRCUMFLEX    // '^^'
-	COLON_EQUAL          // ':='
+	COLON_ASSIGN         // ':='
 	COLON_MINUS          // ':-'
 	COLON_PLUS           // ':+'
 	COLON_QUESTION       // ':?'
@@ -113,15 +99,19 @@ const (
 	DOUBLE_DOT           // '..'
 	INCREMENT            // '++'
 	DECREMENT            // '--'
+	TILDE                // '~'
 
-	SPECIAL_VAR // Special variables like $?, $#, $@, $*, $$, $!, $0, $1, $2, ...
-
-	ESCAPE_CHAR // Escaped characters like \n, \t, \\
-
-	TILDE // '~'
-
-	OTHER // anything else
-	EOF   // end of file
+	FILE_DESCRIPTOR      // 0-9 in io redirection. eg '>&', '<&', ...
+	NAME                 // Variable names, functions and other identifiers.
+	FNAME                // Just like NAME, but contains '-' dash.
+	STRING_SINGLE_QUOTED // Single-quoted string
+	NUMBER               // Integer and float numbers
+	BLANK                // Spaces and tabs
+	NEWLINE              //  '\n'
+	SPECIAL_VAR          // Special variables like $?, $#, $@, $*, $$, $!, $0, $1, $2, ...
+	ESCAPE_CHAR          // Escaped characters like \n, \t, \\
+	OTHER                // anything else
+	EOF                  // end of file
 )
 
 var literals = map[TokenType]string{
