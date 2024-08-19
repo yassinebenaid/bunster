@@ -29,13 +29,28 @@ func (l *Lexer) NextToken() token.Token {
 	case l.ch == '\n':
 		tok.Type, tok.Literal = token.NEWLINE, string(l.ch)
 	case l.ch == '[':
-		tok.Type, tok.Literal = token.LEFT_BRACKET, string(l.ch)
+		if l.peek == '[' {
+			l.readCh()
+			tok.Type, tok.Literal = token.DOUBLE_LEFT_BRACKET, "[["
+		} else {
+			tok.Type, tok.Literal = token.LEFT_BRACKET, string(l.ch)
+		}
 	case l.ch == ']':
-		tok.Type, tok.Literal = token.RIGHT_BRACKET, string(l.ch)
+		if l.peek == ']' {
+			l.readCh()
+			tok.Type, tok.Literal = token.DOUBLE_RIGHT_BRACKET, "]]"
+		} else {
+			tok.Type, tok.Literal = token.RIGHT_BRACKET, string(l.ch)
+		}
 	case l.ch == ';':
 		tok.Type, tok.Literal = token.SEMICOLON, string(l.ch)
 	case l.ch == '=':
-		tok.Type, tok.Literal = token.ASSIGN, string(l.ch)
+		if l.peek == '=' {
+			l.readCh()
+			tok.Type, tok.Literal = token.EQ, "=="
+		} else {
+			tok.Type, tok.Literal = token.ASSIGN, string(l.ch)
+		}
 	case l.ch == '\'':
 		tok.Type = token.LITERAL_STRING
 		l.readCh()
