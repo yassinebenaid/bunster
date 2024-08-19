@@ -28,6 +28,15 @@ func (l *Lexer) NextToken() token.Token {
 	switch {
 	case l.ch == '\n':
 		tok.Type, tok.Literal = token.NEWLINE, string(l.ch)
+	case l.ch == '*':
+		if l.peek == '=' {
+			l.readCh()
+			tok.Type, tok.Literal = token.STAR_ASSIGN, "*="
+		} else {
+			tok.Type, tok.Literal = token.STAR, string(l.ch)
+		}
+	case l.ch == '%':
+		tok.Type, tok.Literal = token.PERCENT, string(l.ch)
 	case l.ch == '[':
 		if l.peek == '[' {
 			l.readCh()
@@ -35,6 +44,38 @@ func (l *Lexer) NextToken() token.Token {
 		} else {
 			tok.Type, tok.Literal = token.LEFT_BRACKET, string(l.ch)
 		}
+	case l.ch == '+':
+		if l.peek == '+' {
+			l.readCh()
+			tok.Type, tok.Literal = token.INCREMENT, "++"
+		} else if l.peek == '=' {
+			l.readCh()
+			tok.Type, tok.Literal = token.PLUS_ASSIGN, "+="
+		} else {
+			tok.Type, tok.Literal = token.PLUS, string(l.ch)
+		}
+	case l.ch == '/':
+		if l.peek == '/' {
+			l.readCh()
+			tok.Type, tok.Literal = token.DOUBLE_SLASH, "//"
+		} else if l.peek == '=' {
+			l.readCh()
+			tok.Type, tok.Literal = token.SLASH_ASSIGN, "/="
+		} else {
+			tok.Type, tok.Literal = token.SLASH, string(l.ch)
+		}
+	case l.ch == '-':
+		if l.peek == '-' {
+			l.readCh()
+			tok.Type, tok.Literal = token.DECREMENT, "--"
+		} else if l.peek == '=' {
+			l.readCh()
+			tok.Type, tok.Literal = token.MINUS_ASSIGN, "-="
+		} else {
+			tok.Type, tok.Literal = token.MINUS, string(l.ch)
+		}
+	case l.ch == '!' && l.peek == '=':
+		tok.Type, tok.Literal = token.NOT_EQ, "!="
 	case l.ch == ']':
 		if l.peek == ']' {
 			l.readCh()
