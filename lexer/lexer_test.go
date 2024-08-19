@@ -9,7 +9,9 @@ import (
 
 func TestLexer(t *testing.T) {
 	input := `
-	    if []
+	if [ $1 = 'foo' ]; then
+    	echo 'Foo Bar'
+	fi
 	`
 
 	l := lexer.New([]byte(input))
@@ -17,6 +19,19 @@ func TestLexer(t *testing.T) {
 	tokens := []token.Token{
 		{Type: token.NEWLINE, Literal: "\n"},
 		{Type: token.IF, Literal: "if"},
+		{Type: token.LEFT_BRACKET, Literal: "["},
+		{Type: token.SPECIAL_VAR, Literal: "1"},
+		{Type: token.ASSIGN, Literal: "="},
+		{Type: token.LITERAL_STRING, Literal: "foo"},
+		{Type: token.RIGHT_BRACKET, Literal: "]"},
+		{Type: token.SEMICOLON, Literal: ";"},
+		{Type: token.THEN, Literal: "then"},
+		{Type: token.NEWLINE, Literal: "\n"},
+		{Type: token.NAME, Literal: "echo"},
+		{Type: token.LITERAL_STRING, Literal: "Foo Bar"},
+		{Type: token.NEWLINE, Literal: "\n"},
+		{Type: token.FI, Literal: "fi"},
+		{Type: token.NEWLINE, Literal: "\n"},
 	}
 
 	for i, tn := range tokens {

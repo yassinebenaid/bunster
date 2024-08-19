@@ -28,6 +28,28 @@ func (l *Lexer) NextToken() token.Token {
 	switch {
 	case l.ch == '\n':
 		tok.Type, tok.Literal = token.NEWLINE, string(l.ch)
+	case l.ch == '[':
+		tok.Type, tok.Literal = token.LEFT_BRACKET, string(l.ch)
+	case l.ch == ']':
+		tok.Type, tok.Literal = token.RIGHT_BRACKET, string(l.ch)
+	case l.ch == ';':
+		tok.Type, tok.Literal = token.SEMICOLON, string(l.ch)
+	case l.ch == '=':
+		tok.Type, tok.Literal = token.ASSIGN, string(l.ch)
+	case l.ch == '\'':
+		tok.Type = token.LITERAL_STRING
+		l.readCh()
+
+		for l.ch != '\'' {
+			tok.Literal += string(l.ch)
+			l.readCh()
+		}
+	case l.ch == '$':
+		switch {
+		case l.peek >= '0' && l.peek <= '9':
+			l.readCh()
+			tok.Type, tok.Literal = token.SPECIAL_VAR, string(l.ch)
+		}
 	case isLetter(l.ch):
 		tok.Literal = string(l.ch)
 
@@ -38,6 +60,8 @@ func (l *Lexer) NextToken() token.Token {
 
 		if keyword, ok := token.Keywords[tok.Literal]; ok {
 			tok.Type = keyword
+		} else {
+			tok.Type = token.NAME
 		}
 	}
 
