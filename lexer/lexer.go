@@ -35,6 +35,13 @@ func (l *Lexer) NextToken() token.Token {
 		} else {
 			tok.Type, tok.Literal = token.STAR, string(l.ch)
 		}
+	case l.ch == '^':
+		if l.peek == '^' {
+			l.readCh()
+			tok.Type, tok.Literal = token.DOUBLE_CIRCUMFLEX, "^^"
+		} else {
+			tok.Type, tok.Literal = token.CIRCUMFLEX, string(l.ch)
+		}
 	case l.ch == '%':
 		tok.Type, tok.Literal = token.PERCENT, string(l.ch)
 	case l.ch == '[':
@@ -65,6 +72,8 @@ func (l *Lexer) NextToken() token.Token {
 		case '>':
 			l.readCh()
 			tok.Type, tok.Literal = token.LT_GT, "<>"
+		case '(':
+			tok.Type, tok.Literal = token.LT_PAREN, "<("
 		default:
 			tok.Type, tok.Literal = token.LT, string(l.ch)
 		}
@@ -78,6 +87,8 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Type, tok.Literal = token.GT_AMPERSAND, ">&"
 		case '|':
 			tok.Type, tok.Literal = token.GT_PIPE, ">|"
+		case '(':
+			tok.Type, tok.Literal = token.GT_PAREN, ">("
 		default:
 			tok.Type, tok.Literal = token.GT, ">"
 		}
@@ -180,9 +191,25 @@ func (l *Lexer) NextToken() token.Token {
 	case l.ch == '}':
 		tok.Type, tok.Literal = token.RIGHT_BRACE, string(l.ch)
 	case l.ch == ':':
-		tok.Type, tok.Literal = token.COLON, string(l.ch)
+		switch l.peek {
+		case '=':
+			tok.Type, tok.Literal = token.COLON_ASSIGN, ":="
+		case '-':
+			tok.Type, tok.Literal = token.COLON_MINUS, ":-"
+		case '+':
+			tok.Type, tok.Literal = token.COLON_PLUS, ":+"
+		case '?':
+			tok.Type, tok.Literal = token.COLON_QUESTION, ":?"
+		default:
+			tok.Type, tok.Literal = token.COLON, string(l.ch)
+		}
 	case l.ch == '?':
 		tok.Type, tok.Literal = token.QUESTION, string(l.ch)
+	case l.ch == '~':
+		tok.Type, tok.Literal = token.TILDE, string(l.ch)
+	case l.ch == '.' && l.peek == '.':
+		l.readCh()
+		tok.Type, tok.Literal = token.DOUBLE_DOT, ".."
 	case l.ch == '!':
 		if l.peek == '=' {
 			l.readCh()
