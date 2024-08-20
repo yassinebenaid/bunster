@@ -44,6 +44,56 @@ func (l *Lexer) NextToken() token.Token {
 		} else {
 			tok.Type, tok.Literal = token.LEFT_BRACKET, string(l.ch)
 		}
+	case l.ch == '<':
+		switch l.peek {
+		case '<':
+			l.readCh()
+			switch l.peek {
+			case '-':
+				tok.Type, tok.Literal = token.DOUBLE_LT_MINUS, "<<-"
+			case '<':
+				tok.Type, tok.Literal = token.TRIPLE_LT, "<<<"
+			default:
+				tok.Type, tok.Literal = token.DOUBLE_LT, "<<"
+			}
+		case '=':
+			l.readCh()
+			tok.Type, tok.Literal = token.LE, "<="
+		case '&':
+			l.readCh()
+			tok.Type, tok.Literal = token.LT_AMPERSAND, "<&"
+		default:
+			tok.Type, tok.Literal = token.LT, string(l.ch)
+		}
+	case l.ch == '>':
+		switch l.peek {
+		case '>':
+			tok.Type, tok.Literal = token.DOUBLE_GT, ">>"
+		case '=':
+			tok.Type, tok.Literal = token.GE, ">="
+		case '&':
+			tok.Type, tok.Literal = token.GT_AMPERSAND, ">&"
+		default:
+			tok.Type, tok.Literal = token.GT, ">"
+		}
+	case l.ch == '&':
+		if l.peek == '&' {
+			l.readCh()
+			tok.Type, tok.Literal = token.AND, "&&"
+		} else {
+			tok.Type, tok.Literal = token.AMPERSAND, string(l.ch)
+		}
+	case l.ch == '|':
+		switch l.peek {
+		case '|':
+			l.readCh()
+			tok.Type, tok.Literal = token.OR, "||"
+		case '&':
+			l.readCh()
+			tok.Type, tok.Literal = token.PIPE_AMPERSAND, "|&"
+		default:
+			tok.Type, tok.Literal = token.PIPE, string(l.ch)
+		}
 	case l.ch == '+':
 		if l.peek == '+' {
 			l.readCh()
