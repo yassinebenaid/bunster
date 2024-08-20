@@ -57,8 +57,10 @@ func (l *Lexer) NextToken() token.Token {
 			l.readCh()
 			switch l.peek {
 			case '-':
+				l.readCh()
 				tok.Type, tok.Literal = token.DOUBLE_LT_MINUS, "<<-"
 			case '<':
+				l.readCh()
 				tok.Type, tok.Literal = token.TRIPLE_LT, "<<<"
 			default:
 				tok.Type, tok.Literal = token.DOUBLE_LT, "<<"
@@ -73,6 +75,7 @@ func (l *Lexer) NextToken() token.Token {
 			l.readCh()
 			tok.Type, tok.Literal = token.LT_GT, "<>"
 		case '(':
+			l.readCh()
 			tok.Type, tok.Literal = token.LT_PAREN, "<("
 		default:
 			tok.Type, tok.Literal = token.LT, string(l.ch)
@@ -91,6 +94,10 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Type, tok.Literal = token.GT_PAREN, ">("
 		default:
 			tok.Type, tok.Literal = token.GT, ">"
+		}
+
+		if tok.Type != token.GT {
+			l.readCh()
 		}
 	case l.ch == '&':
 		switch l.peek {
@@ -207,6 +214,10 @@ func (l *Lexer) NextToken() token.Token {
 		default:
 			tok.Type, tok.Literal = token.COLON, string(l.ch)
 		}
+
+		if tok.Type != token.COLON {
+			l.readCh()
+		}
 	case l.ch == '?':
 		tok.Type, tok.Literal = token.QUESTION, string(l.ch)
 	case l.ch == '~':
@@ -237,10 +248,12 @@ func (l *Lexer) NextToken() token.Token {
 			l.readCh()
 			tok.Type, tok.Literal = token.SPECIAL_VAR, string(l.ch)
 		case '{':
+			l.readCh()
 			tok.Type, tok.Literal = token.DOLLAR_BRACE, "${"
 		case '(':
 			l.readCh()
 			if l.peek == '(' {
+				l.readCh()
 				tok.Type, tok.Literal = token.DOLLAR_DOUBLE_PAREN, "$(("
 			} else {
 				tok.Type, tok.Literal = token.DOLLAR_PAREN, "$("
@@ -267,6 +280,8 @@ func (l *Lexer) NextToken() token.Token {
 		} else {
 			tok.Type = token.NAME
 		}
+	case l.ch == 0:
+		tok.Type = token.EOF
 	}
 
 	l.readCh()

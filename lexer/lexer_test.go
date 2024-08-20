@@ -122,6 +122,7 @@ func TestLexer(t *testing.T) {
 			{Type: token.SPECIAL_VAR, Literal: "8"},
 			{Type: token.SPECIAL_VAR, Literal: "9"},
 			{Type: token.SPECIAL_VAR, Literal: "1"}, // just to emphasize that only first digit is considered
+			{Type: token.NUMBER, Literal: "0"},      // just to emphasize that only first digit is considered
 		}},
 		{`$1something`, []token.Token{
 			{Type: token.SPECIAL_VAR, Literal: "1"},
@@ -155,6 +156,11 @@ func TestLexer(t *testing.T) {
 			} else if tn.Literal != result.Literal {
 				t.Fatalf(`wrong token litreal "%s", expected "%s", case#%d`, result.Literal, tn.Literal, i)
 			}
+		}
+
+		// EOF
+		if result := l.NextToken(); token.EOF != result.Type {
+			t.Fatalf(`#%d: expected EOF, got %d for %q. ("%v")`, i, result.Type, result.Literal, tc.input)
 		}
 	}
 }
