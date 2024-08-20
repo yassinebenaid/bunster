@@ -136,6 +136,15 @@ func TestLexer(t *testing.T) {
 			{Type: token.SPECIAL_VAR, Literal: "_"},
 			{Type: token.SPECIAL_VAR, Literal: "*"},
 		}},
+		// Simple expansion
+		{`$variable_name $variable-name $concatinated$variable`, []token.Token{
+			{Type: token.SIMPLE_EXPANSION, Literal: `variable_name`},
+			{Type: token.SIMPLE_EXPANSION, Literal: `variable`},
+			{Type: token.MINUS, Literal: `-`},
+			{Type: token.NAME, Literal: `name`},
+			{Type: token.SIMPLE_EXPANSION, Literal: `concatinated`},
+			{Type: token.SIMPLE_EXPANSION, Literal: `variable`},
+		}},
 	}
 
 	for i, tc := range testCases {

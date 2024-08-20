@@ -104,6 +104,7 @@ const (
 	DECREMENT            // '--'
 	TILDE                // '~'
 
+	SIMPLE_EXPANSION       // Simple variable expansion. eg. $variable_name.
 	FILE_DESCRIPTOR        // 0-9 in io redirection. eg '>&', '<&', ...
 	NAME                   // Variable names, functions and other identifiers.
 	FNAME                  // Just like NAME, but contains '-' dash.

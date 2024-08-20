@@ -245,6 +245,14 @@ func (l *Lexer) NextToken() token.Token {
 			} else {
 				tok.Type, tok.Literal = token.DOLLAR_PAREN, "$("
 			}
+		default:
+			if isLetter(l.peek) || l.peek == '_' {
+				tok.Type = token.SIMPLE_EXPANSION
+				for isLetter(l.peek) || l.peek == '_' {
+					l.readCh()
+					tok.Literal += string(l.ch)
+				}
+			}
 		}
 	case isLetter(l.ch):
 		tok.Literal = string(l.ch)
