@@ -228,13 +228,13 @@ func (l *Lexer) NextToken() token.Token {
 			l.readCh()
 		}
 	case l.ch == '$':
-		switch {
-		case l.peek >= '0' && l.peek <= '9':
+		switch l.peek {
+		case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '$', '#', '_', '*', '@', '?', '!':
 			l.readCh()
 			tok.Type, tok.Literal = token.SPECIAL_VAR, string(l.ch)
-		case l.peek == '{':
+		case '{':
 			tok.Type, tok.Literal = token.DOLLAR_BRACE, "${"
-		case l.peek == '(':
+		case '(':
 			l.readCh()
 			if l.peek == '(' {
 				tok.Type, tok.Literal = token.DOLLAR_DOUBLE_PAREN, "$(("

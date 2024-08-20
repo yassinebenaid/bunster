@@ -82,7 +82,6 @@ const (
 	DOUBLE_COMMA         // ',,'
 	COLON                // ':'
 	BACKSLASH            // '\'
-	DOLLAR               // '$'
 	DOUBLE_QUOTE         // '"'
 	QUESTION             // '?'
 	EXCLAMATION          // '!'

@@ -87,7 +87,6 @@ func TestLexer(t *testing.T) {
 		{`,,`, []token.Token{{Type: token.DOUBLE_COMMA, Literal: `,,`}}},
 		{`:`, []token.Token{{Type: token.COLON, Literal: `:`}}},
 		// {`\`, []token.Token{{Type: token.BACKSLASH, Literal: `\`}}}, // TODO: see what to do with this
-		// {`$`, []token.Token{{Type: token.DOLLAR, Literal: "$"}}}, // TODO
 		// {`"`, []token.Token{{Type: token.DOUBLE_QUOTE, Literal: `"`}}}, // TODO
 		{`?`, []token.Token{{Type: token.QUESTION, Literal: `?`}}},
 		{`!`, []token.Token{{Type: token.EXCLAMATION, Literal: `!`}}},
@@ -108,6 +107,34 @@ func TestLexer(t *testing.T) {
 		{`++`, []token.Token{{Type: token.INCREMENT, Literal: `++`}}},
 		{`--`, []token.Token{{Type: token.DECREMENT, Literal: `--`}}},
 		{`~`, []token.Token{{Type: token.TILDE, Literal: `~`}}},
+
+		// Special Variables
+		{`$0$1$2 $3$4 $5 $6 $7 $8 $9 $10`, []token.Token{
+			{Type: token.SPECIAL_VAR, Literal: "0"},
+			{Type: token.SPECIAL_VAR, Literal: "1"},
+			{Type: token.SPECIAL_VAR, Literal: "2"},
+			{Type: token.SPECIAL_VAR, Literal: "3"},
+			{Type: token.SPECIAL_VAR, Literal: "4"},
+			{Type: token.SPECIAL_VAR, Literal: "5"},
+			{Type: token.SPECIAL_VAR, Literal: "6"},
+			{Type: token.SPECIAL_VAR, Literal: "7"},
+			{Type: token.SPECIAL_VAR, Literal: "8"},
+			{Type: token.SPECIAL_VAR, Literal: "9"},
+			{Type: token.SPECIAL_VAR, Literal: "1"}, // just to emphasize that only first digit is considered
+		}},
+		{`$1something`, []token.Token{
+			{Type: token.SPECIAL_VAR, Literal: "1"},
+			{Type: token.NAME, Literal: "something"},
+		}},
+		{`$$ $@ $? $# $! $_ $*`, []token.Token{
+			{Type: token.SPECIAL_VAR, Literal: "$"},
+			{Type: token.SPECIAL_VAR, Literal: "@"},
+			{Type: token.SPECIAL_VAR, Literal: "?"},
+			{Type: token.SPECIAL_VAR, Literal: "#"},
+			{Type: token.SPECIAL_VAR, Literal: "!"},
+			{Type: token.SPECIAL_VAR, Literal: "_"},
+			{Type: token.SPECIAL_VAR, Literal: "*"},
+		}},
 	}
 
 	for i, tc := range testCases {
