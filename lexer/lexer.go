@@ -62,6 +62,9 @@ func (l *Lexer) NextToken() token.Token {
 		case '&':
 			l.readCh()
 			tok.Type, tok.Literal = token.LT_AMPERSAND, "<&"
+		case '>':
+			l.readCh()
+			tok.Type, tok.Literal = token.LT_GT, "<>"
 		default:
 			tok.Type, tok.Literal = token.LT, string(l.ch)
 		}
@@ -73,14 +76,20 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Type, tok.Literal = token.GE, ">="
 		case '&':
 			tok.Type, tok.Literal = token.GT_AMPERSAND, ">&"
+		case '|':
+			tok.Type, tok.Literal = token.GT_PIPE, ">|"
 		default:
 			tok.Type, tok.Literal = token.GT, ">"
 		}
 	case l.ch == '&':
-		if l.peek == '&' {
+		switch l.peek {
+		case '&':
 			l.readCh()
 			tok.Type, tok.Literal = token.AND, "&&"
-		} else {
+		case '>':
+			l.readCh()
+			tok.Type, tok.Literal = token.AMPERSAND_GT, "&>"
+		default:
 			tok.Type, tok.Literal = token.AMPERSAND, string(l.ch)
 		}
 	case l.ch == '|':
@@ -124,8 +133,6 @@ func (l *Lexer) NextToken() token.Token {
 		} else {
 			tok.Type, tok.Literal = token.MINUS, string(l.ch)
 		}
-	case l.ch == '!' && l.peek == '=':
-		tok.Type, tok.Literal = token.NOT_EQ, "!="
 	case l.ch == ']':
 		if l.peek == ']' {
 			l.readCh()
@@ -134,7 +141,12 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Type, tok.Literal = token.RIGHT_BRACKET, string(l.ch)
 		}
 	case l.ch == ';':
-		tok.Type, tok.Literal = token.SEMICOLON, string(l.ch)
+		if l.peek == ';' {
+			l.readCh()
+			tok.Type, tok.Literal = token.DOUBLE_SEMICOLON, ";;"
+		} else {
+			tok.Type, tok.Literal = token.SEMICOLON, string(l.ch)
+		}
 	case l.ch == '=':
 		if l.peek == '=' {
 			l.readCh()
@@ -142,6 +154,44 @@ func (l *Lexer) NextToken() token.Token {
 		} else {
 			tok.Type, tok.Literal = token.ASSIGN, string(l.ch)
 		}
+	case l.ch == '(':
+		if l.peek == '(' {
+			l.readCh()
+			tok.Type, tok.Literal = token.DOUBLE_LEFT_PAREN, "(("
+		} else {
+			tok.Type, tok.Literal = token.LEFT_PAREN, string(l.ch)
+		}
+	case l.ch == ')':
+		if l.peek == ')' {
+			l.readCh()
+			tok.Type, tok.Literal = token.DOUBLE_RIGHT_PAREN, "))"
+		} else {
+			tok.Type, tok.Literal = token.RIGHT_PAREN, string(l.ch)
+		}
+	case l.ch == ',':
+		if l.peek == ',' {
+			l.readCh()
+			tok.Type, tok.Literal = token.DOUBLE_COMMA, ",,"
+		} else {
+			tok.Type, tok.Literal = token.COMMA, string(l.ch)
+		}
+	case l.ch == '{':
+		tok.Type, tok.Literal = token.LEFT_BRACE, string(l.ch)
+	case l.ch == '}':
+		tok.Type, tok.Literal = token.RIGHT_BRACE, string(l.ch)
+	case l.ch == ':':
+		tok.Type, tok.Literal = token.COLON, string(l.ch)
+	case l.ch == '?':
+		tok.Type, tok.Literal = token.QUESTION, string(l.ch)
+	case l.ch == '!':
+		if l.peek == '=' {
+			l.readCh()
+			tok.Type, tok.Literal = token.NOT_EQ, "!="
+		} else {
+			tok.Type, tok.Literal = token.EXCLAMATION, string(l.ch)
+		}
+	case l.ch == '#':
+		tok.Type, tok.Literal = token.HASH, string(l.ch)
 	case l.ch == '\'':
 		tok.Type = token.LITERAL_STRING
 		l.readCh()
@@ -155,6 +205,15 @@ func (l *Lexer) NextToken() token.Token {
 		case l.peek >= '0' && l.peek <= '9':
 			l.readCh()
 			tok.Type, tok.Literal = token.SPECIAL_VAR, string(l.ch)
+		case l.peek == '{':
+			tok.Type, tok.Literal = token.DOLLAR_BRACE, "${"
+		case l.peek == '(':
+			l.readCh()
+			if l.peek == '(' {
+				tok.Type, tok.Literal = token.DOLLAR_DOUBLE_PAREN, "$(("
+			} else {
+				tok.Type, tok.Literal = token.DOLLAR_PAREN, "$("
+			}
 		}
 	case isLetter(l.ch):
 		tok.Literal = string(l.ch)

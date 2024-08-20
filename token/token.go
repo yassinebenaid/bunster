@@ -79,6 +79,7 @@ const (
 	LEFT_BRACE           // '{'
 	RIGHT_BRACE          // '}'
 	COMMA                // ','
+	DOUBLE_COMMA         // ',,'
 	COLON                // ':'
 	BACKSLASH            // '\'
 	DOLLAR               // '$'
