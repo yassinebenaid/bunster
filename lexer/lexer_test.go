@@ -53,6 +53,7 @@ func TestLexer(t *testing.T) {
 		{`/=`, []token.Token{{Type: token.SLASH_ASSIGN, Literal: `/=`}}},
 		{`==`, []token.Token{{Type: token.EQ, Literal: `==`}}},
 		{`!=`, []token.Token{{Type: token.NOT_EQ, Literal: `!=`}}},
+		{`=~`, []token.Token{{Type: token.EQ_TILDE, Literal: `=~`}}},
 		{`<`, []token.Token{{Type: token.LT, Literal: `<`}}},
 		{`<=`, []token.Token{{Type: token.LE, Literal: `<=`}}},
 		{`>`, []token.Token{{Type: token.GT, Literal: `>`}}},

@@ -159,10 +159,14 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Type, tok.Literal = token.SEMICOLON, string(l.ch)
 		}
 	case l.ch == '=':
-		if l.peek == '=' {
+		switch l.peek {
+		case '=':
 			l.readCh()
 			tok.Type, tok.Literal = token.EQ, "=="
-		} else {
+		case '~':
+			l.readCh()
+			tok.Type, tok.Literal = token.EQ_TILDE, "=~"
+		default:
 			tok.Type, tok.Literal = token.ASSIGN, string(l.ch)
 		}
 	case l.ch == '(':

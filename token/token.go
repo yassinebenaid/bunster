@@ -52,6 +52,7 @@ const (
 	LE                   // '<='
 	GT                   // '>'
 	GE                   // '>='
+	EQ_TILDE             // '=~'
 	AND                  // '&&'
 	OR                   // '||'
 	PIPE                 // '|'
