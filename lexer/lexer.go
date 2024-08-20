@@ -280,6 +280,12 @@ func (l *Lexer) NextToken() token.Token {
 		} else {
 			tok.Type = token.NAME
 		}
+	case l.ch >= '0' && l.ch <= '9':
+		tok.Type, tok.Literal = token.NUMBER, string(l.ch)
+		for l.peek >= '0' && l.peek <= '9' {
+			l.readCh()
+			tok.Literal += string(l.ch)
+		}
 	case l.ch == 0:
 		tok.Type = token.EOF
 	}

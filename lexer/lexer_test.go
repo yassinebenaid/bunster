@@ -146,6 +146,9 @@ func TestLexer(t *testing.T) {
 			{Type: token.SIMPLE_EXPANSION, Literal: `concatinated`},
 			{Type: token.SIMPLE_EXPANSION, Literal: `variable`},
 		}},
+		{`0123456789`, []token.Token{
+			{Type: token.NUMBER, Literal: `0123456789`},
+		}},
 	}
 
 	for i, tc := range testCases {
