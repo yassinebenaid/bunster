@@ -7,8 +7,9 @@ import (
 type Lexer struct {
 	input []byte
 	pos   int
-	ch    byte
-	peek  byte
+	prev  byte
+	curr  byte
+	next  byte
 }
 
 func New(in []byte) Lexer {
@@ -21,41 +22,41 @@ func New(in []byte) Lexer {
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
-	for l.ch == ' ' || l.ch == '\t' {
+	for l.curr == ' ' || l.curr == '\t' {
 		l.readCh()
 	}
 
 	switch {
-	case l.ch == '\n':
-		tok.Type, tok.Literal = token.NEWLINE, string(l.ch)
-	case l.ch == '*':
-		if l.peek == '=' {
+	case l.curr == '\n':
+		tok.Type, tok.Literal = token.NEWLINE, string(l.curr)
+	case l.curr == '*':
+		if l.next == '=' {
 			l.readCh()
 			tok.Type, tok.Literal = token.STAR_ASSIGN, "*="
 		} else {
-			tok.Type, tok.Literal = token.STAR, string(l.ch)
+			tok.Type, tok.Literal = token.STAR, string(l.curr)
 		}
-	case l.ch == '^':
-		if l.peek == '^' {
+	case l.curr == '^':
+		if l.next == '^' {
 			l.readCh()
 			tok.Type, tok.Literal = token.DOUBLE_CIRCUMFLEX, "^^"
 		} else {
-			tok.Type, tok.Literal = token.CIRCUMFLEX, string(l.ch)
+			tok.Type, tok.Literal = token.CIRCUMFLEX, string(l.curr)
 		}
-	case l.ch == '%':
-		tok.Type, tok.Literal = token.PERCENT, string(l.ch)
-	case l.ch == '[':
-		if l.peek == '[' {
+	case l.curr == '%':
+		tok.Type, tok.Literal = token.PERCENT, string(l.curr)
+	case l.curr == '[':
+		if l.next == '[' {
 			l.readCh()
 			tok.Type, tok.Literal = token.DOUBLE_LEFT_BRACKET, "[["
 		} else {
-			tok.Type, tok.Literal = token.LEFT_BRACKET, string(l.ch)
+			tok.Type, tok.Literal = token.LEFT_BRACKET, string(l.curr)
 		}
-	case l.ch == '<':
-		switch l.peek {
+	case l.curr == '<':
+		switch l.next {
 		case '<':
 			l.readCh()
-			switch l.peek {
+			switch l.next {
 			case '-':
 				l.readCh()
 				tok.Type, tok.Literal = token.DOUBLE_LT_MINUS, "<<-"
@@ -78,10 +79,10 @@ func (l *Lexer) NextToken() token.Token {
 			l.readCh()
 			tok.Type, tok.Literal = token.LT_PAREN, "<("
 		default:
-			tok.Type, tok.Literal = token.LT, string(l.ch)
+			tok.Type, tok.Literal = token.LT, string(l.curr)
 		}
-	case l.ch == '>':
-		switch l.peek {
+	case l.curr == '>':
+		switch l.next {
 		case '>':
 			tok.Type, tok.Literal = token.DOUBLE_GT, ">>"
 		case '=':
@@ -99,8 +100,8 @@ func (l *Lexer) NextToken() token.Token {
 		if tok.Type != token.GT {
 			l.readCh()
 		}
-	case l.ch == '&':
-		switch l.peek {
+	case l.curr == '&':
+		switch l.next {
 		case '&':
 			l.readCh()
 			tok.Type, tok.Literal = token.AND, "&&"
@@ -108,10 +109,10 @@ func (l *Lexer) NextToken() token.Token {
 			l.readCh()
 			tok.Type, tok.Literal = token.AMPERSAND_GT, "&>"
 		default:
-			tok.Type, tok.Literal = token.AMPERSAND, string(l.ch)
+			tok.Type, tok.Literal = token.AMPERSAND, string(l.curr)
 		}
-	case l.ch == '|':
-		switch l.peek {
+	case l.curr == '|':
+		switch l.next {
 		case '|':
 			l.readCh()
 			tok.Type, tok.Literal = token.OR, "||"
@@ -119,54 +120,54 @@ func (l *Lexer) NextToken() token.Token {
 			l.readCh()
 			tok.Type, tok.Literal = token.PIPE_AMPERSAND, "|&"
 		default:
-			tok.Type, tok.Literal = token.PIPE, string(l.ch)
+			tok.Type, tok.Literal = token.PIPE, string(l.curr)
 		}
-	case l.ch == '+':
-		if l.peek == '+' {
+	case l.curr == '+':
+		if l.next == '+' {
 			l.readCh()
 			tok.Type, tok.Literal = token.INCREMENT, "++"
-		} else if l.peek == '=' {
+		} else if l.next == '=' {
 			l.readCh()
 			tok.Type, tok.Literal = token.PLUS_ASSIGN, "+="
 		} else {
-			tok.Type, tok.Literal = token.PLUS, string(l.ch)
+			tok.Type, tok.Literal = token.PLUS, string(l.curr)
 		}
-	case l.ch == '/':
-		if l.peek == '/' {
+	case l.curr == '/':
+		if l.next == '/' {
 			l.readCh()
 			tok.Type, tok.Literal = token.DOUBLE_SLASH, "//"
-		} else if l.peek == '=' {
+		} else if l.next == '=' {
 			l.readCh()
 			tok.Type, tok.Literal = token.SLASH_ASSIGN, "/="
 		} else {
-			tok.Type, tok.Literal = token.SLASH, string(l.ch)
+			tok.Type, tok.Literal = token.SLASH, string(l.curr)
 		}
-	case l.ch == '-':
-		if l.peek == '-' {
+	case l.curr == '-':
+		if l.next == '-' {
 			l.readCh()
 			tok.Type, tok.Literal = token.DECREMENT, "--"
-		} else if l.peek == '=' {
+		} else if l.next == '=' {
 			l.readCh()
 			tok.Type, tok.Literal = token.MINUS_ASSIGN, "-="
 		} else {
-			tok.Type, tok.Literal = token.MINUS, string(l.ch)
+			tok.Type, tok.Literal = token.MINUS, string(l.curr)
 		}
-	case l.ch == ']':
-		if l.peek == ']' {
+	case l.curr == ']':
+		if l.next == ']' {
 			l.readCh()
 			tok.Type, tok.Literal = token.DOUBLE_RIGHT_BRACKET, "]]"
 		} else {
-			tok.Type, tok.Literal = token.RIGHT_BRACKET, string(l.ch)
+			tok.Type, tok.Literal = token.RIGHT_BRACKET, string(l.curr)
 		}
-	case l.ch == ';':
-		if l.peek == ';' {
+	case l.curr == ';':
+		if l.next == ';' {
 			l.readCh()
 			tok.Type, tok.Literal = token.DOUBLE_SEMICOLON, ";;"
 		} else {
-			tok.Type, tok.Literal = token.SEMICOLON, string(l.ch)
+			tok.Type, tok.Literal = token.SEMICOLON, string(l.curr)
 		}
-	case l.ch == '=':
-		switch l.peek {
+	case l.curr == '=':
+		switch l.next {
 		case '=':
 			l.readCh()
 			tok.Type, tok.Literal = token.EQ, "=="
@@ -174,35 +175,35 @@ func (l *Lexer) NextToken() token.Token {
 			l.readCh()
 			tok.Type, tok.Literal = token.EQ_TILDE, "=~"
 		default:
-			tok.Type, tok.Literal = token.ASSIGN, string(l.ch)
+			tok.Type, tok.Literal = token.ASSIGN, string(l.curr)
 		}
-	case l.ch == '(':
-		if l.peek == '(' {
+	case l.curr == '(':
+		if l.next == '(' {
 			l.readCh()
 			tok.Type, tok.Literal = token.DOUBLE_LEFT_PAREN, "(("
 		} else {
-			tok.Type, tok.Literal = token.LEFT_PAREN, string(l.ch)
+			tok.Type, tok.Literal = token.LEFT_PAREN, string(l.curr)
 		}
-	case l.ch == ')':
-		if l.peek == ')' {
+	case l.curr == ')':
+		if l.next == ')' {
 			l.readCh()
 			tok.Type, tok.Literal = token.DOUBLE_RIGHT_PAREN, "))"
 		} else {
-			tok.Type, tok.Literal = token.RIGHT_PAREN, string(l.ch)
+			tok.Type, tok.Literal = token.RIGHT_PAREN, string(l.curr)
 		}
-	case l.ch == ',':
-		if l.peek == ',' {
+	case l.curr == ',':
+		if l.next == ',' {
 			l.readCh()
 			tok.Type, tok.Literal = token.DOUBLE_COMMA, ",,"
 		} else {
-			tok.Type, tok.Literal = token.COMMA, string(l.ch)
+			tok.Type, tok.Literal = token.COMMA, string(l.curr)
 		}
-	case l.ch == '{':
-		tok.Type, tok.Literal = token.LEFT_BRACE, string(l.ch)
-	case l.ch == '}':
-		tok.Type, tok.Literal = token.RIGHT_BRACE, string(l.ch)
-	case l.ch == ':':
-		switch l.peek {
+	case l.curr == '{':
+		tok.Type, tok.Literal = token.LEFT_BRACE, string(l.curr)
+	case l.curr == '}':
+		tok.Type, tok.Literal = token.RIGHT_BRACE, string(l.curr)
+	case l.curr == ':':
+		switch l.next {
 		case '=':
 			tok.Type, tok.Literal = token.COLON_ASSIGN, ":="
 		case '-':
@@ -212,67 +213,67 @@ func (l *Lexer) NextToken() token.Token {
 		case '?':
 			tok.Type, tok.Literal = token.COLON_QUESTION, ":?"
 		default:
-			tok.Type, tok.Literal = token.COLON, string(l.ch)
+			tok.Type, tok.Literal = token.COLON, string(l.curr)
 		}
 
 		if tok.Type != token.COLON {
 			l.readCh()
 		}
-	case l.ch == '?':
-		tok.Type, tok.Literal = token.QUESTION, string(l.ch)
-	case l.ch == '~':
-		tok.Type, tok.Literal = token.TILDE, string(l.ch)
-	case l.ch == '.' && l.peek == '.':
+	case l.curr == '?':
+		tok.Type, tok.Literal = token.QUESTION, string(l.curr)
+	case l.curr == '~':
+		tok.Type, tok.Literal = token.TILDE, string(l.curr)
+	case l.curr == '.' && l.next == '.':
 		l.readCh()
 		tok.Type, tok.Literal = token.DOUBLE_DOT, ".."
-	case l.ch == '!':
-		if l.peek == '=' {
+	case l.curr == '!':
+		if l.next == '=' {
 			l.readCh()
 			tok.Type, tok.Literal = token.NOT_EQ, "!="
 		} else {
-			tok.Type, tok.Literal = token.EXCLAMATION, string(l.ch)
+			tok.Type, tok.Literal = token.EXCLAMATION, string(l.curr)
 		}
-	case l.ch == '#':
-		tok.Type, tok.Literal = token.HASH, string(l.ch)
-	case l.ch == '\'':
+	case l.curr == '#':
+		tok.Type, tok.Literal = token.HASH, string(l.curr)
+	case l.curr == '\'':
 		tok.Type = token.LITERAL_STRING
 		l.readCh()
 
-		for l.ch != '\'' {
-			tok.Literal += string(l.ch)
+		for l.curr != '\'' {
+			tok.Literal += string(l.curr)
 			l.readCh()
 		}
-	case l.ch == '$':
-		switch l.peek {
+	case l.curr == '$':
+		switch l.next {
 		case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '$', '#', '_', '*', '@', '?', '!':
 			l.readCh()
-			tok.Type, tok.Literal = token.SPECIAL_VAR, string(l.ch)
+			tok.Type, tok.Literal = token.SPECIAL_VAR, string(l.curr)
 		case '{':
 			l.readCh()
 			tok.Type, tok.Literal = token.DOLLAR_BRACE, "${"
 		case '(':
 			l.readCh()
-			if l.peek == '(' {
+			if l.next == '(' {
 				l.readCh()
 				tok.Type, tok.Literal = token.DOLLAR_DOUBLE_PAREN, "$(("
 			} else {
 				tok.Type, tok.Literal = token.DOLLAR_PAREN, "$("
 			}
 		default:
-			if isLetter(l.peek) || l.peek == '_' {
+			if isLetter(l.next) || l.next == '_' {
 				tok.Type = token.SIMPLE_EXPANSION
-				for isLetter(l.peek) || l.peek == '_' {
+				for isLetter(l.next) || l.next == '_' {
 					l.readCh()
-					tok.Literal += string(l.ch)
+					tok.Literal += string(l.curr)
 				}
 			}
 		}
-	case isLetter(l.ch):
-		tok.Literal = string(l.ch)
+	case isLetter(l.curr):
+		tok.Literal = string(l.curr)
 
-		for isLetter(l.peek) {
+		for isLetter(l.next) {
 			l.readCh()
-			tok.Literal += string(l.ch)
+			tok.Literal += string(l.curr)
 		}
 
 		if keyword, ok := token.Keywords[tok.Literal]; ok {
@@ -280,30 +281,36 @@ func (l *Lexer) NextToken() token.Token {
 		} else {
 			tok.Type = token.NAME
 		}
-	case (l.ch >= '0' && l.ch <= '9') || (l.ch == '.' && (l.peek >= '0' && l.peek <= '9')):
-		tok.Type, tok.Literal = token.NUMBER, string(l.ch)
-		isFloat := l.ch == '.'
+	case (l.curr >= '0' && l.curr <= '9') || (l.curr == '.' && (l.next >= '0' && l.next <= '9')):
+		prev := l.prev
+		tok.Type, tok.Literal = token.NUMBER, string(l.curr)
+		isFloat := l.curr == '.'
 
 		for {
-			if isFloat && l.peek == '.' {
+			if isFloat && l.next == '.' {
 				break
 			}
 
-			if !((l.peek >= '0' && l.peek <= '9') || l.peek == '.') {
+			if !((l.next >= '0' && l.next <= '9') || l.next == '.') {
 				break
 			}
 
-			if l.peek == '.' {
+			if l.next == '.' {
 				isFloat = true
 			}
 
 			l.readCh()
-			tok.Literal += string(l.ch)
+			tok.Literal += string(l.curr)
 		}
-	case l.ch == 0:
+
+		// If numbers appear in file descriptor positions they're treated differently
+		if !isFloat && (prev == '&' || l.next == '>' || l.next == '<') {
+			tok.Type = token.FILE_DESCRIPTOR
+		}
+	case l.curr == 0:
 		tok.Type = token.EOF
 	default:
-		tok.Type, tok.Literal = token.OTHER, string(l.ch)
+		tok.Type, tok.Literal = token.OTHER, string(l.curr)
 	}
 
 	l.readCh()
@@ -316,11 +323,12 @@ func isLetter(b byte) bool {
 }
 
 func (l *Lexer) readCh() {
-	l.ch = l.peek
+	l.prev = l.curr
+	l.curr = l.next
 	if l.pos >= len(l.input) {
-		l.peek = 0
+		l.next = 0
 	} else {
-		l.peek = l.input[l.pos]
+		l.next = l.input[l.pos]
 	}
 	l.pos++
 }

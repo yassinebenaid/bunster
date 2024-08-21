@@ -146,6 +146,7 @@ func TestLexer(t *testing.T) {
 			{Type: token.SIMPLE_EXPANSION, Literal: `concatinated`},
 			{Type: token.SIMPLE_EXPANSION, Literal: `variable`},
 		}},
+		// Numbers
 		{`0123456789 123.456 .123 123. 1.2.3 .abc 1.c 12.34abc`, []token.Token{
 			{Type: token.NUMBER, Literal: `0123456789`},
 			{Type: token.NUMBER, Literal: `123.456`},
@@ -159,6 +160,15 @@ func TestLexer(t *testing.T) {
 			{Type: token.NAME, Literal: `c`},
 			{Type: token.NUMBER, Literal: `12.34`},
 			{Type: token.NAME, Literal: `abc`},
+		}},
+		// File descriptors
+		{`123< 1> <&45`, []token.Token{
+			{Type: token.FILE_DESCRIPTOR, Literal: `123`},
+			{Type: token.LT, Literal: `<`},
+			{Type: token.FILE_DESCRIPTOR, Literal: `1`},
+			{Type: token.GT, Literal: `>`},
+			{Type: token.LT_AMPERSAND, Literal: `<&`},
+			{Type: token.FILE_DESCRIPTOR, Literal: `45`},
 		}},
 	}
 
