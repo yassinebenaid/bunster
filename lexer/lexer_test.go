@@ -110,6 +110,15 @@ func TestLexer(t *testing.T) {
 		{`--`, []token.Token{{Type: token.DECREMENT, Literal: `--`}}},
 		{`~`, []token.Token{{Type: token.TILDE, Literal: `~`}}},
 
+		// identifiers
+		{`foo bar foo-bar`, []token.Token{
+			{Type: token.Word, Literal: `foo`},
+			{Type: token.Word, Literal: `bar`},
+			{Type: token.Word, Literal: `foo`},
+			{Type: token.MINUS, Literal: `-`},
+			{Type: token.Word, Literal: `bar`},
+		}},
+
 		// Special Variables
 		{`$0$1$2 $3$4 $5 $6 $7 $8 $9 $10`, []token.Token{
 			{Type: token.SPECIAL_VAR, Literal: "0"},
@@ -127,7 +136,7 @@ func TestLexer(t *testing.T) {
 		}},
 		{`$1something`, []token.Token{
 			{Type: token.SPECIAL_VAR, Literal: "1"},
-			{Type: token.NAME, Literal: "something"},
+			{Type: token.Word, Literal: "something"},
 		}},
 		{`$$ $@ $? $# $! $_ $*`, []token.Token{
 			{Type: token.SPECIAL_VAR, Literal: "$"},
@@ -139,13 +148,13 @@ func TestLexer(t *testing.T) {
 			{Type: token.SPECIAL_VAR, Literal: "*"},
 		}},
 		// Simple expansion
-		{`$variable_name $variable-name $concatinated$variable`, []token.Token{
+		{`$variable_name $variable-name $concatinated$VAIABLE`, []token.Token{
 			{Type: token.SIMPLE_EXPANSION, Literal: `variable_name`},
 			{Type: token.SIMPLE_EXPANSION, Literal: `variable`},
 			{Type: token.MINUS, Literal: `-`},
-			{Type: token.NAME, Literal: `name`},
+			{Type: token.Word, Literal: `name`},
 			{Type: token.SIMPLE_EXPANSION, Literal: `concatinated`},
-			{Type: token.SIMPLE_EXPANSION, Literal: `variable`},
+			{Type: token.SIMPLE_EXPANSION, Literal: `VAIABLE`},
 		}},
 		// Numbers
 		{`0123456789 123.456 .123 123. 1.2.3 .abc 1.c 12.34abc`, []token.Token{
@@ -156,11 +165,11 @@ func TestLexer(t *testing.T) {
 			{Type: token.NUMBER, Literal: `1.2`},
 			{Type: token.NUMBER, Literal: `.3`},
 			{Type: token.OTHER, Literal: `.`},
-			{Type: token.NAME, Literal: `abc`},
+			{Type: token.Word, Literal: `abc`},
 			{Type: token.NUMBER, Literal: `1.`},
-			{Type: token.NAME, Literal: `c`},
+			{Type: token.Word, Literal: `c`},
 			{Type: token.NUMBER, Literal: `12.34`},
-			{Type: token.NAME, Literal: `abc`},
+			{Type: token.Word, Literal: `abc`},
 		}},
 		// File descriptors
 		{`123< <&45 33<&45 5<< 6<<-  1> 1>&2 7>> 81>| 19<>`, []token.Token{

@@ -290,7 +290,7 @@ func (l *Lexer) NextToken() token.Token {
 		if keyword, ok := token.Keywords[tok.Literal]; ok {
 			tok.Type = keyword
 		} else {
-			tok.Type = token.NAME
+			tok.Type = token.Word
 		}
 	case (l.curr >= '0' && l.curr <= '9') || (l.curr == '.' && (l.next >= '0' && l.next <= '9')):
 		prev := l.prev

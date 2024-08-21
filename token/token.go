@@ -107,8 +107,7 @@ const (
 
 	SIMPLE_EXPANSION       // Simple variable expansion. eg. $variable_name.
 	FILE_DESCRIPTOR        // 0-9 in io redirection. eg '>&', '<&', ...
-	NAME                   // Variable names, functions and other identifiers.
-	FNAME                  // Just like NAME, but contains '-' dash.
+	Word                   // Variable names, functions and other identifiers.
 	LITERAL_STRING         // Single-quoted string or double-quoted string without any expansion
 	PARTIAL_LITERAL_STRING // Double-quoted string before or after expansion, eg. "hello $name mate" : "hello " and " mate" are both partial literal strings
 	NUMBER                 // Integer and float numbers
