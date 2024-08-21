@@ -14,8 +14,11 @@ type Lexer struct {
 
 func New(in []byte) Lexer {
 	l := Lexer{input: in}
+
+	// read twice so that 'curr' and 'next' get initialized
 	l.readCh()
 	l.readCh()
+
 	return l
 }
 
@@ -44,7 +47,12 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Type, tok.Literal = token.CIRCUMFLEX, string(l.curr)
 		}
 	case l.curr == '%':
-		tok.Type, tok.Literal = token.PERCENT, string(l.curr)
+		if l.next == '%' {
+			l.readCh()
+			tok.Type, tok.Literal = token.DOUBLE_PERCENT, "%%"
+		} else {
+			tok.Type, tok.Literal = token.PERCENT, string(l.curr)
+		}
 	case l.curr == '[':
 		if l.next == '[' {
 			l.readCh()

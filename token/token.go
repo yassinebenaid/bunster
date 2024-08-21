@@ -41,6 +41,7 @@ const (
 	STAR                 // '*'
 	SLASH                // '/'
 	PERCENT              // '%'
+	DOUBLE_PERCENT       // '%%'
 	ASSIGN               // '='
 	PLUS_ASSIGN          // '+='
 	MINUS_ASSIGN         // '-='
