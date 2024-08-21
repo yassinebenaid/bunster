@@ -280,14 +280,30 @@ func (l *Lexer) NextToken() token.Token {
 		} else {
 			tok.Type = token.NAME
 		}
-	case l.ch >= '0' && l.ch <= '9':
+	case (l.ch >= '0' && l.ch <= '9') || (l.ch == '.' && (l.peek >= '0' && l.peek <= '9')):
 		tok.Type, tok.Literal = token.NUMBER, string(l.ch)
-		for l.peek >= '0' && l.peek <= '9' {
+		isFloat := l.ch == '.'
+
+		for {
+			if isFloat && l.peek == '.' {
+				break
+			}
+
+			if !((l.peek >= '0' && l.peek <= '9') || l.peek == '.') {
+				break
+			}
+
+			if l.peek == '.' {
+				isFloat = true
+			}
+
 			l.readCh()
 			tok.Literal += string(l.ch)
 		}
 	case l.ch == 0:
 		tok.Type = token.EOF
+	default:
+		tok.Type, tok.Literal = token.OTHER, string(l.ch)
 	}
 
 	l.readCh()
