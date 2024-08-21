@@ -16,8 +16,8 @@ func New(in []byte) Lexer {
 	l := Lexer{input: in}
 
 	// read twice so that 'curr' and 'next' get initialized
-	l.readCh()
-	l.readCh()
+	l.proceed()
+	l.proceed()
 
 	return l
 }
@@ -26,7 +26,7 @@ func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
 	for l.curr == ' ' || l.curr == '\t' {
-		l.readCh()
+		l.proceed()
 	}
 
 	switch {
@@ -34,28 +34,28 @@ func (l *Lexer) NextToken() token.Token {
 		tok.Type, tok.Literal = token.NEWLINE, string(l.curr)
 	case l.curr == '*':
 		if l.next == '=' {
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.STAR_ASSIGN, "*="
 		} else {
 			tok.Type, tok.Literal = token.STAR, string(l.curr)
 		}
 	case l.curr == '^':
 		if l.next == '^' {
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.DOUBLE_CIRCUMFLEX, "^^"
 		} else {
 			tok.Type, tok.Literal = token.CIRCUMFLEX, string(l.curr)
 		}
 	case l.curr == '%':
 		if l.next == '%' {
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.DOUBLE_PERCENT, "%%"
 		} else {
 			tok.Type, tok.Literal = token.PERCENT, string(l.curr)
 		}
 	case l.curr == '[':
 		if l.next == '[' {
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.DOUBLE_LEFT_BRACKET, "[["
 		} else {
 			tok.Type, tok.Literal = token.LEFT_BRACKET, string(l.curr)
@@ -63,28 +63,28 @@ func (l *Lexer) NextToken() token.Token {
 	case l.curr == '<':
 		switch l.next {
 		case '<':
-			l.readCh()
+			l.proceed()
 			switch l.next {
 			case '-':
-				l.readCh()
+				l.proceed()
 				tok.Type, tok.Literal = token.DOUBLE_LT_MINUS, "<<-"
 			case '<':
-				l.readCh()
+				l.proceed()
 				tok.Type, tok.Literal = token.TRIPLE_LT, "<<<"
 			default:
 				tok.Type, tok.Literal = token.DOUBLE_LT, "<<"
 			}
 		case '=':
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.LE, "<="
 		case '&':
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.LT_AMPERSAND, "<&"
 		case '>':
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.LT_GT, "<>"
 		case '(':
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.LT_PAREN, "<("
 		default:
 			tok.Type, tok.Literal = token.LT, string(l.curr)
@@ -106,15 +106,15 @@ func (l *Lexer) NextToken() token.Token {
 		}
 
 		if tok.Type != token.GT {
-			l.readCh()
+			l.proceed()
 		}
 	case l.curr == '&':
 		switch l.next {
 		case '&':
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.AND, "&&"
 		case '>':
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.AMPERSAND_GT, "&>"
 		default:
 			tok.Type, tok.Literal = token.AMPERSAND, string(l.curr)
@@ -122,54 +122,57 @@ func (l *Lexer) NextToken() token.Token {
 	case l.curr == '|':
 		switch l.next {
 		case '|':
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.OR, "||"
 		case '&':
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.PIPE_AMPERSAND, "|&"
 		default:
 			tok.Type, tok.Literal = token.PIPE, string(l.curr)
 		}
 	case l.curr == '+':
-		if l.next == '+' {
-			l.readCh()
+		switch l.next {
+		case '+':
+			l.proceed()
 			tok.Type, tok.Literal = token.INCREMENT, "++"
-		} else if l.next == '=' {
-			l.readCh()
+		case '=':
+			l.proceed()
 			tok.Type, tok.Literal = token.PLUS_ASSIGN, "+="
-		} else {
+		default:
 			tok.Type, tok.Literal = token.PLUS, string(l.curr)
 		}
 	case l.curr == '/':
-		if l.next == '/' {
-			l.readCh()
+		switch l.next {
+		case '/':
+			l.proceed()
 			tok.Type, tok.Literal = token.DOUBLE_SLASH, "//"
-		} else if l.next == '=' {
-			l.readCh()
+		case '=':
+			l.proceed()
 			tok.Type, tok.Literal = token.SLASH_ASSIGN, "/="
-		} else {
+		default:
 			tok.Type, tok.Literal = token.SLASH, string(l.curr)
 		}
 	case l.curr == '-':
-		if l.next == '-' {
-			l.readCh()
+		switch l.next {
+		case '-':
+			l.proceed()
 			tok.Type, tok.Literal = token.DECREMENT, "--"
-		} else if l.next == '=' {
-			l.readCh()
+		case '=':
+			l.proceed()
 			tok.Type, tok.Literal = token.MINUS_ASSIGN, "-="
-		} else {
+		default:
 			tok.Type, tok.Literal = token.MINUS, string(l.curr)
 		}
 	case l.curr == ']':
 		if l.next == ']' {
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.DOUBLE_RIGHT_BRACKET, "]]"
 		} else {
 			tok.Type, tok.Literal = token.RIGHT_BRACKET, string(l.curr)
 		}
 	case l.curr == ';':
 		if l.next == ';' {
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.DOUBLE_SEMICOLON, ";;"
 		} else {
 			tok.Type, tok.Literal = token.SEMICOLON, string(l.curr)
@@ -177,31 +180,31 @@ func (l *Lexer) NextToken() token.Token {
 	case l.curr == '=':
 		switch l.next {
 		case '=':
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.EQ, "=="
 		case '~':
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.EQ_TILDE, "=~"
 		default:
 			tok.Type, tok.Literal = token.ASSIGN, string(l.curr)
 		}
 	case l.curr == '(':
 		if l.next == '(' {
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.DOUBLE_LEFT_PAREN, "(("
 		} else {
 			tok.Type, tok.Literal = token.LEFT_PAREN, string(l.curr)
 		}
 	case l.curr == ')':
 		if l.next == ')' {
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.DOUBLE_RIGHT_PAREN, "))"
 		} else {
 			tok.Type, tok.Literal = token.RIGHT_PAREN, string(l.curr)
 		}
 	case l.curr == ',':
 		if l.next == ',' {
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.DOUBLE_COMMA, ",,"
 		} else {
 			tok.Type, tok.Literal = token.COMMA, string(l.curr)
@@ -225,18 +228,18 @@ func (l *Lexer) NextToken() token.Token {
 		}
 
 		if tok.Type != token.COLON {
-			l.readCh()
+			l.proceed()
 		}
 	case l.curr == '?':
 		tok.Type, tok.Literal = token.QUESTION, string(l.curr)
 	case l.curr == '~':
 		tok.Type, tok.Literal = token.TILDE, string(l.curr)
 	case l.curr == '.' && l.next == '.':
-		l.readCh()
+		l.proceed()
 		tok.Type, tok.Literal = token.DOUBLE_DOT, ".."
 	case l.curr == '!':
 		if l.next == '=' {
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.NOT_EQ, "!="
 		} else {
 			tok.Type, tok.Literal = token.EXCLAMATION, string(l.curr)
@@ -245,24 +248,24 @@ func (l *Lexer) NextToken() token.Token {
 		tok.Type, tok.Literal = token.HASH, string(l.curr)
 	case l.curr == '\'':
 		tok.Type = token.LITERAL_STRING
-		l.readCh()
+		l.proceed()
 
 		for l.curr != '\'' {
 			tok.Literal += string(l.curr)
-			l.readCh()
+			l.proceed()
 		}
 	case l.curr == '$':
 		switch l.next {
 		case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '$', '#', '_', '*', '@', '?', '!':
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.SPECIAL_VAR, string(l.curr)
 		case '{':
-			l.readCh()
+			l.proceed()
 			tok.Type, tok.Literal = token.DOLLAR_BRACE, "${"
 		case '(':
-			l.readCh()
+			l.proceed()
 			if l.next == '(' {
-				l.readCh()
+				l.proceed()
 				tok.Type, tok.Literal = token.DOLLAR_DOUBLE_PAREN, "$(("
 			} else {
 				tok.Type, tok.Literal = token.DOLLAR_PAREN, "$("
@@ -271,7 +274,7 @@ func (l *Lexer) NextToken() token.Token {
 			if isLetter(l.next) || l.next == '_' {
 				tok.Type = token.SIMPLE_EXPANSION
 				for isLetter(l.next) || l.next == '_' {
-					l.readCh()
+					l.proceed()
 					tok.Literal += string(l.curr)
 				}
 			}
@@ -280,7 +283,7 @@ func (l *Lexer) NextToken() token.Token {
 		tok.Literal = string(l.curr)
 
 		for isLetter(l.next) {
-			l.readCh()
+			l.proceed()
 			tok.Literal += string(l.curr)
 		}
 
@@ -307,11 +310,11 @@ func (l *Lexer) NextToken() token.Token {
 				isFloat = true
 			}
 
-			l.readCh()
+			l.proceed()
 			tok.Literal += string(l.curr)
 		}
 
-		// If numbers appear in file descriptor positions they're treated differently
+		// If numbers appear in file descriptor positions they're treated differently (eg 1>&2)
 		if !isFloat && (prev == '&' || l.next == '>' || l.next == '<') {
 			tok.Type = token.FILE_DESCRIPTOR
 		}
@@ -321,7 +324,7 @@ func (l *Lexer) NextToken() token.Token {
 		tok.Type, tok.Literal = token.OTHER, string(l.curr)
 	}
 
-	l.readCh()
+	l.proceed()
 
 	return tok
 }
@@ -330,7 +333,7 @@ func isLetter(b byte) bool {
 	return (b >= 'A' && b <= 'Z') || (b >= 'a' && b <= 'z')
 }
 
-func (l *Lexer) readCh() {
+func (l *Lexer) proceed() {
 	l.prev = l.curr
 	l.curr = l.next
 	if l.pos >= len(l.input) {
