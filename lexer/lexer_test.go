@@ -162,13 +162,30 @@ func TestLexer(t *testing.T) {
 			{Type: token.NAME, Literal: `abc`},
 		}},
 		// File descriptors
-		{`123< 1> <&45`, []token.Token{
+		{`123< <&45 33<&45 5<< 6<<-  1> 1>&2 7>> 81>| 19<>`, []token.Token{
 			{Type: token.FILE_DESCRIPTOR, Literal: `123`},
 			{Type: token.LT, Literal: `<`},
-			{Type: token.FILE_DESCRIPTOR, Literal: `1`},
-			{Type: token.GT, Literal: `>`},
 			{Type: token.LT_AMPERSAND, Literal: `<&`},
 			{Type: token.FILE_DESCRIPTOR, Literal: `45`},
+			{Type: token.FILE_DESCRIPTOR, Literal: `33`},
+			{Type: token.LT_AMPERSAND, Literal: `<&`},
+			{Type: token.FILE_DESCRIPTOR, Literal: `45`},
+			{Type: token.FILE_DESCRIPTOR, Literal: `5`},
+			{Type: token.DOUBLE_LT, Literal: `<<`},
+			{Type: token.FILE_DESCRIPTOR, Literal: `6`},
+			{Type: token.DOUBLE_LT_MINUS, Literal: `<<-`},
+
+			{Type: token.FILE_DESCRIPTOR, Literal: `1`},
+			{Type: token.GT, Literal: `>`},
+			{Type: token.FILE_DESCRIPTOR, Literal: `1`},
+			{Type: token.GT_AMPERSAND, Literal: `>&`},
+			{Type: token.FILE_DESCRIPTOR, Literal: `2`},
+			{Type: token.FILE_DESCRIPTOR, Literal: `7`},
+			{Type: token.DOUBLE_GT, Literal: `>>`},
+			{Type: token.FILE_DESCRIPTOR, Literal: `81`},
+			{Type: token.GT_PIPE, Literal: `>|`},
+			{Type: token.FILE_DESCRIPTOR, Literal: `19`},
+			{Type: token.LT_GT, Literal: `<>`},
 		}},
 	}
 
