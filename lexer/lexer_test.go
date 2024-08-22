@@ -88,8 +88,8 @@ func TestLexer(t *testing.T) {
 		{`,`, []token.Token{{Type: token.COMMA, Literal: `,`}}},
 		{`,,`, []token.Token{{Type: token.DOUBLE_COMMA, Literal: `,,`}}},
 		{`:`, []token.Token{{Type: token.COLON, Literal: `:`}}},
-		// {`\`, []token.Token{{Type: token.BACKSLASH, Literal: `\`}}}, // TODO: see what to do with this
-		// {`"`, []token.Token{{Type: token.DOUBLE_QUOTE, Literal: `"`}}}, // TODO
+		{`"`, []token.Token{{Type: token.DOUBLE_QUOTE, Literal: `"`}}},
+		{`'`, []token.Token{{Type: token.SINGLE_QUOTE, Literal: `'`}}},
 		{`?`, []token.Token{{Type: token.QUESTION, Literal: `?`}}},
 		{`!`, []token.Token{{Type: token.EXCLAMATION, Literal: `!`}}},
 		{`#`, []token.Token{{Type: token.HASH, Literal: `#`}}},

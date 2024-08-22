@@ -10,113 +10,112 @@ type Token struct {
 const (
 	_ TokenType = iota
 
-	IF       // 'if'
-	THEN     // 'then'
-	ELSE     // 'else'
-	ELIF     // 'elif'
-	FI       // 'fi'
-	FOR      // 'for'
-	IN       // 'in'
-	DO       // 'do'
-	DONE     // 'done'
-	WHILE    // 'while'
-	UNTIL    // 'until'
-	CASE     // 'case'
-	ESAC     // 'esac'
-	FUNCTION // 'function'
-	SELECT   // 'select'
-	TRAP     // 'trap'
-	RETURN   // 'return'
-	EXIT     // 'exit'
-	BREAK    // 'break'
-	CONTINUE // 'continue'
-	DECLARE  // 'declare'
-	LOCAL    // 'local'
-	EXPORT   // 'export'
-	READONLY // 'readonly'
-	UNSET    // 'unset'
+	IF       // `if`
+	THEN     // `then`
+	ELSE     // `else`
+	ELIF     // `elif`
+	FI       // `fi`
+	FOR      // `for`
+	IN       // `in`
+	DO       // `do`
+	DONE     // `done`
+	WHILE    // `while`
+	UNTIL    // `until`
+	CASE     // `case`
+	ESAC     // `esac`
+	FUNCTION // `function`
+	SELECT   // `select`
+	TRAP     // `trap`
+	RETURN   // `return`
+	EXIT     // `exit`
+	BREAK    // `break`
+	CONTINUE // `continue`
+	DECLARE  // `declare`
+	LOCAL    // `local`
+	EXPORT   // `export`
+	READONLY // `readonly`
+	UNSET    // `unset`
 
-	PLUS                 // '+'
-	MINUS                // '-'
-	STAR                 // '*'
-	SLASH                // '/'
-	PERCENT              // '%'
-	DOUBLE_PERCENT       // '%%'
-	ASSIGN               // '='
-	PLUS_ASSIGN          // '+='
-	MINUS_ASSIGN         // '-='
-	STAR_ASSIGN          // '*='
-	SLASH_ASSIGN         // '/='
-	EQ                   // '=='
-	NOT_EQ               // '!='
-	LT                   // '<'
-	LE                   // '<='
-	GT                   // '>'
-	GE                   // '>='
-	EQ_TILDE             // '=~'
-	AND                  // '&&'
-	OR                   // '||'
-	PIPE                 // '|'
-	AMPERSAND            // '&'
-	DOUBLE_GT            // '>>'
-	DOUBLE_LT            // '<<'
-	DOUBLE_LT_MINUS      // '<<-'
-	TRIPLE_LT            // '<<<'
-	GT_AMPERSAND         // '>&'
-	LT_AMPERSAND         // '<&'
-	PIPE_AMPERSAND       // '|&'
-	AMPERSAND_GT         // '&>'
-	GT_PIPE              // '>|'
-	LT_GT                // '<>'
-	SEMICOLON            // ';'
-	DOUBLE_SEMICOLON     // ';;'
-	LEFT_PAREN           // '('
-	RIGHT_PAREN          // ')'
-	DOUBLE_LEFT_PAREN    // '(('
-	DOUBLE_RIGHT_PAREN   // '))'
-	LEFT_BRACKET         // '['
-	RIGHT_BRACKET        // ']'
-	DOUBLE_LEFT_BRACKET  // '[['
-	DOUBLE_RIGHT_BRACKET // ']]'
-	LEFT_BRACE           // '{'
-	RIGHT_BRACE          // '}'
-	COMMA                // ','
-	DOUBLE_COMMA         // ',,'
-	COLON                // ':'
-	BACKSLASH            // '\'
-	DOUBLE_QUOTE         // '"'
-	QUESTION             // '?'
-	EXCLAMATION          // '!'
-	HASH                 // '#'
-	DOLLAR_BRACE         // '${'
-	DOLLAR_PAREN         // '$('
-	DOLLAR_DOUBLE_PAREN  // '$(('
-	GT_PAREN             // '>('
-	LT_PAREN             // '<('
-	CIRCUMFLEX           // '^'
-	DOUBLE_CIRCUMFLEX    // '^^'
-	COLON_ASSIGN         // ':='
-	COLON_MINUS          // ':-'
-	COLON_PLUS           // ':+'
-	COLON_QUESTION       // ':?'
-	DOUBLE_SLASH         // '//'
-	DOUBLE_DOT           // '..'
-	INCREMENT            // '++'
-	DECREMENT            // '--'
-	TILDE                // '~'
+	PLUS                 // `+`
+	MINUS                // `-`
+	STAR                 // `*`
+	SLASH                // `/`
+	PERCENT              // `%`
+	DOUBLE_PERCENT       // `%%`
+	ASSIGN               // `=`
+	PLUS_ASSIGN          // `+=`
+	MINUS_ASSIGN         // `-=`
+	STAR_ASSIGN          // `*=`
+	SLASH_ASSIGN         // `/=`
+	EQ                   // `==`
+	NOT_EQ               // `!=`
+	LT                   // `<`
+	LE                   // `<=`
+	GT                   // `>`
+	GE                   // `>=`
+	EQ_TILDE             // `=~`
+	AND                  // `&&`
+	OR                   // `||`
+	PIPE                 // `|`
+	AMPERSAND            // `&`
+	DOUBLE_GT            // `>>`
+	DOUBLE_LT            // `<<`
+	DOUBLE_LT_MINUS      // `<<-`
+	TRIPLE_LT            // `<<<`
+	GT_AMPERSAND         // `>&`
+	LT_AMPERSAND         // `<&`
+	PIPE_AMPERSAND       // `|&`
+	AMPERSAND_GT         // `&>`
+	GT_PIPE              // `>|`
+	LT_GT                // `<>`
+	SEMICOLON            // `;`
+	DOUBLE_SEMICOLON     // `;;`
+	LEFT_PAREN           // `(`
+	RIGHT_PAREN          // `)`
+	DOUBLE_LEFT_PAREN    // `((`
+	DOUBLE_RIGHT_PAREN   // `))`
+	LEFT_BRACKET         // `[`
+	RIGHT_BRACKET        // `]`
+	DOUBLE_LEFT_BRACKET  // `[[`
+	DOUBLE_RIGHT_BRACKET // `]]`
+	LEFT_BRACE           // `{`
+	RIGHT_BRACE          // `}`
+	COMMA                // `,`
+	DOUBLE_COMMA         // `,,`
+	COLON                // `:`
+	BACKSLASH            // `\`
+	DOUBLE_QUOTE         // `"`
+	SINGLE_QUOTE         // `'`
+	QUESTION             // `?`
+	EXCLAMATION          // `!`
+	HASH                 // `#`
+	DOLLAR_BRACE         // `${`
+	DOLLAR_PAREN         // `$(`
+	DOLLAR_DOUBLE_PAREN  // `$((`
+	GT_PAREN             // `>(`
+	LT_PAREN             // `<(`
+	CIRCUMFLEX           // `^`
+	DOUBLE_CIRCUMFLEX    // `^^`
+	COLON_ASSIGN         // `:=`
+	COLON_MINUS          // `:-`
+	COLON_PLUS           // `:+`
+	COLON_QUESTION       // `:?`
+	DOUBLE_SLASH         // `//`
+	DOUBLE_DOT           // `..`
+	INCREMENT            // `++`
+	DECREMENT            // `--`
+	TILDE                // `~`
 
-	SIMPLE_EXPANSION       // Simple variable expansion. eg. $variable_name.
-	FILE_DESCRIPTOR        // 0-9 in io redirection. eg '>&', '<&', ...
-	Word                   // Variable names, functions and other identifiers.
-	LITERAL_STRING         // Single-quoted string or double-quoted string without any expansion
-	PARTIAL_LITERAL_STRING // Double-quoted string before or after expansion, eg. "hello $name mate" : "hello " and " mate" are both partial literal strings
-	NUMBER                 // Integer and float numbers
-	BLANK                  // Spaces and tabs
-	NEWLINE                //  '\n'
-	SPECIAL_VAR            // Special variables like $?, $#, $@, $*, $$, $!, $0, $1, $2, ...
-	ESCAPE_CHAR            // Escaped characters like \n, \t, \\
-	OTHER                  // anything else
-	EOF                    // end of file
+	SIMPLE_EXPANSION // Simple variable expansion. eg. $variable_name.
+	FILE_DESCRIPTOR  // 0-9 in io redirection. eg `>&`, `<&`, ...
+	Word             // Variable names, functions and other identifiers.
+	NUMBER           // Integer and float numbers
+	BLANK            // Spaces and tabs
+	NEWLINE          //  `\n`
+	SPECIAL_VAR      // Special variables like $?, $#, $@, $*, $$, $!, $0, $1, $2, ...
+	ESCAPE_CHAR      // Escaped characters like \n, \t, \\
+	OTHER            // anything else
+	EOF              // end of file
 )
 
 var Keywords = map[string]TokenType{

@@ -247,13 +247,9 @@ func (l *Lexer) NextToken() token.Token {
 	case l.curr == '#':
 		tok.Type, tok.Literal = token.HASH, string(l.curr)
 	case l.curr == '\'':
-		tok.Type = token.LITERAL_STRING
-		l.proceed()
-
-		for l.curr != '\'' {
-			tok.Literal += string(l.curr)
-			l.proceed()
-		}
+		tok.Type, tok.Literal = token.SINGLE_QUOTE, string(l.curr)
+	case l.curr == '"':
+		tok.Type, tok.Literal = token.DOUBLE_QUOTE, string(l.curr)
 	case l.curr == '$':
 		switch l.next {
 		case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '$', '#', '_', '*', '@', '?', '!':
