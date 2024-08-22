@@ -234,6 +234,28 @@ func TestLexer(t *testing.T) {
 		{"  	\t", []token.Token{
 			{Type: token.BLANK, Literal: "  	\t"},
 		}},
+
+		// Others
+		{``, []token.Token{
+			{Type: token.EOF},
+		}},
+
+		// Escapes
+		{`\\\`, []token.Token{
+			// three \ will only produce one \ because the first will escape to the second, the third will be ignored because nothing comes after it
+			{Type: token.OTHER, Literal: `\`},
+		}},
+		// {`\  \$ \< \> \`, []token.Token{
+		// 	// three \ will only produce one \ because the first will escape to the second, the third will be ignored because nothing comes after it
+		// 	{Type: token.OTHER, Literal: `\`},
+		// }},
+
+		// Others
+		{`$ @`, []token.Token{ // three \ will only produce one \ because the first will escape to the second, the third will be ignored because nothing comes after it
+			{Type: token.OTHER, Literal: "$"},
+			{Type: token.BLANK, Literal: " "},
+			{Type: token.OTHER, Literal: "@"},
+		}},
 	}
 
 	for i, tc := range testCases {
@@ -242,7 +264,7 @@ func TestLexer(t *testing.T) {
 			if result := l.NextToken(); tn.Type != result.Type {
 				t.Fatalf(`#%d: wrong token type for %q, want=%d got=%d`, i, tn.Literal, tn.Type, result.Type)
 			} else if tn.Literal != result.Literal {
-				t.Fatalf(`wrong token litreal "%s", expected "%s", case#%d`, result.Literal, tn.Literal, i)
+				t.Fatalf(`#%d: wrong token litreal "%s", expected "%s"`, i, result.Literal, tn.Literal)
 			}
 		}
 

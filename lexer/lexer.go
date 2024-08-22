@@ -275,6 +275,8 @@ func (l *Lexer) NextToken() token.Token {
 					l.proceed()
 					tok.Literal += string(l.curr)
 				}
+			} else {
+				tok.Type, tok.Literal = token.OTHER, "$"
 			}
 		}
 	case isLetter(l.curr):
@@ -315,6 +317,15 @@ func (l *Lexer) NextToken() token.Token {
 		// If numbers appear in file descriptor positions they're treated differently (eg 1>&2)
 		if !isFloat && (prev == '&' || l.next == '>' || l.next == '<') {
 			tok.Type = token.FILE_DESCRIPTOR
+		}
+	case l.curr == '\\':
+		l.proceed()
+
+		switch l.curr {
+		case '\\':
+			tok.Type, tok.Literal = token.OTHER, string(l.curr)
+		case 0:
+			tok.Type = token.EOF
 		}
 	case l.curr == 0:
 		tok.Type = token.EOF
