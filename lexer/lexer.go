@@ -25,11 +25,13 @@ func New(in []byte) Lexer {
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
-	for l.curr == ' ' || l.curr == '\t' {
-		l.proceed()
-	}
-
 	switch {
+	case l.curr == ' ' || l.curr == '\t':
+		tok.Type, tok.Literal = token.BLANK, string(l.curr)
+		for l.next == ' ' || l.next == '\t' {
+			l.proceed()
+			tok.Literal += string(l.curr)
+		}
 	case l.curr == '\n':
 		tok.Type, tok.Literal = token.NEWLINE, string(l.curr)
 	case l.curr == '*':
