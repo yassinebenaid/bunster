@@ -1,18 +1,16 @@
 package ast
 
 type Node interface {
-	TokenLiteral() string
+	node() // Just to distinguish it.
 }
 
-type Program struct {
-	Nodes []Node
+type Script struct {
+	Statements []Node
 }
 
-type CommandCall struct {
-	Command string
-	Args    []string
+type Command struct {
+	Name string
+	Args []string
 }
 
-func (cc CommandCall) TokenLiteral() string {
-	return cc.Command
-}
+func (cc Command) node() {}

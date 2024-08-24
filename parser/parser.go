@@ -24,30 +24,33 @@ func (p *Parser) proceed() {
 	p.nextToken = p.l.NextToken()
 }
 
-func (p *Parser) ParseProgram() ast.Program {
-	var program ast.Program
+func (p *Parser) ParseScript() ast.Script {
+	var script ast.Script
 
 loop:
 	for {
 		p.proceed()
 		switch p.currentToken.Type {
-		case token.IDENT:
-			program.Nodes = append(program.Nodes, p.parseCommandCall())
 		case token.EOF:
 			break loop
+		default:
+			script.Statements = append(script.Statements, p.parseCommand())
 		}
 	}
 
-	return program
+	return script
 }
 
-func (p *Parser) parseCommandCall() ast.CommandCall {
-	var cc ast.CommandCall
+func (p *Parser) parseCommand() ast.Command {
+	var cc ast.Command
 
-	cc.Command = p.currentToken.Literal
+	cc.Name = p.currentToken.Literal
 
 	for {
-		if p.nextToken.Type != token.IDENT {
+		if p.nextToken.Type == token.BLANK {
+			p.proceed()
+		}
+		if p.nextToken.Type != token.Word {
 			break
 		}
 

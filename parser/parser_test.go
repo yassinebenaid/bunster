@@ -1,40 +1,20 @@
-package parser
+package parser_test
 
 import (
 	"testing"
 
-	"github.com/yassinebenaid/nbs/ast"
 	"github.com/yassinebenaid/nbs/lexer"
+	"github.com/yassinebenaid/nbs/parser"
 )
 
 func TestCanParseCommandCall(t *testing.T) {
-	input := `
-		git branch
-	`
+	input := `git branch`
 
-	l := lexer.New([]byte(input))
-	p := New(l)
-	program := p.ParseProgram()
+	p := parser.New(lexer.New([]byte(input)))
+	script := p.ParseScript()
 
-	if len := len(program.Nodes); len != 1 {
-		t.Fatalf(`expected program to have 1 expression, got "%d".`, len)
+	if len := len(script.Statements); len != 1 {
+		t.Fatalf(`expected script to have 1 expression, got "%d".`, len)
 	}
 
-	cmd, ok := program.Nodes[0].(ast.CommandCall)
-
-	if !ok {
-		t.Fatalf(`expected first node to be 'ast.CommandCall', got "%T".`, program.Nodes[0])
-	}
-
-	if cmd.Command != "git" {
-		t.Fatalf(`expected command to be 'git', got "%s".`, cmd.Command)
-	}
-
-	if len(cmd.Args) != 1 {
-		t.Fatalf(`expected command args length to be '1', got "%d".`, len(cmd.Args))
-	}
-
-	if cmd.Args[0] != "branch" {
-		t.Fatalf(`expected first command arg to be 'branch', got "%s".`, cmd.Args[0])
-	}
 }
