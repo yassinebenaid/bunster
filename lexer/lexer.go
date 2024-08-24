@@ -319,12 +319,12 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Type = token.FILE_DESCRIPTOR
 		}
 	case l.curr == '\\':
-		l.proceed()
-
-		switch l.curr {
-		case '\\':
+		switch l.next {
+		case '\\', ' ', '\t', '$', '|', '&', '>', '<', ';', '(', ')':
+			l.proceed()
 			tok.Type, tok.Literal = token.OTHER, string(l.curr)
 		case 0:
+			l.proceed()
 			tok.Type = token.EOF
 		}
 	case l.curr == 0:

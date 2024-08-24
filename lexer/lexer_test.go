@@ -235,26 +235,31 @@ func TestLexer(t *testing.T) {
 			{Type: token.BLANK, Literal: "  	\t"},
 		}},
 
-		// Others
-		{``, []token.Token{
-			{Type: token.EOF},
-		}},
-
 		// Escapes
-		{`\\\`, []token.Token{
-			// three \ will only produce one \ because the first will escape to the second, the third will be ignored because nothing comes after it
-			{Type: token.OTHER, Literal: `\`},
-		}},
-		// {`\  \$ \< \> \`, []token.Token{
-		// 	// three \ will only produce one \ because the first will escape to the second, the third will be ignored because nothing comes after it
-		// 	{Type: token.OTHER, Literal: `\`},
-		// }},
+		{`\`, []token.Token{{Type: token.EOF}}},
+		{`\\`, []token.Token{{Type: token.OTHER, Literal: `\`}}},
+		{`\ `, []token.Token{{Type: token.OTHER, Literal: ` `}}},
+		{`\	`, []token.Token{{Type: token.OTHER, Literal: `	`}}}, // this is a tab
+		{`\$foo`, []token.Token{{Type: token.OTHER, Literal: `$`}, {Type: token.Word, Literal: `foo`}}},
+		{`\|`, []token.Token{{Type: token.OTHER, Literal: `|`}}},
+		{`\&`, []token.Token{{Type: token.OTHER, Literal: `&`}}},
+		{`\>`, []token.Token{{Type: token.OTHER, Literal: `>`}}},
+		{`\<`, []token.Token{{Type: token.OTHER, Literal: `<`}}},
+		{`\;`, []token.Token{{Type: token.OTHER, Literal: `;`}}},
+		{`\(`, []token.Token{{Type: token.OTHER, Literal: `(`}}},
+		{`\)`, []token.Token{{Type: token.OTHER, Literal: `)`}}},
+		// {`\foo`, []token.Token{{Type: token.Word, Literal: `foo`}}},
 
 		// Others
 		{`$ @`, []token.Token{ // three \ will only produce one \ because the first will escape to the second, the third will be ignored because nothing comes after it
 			{Type: token.OTHER, Literal: "$"},
 			{Type: token.BLANK, Literal: " "},
 			{Type: token.OTHER, Literal: "@"},
+		}},
+
+		// Others
+		{``, []token.Token{
+			{Type: token.EOF},
 		}},
 	}
 
