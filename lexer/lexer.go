@@ -25,6 +25,7 @@ func New(in []byte) Lexer {
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
+switch_beginning:
 	switch {
 	case l.curr == ' ' || l.curr == '\t':
 		tok.Type, tok.Literal = token.BLANK, string(l.curr)
@@ -281,13 +282,16 @@ func (l *Lexer) NextToken() token.Token {
 		}
 	case isLetter(l.curr):
 		tok.Literal = string(l.curr)
+		isEscaped := l.prev == '\\'
 
 		for isLetter(l.next) {
 			l.proceed()
 			tok.Literal += string(l.curr)
 		}
 
-		if keyword, ok := token.Keywords[tok.Literal]; ok {
+		if isEscaped {
+			tok.Type = token.OTHER
+		} else if keyword, ok := token.Keywords[tok.Literal]; ok {
 			tok.Type = keyword
 		} else {
 			tok.Type = token.Word
@@ -319,13 +323,15 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Type = token.FILE_DESCRIPTOR
 		}
 	case l.curr == '\\':
-		switch l.next {
+		l.proceed()
+		switch l.curr {
 		case '\\', ' ', '\t', '$', '|', '&', '>', '<', ';', '(', ')':
-			l.proceed()
 			tok.Type, tok.Literal = token.OTHER, string(l.curr)
-		case 0:
-			l.proceed()
-			tok.Type = token.EOF
+		default:
+			// If the current token did not match any of the above control tokens. Then we need to go throught the switch again.
+			// This way we will ignore the \ backslash while returning a valid token.
+			// Otherwise, we would be returning an invalid token with 0 type which is not expected.
+			goto switch_beginning
 		}
 	case l.curr == 0:
 		tok.Type = token.EOF

@@ -248,19 +248,45 @@ func TestLexer(t *testing.T) {
 		{`\;`, []token.Token{{Type: token.OTHER, Literal: `;`}}},
 		{`\(`, []token.Token{{Type: token.OTHER, Literal: `(`}}},
 		{`\)`, []token.Token{{Type: token.OTHER, Literal: `)`}}},
-		// {`\foo`, []token.Token{{Type: token.Word, Literal: `foo`}}},
+		{`\foo`, []token.Token{{Type: token.OTHER, Literal: `foo`}}},
+
+		// escaped keywords
+		{`\if`, []token.Token{{Type: token.OTHER, Literal: `if`}}},
+		{`\if`, []token.Token{{Type: token.OTHER, Literal: `if`}}},
+		{`\then`, []token.Token{{Type: token.OTHER, Literal: `then`}}},
+		{`\else`, []token.Token{{Type: token.OTHER, Literal: `else`}}},
+		{`\elif`, []token.Token{{Type: token.OTHER, Literal: `elif`}}},
+		{`\fi`, []token.Token{{Type: token.OTHER, Literal: `fi`}}},
+		{`\for`, []token.Token{{Type: token.OTHER, Literal: `for`}}},
+		{`\in`, []token.Token{{Type: token.OTHER, Literal: `in`}}},
+		{`\do`, []token.Token{{Type: token.OTHER, Literal: `do`}}},
+		{`\done`, []token.Token{{Type: token.OTHER, Literal: `done`}}},
+		{`\while`, []token.Token{{Type: token.OTHER, Literal: `while`}}},
+		{`\until`, []token.Token{{Type: token.OTHER, Literal: `until`}}},
+		{`\case`, []token.Token{{Type: token.OTHER, Literal: `case`}}},
+		{`\esac`, []token.Token{{Type: token.OTHER, Literal: `esac`}}},
+		{`\function`, []token.Token{{Type: token.OTHER, Literal: `function`}}},
+		{`\select`, []token.Token{{Type: token.OTHER, Literal: `select`}}},
+		{`\trap`, []token.Token{{Type: token.OTHER, Literal: `trap`}}},
+		{`\return`, []token.Token{{Type: token.OTHER, Literal: `return`}}},
+		{`\exit`, []token.Token{{Type: token.OTHER, Literal: `exit`}}},
+		{`\break`, []token.Token{{Type: token.OTHER, Literal: `break`}}},
+		{`\continue`, []token.Token{{Type: token.OTHER, Literal: `continue`}}},
+		{`\declare`, []token.Token{{Type: token.OTHER, Literal: `declare`}}},
+		{`\local`, []token.Token{{Type: token.OTHER, Literal: `local`}}},
+		{`\export`, []token.Token{{Type: token.OTHER, Literal: `export`}}},
+		{`\readonly`, []token.Token{{Type: token.OTHER, Literal: `readonly`}}},
+		{`\unset`, []token.Token{{Type: token.OTHER, Literal: `unset`}}},
 
 		// Others
-		{`$ @`, []token.Token{ // three \ will only produce one \ because the first will escape to the second, the third will be ignored because nothing comes after it
+		{`$ @`, []token.Token{
 			{Type: token.OTHER, Literal: "$"},
 			{Type: token.BLANK, Literal: " "},
 			{Type: token.OTHER, Literal: "@"},
 		}},
 
 		// Others
-		{``, []token.Token{
-			{Type: token.EOF},
-		}},
+		{``, []token.Token{{Type: token.EOF}}},
 	}
 
 	for i, tc := range testCases {
