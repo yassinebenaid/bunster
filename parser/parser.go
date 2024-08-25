@@ -62,24 +62,38 @@ loop:
 }
 
 func (p *Parser) parseSentence() ast.Node {
-	var sentence ast.Node
+	var nodes []ast.Node
+	var is_word bool = true
 
 loop:
 	for {
 		switch p.curr.Type {
 		case token.BLANK, token.EOF:
 			break loop
-		case token.Word:
-			sentence = ast.Word{Value: p.curr.Literal}
 		case token.SIMPLE_EXPANSION:
-			sentence = ast.SimpleExpansion{Name: p.curr.Literal}
+			is_word = false
+			nodes = append(nodes, ast.SimpleExpansion{Name: p.curr.Literal})
 		default:
+			nodes = append(nodes, ast.Word{Value: p.curr.Literal})
 			// TODO: handle error
-			panic("TODO: handle error gracefully")
 		}
 
 		p.proceed()
 	}
 
-	return sentence
+	if is_word {
+		var word string
+
+		for _, node := range nodes {
+			word += node.(ast.Word).Value
+		}
+
+		return ast.Word{Value: word}
+	}
+
+	if len(nodes) == 1 {
+		return nodes[0]
+	}
+
+	return nil
 }
