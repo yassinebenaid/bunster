@@ -71,6 +71,8 @@ loop:
 			break loop
 		case token.Word:
 			sentence = ast.Word{Value: p.curr.Literal}
+		case token.SIMPLE_EXPANSION:
+			sentence = ast.SimpleExpansion{Name: p.curr.Literal}
 		default:
 			// TODO: handle error
 			panic("TODO: handle error gracefully")

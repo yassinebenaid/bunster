@@ -20,3 +20,9 @@ type Command struct {
 }
 
 func (Command) node() {}
+
+type SimpleExpansion struct {
+	Name string
+}
+
+func (SimpleExpansion) node() {}

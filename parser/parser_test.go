@@ -35,6 +35,16 @@ func TestCanParseCommandCall(t *testing.T) {
 				},
 			},
 		}},
+		{`foo $bar`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word{Value: "foo"},
+					Args: []ast.Node{
+						ast.SimpleExpansion{Name: "bar"},
+					},
+				},
+			},
+		}},
 	}
 
 	for i, tc := range testCases {
