@@ -24,6 +24,16 @@ func TestCanParseCommandCall(t *testing.T) {
 				ast.Command{Name: "git"},
 			},
 		}},
+		{`cmd foo`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{Name: "cmd", Args: []string{"foo"}},
+			},
+		}},
+		{`cmd foo bar baz`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{Name: "cmd", Args: []string{"foo","bar","baz"}},
+			},
+		}},
 	}
 
 	for i, tc := range testCases {
