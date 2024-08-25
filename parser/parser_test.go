@@ -1,20 +1,41 @@
 package parser_test
 
 import (
+	"reflect"
 	"testing"
 
+	"github.com/yassinebenaid/godump"
+	"github.com/yassinebenaid/nbs/ast"
 	"github.com/yassinebenaid/nbs/lexer"
 	"github.com/yassinebenaid/nbs/parser"
 )
 
+var dump = (&godump.Dumper{
+	Theme: godump.DefaultTheme,
+}).Sprintln
+
 func TestCanParseCommandCall(t *testing.T) {
-	input := `git branch`
-
-	p := parser.New(lexer.New([]byte(input)))
-	script := p.ParseScript()
-
-	if len := len(script.Statements); len != 1 {
-		t.Fatalf(`expected script to have 1 expression, got "%d".`, len)
+	testCases := []struct {
+		input    string
+		expected ast.Script
+	}{
+		{`git`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{Name: "git"},
+			},
+		}},
 	}
 
+	for i, tc := range testCases {
+		p := parser.New(
+			lexer.New([]byte(tc.input)),
+		)
+
+		script := p.ParseScript()
+
+		if !reflect.DeepEqual(script, tc.expected) {
+			t.Fatalf("\nCase #%d: the script is not as expected:\n\nwant:\n%s\ngot:\n%s", i, dump(tc.expected), dump(script))
+		}
+
+	}
 }
