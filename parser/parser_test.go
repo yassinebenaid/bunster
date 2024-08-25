@@ -35,7 +35,7 @@ func TestCanParseCommandCall(t *testing.T) {
 				},
 			},
 		}},
-		{`foo $bar`, ast.Script{
+		{`foo $bar $FOO_BAR_1234567890`, ast.Script{
 			Statements: []ast.Node{
 				ast.Command{
 					Name: ast.Word{Value: "foo"},

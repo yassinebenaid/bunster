@@ -272,7 +272,7 @@ switch_beginning:
 		default:
 			if isLetter(l.next) || l.next == '_' {
 				tok.Type = token.SIMPLE_EXPANSION
-				for isLetter(l.next) || l.next == '_' {
+				for isLetter(l.next) || l.next == '_' || (l.next <= '9' && l.next >= '0') {
 					l.proceed()
 					tok.Literal += string(l.curr)
 				}
