@@ -43,19 +43,37 @@ func (p *Parser) ParseScript() ast.Script {
 func (p *Parser) parseCommand() ast.Command {
 	var cc ast.Command
 
-	cc.Name = p.curr.Literal
+	cc.Name = p.parseSentence()
 
+	// for {
+	// 	if p.next.Type == token.BLANK {
+	// 		p.proceed()
+	// 	}
+	// 	if p.next.Type != token.Word {
+	// 		break
+	// 	}
+
+	// 	p.proceed()
+	// 	cc.Args = append(cc.Args, p.curr.Literal)
+	// }
+
+	return cc
+}
+
+func (p *Parser) parseSentence() ast.Node {
+	var sentence ast.Node
+
+loop:
 	for {
-		if p.next.Type == token.BLANK {
-			p.proceed()
-		}
-		if p.next.Type != token.Word {
-			break
+		switch p.curr.Type {
+		case token.BLANK, token.EOF:
+			break loop
+		case token.Word:
+			sentence = ast.Word{Value: p.curr.Literal}
 		}
 
 		p.proceed()
-		cc.Args = append(cc.Args, p.curr.Literal)
 	}
 
-	return cc
+	return sentence
 }

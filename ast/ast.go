@@ -8,9 +8,15 @@ type Script struct {
 	Statements []Node
 }
 
-type Command struct {
-	Name string
-	Args []string
+type Word struct {
+	Value string
 }
 
-func (cc Command) node() {}
+func (Word) node() {}
+
+type Command struct {
+	Name Node
+	Args []Node
+}
+
+func (Command) node() {}
