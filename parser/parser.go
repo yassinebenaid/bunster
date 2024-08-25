@@ -41,23 +41,24 @@ func (p *Parser) ParseScript() ast.Script {
 }
 
 func (p *Parser) parseCommand() ast.Command {
-	var cc ast.Command
+	var cmd ast.Command
 
-	cc.Name = p.parseSentence()
+	cmd.Name = p.parseSentence()
 
-	// for {
-	// 	if p.next.Type == token.BLANK {
-	// 		p.proceed()
-	// 	}
-	// 	if p.next.Type != token.Word {
-	// 		break
-	// 	}
+loop:
+	for ; ; p.proceed() {
+		switch p.curr.Type {
+		case token.BLANK:
+			continue
+		case token.EOF:
+			break loop
+		default:
+			cmd.Args = append(cmd.Args, p.parseSentence())
+		}
 
-	// 	p.proceed()
-	// 	cc.Args = append(cc.Args, p.curr.Literal)
-	// }
+	}
 
-	return cc
+	return cmd
 }
 
 func (p *Parser) parseSentence() ast.Node {
@@ -70,6 +71,9 @@ loop:
 			break loop
 		case token.Word:
 			sentence = ast.Word{Value: p.curr.Literal}
+		default:
+			// TODO: handle error
+			panic("TODO: handle error gracefully")
 		}
 
 		p.proceed()
