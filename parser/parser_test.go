@@ -21,16 +21,16 @@ func TestCanParseCommandCall(t *testing.T) {
 	}{
 		{`git`, ast.Script{
 			Statements: []ast.Node{
-				ast.Command{Name: ast.Word{Value: "git"}},
+				ast.Command{Name: ast.Word("git")},
 			},
 		}},
 		{`foo bar baz`, ast.Script{
 			Statements: []ast.Node{
 				ast.Command{
-					Name: ast.Word{Value: "foo"},
+					Name: ast.Word("foo"),
 					Args: []ast.Node{
-						ast.Word{Value: "bar"},
-						ast.Word{Value: "baz"},
+						ast.Word("bar"),
+						ast.Word("baz"),
 					},
 				},
 			},
@@ -38,10 +38,10 @@ func TestCanParseCommandCall(t *testing.T) {
 		{`foo $bar $FOO_BAR_1234567890`, ast.Script{
 			Statements: []ast.Node{
 				ast.Command{
-					Name: ast.Word{Value: "foo"},
+					Name: ast.Word("foo"),
 					Args: []ast.Node{
-						ast.SimpleExpansion{Name: "bar"},
-						ast.SimpleExpansion{Name: "FOO_BAR_1234567890"},
+						ast.SimpleExpansion("bar"),
+						ast.SimpleExpansion("FOO_BAR_1234567890"),
 					},
 				},
 			},
@@ -49,10 +49,10 @@ func TestCanParseCommandCall(t *testing.T) {
 		{`/usr/bin/foo bar baz`, ast.Script{
 			Statements: []ast.Node{
 				ast.Command{
-					Name: ast.Word{Value: "/usr/bin/foo"},
+					Name: ast.Word("/usr/bin/foo"),
 					Args: []ast.Node{
-						ast.Word{Value: "bar"},
-						ast.Word{Value: "baz"},
+						ast.Word("bar"),
+						ast.Word("baz"),
 					},
 				},
 			},
@@ -60,9 +60,9 @@ func TestCanParseCommandCall(t *testing.T) {
 		{`/usr/bin/foo-bar baz`, ast.Script{
 			Statements: []ast.Node{
 				ast.Command{
-					Name: ast.Word{Value: "/usr/bin/foo-bar"},
+					Name: ast.Word("/usr/bin/foo-bar"),
 					Args: []ast.Node{
-						ast.Word{Value: "baz"},
+						ast.Word("baz"),
 					},
 				},
 			},
@@ -72,14 +72,14 @@ func TestCanParseCommandCall(t *testing.T) {
 				ast.Command{
 					Name: ast.Concatination{
 						Nodes: []ast.Node{
-							ast.Word{Value: "/usr/bin/"},
-							ast.SimpleExpansion{Name: "BINARY_NAME"},
+							ast.Word("/usr/bin/"),
+							ast.SimpleExpansion("BINARY_NAME"),
 						},
 					},
 					Args: []ast.Node{
-						ast.Word{Value: "--option"},
-						ast.Word{Value: "-f"},
-						ast.Word{Value: "--do=something"},
+						ast.Word("--option"),
+						ast.Word("-f"),
+						ast.Word("--do=something"),
 					},
 				},
 			},

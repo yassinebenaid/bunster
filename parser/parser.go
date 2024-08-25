@@ -72,9 +72,9 @@ loop:
 			break loop
 		case token.SIMPLE_EXPANSION:
 			is_word = false
-			nodes = append(nodes, ast.SimpleExpansion{Name: p.curr.Literal})
+			nodes = append(nodes, ast.SimpleExpansion(p.curr.Literal))
 		default:
-			nodes = append(nodes, ast.Word{Value: p.curr.Literal})
+			nodes = append(nodes, ast.Word(p.curr.Literal))
 			// TODO: handle error
 		}
 
@@ -92,13 +92,13 @@ loop:
 		for _, node := range nodes {
 			w, ok := node.(ast.Word)
 			if ok {
-				word.Value += w.Value
+				word += w
 			} else {
-				if word.Value != "" {
+				if word != "" {
 					conc.Nodes = append(conc.Nodes, word)
 				}
 				conc.Nodes = append(conc.Nodes, node)
-				word.Value = ""
+				word = ""
 
 			}
 		}
@@ -106,11 +106,9 @@ loop:
 		return conc
 	}
 
-	var word string
-
+	var word ast.Word
 	for _, node := range nodes {
-		word += node.(ast.Word).Value
+		word += node.(ast.Word)
 	}
-
-	return ast.Word{Value: word}
+	return word
 }

@@ -8,9 +8,7 @@ type Script struct {
 	Statements []Node
 }
 
-type Word struct {
-	Value string
-}
+type Word string
 
 func (Word) node() {}
 
@@ -21,9 +19,7 @@ type Command struct {
 
 func (Command) node() {}
 
-type SimpleExpansion struct {
-	Name string
-}
+type SimpleExpansion string
 
 func (SimpleExpansion) node() {}
 
