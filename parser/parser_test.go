@@ -41,6 +41,7 @@ func TestCanParseCommandCall(t *testing.T) {
 					Name: ast.Word{Value: "foo"},
 					Args: []ast.Node{
 						ast.SimpleExpansion{Name: "bar"},
+						ast.SimpleExpansion{Name: "FOO_BAR_1234567890"},
 					},
 				},
 			},
