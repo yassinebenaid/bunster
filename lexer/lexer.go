@@ -327,6 +327,9 @@ switch_beginning:
 		switch l.curr {
 		case '\\', ' ', '\t', '$', '|', '&', '>', '<', ';', '(', ')':
 			tok.Type, tok.Literal = token.OTHER, string(l.curr)
+		case '\n':
+			l.proceed()
+			fallthrough
 		default:
 			// If the current token did not match any of the above control tokens. Then we need to go throught the switch again.
 			// This way we will ignore the \ backslash while returning a valid token.
