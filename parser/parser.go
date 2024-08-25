@@ -81,19 +81,36 @@ loop:
 		p.proceed()
 	}
 
-	if is_word {
-		var word string
-
-		for _, node := range nodes {
-			word += node.(ast.Word).Value
-		}
-
-		return ast.Word{Value: word}
-	}
-
 	if len(nodes) == 1 {
 		return nodes[0]
 	}
 
-	return nil
+	if !is_word {
+		var conc ast.Concatination
+		var word ast.Word
+
+		for _, node := range nodes {
+			w, ok := node.(ast.Word)
+			if ok {
+				word.Value += w.Value
+			} else {
+				if word.Value != "" {
+					conc.Nodes = append(conc.Nodes, word)
+				}
+				conc.Nodes = append(conc.Nodes, node)
+				word.Value = ""
+
+			}
+		}
+
+		return conc
+	}
+
+	var word string
+
+	for _, node := range nodes {
+		word += node.(ast.Word).Value
+	}
+
+	return ast.Word{Value: word}
 }

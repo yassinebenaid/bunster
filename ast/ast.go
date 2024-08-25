@@ -26,3 +26,9 @@ type SimpleExpansion struct {
 }
 
 func (SimpleExpansion) node() {}
+
+type Concatination struct {
+	Nodes []Node
+}
+
+func (Concatination) node() {}

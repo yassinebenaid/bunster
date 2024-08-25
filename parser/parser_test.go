@@ -57,6 +57,33 @@ func TestCanParseCommandCall(t *testing.T) {
 				},
 			},
 		}},
+		{`/usr/bin/foo-bar baz`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word{Value: "/usr/bin/foo-bar"},
+					Args: []ast.Node{
+						ast.Word{Value: "baz"},
+					},
+				},
+			},
+		}},
+		{`/usr/bin/$BINARY_NAME --option -f --do=something`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Concatination{
+						Nodes: []ast.Node{
+							ast.Word{Value: "/usr/bin/"},
+							ast.SimpleExpansion{Name: "BINARY_NAME"},
+						},
+					},
+					Args: []ast.Node{
+						ast.Word{Value: "--option"},
+						ast.Word{Value: "-f"},
+						ast.Word{Value: "--do=something"},
+					},
+				},
+			},
+		}},
 	}
 
 	for i, tc := range testCases {
