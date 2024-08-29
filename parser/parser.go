@@ -80,22 +80,22 @@ loop:
 	}
 
 	var conc ast.Concatination
-	var word ast.Word
+	var mergedWords ast.Word
 
 	for i, node := range nodes {
-		w, ok := node.(ast.Word)
-		if ok {
-			word += w
+
+		if w, ok := node.(ast.Word); ok {
+			mergedWords += w
 		} else {
-			if word != "" {
-				conc.Nodes = append(conc.Nodes, word)
-				word = ""
+			if mergedWords != "" {
+				conc.Nodes = append(conc.Nodes, mergedWords)
+				mergedWords = ""
 			}
 			conc.Nodes = append(conc.Nodes, node)
 		}
 
-		if i == len(nodes)-1 && word != "" {
-			conc.Nodes = append(conc.Nodes, word)
+		if i == len(nodes)-1 && mergedWords != "" {
+			conc.Nodes = append(conc.Nodes, mergedWords)
 		}
 	}
 
