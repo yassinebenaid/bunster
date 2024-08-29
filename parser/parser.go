@@ -103,6 +103,10 @@ loop:
 			}
 		}
 
+		if word != "" {
+			conc.Nodes = append(conc.Nodes, word)
+		}
+
 		return conc
 	}
 

@@ -11,7 +11,8 @@ import (
 )
 
 var dump = (&godump.Dumper{
-	Theme: godump.DefaultTheme,
+	Theme:                   godump.DefaultTheme,
+	ShowPrimitiveNamedTypes: true,
 }).Sprintln
 
 func TestCanParseCommandCall(t *testing.T) {
@@ -67,7 +68,7 @@ func TestCanParseCommandCall(t *testing.T) {
 				},
 			},
 		}},
-		{`/usr/bin/$BINARY_NAME --option -f --do=something`, ast.Script{
+		{`/usr/bin/$BINARY_NAME --path=/home/$USER/dir --option -f --do=something`, ast.Script{
 			Statements: []ast.Node{
 				ast.Command{
 					Name: ast.Concatination{
@@ -77,6 +78,13 @@ func TestCanParseCommandCall(t *testing.T) {
 						},
 					},
 					Args: []ast.Node{
+						ast.Concatination{
+							Nodes: []ast.Node{
+								ast.Word("--path=/home/"),
+								ast.SimpleExpansion("USER"),
+								ast.Word("/dir"),
+							},
+						},
 						ast.Word("--option"),
 						ast.Word("-f"),
 						ast.Word("--do=something"),
