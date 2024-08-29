@@ -82,7 +82,7 @@ loop:
 	var conc ast.Concatination
 	var word ast.Word
 
-	for _, node := range nodes {
+	for i, node := range nodes {
 		w, ok := node.(ast.Word)
 		if ok {
 			word += w
@@ -93,10 +93,10 @@ loop:
 			}
 			conc.Nodes = append(conc.Nodes, node)
 		}
-	}
 
-	if word != "" {
-		conc.Nodes = append(conc.Nodes, word)
+		if i == len(nodes)-1 && word != "" {
+			conc.Nodes = append(conc.Nodes, word)
+		}
 	}
 
 	if len(conc.Nodes) == 1 {
