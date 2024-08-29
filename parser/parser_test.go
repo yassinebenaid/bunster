@@ -68,7 +68,7 @@ func TestCanParseCommandCall(t *testing.T) {
 				},
 			},
 		}},
-		{`/usr/bin/$BINARY_NAME --path=/home/$USER/dir --option -f --do=something`, ast.Script{
+		{`/usr/bin/$BINARY_NAME --path=/home/$USER/dir --option -f --do=something $HOME$DIR_NAME$PKG_NAME/foo`, ast.Script{
 			Statements: []ast.Node{
 				ast.Command{
 					Name: ast.Concatination{
@@ -88,6 +88,14 @@ func TestCanParseCommandCall(t *testing.T) {
 						ast.Word("--option"),
 						ast.Word("-f"),
 						ast.Word("--do=something"),
+						ast.Concatination{
+							Nodes: []ast.Node{
+								ast.SimpleExpansion("HOME"),
+								ast.SimpleExpansion("DIR_NAME"),
+								ast.SimpleExpansion("PKG_NAME"),
+								ast.Word("/foo"),
+							},
+						},
 					},
 				},
 			},
