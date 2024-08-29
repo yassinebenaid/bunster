@@ -63,7 +63,6 @@ loop:
 
 func (p *Parser) parseSentence() ast.Node {
 	var nodes []ast.Node
-	var is_word bool = true
 
 loop:
 	for {
@@ -71,7 +70,6 @@ loop:
 		case token.BLANK, token.EOF:
 			break loop
 		case token.SIMPLE_EXPANSION:
-			is_word = false
 			nodes = append(nodes, ast.SimpleExpansion(p.curr.Literal))
 		default:
 			nodes = append(nodes, ast.Word(p.curr.Literal))
@@ -81,38 +79,30 @@ loop:
 		p.proceed()
 	}
 
-	if len(nodes) == 1 {
-		return nodes[0]
-	}
-
-	if !is_word {
-		var conc ast.Concatination
-		var word ast.Word
-
-		for _, node := range nodes {
-			w, ok := node.(ast.Word)
-			if ok {
-				word += w
-			} else {
-				if word != "" {
-					conc.Nodes = append(conc.Nodes, word)
-				}
-				conc.Nodes = append(conc.Nodes, node)
-				word = ""
-
-			}
-		}
-
-		if word != "" {
-			conc.Nodes = append(conc.Nodes, word)
-		}
-
-		return conc
-	}
-
+	var conc ast.Concatination
 	var word ast.Word
+
 	for _, node := range nodes {
-		word += node.(ast.Word)
+		w, ok := node.(ast.Word)
+		if ok {
+			word += w
+		} else {
+			if word != "" {
+				conc.Nodes = append(conc.Nodes, word)
+			}
+			conc.Nodes = append(conc.Nodes, node)
+			word = ""
+
+		}
 	}
-	return word
+
+	if word != "" {
+		conc.Nodes = append(conc.Nodes, word)
+	}
+
+	if len(conc.Nodes) == 1 {
+		return conc.Nodes[0]
+	}
+
+	return conc
 }
