@@ -89,10 +89,9 @@ loop:
 		} else {
 			if word != "" {
 				conc.Nodes = append(conc.Nodes, word)
+				word = ""
 			}
 			conc.Nodes = append(conc.Nodes, node)
-			word = ""
-
 		}
 	}
 
