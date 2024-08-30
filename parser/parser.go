@@ -71,6 +71,8 @@ loop:
 			break loop
 		case token.SIMPLE_EXPANSION:
 			nodes = append(nodes, ast.SimpleExpansion(p.curr.Literal))
+		case token.SINGLE_QUOTE:
+			nodes = append(nodes, p.parseLiteralString())
 		default:
 			nodes = append(nodes, ast.Word(p.curr.Literal))
 			// TODO: handle error
@@ -104,4 +106,16 @@ loop:
 	}
 
 	return conc
+}
+
+func (p *Parser) parseLiteralString() ast.Word {
+	p.proceed()
+	var word string
+
+	for p.curr.Type != token.SINGLE_QUOTE && p.curr.Type != token.EOF {
+		word += (p.curr.Literal)
+		p.proceed()
+	}
+
+	return ast.Word(word)
 }

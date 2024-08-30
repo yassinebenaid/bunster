@@ -76,34 +76,12 @@ var testCases = []struct {
 	}},
 
 	{"Strings", []testCase{
-		{`/usr/bin/$BINARY_NAME --path=/home/$USER/dir --option -f --do=something $HOME$DIR_NAME$PKG_NAME/foo`, ast.Script{
+		{`cmd 'hello world'`, ast.Script{
 			Statements: []ast.Node{
 				ast.Command{
-					Name: ast.Concatination{
-						Nodes: []ast.Node{
-							ast.Word("/usr/bin/"),
-							ast.SimpleExpansion("BINARY_NAME"),
-						},
-					},
+					Name: ast.Word("cmd"),
 					Args: []ast.Node{
-						ast.Concatination{
-							Nodes: []ast.Node{
-								ast.Word("--path=/home/"),
-								ast.SimpleExpansion("USER"),
-								ast.Word("/dir"),
-							},
-						},
-						ast.Word("--option"),
-						ast.Word("-f"),
-						ast.Word("--do=something"),
-						ast.Concatination{
-							Nodes: []ast.Node{
-								ast.SimpleExpansion("HOME"),
-								ast.SimpleExpansion("DIR_NAME"),
-								ast.SimpleExpansion("PKG_NAME"),
-								ast.Word("/foo"),
-							},
-						},
+						ast.Word("hello world"),
 					},
 				},
 			},
