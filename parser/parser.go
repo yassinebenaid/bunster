@@ -117,5 +117,7 @@ func (p *Parser) parseLiteralString() ast.Word {
 		p.proceed()
 	}
 
+	//TODO: handle error here
+
 	return ast.Word(word)
 }

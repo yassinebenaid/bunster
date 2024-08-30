@@ -86,6 +86,26 @@ var testCases = []struct {
 				},
 			},
 		}},
+		{`cmd 'if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset'`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word("if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset"),
+					},
+				},
+			},
+		}},
+		{`cmd '+ - * / % %% = += -= *= /= == != < <= > >= =~ && || |'`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word("+ - * / % %% = += -= *= /= == != < <= > >= =~ && || |"),
+					},
+				},
+			},
+		}},
 	}},
 
 	{"Concatination", []testCase{
