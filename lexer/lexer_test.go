@@ -327,15 +327,30 @@ func TestLexerContext(t *testing.T) {
 			}},
 		},
 		{
-			`hello world'`,
+			`+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : \ " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~`,
 			[]token.Token{{
 				Type:    token.OTHER,
-				Literal: `hello world`,
-			}, {
-				Type:    token.SINGLE_QUOTE,
-				Literal: `'`,
+				Literal: `+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : \ " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~`,
 			}},
 		},
+		{
+			`$$ $@ $? $# $! $_ $* $0$1$2 $3$4 $5 $6 $7 $8 $9 $10 foo bar foo-bar $variable_name $variable-name 
+			$concatinated$VAIABLE$VAR_0987654321 0123456789 123.456 .123 123. 1.2.3 .abc 1.c 12.34abc 123< <&45 33<&45 5<< 6<<- 1> 1>&2 7>> 81>| 19<>
+			   	\t`,
+			[]token.Token{{
+				Type: token.OTHER,
+				Literal: `$$ $@ $? $# $! $_ $* $0$1$2 $3$4 $5 $6 $7 $8 $9 $10 foo bar foo-bar $variable_name $variable-name 
+			$concatinated$VAIABLE$VAR_0987654321 0123456789 123.456 .123 123. 1.2.3 .abc 1.c 12.34abc 123< <&45 33<&45 5<< 6<<- 1> 1>&2 7>> 81>| 19<>
+			   	\t`,
+			}},
+		},
+		{`hello world'`, []token.Token{
+			{Type: token.OTHER, Literal: `hello world`},
+			{Type: token.SINGLE_QUOTE, Literal: `'`},
+		}},
+		{"\\\n ", []token.Token{
+			{Type: token.OTHER, Literal: "\\\n"},
+		}},
 	}
 
 	for i, tc := range testCases {
