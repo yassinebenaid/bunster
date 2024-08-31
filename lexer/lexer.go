@@ -4,7 +4,16 @@ import (
 	"github.com/yassinebenaid/nbs/token"
 )
 
+type context byte
+
+const (
+	CTX_DEFAULT context = iota
+	CTX_LITERAL_STRING
+)
+
 type Lexer struct {
+	Context context
+
 	input []byte
 	pos   int
 	prev  byte
@@ -13,7 +22,7 @@ type Lexer struct {
 }
 
 func New(in []byte) Lexer {
-	l := Lexer{input: in}
+	l := Lexer{input: in, Context: CTX_DEFAULT}
 
 	// read twice so that 'curr' and 'next' get initialized
 	l.proceed()
@@ -27,6 +36,15 @@ func (l *Lexer) NextToken() token.Token {
 
 switch_beginning:
 	switch {
+	case l.Context == CTX_LITERAL_STRING:
+		tok.Type, tok.Literal = token.OTHER, string(l.curr)
+		for l.next != 0 && l.next != '\'' {
+			l.proceed()
+			tok.Literal += string(l.curr)
+		}
+
+		// revert the context back
+		l.Context = CTX_DEFAULT
 	case l.curr == ' ' || l.curr == '\t':
 		tok.Type, tok.Literal = token.BLANK, string(l.curr)
 		for l.next == ' ' || l.next == '\t' {

@@ -3,9 +3,15 @@ package lexer_test
 import (
 	"testing"
 
+	"github.com/yassinebenaid/godump"
 	"github.com/yassinebenaid/nbs/lexer"
 	"github.com/yassinebenaid/nbs/token"
 )
+
+var dump = (&godump.Dumper{
+	Theme:                   godump.DefaultTheme,
+	ShowPrimitiveNamedTypes: true,
+}).Sprintln
 
 func TestLexer(t *testing.T) {
 	testCases := []struct {
@@ -304,6 +310,48 @@ func TestLexer(t *testing.T) {
 		// EOF
 		if result := l.NextToken(); token.EOF != result.Type {
 			t.Fatalf(`#%d: expected EOF, got %d for %q. ("%v")`, i, result.Type, result.Literal, tc.input)
+		}
+	}
+}
+
+func TestLexerContext(t *testing.T) {
+	testCases := []struct {
+		input  string
+		tokens []token.Token
+	}{
+		{
+			`if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset`,
+			[]token.Token{{
+				Type:    token.OTHER,
+				Literal: `if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset`,
+			}},
+		},
+		{
+			`hello world'`,
+			[]token.Token{{
+				Type:    token.OTHER,
+				Literal: `hello world`,
+			}, {
+				Type:    token.SINGLE_QUOTE,
+				Literal: `'`,
+			}},
+		},
+	}
+
+	for i, tc := range testCases {
+		l := lexer.New([]byte(tc.input))
+		l.Context = lexer.CTX_LITERAL_STRING
+
+		for _, tn := range tc.tokens {
+			result := l.NextToken()
+			if tn != result {
+				t.Fatalf("\nCase: %d\nWant:\n %s\n Got:\n%s", i, dump(tn), dump(result))
+			}
+		}
+
+		// EOF
+		if result := l.NextToken(); token.EOF != result.Type {
+			t.Fatalf("\nCase#%d: expected EOF, got:\n %s ", i, dump(result))
 		}
 	}
 }
