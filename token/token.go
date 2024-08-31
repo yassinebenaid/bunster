@@ -145,3 +145,5 @@ var Keywords = map[string]TokenType{
 	"readonly": READONLY,
 	"unset":    UNSET,
 }
+
+const ()
