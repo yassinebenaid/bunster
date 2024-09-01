@@ -106,11 +106,12 @@ var testCases = []struct {
 				},
 			},
 		}},
-		{`cmd '\'`, ast.Script{
+		{`cmd '' '\'`, ast.Script{
 			Statements: []ast.Node{
 				ast.Command{
 					Name: ast.Word("cmd"),
 					Args: []ast.Node{
+						ast.Word(""),
 						ast.Word(`\`),
 					},
 				},

@@ -83,20 +83,22 @@ loop:
 
 	var conc ast.Concatination
 	var mergedWords ast.Word
+	var hasWords bool
 
 	for i, node := range nodes {
 
 		if w, ok := node.(ast.Word); ok {
 			mergedWords += w
+			hasWords = true
 		} else {
-			if mergedWords != "" {
+			if hasWords {
 				conc.Nodes = append(conc.Nodes, mergedWords)
-				mergedWords = ""
+				mergedWords, hasWords = "", false
 			}
 			conc.Nodes = append(conc.Nodes, node)
 		}
 
-		if i == len(nodes)-1 && mergedWords != "" {
+		if i == len(nodes)-1 && hasWords {
 			conc.Nodes = append(conc.Nodes, mergedWords)
 		}
 	}
@@ -110,14 +112,18 @@ loop:
 
 func (p *Parser) parseLiteralString() ast.Word {
 	p.proceed()
-	var word string
 
-	for p.curr.Type != token.SINGLE_QUOTE && p.curr.Type != token.EOF {
-		word += (p.curr.Literal)
-		p.proceed()
+	if p.curr.Type == token.SINGLE_QUOTE {
+		return ast.Word("")
 	}
 
-	//TODO: handle error here
+	word := p.curr.Literal
+	p.proceed()
+
+	if p.curr.Type != token.SINGLE_QUOTE {
+		//TODO: handle error here
+		panic("TODO: handle error here")
+	}
 
 	return ast.Word(word)
 }
