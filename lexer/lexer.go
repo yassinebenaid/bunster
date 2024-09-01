@@ -7,22 +7,21 @@ import (
 type context byte
 
 const (
-	CTX_DEFAULT context = iota
-	CTX_LITERAL_STRING
+	ctx_DEFAULT context = iota
+	ctx_LITERAL_STRING
 )
 
 type Lexer struct {
-	Context context
-
 	input []byte
 	pos   int
 	prev  byte
 	curr  byte
 	next  byte
+	ctx   context
 }
 
 func New(in []byte) Lexer {
-	l := Lexer{input: in, Context: CTX_DEFAULT}
+	l := Lexer{input: in}
 
 	// read twice so that 'curr' and 'next' get initialized
 	l.proceed()
@@ -31,28 +30,18 @@ func New(in []byte) Lexer {
 	return l
 }
 
-func (l *Lexer) ChangeContext(c context) {
-	l.Context = c
-}
-
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
 switch_beginning:
 	switch {
-	case l.Context == CTX_LITERAL_STRING:
-		tok.Type = token.OTHER
-		if l.curr != 0 && l.curr != '\'' {
-			tok.Literal = string(l.curr)
+	case l.ctx == ctx_LITERAL_STRING && l.curr != '\'' && l.curr != 0:
+		tok.Type, tok.Literal = token.OTHER, string(l.curr)
 
-			for l.next != 0 && l.next != '\'' {
-				l.proceed()
-				tok.Literal += string(l.curr)
-			}
+		for l.next != 0 && l.next != '\'' {
+			l.proceed()
+			tok.Literal += string(l.curr)
 		}
-
-		// revert the context back
-		l.Context = CTX_DEFAULT
 	case l.curr == ' ' || l.curr == '\t':
 		tok.Type, tok.Literal = token.BLANK, string(l.curr)
 		for l.next == ' ' || l.next == '\t' {
@@ -276,6 +265,11 @@ switch_beginning:
 	case l.curr == '#':
 		tok.Type, tok.Literal = token.HASH, string(l.curr)
 	case l.curr == '\'':
+		if l.ctx == ctx_DEFAULT {
+			l.ctx = ctx_LITERAL_STRING
+		} else {
+			l.ctx = ctx_DEFAULT
+		}
 		tok.Type, tok.Literal = token.SINGLE_QUOTE, string(l.curr)
 	case l.curr == '"':
 		tok.Type, tok.Literal = token.DOUBLE_QUOTE, string(l.curr)

@@ -286,14 +286,69 @@ func TestLexer(t *testing.T) {
 		{`\readonly`, []token.Token{{Type: token.OTHER, Literal: `readonly`}}},
 		{`\unset`, []token.Token{{Type: token.OTHER, Literal: `unset`}}},
 
+		// Literal strings
+		{`'hello world'`, []token.Token{
+			{Type: token.SINGLE_QUOTE, Literal: `'`},
+			{Type: token.OTHER, Literal: `hello world`},
+			{Type: token.SINGLE_QUOTE, Literal: `'`},
+		}},
+		{`''`, []token.Token{
+			{Type: token.SINGLE_QUOTE, Literal: `'`},
+			{Type: token.SINGLE_QUOTE, Literal: `'`},
+		}},
+		{`'\'`, []token.Token{
+			{Type: token.SINGLE_QUOTE, Literal: `'`},
+			{Type: token.OTHER, Literal: `\`},
+			{Type: token.SINGLE_QUOTE, Literal: `'`},
+		}},
+		{
+			`'if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset'`,
+			[]token.Token{
+				{Type: token.SINGLE_QUOTE, Literal: `'`},
+				{
+					Type:    token.OTHER,
+					Literal: `if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset`,
+				},
+				{Type: token.SINGLE_QUOTE, Literal: `'`},
+			},
+		},
+		{
+			`'+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : \ " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~'`,
+			[]token.Token{
+				{Type: token.SINGLE_QUOTE, Literal: `'`},
+				{
+					Type:    token.OTHER,
+					Literal: `+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : \ " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~`,
+				},
+				{Type: token.SINGLE_QUOTE, Literal: `'`},
+			},
+		},
+		{
+			`'$$ $@ $? $# $! $_ $* $0$1$2 $3$4 $5 $6 $7 $8 $9 $10 foo bar foo-bar $variable_name $variable-name
+					$concatinated$VAIABLE$VAR_0987654321 0123456789 123.456 .123 123. 1.2.3 .abc 1.c 12.34abc 123< <&45 33<&45 5<< 6<<- 1> 1>&2 7>> 81>| 19<>
+					   	\t'`,
+			[]token.Token{
+				{Type: token.SINGLE_QUOTE, Literal: `'`},
+				{
+					Type: token.OTHER,
+					Literal: `$$ $@ $? $# $! $_ $* $0$1$2 $3$4 $5 $6 $7 $8 $9 $10 foo bar foo-bar $variable_name $variable-name
+					$concatinated$VAIABLE$VAR_0987654321 0123456789 123.456 .123 123. 1.2.3 .abc 1.c 12.34abc 123< <&45 33<&45 5<< 6<<- 1> 1>&2 7>> 81>| 19<>
+					   	\t`,
+				},
+				{Type: token.SINGLE_QUOTE, Literal: `'`},
+			},
+		},
+		{"'\\\n'", []token.Token{
+			{Type: token.SINGLE_QUOTE, Literal: `'`},
+			{Type: token.OTHER, Literal: "\\\n"},
+			{Type: token.SINGLE_QUOTE, Literal: `'`},
+		}},
 		// Others
 		{`$ @`, []token.Token{
 			{Type: token.OTHER, Literal: "$"},
 			{Type: token.BLANK, Literal: " "},
 			{Type: token.OTHER, Literal: "@"},
 		}},
-
-		// Others
 		{"\n", []token.Token{{Type: token.NEWLINE, Literal: "\n"}}},
 		{``, []token.Token{{Type: token.EOF}}},
 	}
@@ -301,79 +356,16 @@ func TestLexer(t *testing.T) {
 	for i, tc := range testCases {
 		l := lexer.New([]byte(tc.input))
 
-		for _, tn := range tc.tokens {
+		for j, tn := range tc.tokens {
 			result := l.NextToken()
 			if tn != result {
-				t.Fatalf("\nCase: %d\nWant:\n %s\n Got:\n%s", i, dump(tn), dump(result))
+				t.Fatalf("\nCase: %d:%d\nWant:\n%s\nGot:\n%s", i, j, dump(tn), dump(result))
 			}
 		}
 
 		// EOF
 		if result := l.NextToken(); token.EOF != result.Type {
-			t.Fatalf("\nCase#%d: expected EOF, got:\n %s ", i, dump(result))
-		}
-	}
-}
-
-func TestLexerLiteralStringContext(t *testing.T) {
-	testCases := []struct {
-		input  string
-		tokens []token.Token
-	}{
-		{
-			`if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset`,
-			[]token.Token{{
-				Type:    token.OTHER,
-				Literal: `if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset`,
-			}},
-		},
-		{
-			`+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : \ " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~`,
-			[]token.Token{{
-				Type:    token.OTHER,
-				Literal: `+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : \ " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~`,
-			}},
-		},
-		{
-			`$$ $@ $? $# $! $_ $* $0$1$2 $3$4 $5 $6 $7 $8 $9 $10 foo bar foo-bar $variable_name $variable-name 
-			$concatinated$VAIABLE$VAR_0987654321 0123456789 123.456 .123 123. 1.2.3 .abc 1.c 12.34abc 123< <&45 33<&45 5<< 6<<- 1> 1>&2 7>> 81>| 19<>
-			   	\t`,
-			[]token.Token{{
-				Type: token.OTHER,
-				Literal: `$$ $@ $? $# $! $_ $* $0$1$2 $3$4 $5 $6 $7 $8 $9 $10 foo bar foo-bar $variable_name $variable-name 
-			$concatinated$VAIABLE$VAR_0987654321 0123456789 123.456 .123 123. 1.2.3 .abc 1.c 12.34abc 123< <&45 33<&45 5<< 6<<- 1> 1>&2 7>> 81>| 19<>
-			   	\t`,
-			}},
-		},
-		{`hello world'`, []token.Token{
-			{Type: token.OTHER, Literal: `hello world`},
-			{Type: token.SINGLE_QUOTE, Literal: `'`},
-		}},
-		{"\\\n", []token.Token{
-			{Type: token.OTHER, Literal: "\\\n"},
-		}},
-		{`\`, []token.Token{
-			{Type: token.OTHER, Literal: `\`},
-		}},
-		{"", []token.Token{
-			{Type: token.OTHER, Literal: ""},
-		}},
-	}
-
-	for i, tc := range testCases {
-		l := lexer.New([]byte(tc.input))
-		l.ChangeContext(lexer.CTX_LITERAL_STRING)
-
-		for _, tn := range tc.tokens {
-			result := l.NextToken()
-			if tn != result {
-				t.Fatalf("\nCase: %d\nWant:\n %s\n Got:\n%s", i, dump(tn), dump(result))
-			}
-		}
-
-		// EOF
-		if result := l.NextToken(); token.EOF != result.Type {
-			t.Fatalf("\nCase#%d: expected EOF, got:\n %s ", i, dump(result))
+			t.Fatalf("\nCase:%d, expected EOF, got:\n %s ", i, dump(result))
 		}
 	}
 }
