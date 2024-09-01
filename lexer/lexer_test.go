@@ -294,27 +294,28 @@ func TestLexer(t *testing.T) {
 		}},
 
 		// Others
+		{"\n", []token.Token{{Type: token.NEWLINE, Literal: "\n"}}},
 		{``, []token.Token{{Type: token.EOF}}},
 	}
 
 	for i, tc := range testCases {
 		l := lexer.New([]byte(tc.input))
+
 		for _, tn := range tc.tokens {
-			if result := l.NextToken(); tn.Type != result.Type {
-				t.Fatalf(`#%d: wrong token type for %q, want=%d got=%d`, i, tn.Literal, tn.Type, result.Type)
-			} else if tn.Literal != result.Literal {
-				t.Fatalf(`#%d: wrong token litreal "%s", expected "%s"`, i, result.Literal, tn.Literal)
+			result := l.NextToken()
+			if tn != result {
+				t.Fatalf("\nCase: %d\nWant:\n %s\n Got:\n%s", i, dump(tn), dump(result))
 			}
 		}
 
 		// EOF
 		if result := l.NextToken(); token.EOF != result.Type {
-			t.Fatalf(`#%d: expected EOF, got %d for %q. ("%v")`, i, result.Type, result.Literal, tc.input)
+			t.Fatalf("\nCase#%d: expected EOF, got:\n %s ", i, dump(result))
 		}
 	}
 }
 
-func TestLexerContext(t *testing.T) {
+func TestLexerLiteralStringContext(t *testing.T) {
 	testCases := []struct {
 		input  string
 		tokens []token.Token
@@ -348,7 +349,7 @@ func TestLexerContext(t *testing.T) {
 			{Type: token.OTHER, Literal: `hello world`},
 			{Type: token.SINGLE_QUOTE, Literal: `'`},
 		}},
-		{"\\\n ", []token.Token{
+		{"\\\n", []token.Token{
 			{Type: token.OTHER, Literal: "\\\n"},
 		}},
 	}
