@@ -301,6 +301,19 @@ func TestLexer(t *testing.T) {
 			{Type: token.OTHER, Literal: `\`},
 			{Type: token.SINGLE_QUOTE, Literal: `'`},
 		}},
+		{`'''''x' '  '`, []token.Token{
+			{Type: token.SINGLE_QUOTE, Literal: `'`},
+			{Type: token.SINGLE_QUOTE, Literal: `'`},
+			{Type: token.SINGLE_QUOTE, Literal: `'`},
+			{Type: token.SINGLE_QUOTE, Literal: `'`},
+			{Type: token.SINGLE_QUOTE, Literal: `'`},
+			{Type: token.OTHER, Literal: `x`},
+			{Type: token.SINGLE_QUOTE, Literal: `'`},
+			{Type: token.BLANK, Literal: ` `},
+			{Type: token.SINGLE_QUOTE, Literal: `'`},
+			{Type: token.OTHER, Literal: `  `},
+			{Type: token.SINGLE_QUOTE, Literal: `'`},
+		}},
 		{
 			`'if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset'`,
 			[]token.Token{
