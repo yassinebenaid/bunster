@@ -352,6 +352,9 @@ func TestLexerLiteralStringContext(t *testing.T) {
 		{"\\\n", []token.Token{
 			{Type: token.OTHER, Literal: "\\\n"},
 		}},
+		{`\`, []token.Token{
+			{Type: token.OTHER, Literal: `\`},
+		}},
 		{"", []token.Token{
 			{Type: token.OTHER, Literal: ""},
 		}},
