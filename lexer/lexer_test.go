@@ -352,11 +352,14 @@ func TestLexerLiteralStringContext(t *testing.T) {
 		{"\\\n", []token.Token{
 			{Type: token.OTHER, Literal: "\\\n"},
 		}},
+		{"", []token.Token{
+			{Type: token.OTHER, Literal: ""},
+		}},
 	}
 
 	for i, tc := range testCases {
 		l := lexer.New([]byte(tc.input))
-		l.Context = lexer.CTX_LITERAL_STRING
+		l.ChangeContext(lexer.CTX_LITERAL_STRING)
 
 		for _, tn := range tc.tokens {
 			result := l.NextToken()

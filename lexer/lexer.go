@@ -31,16 +31,24 @@ func New(in []byte) Lexer {
 	return l
 }
 
+func (l *Lexer) ChangeContext(c context) {
+	l.Context = c
+}
+
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
 switch_beginning:
 	switch {
 	case l.Context == CTX_LITERAL_STRING:
-		tok.Type, tok.Literal = token.OTHER, string(l.curr)
-		for l.next != 0 && l.next != '\'' {
-			l.proceed()
-			tok.Literal += string(l.curr)
+		tok.Type = token.OTHER
+		if l.curr != 0 && l.curr != '\'' {
+			tok.Literal = string(l.curr)
+
+			for l.next != 0 && l.next != '\'' {
+				l.proceed()
+				tok.Literal += string(l.curr)
+			}
 		}
 
 		// revert the context back
