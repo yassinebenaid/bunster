@@ -257,6 +257,7 @@ func TestLexer(t *testing.T) {
 		{`\)`, []token.Token{{Type: token.OTHER, Literal: `)`}}},
 		{`\foo`, []token.Token{{Type: token.OTHER, Literal: `foo`}}},
 		{"\\\nfoo", []token.Token{{Type: token.Word, Literal: "foo"}}},
+		{`\"`, []token.Token{{Type: token.OTHER, Literal: `"`}}},
 
 		// escaped keywords
 		{`\if`, []token.Token{{Type: token.OTHER, Literal: `if`}}},

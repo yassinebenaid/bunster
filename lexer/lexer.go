@@ -345,7 +345,7 @@ switch_beginning:
 	case l.curr == '\\':
 		l.proceed()
 		switch l.curr {
-		case '\\', ' ', '\t', '$', '|', '&', '>', '<', ';', '(', ')':
+		case '\\', ' ', '\t', '$', '|', '&', '>', '<', ';', '(', ')', '"':
 			tok.Type, tok.Literal = token.OTHER, string(l.curr)
 		case '\n':
 			l.proceed()

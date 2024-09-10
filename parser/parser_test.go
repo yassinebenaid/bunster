@@ -148,6 +148,17 @@ var testCases = []struct {
 				},
 			},
 		}},
+		{`cmd "\"" "\$ESCAPED_VAR"`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word(`"`),
+						ast.Word(`$ESCAPED_VAR`),
+					},
+				},
+			},
+		}},
 	}},
 
 	{"Concatination", []testCase{
