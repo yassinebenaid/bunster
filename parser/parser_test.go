@@ -118,6 +118,36 @@ var testCases = []struct {
 				},
 			},
 		}},
+		{`cmd ""`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word(""),
+					},
+				},
+			},
+		}},
+		{`cmd "Hello World" "name is: $NAME and path is $DIR/$FILE"`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word("Hello World"),
+						ast.Concatination{
+							Nodes: []ast.Node{
+								ast.Word("name is: "),
+								ast.SimpleExpansion("NAME"),
+								ast.Word(" and path is "),
+								ast.SimpleExpansion("DIR"),
+								ast.Word("/"),
+								ast.SimpleExpansion("FILE"),
+							},
+						},
+					},
+				},
+			},
+		}},
 	}},
 
 	{"Concatination", []testCase{

@@ -73,6 +73,8 @@ loop:
 			nodes = append(nodes, ast.SimpleExpansion(p.curr.Literal))
 		case token.SINGLE_QUOTE:
 			nodes = append(nodes, p.parseLiteralString())
+		case token.DOUBLE_QUOTE:
+			nodes = append(nodes, p.parseString())
 		default:
 			nodes = append(nodes, ast.Word(p.curr.Literal))
 			// TODO: handle error
@@ -81,33 +83,7 @@ loop:
 		p.proceed()
 	}
 
-	var conc ast.Concatination
-	var mergedWords ast.Word
-	var hasWords bool
-
-	for i, node := range nodes {
-
-		if w, ok := node.(ast.Word); ok {
-			mergedWords += w
-			hasWords = true
-		} else {
-			if hasWords {
-				conc.Nodes = append(conc.Nodes, mergedWords)
-				mergedWords, hasWords = "", false
-			}
-			conc.Nodes = append(conc.Nodes, node)
-		}
-
-		if i == len(nodes)-1 && hasWords {
-			conc.Nodes = append(conc.Nodes, mergedWords)
-		}
-	}
-
-	if len(conc.Nodes) == 1 {
-		return conc.Nodes[0]
-	}
-
-	return conc
+	return concat(nodes)
 }
 
 func (p *Parser) parseLiteralString() ast.Word {
@@ -126,4 +102,65 @@ func (p *Parser) parseLiteralString() ast.Word {
 	}
 
 	return ast.Word(word)
+}
+
+func (p *Parser) parseString() ast.Node {
+	p.proceed()
+
+	if p.curr.Type == token.DOUBLE_QUOTE {
+		return ast.Word("")
+	}
+
+	var nodes []ast.Node
+
+loop:
+	for {
+		switch p.curr.Type {
+		case token.DOUBLE_QUOTE, token.EOF:
+			break loop
+		case token.SIMPLE_EXPANSION:
+			nodes = append(nodes, ast.SimpleExpansion(p.curr.Literal))
+		default:
+			nodes = append(nodes, ast.Word(p.curr.Literal))
+		}
+
+		p.proceed()
+	}
+
+	if p.curr.Type != token.DOUBLE_QUOTE {
+		//TODO: handle error here
+		panic("TODO: handle error here")
+	}
+
+	return concat(nodes)
+}
+
+func concat(n []ast.Node) ast.Node {
+	var conc ast.Concatination
+	var mergedWords ast.Word
+	var hasWords bool
+
+	for i, node := range n {
+
+		if w, ok := node.(ast.Word); ok {
+			mergedWords += w
+			hasWords = true
+		} else {
+			if hasWords {
+				conc.Nodes = append(conc.Nodes, mergedWords)
+				mergedWords, hasWords = "", false
+			}
+			conc.Nodes = append(conc.Nodes, node)
+		}
+
+		if i == len(n)-1 && hasWords {
+			conc.Nodes = append(conc.Nodes, mergedWords)
+		}
+	}
+
+	if len(conc.Nodes) == 1 {
+		return conc.Nodes[0]
+	}
+
+	return conc
 }
