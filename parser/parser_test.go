@@ -159,6 +159,16 @@ var testCases = []struct {
 				},
 			},
 		}},
+		{"cmd \"\n\"", ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word("\n"),
+					},
+				},
+			},
+		}},
 	}},
 
 	{"Concatination", []testCase{
