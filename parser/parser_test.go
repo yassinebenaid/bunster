@@ -218,6 +218,33 @@ var testCases = []struct {
 			},
 		}},
 	}},
+
+	{"Command output control", []testCase{
+		{`cmd`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+							},
+						},
+					},
+				},
+			},
+		}},
+		{`cmd 'foo''bar' "foo""bar" "foo"'bar' "'foo'"`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word("foobar"),
+						ast.Word("foobar"),
+						ast.Word("foobar"),
+						ast.Word("'foo'"),
+					},
+				},
+			},
+		}},
+	}},
 }
 
 func TestParser(t *testing.T) {
