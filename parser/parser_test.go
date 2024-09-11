@@ -204,6 +204,19 @@ var testCases = []struct {
 				},
 			},
 		}},
+		{`cmd 'foo''bar' "foo""bar" "foo"'bar' "'foo'"`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word("foobar"),
+						ast.Word("foobar"),
+						ast.Word("foobar"),
+						ast.Word("'foo'"),
+					},
+				},
+			},
+		}},
 	}},
 }
 
