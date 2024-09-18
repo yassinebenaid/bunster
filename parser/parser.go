@@ -46,10 +46,10 @@ func (p *Parser) parseCommand() ast.Command {
 	cmd.Name = p.parseField()
 
 loop:
-	for ; ; p.proceed() {
+	for {
 		switch p.curr.Type {
 		case token.BLANK:
-			continue
+			break
 		case token.EOF:
 			break loop
 		default:
@@ -58,6 +58,10 @@ loop:
 			} else {
 				cmd.Args = append(cmd.Args, p.parseField())
 			}
+		}
+
+		if p.getCommandContextParser(p.curr.Type) == nil {
+			p.proceed()
 		}
 	}
 
