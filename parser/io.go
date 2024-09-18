@@ -24,7 +24,7 @@ func (p *Parser) parseStdoutRedirection(cmd *ast.Command) {
 		p.proceed()
 	}
 
-	r.Dst = p.parseSentence()
+	r.Dst = p.parseField()
 
 	cmd.Redirections = append(cmd.Redirections, r)
 }

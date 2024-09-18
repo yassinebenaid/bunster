@@ -43,7 +43,7 @@ func (p *Parser) ParseScript() ast.Script {
 func (p *Parser) parseCommand() ast.Command {
 	var cmd ast.Command
 
-	cmd.Name = p.parseSentence()
+	cmd.Name = p.parseField()
 
 loop:
 	for ; ; p.proceed() {
@@ -56,7 +56,7 @@ loop:
 			if ioParser := p.getCommandContextParser(p.curr.Type); ioParser != nil {
 				ioParser(&cmd)
 			} else {
-				cmd.Args = append(cmd.Args, p.parseSentence())
+				cmd.Args = append(cmd.Args, p.parseField())
 			}
 		}
 	}
@@ -64,7 +64,7 @@ loop:
 	return cmd
 }
 
-func (p *Parser) parseSentence() ast.Node {
+func (p *Parser) parseField() ast.Node {
 	var nodes []ast.Node
 
 loop:
