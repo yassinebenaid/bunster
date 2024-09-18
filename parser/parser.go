@@ -53,7 +53,11 @@ loop:
 		case token.EOF:
 			break loop
 		default:
-			cmd.Args = append(cmd.Args, p.parseSentence())
+			if ioParser := p.getIOParser(p.curr.Type); ioParser != nil {
+				ioParser(&cmd)
+			} else {
+				cmd.Args = append(cmd.Args, p.parseSentence())
+			}
 		}
 
 	}

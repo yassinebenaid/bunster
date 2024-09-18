@@ -226,7 +226,7 @@ var testCases = []struct {
 					Name: ast.Word("cmd"),
 					Args: nil,
 					Redirections: []ast.Redirection{
-						{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.FileName("/dev/null")},
+						{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.Word("/dev/null")},
 					},
 				},
 			},

@@ -22,10 +22,6 @@ func (Redirection) node() {}
 
 type FileDescriptor string
 
-func (FileName) node() {}
-
-type FileName string
-
 func (FileDescriptor) node() {}
 
 type Command struct {
