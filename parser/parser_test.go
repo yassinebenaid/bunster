@@ -219,7 +219,7 @@ var testCases = []struct {
 		}},
 	}},
 
-	{"Command output control", []testCase{
+	{"Redirections", []testCase{
 		{`cmd`, ast.Script{
 			Statements: []ast.Node{
 				ast.Command{
