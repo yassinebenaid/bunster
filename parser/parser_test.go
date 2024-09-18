@@ -270,6 +270,56 @@ var testCases = []struct {
 				},
 			},
 		}},
+		{`cmd >> /dev/null arg1 >>foobar.txt arg2 >>$var arg3 >>'some string goes here' arg4`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word("arg1"),
+						ast.Word("arg2"),
+						ast.Word("arg3"),
+						ast.Word("arg4"),
+					},
+					Redirections: []ast.Redirection{
+						{Src: ast.FileDescriptor("1"), Method: ">>", Dst: ast.Word("/dev/null")},
+						{Src: ast.FileDescriptor("1"), Method: ">>", Dst: ast.Word("foobar.txt")},
+						{Src: ast.FileDescriptor("1"), Method: ">>", Dst: ast.SimpleExpansion("var")},
+						{Src: ast.FileDescriptor("1"), Method: ">>", Dst: ast.Word("some string goes here")},
+					},
+				},
+			},
+		}},
+		{`cmd arg>>/dev/null`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word("arg"),
+					},
+					Redirections: []ast.Redirection{
+						{Src: ast.FileDescriptor("1"), Method: ">>", Dst: ast.Word("/dev/null")},
+					},
+				},
+			},
+		}},
+		{`cmd>>"foo $bar baz">>'boo'`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: nil,
+					Redirections: []ast.Redirection{
+						{Src: ast.FileDescriptor("1"), Method: ">>", Dst: ast.Concatination{
+							Nodes: []ast.Node{
+								ast.Word("foo "),
+								ast.SimpleExpansion("bar"),
+								ast.Word(" baz"),
+							},
+						}},
+						{Src: ast.FileDescriptor("1"), Method: ">>", Dst: ast.Word("boo")},
+					},
+				},
+			},
+		}},
 	}},
 }
 

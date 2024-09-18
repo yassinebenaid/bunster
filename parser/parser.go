@@ -74,7 +74,7 @@ func (p *Parser) parseField() ast.Node {
 loop:
 	for {
 		switch p.curr.Type {
-		case token.BLANK, token.GT, token.EOF:
+		case token.BLANK, token.EOF:
 			break loop
 		case token.SIMPLE_EXPANSION:
 			nodes = append(nodes, ast.SimpleExpansion(p.curr.Literal))
@@ -83,6 +83,10 @@ loop:
 		case token.DOUBLE_QUOTE:
 			nodes = append(nodes, p.parseString())
 		default:
+			if p.getCommandContextParser(p.curr.Type) != nil {
+				break loop
+			}
+
 			nodes = append(nodes, ast.Word(p.curr.Literal))
 			// TODO: handle error
 		}

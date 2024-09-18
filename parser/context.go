@@ -7,7 +7,7 @@ import (
 
 func (p *Parser) getCommandContextParser(tt token.TokenType) func(*ast.Command) {
 	switch tt {
-	case token.GT:
+	case token.GT, token.DOUBLE_GT:
 		return p.parseStdoutRedirection
 	default:
 		return nil
