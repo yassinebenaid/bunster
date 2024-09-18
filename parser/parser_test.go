@@ -220,13 +220,21 @@ var testCases = []struct {
 	}},
 
 	{"Redirections", []testCase{
-		{`cmd > /dev/null`, ast.Script{
+		{`cmd > /dev/null arg1 >foobar.txt arg2 >$var arg3 >'some string goes here' arg4`, ast.Script{
 			Statements: []ast.Node{
 				ast.Command{
 					Name: ast.Word("cmd"),
-					Args: nil,
+					Args: []ast.Node{
+						ast.Word("arg1"),
+						ast.Word("arg2"),
+						ast.Word("arg3"),
+						ast.Word("arg4"),
+					},
 					Redirections: []ast.Redirection{
 						{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.Word("/dev/null")},
+						{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.Word("foobar.txt")},
+						{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.SimpleExpansion("var")},
+						{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.Word("some string goes here")},
 					},
 				},
 			},
