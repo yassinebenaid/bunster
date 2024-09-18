@@ -5,7 +5,7 @@ import (
 	"github.com/yassinebenaid/nbs/token"
 )
 
-func (p *Parser) getIOParser(tt token.TokenType) func(*ast.Command) {
+func (p *Parser) getCommandContextParser(tt token.TokenType) func(*ast.Command) {
 	switch tt {
 	case token.GT:
 		return p.parseStdoutRedirection

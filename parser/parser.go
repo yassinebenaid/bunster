@@ -53,13 +53,12 @@ loop:
 		case token.EOF:
 			break loop
 		default:
-			if ioParser := p.getIOParser(p.curr.Type); ioParser != nil {
+			if ioParser := p.getCommandContextParser(p.curr.Type); ioParser != nil {
 				ioParser(&cmd)
 			} else {
 				cmd.Args = append(cmd.Args, p.parseSentence())
 			}
 		}
-
 	}
 
 	return cmd
@@ -71,7 +70,7 @@ func (p *Parser) parseSentence() ast.Node {
 loop:
 	for {
 		switch p.curr.Type {
-		case token.BLANK, token.EOF:
+		case token.BLANK, token.GT, token.EOF:
 			break loop
 		case token.SIMPLE_EXPANSION:
 			nodes = append(nodes, ast.SimpleExpansion(p.curr.Literal))

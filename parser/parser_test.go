@@ -239,6 +239,19 @@ var testCases = []struct {
 				},
 			},
 		}},
+		{`cmd arg>/dev/null`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word("arg"),
+					},
+					Redirections: []ast.Redirection{
+						{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.Word("/dev/null")},
+					},
+				},
+			},
+		}},
 	}},
 }
 
