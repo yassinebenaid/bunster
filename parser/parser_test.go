@@ -320,6 +320,19 @@ var testCases = []struct {
 				},
 			},
 		}},
+		{`cmd 3>file.txt 123>>$foo 123>>xyz`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: nil,
+					Redirections: []ast.Redirection{
+						{Src: ast.FileDescriptor("3"), Method: ">", Dst: ast.Word("file.txt")},
+						{Src: ast.FileDescriptor("123"), Method: ">>", Dst: ast.SimpleExpansion("foo")},
+						{Src: ast.FileDescriptor("123"), Method: ">>", Dst: ast.Word("xyz")},
+					},
+				},
+			},
+		}},
 	}},
 }
 
