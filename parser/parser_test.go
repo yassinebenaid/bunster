@@ -220,11 +220,14 @@ var testCases = []struct {
 	}},
 
 	{"Redirections", []testCase{
-		{`cmd`, ast.Script{
+		{`cmd > /dev/null`, ast.Script{
 			Statements: []ast.Node{
 				ast.Command{
 					Name: ast.Word("cmd"),
 					Args: nil,
+					Redirections: []ast.Redirection{
+						{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.FileName("/dev/null")},
+					},
 				},
 			},
 		}},
