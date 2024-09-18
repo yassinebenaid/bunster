@@ -12,9 +12,26 @@ type Word string
 
 func (Word) node() {}
 
+type Redirection struct {
+	Src    Node
+	Method string
+	Dst    Node
+}
+
+func (Redirection) node() {}
+
+type FileDescriptor string
+
+func (FileName) node() {}
+
+type FileName string
+
+func (FileDescriptor) node() {}
+
 type Command struct {
-	Name Node
-	Args []Node
+	Name         Node
+	Args         []Node
+	Redirections []Redirection
 }
 
 func (Command) node() {}
