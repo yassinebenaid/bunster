@@ -7,7 +7,7 @@ import (
 
 func (p *Parser) getCommandContextParser(tt token.TokenType) func(*ast.Command) {
 	switch tt {
-	case token.GT, token.DOUBLE_GT:
+	case token.GT, token.DOUBLE_GT, token.GT_AMPERSAND:
 		return p.parseStdoutRedirection
 	case token.FILE_DESCRIPTOR:
 		return p.parseFileDescriptorRedirection
@@ -22,11 +22,17 @@ func (p *Parser) parseStdoutRedirection(cmd *ast.Command) {
 	r.Method = p.curr.Literal
 
 	p.proceed()
-	if p.curr.Type == token.BLANK {
-		p.proceed()
-	}
 
-	r.Dst = p.parseField()
+	if p.curr.Type == token.FILE_DESCRIPTOR {
+		r.Dst = ast.FileDescriptor(p.curr.Literal)
+		p.proceed()
+	} else {
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+
+		r.Dst = p.parseField()
+	}
 
 	cmd.Redirections = append(cmd.Redirections, r)
 }
@@ -43,7 +49,12 @@ func (p *Parser) parseFileDescriptorRedirection(cmd *ast.Command) {
 		p.proceed()
 	}
 
-	r.Dst = p.parseField()
+	if p.curr.Type == token.FILE_DESCRIPTOR {
+		r.Dst = ast.FileDescriptor(p.curr.Literal)
+		p.proceed()
+	} else {
+		r.Dst = p.parseField()
+	}
 
 	cmd.Redirections = append(cmd.Redirections, r)
 }

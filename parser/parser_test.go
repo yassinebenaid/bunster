@@ -333,6 +333,18 @@ var testCases = []struct {
 				},
 			},
 		}},
+		{`cmd>&2 3>&5`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: nil,
+					Redirections: []ast.Redirection{
+						{Src: ast.FileDescriptor("1"), Method: ">&", Dst: ast.FileDescriptor("2")},
+						{Src: ast.FileDescriptor("3"), Method: ">&", Dst: ast.FileDescriptor("5")},
+					},
+				},
+			},
+		}},
 	}},
 }
 
