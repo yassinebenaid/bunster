@@ -24,6 +24,10 @@ type FileDescriptor string
 
 func (FileDescriptor) node() {}
 
+type StdoutStderr struct{}
+
+func (StdoutStderr) node() {}
+
 type Command struct {
 	Name         Node
 	Args         []Node

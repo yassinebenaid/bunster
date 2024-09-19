@@ -361,6 +361,17 @@ var testCases = []struct {
 				},
 			},
 		}},
+		{`cmd&>file`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: nil,
+					Redirections: []ast.Redirection{
+						{Src: ast.StdoutStderr{}, Method: "&>", Dst: ast.Word("file")},
+					},
+				},
+			},
+		}},
 	}},
 }
 
