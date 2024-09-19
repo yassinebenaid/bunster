@@ -53,14 +53,14 @@ loop:
 		case token.EOF:
 			break loop
 		default:
-			if ioParser := p.getCommandContextParser(p.curr.Type); ioParser != nil {
+			if ioParser := p.getRedirectionParser(p.curr.Type); ioParser != nil {
 				ioParser(&cmd)
 			} else {
 				cmd.Args = append(cmd.Args, p.parseField())
 			}
 		}
 
-		if p.getCommandContextParser(p.curr.Type) == nil {
+		if p.getRedirectionParser(p.curr.Type) == nil {
 			p.proceed()
 		}
 	}
@@ -83,7 +83,7 @@ loop:
 		case token.DOUBLE_QUOTE:
 			nodes = append(nodes, p.parseString())
 		default:
-			if p.getCommandContextParser(p.curr.Type) != nil {
+			if p.getRedirectionParser(p.curr.Type) != nil {
 				break loop
 			}
 

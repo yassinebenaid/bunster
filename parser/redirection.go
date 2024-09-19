@@ -5,10 +5,12 @@ import (
 	"github.com/yassinebenaid/nbs/token"
 )
 
-func (p *Parser) getCommandContextParser(tt token.TokenType) func(*ast.Command) {
+func (p *Parser) getRedirectionParser(tt token.TokenType) func(*ast.Command) {
 	switch tt {
-	case token.GT, token.DOUBLE_GT, token.GT_AMPERSAND:
-		return p.parseStdoutRedirection
+	case token.GT, token.DOUBLE_GT:
+		return p.parseStdoutToFileRedirection
+	case token.GT_AMPERSAND:
+		return p.parseStdoutToFileDescriptorRedirection
 	case token.FILE_DESCRIPTOR:
 		return p.parseFileDescriptorRedirection
 	default:
@@ -16,23 +18,28 @@ func (p *Parser) getCommandContextParser(tt token.TokenType) func(*ast.Command) 
 	}
 }
 
-func (p *Parser) parseStdoutRedirection(cmd *ast.Command) {
+func (p *Parser) parseStdoutToFileRedirection(cmd *ast.Command) {
 	var r ast.Redirection
 	r.Src = ast.FileDescriptor("1")
 	r.Method = p.curr.Literal
 
 	p.proceed()
-
-	if p.curr.Type == token.FILE_DESCRIPTOR {
-		r.Dst = ast.FileDescriptor(p.curr.Literal)
+	if p.curr.Type == token.BLANK {
 		p.proceed()
-	} else {
-		if p.curr.Type == token.BLANK {
-			p.proceed()
-		}
-
-		r.Dst = p.parseField()
 	}
+
+	r.Dst = p.parseField()
+	cmd.Redirections = append(cmd.Redirections, r)
+}
+
+func (p *Parser) parseStdoutToFileDescriptorRedirection(cmd *ast.Command) {
+	var r ast.Redirection
+	r.Src = ast.FileDescriptor("1")
+	r.Method = p.curr.Literal
+
+	p.proceed()
+	r.Dst = ast.FileDescriptor(p.curr.Literal)
+	p.proceed()
 
 	cmd.Redirections = append(cmd.Redirections, r)
 }
