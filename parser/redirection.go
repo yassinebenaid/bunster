@@ -11,7 +11,7 @@ func (p *Parser) getRedirectionParser(tt token.TokenType) func(*ast.Command) {
 		return p.parseStdoutToFileRedirection
 	case token.AMPERSAND_GT:
 		return p.parseStdoutAndStderrToFileRedirection
-	case token.LT:
+	case token.LT, token.TRIPLE_LT:
 		return p.parseStdinFromFileRedirection
 	case token.GT_AMPERSAND:
 		return p.parseStdoutToFileDescriptorRedirection

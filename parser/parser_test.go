@@ -372,6 +372,20 @@ var testCases = []struct {
 				},
 			},
 		}},
+		{`cmd <<< foo arg<<<"foo bar"`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word("arg"),
+					},
+					Redirections: []ast.Redirection{
+						{Src: ast.FileDescriptor("0"), Method: "<<<", Dst: ast.Word("foo")},
+						{Src: ast.FileDescriptor("0"), Method: "<<<", Dst: ast.Word("foo bar")},
+					},
+				},
+			},
+		}},
 	}},
 }
 
