@@ -9,6 +9,8 @@ func (p *Parser) getRedirectionParser(tt token.TokenType) func(*ast.Command) {
 	switch tt {
 	case token.GT, token.DOUBLE_GT:
 		return p.parseStdoutToFileRedirection
+	case token.LT:
+		return p.parseStdinFromFileRedirection
 	case token.GT_AMPERSAND:
 		return p.parseStdoutToFileDescriptorRedirection
 	case token.FILE_DESCRIPTOR:
@@ -63,5 +65,19 @@ func (p *Parser) parseFileDescriptorRedirection(cmd *ast.Command) {
 		r.Dst = p.parseField()
 	}
 
+	cmd.Redirections = append(cmd.Redirections, r)
+}
+
+func (p *Parser) parseStdinFromFileRedirection(cmd *ast.Command) {
+	var r ast.Redirection
+	r.Src = ast.FileDescriptor("0")
+	r.Method = p.curr.Literal
+
+	p.proceed()
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
+	r.Dst = p.parseField()
 	cmd.Redirections = append(cmd.Redirections, r)
 }
