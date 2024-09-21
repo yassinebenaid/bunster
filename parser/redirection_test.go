@@ -45,6 +45,35 @@ var redirectionTests = []testCase{
 			},
 		},
 	}},
+	{`cmd&>'file.ext' arg &> file&>/foo/bar arg2 &>"$var" arg345&>xyz`, ast.Script{
+		Statements: []ast.Node{
+			ast.Command{
+				Name: ast.Word("cmd"),
+				Args: []ast.Node{
+					ast.Word("arg"),
+					ast.Word("arg2"),
+					ast.Word("arg345"),
+				}, Redirections: []ast.Redirection{
+					{Src: nil, Method: "&>", Dst: ast.Word("file.ext")},
+					{Src: nil, Method: "&>", Dst: ast.Word("file")},
+					{Src: nil, Method: "&>", Dst: ast.Word("/foo/bar")},
+					{Src: nil, Method: "&>", Dst: ast.SimpleExpansion("var")},
+					{Src: nil, Method: "&>", Dst: ast.Word("xyz")},
+				},
+			},
+		},
+	}},
+	// {`cmd&>file`, ast.Script{
+	// 	Statements: []ast.Node{
+	// 		ast.Command{
+	// 			Name: ast.Word("cmd"),
+	// 			Args: nil,
+	// 			Redirections: []ast.Redirection{
+	// 				{Src: ast.StdoutStderr{}, Method: "&>", Dst: ast.Word("file")},
+	// 			},
+	// 		},
+	// 	},
+	// }},
 	// {`cmd>&2 3>&5`, ast.Script{
 	// 	Statements: []ast.Node{
 	// 		ast.Command{

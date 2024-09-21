@@ -1,13 +1,15 @@
 package parser
 
 import (
+	"fmt"
+
 	"github.com/yassinebenaid/nbs/ast"
 	"github.com/yassinebenaid/nbs/token"
 )
 
 func (p *Parser) isRedirectionToken() bool {
 	switch p.curr.Type {
-	case token.GT, token.DOUBLE_GT:
+	case token.GT, token.DOUBLE_GT, token.AMPERSAND_GT:
 		return true
 	case token.INT:
 		switch p.next.Type {
@@ -24,8 +26,12 @@ func (p *Parser) HandleRedirection(cmd *ast.Command) {
 	switch p.curr.Type {
 	case token.GT, token.DOUBLE_GT:
 		p.fromStdoutToFile(cmd)
+	case token.AMPERSAND_GT:
+		p.allOutputsToFile(cmd)
 	case token.INT:
 		p.fromFdToFile(cmd)
+	default:
+		panic(fmt.Sprintf("unhandled redirection token: %q", p.curr.Literal))
 	}
 }
 
@@ -59,9 +65,8 @@ func (p *Parser) fromFdToFile(cmd *ast.Command) {
 	cmd.Redirections = append(cmd.Redirections, r)
 }
 
-func (p *Parser) parseStdoutAndStderrToFileRedirection(cmd *ast.Command) {
+func (p *Parser) allOutputsToFile(cmd *ast.Command) {
 	var r ast.Redirection
-	r.Src = ast.StdoutStderr{}
 	r.Method = p.curr.Literal
 
 	p.proceed()
