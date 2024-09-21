@@ -109,7 +109,8 @@ const (
 	SIMPLE_EXPANSION // Simple variable expansion. eg. $variable_name.
 	FILE_DESCRIPTOR  // 0-9 in io redirection. eg `>&`, `<&`, ...
 	Word             // Variable names, functions and other identifiers.
-	NUMBER           // Integer and float numbers
+	INT              // Integer numbers
+	FLOAT            //  float numbers
 	BLANK            // Spaces and tabs
 	NEWLINE          //  `\n`
 	SPECIAL_VAR      // Special variables like $?, $#, $@, $*, $$, $!, $0, $1, $2, ...
