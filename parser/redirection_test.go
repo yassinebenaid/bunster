@@ -3,7 +3,7 @@ package parser_test
 import "github.com/yassinebenaid/nbs/ast"
 
 var redirectionTests = []testCase{
-	{`cmd>'file.ext' arg > file>/foo/bar arg2 >"$var" arg345>xyz 3>foo.bar`, ast.Script{
+	{`cmd>'file.ext' arg > file>/foo/bar arg2 >"$var" arg345>xyz 3>foo.bar 12.34>baz`, ast.Script{
 		Statements: []ast.Node{
 			ast.Command{
 				Name: ast.Word("cmd"),
@@ -11,6 +11,7 @@ var redirectionTests = []testCase{
 					ast.Word("arg"),
 					ast.Word("arg2"),
 					ast.Word("arg345"),
+					ast.Word("12.34"),
 				}, Redirections: []ast.Redirection{
 					{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.Word("file.ext")},
 					{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.Word("file")},
@@ -18,6 +19,7 @@ var redirectionTests = []testCase{
 					{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.SimpleExpansion("var")},
 					{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.Word("xyz")},
 					{Src: ast.FileDescriptor("3"), Method: ">", Dst: ast.Word("foo.bar")},
+					{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.Word("baz")},
 				},
 			},
 		},
