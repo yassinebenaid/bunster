@@ -3,7 +3,7 @@ package parser_test
 import "github.com/yassinebenaid/nbs/ast"
 
 var redirectionTests = []testCase{
-	{`cmd>file.ext > file arg>/foo/bar arg2 >$var arg345>xyz`, ast.Script{
+	{`cmd>'file.ext' > file arg>/foo/bar arg2 >"$var" arg345>xyz`, ast.Script{
 		Statements: []ast.Node{
 			ast.Command{
 				Name: ast.Word("cmd"),
