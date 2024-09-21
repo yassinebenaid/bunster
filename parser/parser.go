@@ -81,7 +81,7 @@ loop:
 		case token.DOUBLE_QUOTE:
 			nodes = append(nodes, p.parseString())
 		default:
-			if p.getRedirectionParser(p.curr.Type) != nil {
+			if p.isRedirectionToken(p.curr) {
 				break loop
 			}
 
