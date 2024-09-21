@@ -45,19 +45,6 @@ var redirectionTests = []testCase{
 			},
 		},
 	}},
-	// {`cmd 3>file.txt 123>>$foo 123>>xyz`, ast.Script{
-	// 	Statements: []ast.Node{
-	// 		ast.Command{
-	// 			Name: ast.Word("cmd"),
-	// 			Args: nil,
-	// 			Redirections: []ast.Redirection{
-	// 				{Src: ast.FileDescriptor("3"), Method: ">", Dst: ast.Word("file.txt")},
-	// 				{Src: ast.FileDescriptor("123"), Method: ">>", Dst: ast.SimpleExpansion("foo")},
-	// 				{Src: ast.FileDescriptor("123"), Method: ">>", Dst: ast.Word("xyz")},
-	// 			},
-	// 		},
-	// 	},
-	// }},
 	// {`cmd>&2 3>&5`, ast.Script{
 	// 	Statements: []ast.Node{
 	// 		ast.Command{
