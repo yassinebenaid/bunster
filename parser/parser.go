@@ -47,10 +47,10 @@ func (p *Parser) parseCommand() ast.Command {
 
 loop:
 	for {
-		switch p.curr.Type {
-		case token.BLANK:
+		switch {
+		case p.curr.Type.Is(token.BLANK):
 			break
-		case token.EOF:
+		case p.curr.Type.Is(token.EOF):
 			break loop
 		default:
 			if ioParser := p.getRedirectionParser(p.curr.Type); ioParser != nil {
