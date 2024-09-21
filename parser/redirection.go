@@ -97,28 +97,6 @@ func (p *Parser) fromStdoutToFd(cmd *ast.Command) {
 	cmd.Redirections = append(cmd.Redirections, r)
 }
 
-func (p *Parser) parseFileDescriptorRedirection(cmd *ast.Command) {
-	var r ast.Redirection
-	r.Src = ast.FileDescriptor(p.curr.Literal)
-
-	p.proceed()
-	r.Method = p.curr.Literal
-	p.proceed()
-
-	if p.curr.Type == token.BLANK {
-		p.proceed()
-	}
-
-	if p.curr.Type == token.FILE_DESCRIPTOR {
-		r.Dst = ast.FileDescriptor(p.curr.Literal)
-		p.proceed()
-	} else {
-		r.Dst = p.parseField()
-	}
-
-	cmd.Redirections = append(cmd.Redirections, r)
-}
-
 func (p *Parser) parseStdinFromFileRedirection(cmd *ast.Command) {
 	var r ast.Redirection
 	r.Src = ast.FileDescriptor("0")

@@ -83,18 +83,18 @@ var redirectionTests = []testCase{
 			},
 		},
 	}},
-	// {`cmd>&2 3>&5`, ast.Script{
-	// 	Statements: []ast.Node{
-	// 		ast.Command{
-	// 			Name: ast.Word("cmd"),
-	// 			Args: nil,
-	// 			Redirections: []ast.Redirection{
-	// 				{Src: ast.FileDescriptor("1"), Method: ">&", Dst: ast.FileDescriptor("2")},
-	// 				{Src: ast.FileDescriptor("3"), Method: ">&", Dst: ast.FileDescriptor("5")},
-	// 			},
-	// 		},
-	// 	},
-	// }},
+	{`cmd<'file.ext' arg`, ast.Script{
+		Statements: []ast.Node{
+			ast.Command{
+				Name: ast.Word("cmd"),
+				Args: []ast.Node{
+					ast.Word("arg"),
+				}, Redirections: []ast.Redirection{
+					{Src: ast.FileDescriptor("0"), Method: "<", Dst: ast.Word("file.ext")},
+				},
+			},
+		},
+	}},
 	// {`cmd<file.txt 2<file.txt 3<&5 arg<foo`, ast.Script{
 	// 	Statements: []ast.Node{
 	// 		ast.Command{
