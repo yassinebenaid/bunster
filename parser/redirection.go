@@ -14,7 +14,7 @@ func (p *Parser) isRedirectionToken() bool {
 	case token.INT:
 		// redirections that use file descriptor as source
 		switch p.next.Type {
-		case token.GT, token.DOUBLE_GT, token.GT_AMPERSAND, token.LT:
+		case token.GT, token.DOUBLE_GT, token.GT_AMPERSAND, token.LT, token.LT_AMPERSAND:
 			return true
 		}
 		fallthrough

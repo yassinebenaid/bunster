@@ -83,7 +83,7 @@ var redirectionTests = []testCase{
 			},
 		},
 	}},
-	{`cmd<'file.ext' arg < file</foo/bar arg123<foo 3<bar <&3`, ast.Script{
+	{`cmd<'file.ext' arg < file</foo/bar arg123<foo 3<bar <&3 4<&5`, ast.Script{
 		Statements: []ast.Node{
 			ast.Command{
 				Name: ast.Word("cmd"),
@@ -97,6 +97,7 @@ var redirectionTests = []testCase{
 					{Src: ast.FileDescriptor("0"), Method: "<", Dst: ast.Word("foo")},
 					{Src: ast.FileDescriptor("3"), Method: "<", Dst: ast.Word("bar")},
 					{Src: ast.FileDescriptor("0"), Method: "<&", Dst: ast.FileDescriptor("3")},
+					{Src: ast.FileDescriptor("4"), Method: "<&", Dst: ast.FileDescriptor("5")},
 				},
 			},
 		},
