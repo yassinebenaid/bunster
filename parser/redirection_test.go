@@ -102,7 +102,7 @@ var redirectionTests = []testCase{
 			},
 		},
 	}},
-	{`cmd<<<'foo bar' arg <<< foo<<<foo-bar arg2 <<<"$var"`, ast.Script{
+	{`cmd<<<'foo bar' arg <<< foo<<<foo-bar arg2 <<<"$var" 3<<<foobar`, ast.Script{
 		Statements: []ast.Node{
 			ast.Command{
 				Name: ast.Word("cmd"),
@@ -114,6 +114,7 @@ var redirectionTests = []testCase{
 					{Src: ast.FileDescriptor("0"), Method: "<<<", Dst: ast.Word("foo")},
 					{Src: ast.FileDescriptor("0"), Method: "<<<", Dst: ast.Word("foo-bar")},
 					{Src: ast.FileDescriptor("0"), Method: "<<<", Dst: ast.SimpleExpansion("var")},
+					{Src: ast.FileDescriptor("3"), Method: "<<<", Dst: ast.Word("foobar")},
 				},
 			},
 		},
