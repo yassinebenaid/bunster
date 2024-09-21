@@ -32,7 +32,7 @@ func (p *Parser) HandleRedirection(cmd *ast.Command) {
 	case token.GT_AMPERSAND:
 		p.fromStdoutToFd(cmd)
 	case token.INT:
-		p.fromFdToFile(cmd)
+		p.fromFileDescriptor(cmd)
 	default:
 		panic(fmt.Sprintf("unhandled redirection token: %q", p.curr.Literal))
 	}
@@ -52,7 +52,7 @@ func (p *Parser) fromStdoutToFile(cmd *ast.Command) {
 	cmd.Redirections = append(cmd.Redirections, r)
 }
 
-func (p *Parser) fromFdToFile(cmd *ast.Command) {
+func (p *Parser) fromFileDescriptor(cmd *ast.Command) {
 	var r ast.Redirection
 	r.Src = ast.FileDescriptor(p.curr.Literal)
 
