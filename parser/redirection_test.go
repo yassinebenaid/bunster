@@ -39,24 +39,6 @@ var redirectionTests = []testCase{
 			},
 		},
 	}},
-	// {`cmd>>"foo $bar baz">>'boo'`, ast.Script{
-	// 	Statements: []ast.Node{
-	// 		ast.Command{
-	// 			Name: ast.Word("cmd"),
-	// 			Args: nil,
-	// 			Redirections: []ast.Redirection{
-	// 				{Src: ast.FileDescriptor("1"), Method: ">>", Dst: ast.Concatination{
-	// 					Nodes: []ast.Node{
-	// 						ast.Word("foo "),
-	// 						ast.SimpleExpansion("bar"),
-	// 						ast.Word(" baz"),
-	// 					},
-	// 				}},
-	// 				{Src: ast.FileDescriptor("1"), Method: ">>", Dst: ast.Word("boo")},
-	// 			},
-	// 		},
-	// 	},
-	// }},
 	// {`cmd 3>file.txt 123>>$foo 123>>xyz`, ast.Script{
 	// 	Statements: []ast.Node{
 	// 		ast.Command{
