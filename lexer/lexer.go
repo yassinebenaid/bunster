@@ -317,8 +317,7 @@ switch_beginning:
 			tok.Type = token.Word
 		}
 	case (l.curr >= '0' && l.curr <= '9') || (l.curr == '.' && (l.next >= '0' && l.next <= '9')):
-		prev := l.prev
-		tok.Type, tok.Literal = token.NUMBER, string(l.curr)
+		tok.Type, tok.Literal = token.INT, string(l.curr)
 		isFloat := l.curr == '.'
 
 		for {
@@ -339,8 +338,8 @@ switch_beginning:
 		}
 
 		// If numbers appear in file descriptor positions they're treated differently (eg 1>&2)
-		if !isFloat && (prev == '&' || l.next == '>' || l.next == '<') {
-			tok.Type = token.FILE_DESCRIPTOR
+		if isFloat {
+			tok.Type = token.FLOAT
 		}
 	case l.curr == '\\':
 		l.proceed()
