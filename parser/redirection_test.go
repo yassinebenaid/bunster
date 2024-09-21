@@ -63,7 +63,7 @@ var redirectionTests = []testCase{
 			},
 		},
 	}},
-	{`cmd>&1 arg >&2 arg>&3 arg345>&4 `, ast.Script{ //5>&6 12.34>&7
+	{`cmd>&1 arg >&2 arg>&3 arg345>&4 5>&6 12.34>&7`, ast.Script{
 		Statements: []ast.Node{
 			ast.Command{
 				Name: ast.Word("cmd"),
@@ -71,14 +71,14 @@ var redirectionTests = []testCase{
 					ast.Word("arg"),
 					ast.Word("arg"),
 					ast.Word("arg345"),
-					// ast.Word("12.34"),
+					ast.Word("12.34"),
 				}, Redirections: []ast.Redirection{
 					{Src: ast.FileDescriptor("1"), Method: ">&", Dst: ast.FileDescriptor("1")},
 					{Src: ast.FileDescriptor("1"), Method: ">&", Dst: ast.FileDescriptor("2")},
 					{Src: ast.FileDescriptor("1"), Method: ">&", Dst: ast.FileDescriptor("3")},
 					{Src: ast.FileDescriptor("1"), Method: ">&", Dst: ast.FileDescriptor("4")},
-					// {Src: ast.FileDescriptor("5"), Method: ">&", Dst: ast.FileDescriptor("6")},
-					// {Src: ast.FileDescriptor("3"), Method: ">&", Dst: ast.FileDescriptor("7")},
+					{Src: ast.FileDescriptor("5"), Method: ">&", Dst: ast.FileDescriptor("6")},
+					{Src: ast.FileDescriptor("1"), Method: ">&", Dst: ast.FileDescriptor("7")},
 				},
 			},
 		},

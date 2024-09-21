@@ -64,7 +64,11 @@ func (p *Parser) fromFdToFile(cmd *ast.Command) {
 		p.proceed()
 	}
 
-	r.Dst = p.parseField()
+	if p.curr.Type == token.INT {
+		r.Dst = ast.FileDescriptor(p.curr.Literal)
+	} else {
+		r.Dst = p.parseField()
+	}
 	cmd.Redirections = append(cmd.Redirections, r)
 }
 
