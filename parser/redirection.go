@@ -17,14 +17,14 @@ func (*Parser) isRedirectionToken(t token.Token) bool {
 func (p *Parser) HandleRedirection(cmd *ast.Command) {
 	switch p.curr.Type {
 	case token.GT:
-		p.parseStdoutToFileRedirection(cmd)
+		p.fromStdoutToFile(cmd)
 	}
 }
 
 func (p *Parser) getRedirectionParser(tt token.TokenType) func(*ast.Command) {
 	switch tt {
 	case token.GT, token.DOUBLE_GT:
-		return p.parseStdoutToFileRedirection
+		return p.fromStdoutToFile
 	case token.AMPERSAND_GT:
 		return p.parseStdoutAndStderrToFileRedirection
 	case token.LT, token.TRIPLE_LT:
@@ -38,7 +38,7 @@ func (p *Parser) getRedirectionParser(tt token.TokenType) func(*ast.Command) {
 	}
 }
 
-func (p *Parser) parseStdoutToFileRedirection(cmd *ast.Command) {
+func (p *Parser) fromStdoutToFile(cmd *ast.Command) {
 	var r ast.Redirection
 	r.Src = ast.FileDescriptor("1")
 	r.Method = p.curr.Literal
