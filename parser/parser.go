@@ -52,17 +52,15 @@ loop:
 			break
 		case p.curr.Type.Is(token.EOF):
 			break loop
+		case p.isRedirectionToken(p.curr):
+			p.HandleRedirection(&cmd)
 		default:
-			if ioParser := p.getRedirectionParser(p.curr.Type); ioParser != nil {
-				ioParser(&cmd)
-			} else {
-				cmd.Args = append(cmd.Args, p.parseField())
-			}
+			cmd.Args = append(cmd.Args, p.parseField())
 		}
 
-		if p.getRedirectionParser(p.curr.Type) == nil {
-			p.proceed()
-		}
+		// if p.getRedirectionParser(p.curr.Type) == nil {
+		p.proceed()
+		// }
 	}
 
 	return cmd

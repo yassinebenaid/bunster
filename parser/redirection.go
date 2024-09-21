@@ -5,6 +5,22 @@ import (
 	"github.com/yassinebenaid/nbs/token"
 )
 
+func (*Parser) isRedirectionToken(t token.Token) bool {
+	switch t.Type {
+	case token.GT:
+		return true
+	default:
+		return false
+	}
+}
+
+func (p *Parser) HandleRedirection(cmd *ast.Command) {
+	switch p.curr.Type {
+	case token.GT:
+		p.parseStdoutToFileRedirection(cmd)
+	}
+}
+
 func (p *Parser) getRedirectionParser(tt token.TokenType) func(*ast.Command) {
 	switch tt {
 	case token.GT, token.DOUBLE_GT:
