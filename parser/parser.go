@@ -58,9 +58,9 @@ loop:
 			cmd.Args = append(cmd.Args, p.parseField())
 		}
 
-		// if p.getRedirectionParser(p.curr.Type) == nil {
-		p.proceed()
-		// }
+		if !p.isRedirectionToken(p.curr) {
+			p.proceed()
+		}
 	}
 
 	return cmd
