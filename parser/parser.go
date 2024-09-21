@@ -52,13 +52,13 @@ loop:
 			break
 		case p.curr.Type.Is(token.EOF):
 			break loop
-		case p.isRedirectionToken(p.curr):
+		case p.isRedirectionToken():
 			p.HandleRedirection(&cmd)
 		default:
 			cmd.Args = append(cmd.Args, p.parseField())
 		}
 
-		if !p.isRedirectionToken(p.curr) {
+		if !p.isRedirectionToken() {
 			p.proceed()
 		}
 	}
@@ -81,7 +81,7 @@ loop:
 		case token.DOUBLE_QUOTE:
 			nodes = append(nodes, p.parseString())
 		default:
-			if p.isRedirectionToken(p.curr) {
+			if !p.curr.Type.Is(token.INT) && p.isRedirectionToken() {
 				break loop
 			}
 
