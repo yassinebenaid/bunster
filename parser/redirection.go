@@ -7,7 +7,7 @@ import (
 
 func (*Parser) isRedirectionToken(t token.Token) bool {
 	switch t.Type {
-	case token.GT:
+	case token.GT, token.DOUBLE_GT:
 		return true
 	default:
 		return false
@@ -16,7 +16,7 @@ func (*Parser) isRedirectionToken(t token.Token) bool {
 
 func (p *Parser) HandleRedirection(cmd *ast.Command) {
 	switch p.curr.Type {
-	case token.GT:
+	case token.GT, token.DOUBLE_GT:
 		p.fromStdoutToFile(cmd)
 	}
 }

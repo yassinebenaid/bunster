@@ -21,6 +21,24 @@ var redirectionTests = []testCase{
 			},
 		},
 	}},
+	{`cmd>>'file.ext' arg >> file>>/foo/bar arg2 >>"$var" arg345>>xyz`, ast.Script{
+		Statements: []ast.Node{
+			ast.Command{
+				Name: ast.Word("cmd"),
+				Args: []ast.Node{
+					ast.Word("arg"),
+					ast.Word("arg2"),
+					ast.Word("arg345"),
+				}, Redirections: []ast.Redirection{
+					{Src: ast.FileDescriptor("1"), Method: ">>", Dst: ast.Word("file.ext")},
+					{Src: ast.FileDescriptor("1"), Method: ">>", Dst: ast.Word("file")},
+					{Src: ast.FileDescriptor("1"), Method: ">>", Dst: ast.Word("/foo/bar")},
+					{Src: ast.FileDescriptor("1"), Method: ">>", Dst: ast.SimpleExpansion("var")},
+					{Src: ast.FileDescriptor("1"), Method: ">>", Dst: ast.Word("xyz")},
+				},
+			},
+		},
+	}},
 	// {`cmd >> /dev/null arg1 >>foobar.txt arg2 >>$var arg3 >>'some string goes here' arg4`, ast.Script{
 	// 	Statements: []ast.Node{
 	// 		ast.Command{
