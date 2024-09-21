@@ -68,11 +68,13 @@ func (p *Parser) fromFileDescriptor(cmd *ast.Command) {
 		p.proceed()
 	}
 
-	if p.curr.Type == token.INT {
+	switch r.Method {
+	case "<&", ">&":
 		r.Dst = ast.FileDescriptor(p.curr.Literal)
-	} else {
+	default:
 		r.Dst = p.parseField()
 	}
+
 	cmd.Redirections = append(cmd.Redirections, r)
 }
 
