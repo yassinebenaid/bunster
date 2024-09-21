@@ -9,7 +9,7 @@ import (
 
 func (p *Parser) isRedirectionToken() bool {
 	switch p.curr.Type {
-	case token.GT, token.DOUBLE_GT, token.AMPERSAND_GT, token.GT_AMPERSAND, token.LT:
+	case token.GT, token.DOUBLE_GT, token.AMPERSAND_GT, token.GT_AMPERSAND, token.LT, token.LT_AMPERSAND:
 		return true
 	case token.INT:
 		// redirections that use file descriptor as source
@@ -31,6 +31,8 @@ func (p *Parser) HandleRedirection(cmd *ast.Command) {
 		p.allOutputsToFile(cmd)
 	case token.GT_AMPERSAND:
 		p.fromStdoutToFd(cmd)
+	case token.LT_AMPERSAND:
+		p.toStdinFromFd(cmd)
 	case token.LT:
 		p.toStdin(cmd)
 	case token.INT:
@@ -110,5 +112,17 @@ func (p *Parser) toStdin(cmd *ast.Command) {
 	}
 
 	r.Dst = p.parseField()
+	cmd.Redirections = append(cmd.Redirections, r)
+}
+
+func (p *Parser) toStdinFromFd(cmd *ast.Command) {
+	var r ast.Redirection
+	r.Src = ast.FileDescriptor("0")
+	r.Method = p.curr.Literal
+
+	p.proceed()
+	r.Dst = ast.FileDescriptor(p.curr.Literal)
+	p.proceed()
+
 	cmd.Redirections = append(cmd.Redirections, r)
 }
