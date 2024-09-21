@@ -102,18 +102,20 @@ var redirectionTests = []testCase{
 			},
 		},
 	}},
-	// {`cmd <<< foo arg<<<"foo bar"`, ast.Script{
-	// 	Statements: []ast.Node{
-	// 		ast.Command{
-	// 			Name: ast.Word("cmd"),
-	// 			Args: []ast.Node{
-	// 				ast.Word("arg"),
-	// 			},
-	// 			Redirections: []ast.Redirection{
-	// 				{Src: ast.FileDescriptor("0"), Method: "<<<", Dst: ast.Word("foo")},
-	// 				{Src: ast.FileDescriptor("0"), Method: "<<<", Dst: ast.Word("foo bar")},
-	// 			},
-	// 		},
-	// 	},
-	// }},
+	{`cmd<<<'foo bar' arg <<< foo<<<foo-bar arg2 <<<"$var"`, ast.Script{
+		Statements: []ast.Node{
+			ast.Command{
+				Name: ast.Word("cmd"),
+				Args: []ast.Node{
+					ast.Word("arg"),
+					ast.Word("arg2"),
+				}, Redirections: []ast.Redirection{
+					{Src: ast.FileDescriptor("0"), Method: "<<<", Dst: ast.Word("foo bar")},
+					{Src: ast.FileDescriptor("0"), Method: "<<<", Dst: ast.Word("foo")},
+					{Src: ast.FileDescriptor("0"), Method: "<<<", Dst: ast.Word("foo-bar")},
+					{Src: ast.FileDescriptor("0"), Method: "<<<", Dst: ast.SimpleExpansion("var")},
+				},
+			},
+		},
+	}},
 }
