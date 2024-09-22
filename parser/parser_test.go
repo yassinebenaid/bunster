@@ -260,8 +260,8 @@ var errorHandlingTestCases = []errorHandlingTestCase{
 
 	{`cmd 1>`, "syntax error: a file name was not provided after the `>`."},
 	{`cmd 1> 1>x`, "syntax error: a file name was not provided after the `>`."},
-	// // {`cmd >>`, "syntax error: a file name was not provided after the `>>`."},
-	// // {`cmd >&`, "syntax error: a file descriptor was not provided after the `>&`."},
+	{`cmd 1>> 1>>x`, "syntax error: a file name was not provided after the `>>`."},
+	// {`cmd 1>&`, "syntax error: a file descriptor was not provided after the `>&`."},
 	// // {`cmd >&foo`, "syntax error: a file descriptor was not provided after the `>&`."},
 	// // {`cmd >& foo`, "syntax error: a file descriptor was not provided after the `>&`."},
 }
