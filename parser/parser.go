@@ -174,6 +174,10 @@ func concat(n []ast.Node) ast.Node {
 		}
 	}
 
+	if len(conc.Nodes) == 0 {
+		return nil
+	}
+
 	if len(conc.Nodes) == 1 {
 		return conc.Nodes[0]
 	}
