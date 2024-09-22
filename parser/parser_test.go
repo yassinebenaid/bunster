@@ -250,6 +250,7 @@ type errorHandlingTestCase struct {
 var errorHandlingTestCases = []errorHandlingTestCase{
 	{`cmd 'foo bar`, `syntax error: a closing single quote is missing.`},
 	{`cmd "foo bar'`, `syntax error: a closing double quote is missing.`},
+	{`cmd >`, "syntax error: a file name was not provided after the `>`."},
 }
 
 func TestParserErrorHandling(t *testing.T) {
@@ -261,7 +262,7 @@ func TestParserErrorHandling(t *testing.T) {
 		p.ParseScript()
 
 		if p.Error == nil {
-			t.Fatalf("\nCase#%s: Expected Error, got nil\n", dump(i))
+			t.Fatalf("\nCase#%d: Expected Error, got nil\n", i)
 		}
 
 		if p.Error.Error() != tc.err {
