@@ -89,13 +89,17 @@ loop:
 			nodes = append(nodes, p.parseLiteralString())
 		case token.DOUBLE_QUOTE:
 			nodes = append(nodes, p.parseString())
+		case token.INT:
+			if len(nodes) == 0 && p.isRedirectionToken() {
+				break loop
+			}
+			fallthrough
 		default:
 			if !p.curr.Type.Is(token.INT) && p.isRedirectionToken() {
 				break loop
 			}
 
 			nodes = append(nodes, ast.Word(p.curr.Literal))
-			// TODO: handle error
 		}
 
 		p.proceed()
