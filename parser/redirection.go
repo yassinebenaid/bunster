@@ -92,6 +92,10 @@ func (p *Parser) fromStdoutToFd(cmd *ast.Command) {
 	r.Method = p.curr.Literal
 
 	p.proceed()
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
 	r.Dst = ast.FileDescriptor(p.curr.Literal)
 	p.proceed()
 

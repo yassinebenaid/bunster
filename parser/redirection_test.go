@@ -64,7 +64,7 @@ var redirectionTests = []testCase{
 			},
 		},
 	}},
-	{`cmd>&1 arg >&2 arg>&3 arg345>&4 5>&6 12.34>&7`, ast.Script{
+	{`cmd>&1 arg >&2 arg>&3 arg345>&4 5>&6 12.34>& 7`, ast.Script{
 		Statements: []ast.Node{
 			ast.Command{
 				Name: ast.Word("cmd"),
