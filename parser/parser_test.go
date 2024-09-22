@@ -231,9 +231,40 @@ func TestParser(t *testing.T) {
 
 			script := p.ParseScript()
 
+			if p.Error != nil {
+				t.Fatalf("\nGroup: %sCase: %s\nUnexpected Error: %s\n", dump(group.label), dump(i), dump(p.Error.Error()))
+			}
+
 			if !reflect.DeepEqual(script, tc.expected) {
 				t.Fatalf("\nGroup: %sCase: %s\nwant:\n%s\ngot:\n%s", dump(group.label), dump(i), dump(tc.expected), dump(script))
 			}
+		}
+	}
+}
+
+type errorHandlingTestCase struct {
+	input string
+	err   string
+}
+
+var errorHandlingTestCases = []errorHandlingTestCase{
+	{"cmd '", "syntax error: unterminated quoted string. expected `'`, found `end of file`"},
+}
+
+func TestParserErrorHandling(t *testing.T) {
+	for i, tc := range errorHandlingTestCases {
+		p := parser.New(
+			lexer.New([]byte(tc.input)),
+		)
+
+		p.ParseScript()
+
+		if p.Error == nil {
+			t.Fatalf("\nCase#%s: Expected Error, got nil\n", dump(i))
+		}
+
+		if p.Error.Error() != tc.err {
+			t.Fatalf("\nCase: %s\nwant:\n%s\ngot:\n%s", dump(i), dump(tc.err), dump(p.Error.Error()))
 		}
 	}
 }

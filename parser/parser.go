@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"fmt"
+
 	"github.com/yassinebenaid/nbs/ast"
 	"github.com/yassinebenaid/nbs/lexer"
 	"github.com/yassinebenaid/nbs/token"
@@ -17,9 +19,14 @@ func New(l lexer.Lexer) Parser {
 }
 
 type Parser struct {
-	l    lexer.Lexer
-	curr token.Token
-	next token.Token
+	l     lexer.Lexer
+	curr  token.Token
+	next  token.Token
+	Error error
+}
+
+func (p *Parser) error(msg string) {
+	p.Error = fmt.Errorf("syntax error: %s", msg)
 }
 
 func (p *Parser) proceed() {
