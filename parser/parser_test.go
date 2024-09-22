@@ -248,7 +248,7 @@ type errorHandlingTestCase struct {
 }
 
 var errorHandlingTestCases = []errorHandlingTestCase{
-	{"cmd '", "syntax error: unterminated quoted string. expected `'`, found `end of file`"},
+	{"cmd '", "syntax error: a closing single quote is missing."},
 }
 
 func TestParserErrorHandling(t *testing.T) {

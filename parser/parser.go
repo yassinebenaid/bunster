@@ -25,8 +25,10 @@ type Parser struct {
 	Error error
 }
 
-func (p *Parser) error(msg string) {
-	p.Error = fmt.Errorf("syntax error: %s", msg)
+func (p *Parser) error(msg string, args ...any) {
+	if p.Error == nil {
+		p.Error = fmt.Errorf("syntax error: "+msg+".", args...)
+	}
 }
 
 func (p *Parser) proceed() {
@@ -113,8 +115,7 @@ func (p *Parser) parseLiteralString() ast.Word {
 	p.proceed()
 
 	if p.curr.Type != token.SINGLE_QUOTE {
-		//TODO: handle error here
-		panic("TODO: handle error here")
+		p.error("a closing single quote is missing")
 	}
 
 	return ast.Word(word)
