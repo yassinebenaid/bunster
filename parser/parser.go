@@ -145,8 +145,7 @@ loop:
 	}
 
 	if p.curr.Type != token.DOUBLE_QUOTE {
-		//TODO: handle error here
-		panic("TODO: handle error here")
+		p.error("a closing double quote is missing")
 	}
 
 	return concat(nodes)

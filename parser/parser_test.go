@@ -248,7 +248,8 @@ type errorHandlingTestCase struct {
 }
 
 var errorHandlingTestCases = []errorHandlingTestCase{
-	{"cmd '", "syntax error: a closing single quote is missing."},
+	{`cmd 'foo bar`, `syntax error: a closing single quote is missing.`},
+	{`cmd "foo bar'`, `syntax error: a closing double quote is missing.`},
 }
 
 func TestParserErrorHandling(t *testing.T) {
