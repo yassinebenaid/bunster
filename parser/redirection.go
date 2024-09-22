@@ -33,7 +33,7 @@ func (p *Parser) HandleRedirection(cmd *ast.Command) {
 	case token.LT, token.TRIPLE_LT:
 		p.toStdin(cmd)
 	case token.INT:
-		p.fromFileDescriptor(cmd)
+		p.fromOrToFileDescriptor(cmd)
 	}
 }
 
@@ -55,7 +55,7 @@ func (p *Parser) fromStdoutToFile(cmd *ast.Command) {
 	cmd.Redirections = append(cmd.Redirections, r)
 }
 
-func (p *Parser) fromFileDescriptor(cmd *ast.Command) {
+func (p *Parser) fromOrToFileDescriptor(cmd *ast.Command) {
 	var r ast.Redirection
 	r.Src = ast.FileDescriptor(p.curr.Literal)
 
@@ -98,6 +98,10 @@ func (p *Parser) fromStdoutToFd(cmd *ast.Command) {
 	p.proceed()
 	if p.curr.Type == token.BLANK {
 		p.proceed()
+	}
+
+	if p.curr.Type != token.INT {
+		p.error("a file descriptor was not provided after the `%s`", r.Method)
 	}
 
 	r.Dst = ast.FileDescriptor(p.curr.Literal)

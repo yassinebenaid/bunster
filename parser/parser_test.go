@@ -253,6 +253,7 @@ var errorHandlingTestCases = []errorHandlingTestCase{
 	{`cmd >`, "syntax error: a file name was not provided after the `>`."},
 	{`cmd > >`, "syntax error: a file name was not provided after the `>`."},
 	{`cmd >>`, "syntax error: a file name was not provided after the `>>`."},
+	{`cmd >&`, "syntax error: a file descriptor was not provided after the `>&`."},
 }
 
 func TestParserErrorHandling(t *testing.T) {
