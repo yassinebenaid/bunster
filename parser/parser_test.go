@@ -251,6 +251,8 @@ var errorHandlingTestCases = []errorHandlingTestCase{
 	{`cmd 'foo bar`, `syntax error: a closing single quote is missing.`},
 	{`cmd "foo bar'`, `syntax error: a closing double quote is missing.`},
 	{`cmd >`, "syntax error: a file name was not provided after the `>`."},
+	{`cmd > >`, "syntax error: a file name was not provided after the `>`."},
+	{`cmd >>`, "syntax error: a file name was not provided after the `>>`."},
 }
 
 func TestParserErrorHandling(t *testing.T) {
