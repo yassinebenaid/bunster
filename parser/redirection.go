@@ -1,8 +1,6 @@
 package parser
 
 import (
-	"fmt"
-
 	"github.com/yassinebenaid/nbs/ast"
 	"github.com/yassinebenaid/nbs/token"
 )
@@ -17,10 +15,9 @@ func (p *Parser) isRedirectionToken() bool {
 		case token.GT, token.DOUBLE_GT, token.GT_AMPERSAND, token.LT, token.LT_AMPERSAND, token.TRIPLE_LT:
 			return true
 		}
-		fallthrough
-	default:
-		return false
 	}
+
+	return false
 }
 
 func (p *Parser) HandleRedirection(cmd *ast.Command) {
@@ -37,8 +34,6 @@ func (p *Parser) HandleRedirection(cmd *ast.Command) {
 		p.toStdin(cmd)
 	case token.INT:
 		p.fromFileDescriptor(cmd)
-	default:
-		panic(fmt.Sprintf("unhandled redirection token: %q", p.curr.Literal))
 	}
 }
 
