@@ -28,9 +28,7 @@ func (p *Parser) HandleRedirection(cmd *ast.Command) {
 		p.allOutputsToFile(cmd)
 	case token.GT_AMPERSAND:
 		p.fromStdoutToFd(cmd)
-	case token.LT_AMPERSAND:
-		p.toStdinFromFd(cmd)
-	case token.LT, token.TRIPLE_LT:
+	case token.LT_AMPERSAND, token.LT, token.TRIPLE_LT:
 		p.toStdin(cmd)
 	case token.INT:
 		p.fromOrToFileDescriptor(cmd)
@@ -110,7 +108,6 @@ func (p *Parser) fromStdoutToFd(cmd *ast.Command) {
 	if r.Dst == nil {
 		p.error("a file name was not provided after the `%s`", r.Method)
 	}
-	// p.proceed()
 
 	cmd.Redirections = append(cmd.Redirections, r)
 }

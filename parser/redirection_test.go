@@ -93,30 +93,32 @@ var redirectionTests = []testCase{
 			},
 		},
 	}},
-	// {`cmd<'file.ext' arg < file</foo/bar arg123<foo 3<bar 928 <bar 282 <&123 <&3 4<&5 6<& 7`, ast.Script{
-	// 	Statements: []ast.Node{
-	// 		ast.Command{
-	// 			Name: ast.Word("cmd"),
-	// 			Args: []ast.Node{
-	// 				ast.Word("arg"),
-	// 				ast.Word("arg123"),
-	// 				ast.Word("928"),
-	// 				ast.Word("282"),
-	// 			}, Redirections: []ast.Redirection{
-	// 				{Src: ast.FileDescriptor("0"), Method: "<", Dst: ast.Word("file.ext")},
-	// 				{Src: ast.FileDescriptor("0"), Method: "<", Dst: ast.Word("file")},
-	// 				{Src: ast.FileDescriptor("0"), Method: "<", Dst: ast.Word("/foo/bar")},
-	// 				{Src: ast.FileDescriptor("0"), Method: "<", Dst: ast.Word("foo")},
-	// 				{Src: ast.FileDescriptor("3"), Method: "<", Dst: ast.Word("bar")},
-	// 				{Src: ast.FileDescriptor("0"), Method: "<", Dst: ast.Word("bar")},
-	// 				{Src: ast.FileDescriptor("0"), Method: "<&", Dst: ast.FileDescriptor("123")},
-	// 				{Src: ast.FileDescriptor("0"), Method: "<&", Dst: ast.FileDescriptor("3")},
-	// 				{Src: ast.FileDescriptor("4"), Method: "<&", Dst: ast.FileDescriptor("5")},
-	// 				{Src: ast.FileDescriptor("6"), Method: "<&", Dst: ast.FileDescriptor("7")},
-	// 			},
-	// 		},
-	// 	},
-	// }},
+	{`cmd<'file.ext' arg < file</foo/bar arg123<foo 3<bar 928 <bar 282 <&123 <&3 4<&5 6<& 7 <& "$FD" <&'9'`, ast.Script{
+		Statements: []ast.Node{
+			ast.Command{
+				Name: ast.Word("cmd"),
+				Args: []ast.Node{
+					ast.Word("arg"),
+					ast.Word("arg123"),
+					ast.Word("928"),
+					ast.Word("282"),
+				}, Redirections: []ast.Redirection{
+					{Src: ast.FileDescriptor("0"), Method: "<", Dst: ast.Word("file.ext")},
+					{Src: ast.FileDescriptor("0"), Method: "<", Dst: ast.Word("file")},
+					{Src: ast.FileDescriptor("0"), Method: "<", Dst: ast.Word("/foo/bar")},
+					{Src: ast.FileDescriptor("0"), Method: "<", Dst: ast.Word("foo")},
+					{Src: ast.FileDescriptor("3"), Method: "<", Dst: ast.Word("bar")},
+					{Src: ast.FileDescriptor("0"), Method: "<", Dst: ast.Word("bar")},
+					{Src: ast.FileDescriptor("0"), Method: "<&", Dst: ast.Word("123")},
+					{Src: ast.FileDescriptor("0"), Method: "<&", Dst: ast.Word("3")},
+					{Src: ast.FileDescriptor("4"), Method: "<&", Dst: ast.Word("5")},
+					{Src: ast.FileDescriptor("6"), Method: "<&", Dst: ast.Word("7")},
+					{Src: ast.FileDescriptor("0"), Method: "<&", Dst: ast.SimpleExpansion("FD")},
+					{Src: ast.FileDescriptor("0"), Method: "<&", Dst: ast.Word("9")},
+				},
+			},
+		},
+	}},
 	// {`cmd<<<'foo bar' arg <<< foo<<<foo-bar arg2 <<<"$var" 3<<<foobar <<<123 4<<<123 5<<< 	776`, ast.Script{
 	// 	Statements: []ast.Node{
 	// 		ast.Command{
