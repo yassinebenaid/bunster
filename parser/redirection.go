@@ -65,18 +65,10 @@ func (p *Parser) fromOrToFileDescriptor(cmd *ast.Command) {
 		p.proceed()
 	}
 
-	// switch r.Method {
-	// case "<&", ">&":
-	// 	if p.curr.Type != token.INT {
-	// 		p.error("a file descriptor was not provided after the `%s`", r.Method)
-	// 	}
-	// 	r.Dst = ast.FileDescriptor(p.curr.Literal)
-	// default:
 	r.Dst = p.parseField()
 	if r.Dst == nil {
 		p.error("a file name was not provided after the `%s`", r.Method)
 	}
-	// }
 
 	cmd.Redirections = append(cmd.Redirections, r)
 }
