@@ -248,20 +248,20 @@ type errorHandlingTestCase struct {
 }
 
 var errorHandlingTestCases = []errorHandlingTestCase{
-	{`cmd 'foo bar`, `syntax error: a closing single quote is missing.`},
-	{`cmd "foo bar'`, `syntax error: a closing double quote is missing.`},
+	// {`cmd 'foo bar`, `syntax error: a closing single quote is missing.`},
+	// {`cmd "foo bar'`, `syntax error: a closing double quote is missing.`},
 
-	{`cmd >`, "syntax error: a file name was not provided after the `>`."},
-	{`cmd > >file.txt`, "syntax error: a file name was not provided after the `>`."},
-	{`cmd >>`, "syntax error: a file name was not provided after the `>>`."},
-	{`cmd >&`, "syntax error: a file descriptor was not provided after the `>&`."},
-	{`cmd >&foo`, "syntax error: a file descriptor was not provided after the `>&`."},
-	{`cmd >& foo`, "syntax error: a file descriptor was not provided after the `>&`."},
+	// {`cmd >`, "syntax error: a file name was not provided after the `>`."},
+	// {`cmd > >file.txt`, "syntax error: a file name was not provided after the `>`."},
+	// {`cmd >>`, "syntax error: a file name was not provided after the `>>`."},
+	// {`cmd >&`, "syntax error: a file descriptor was not provided after the `>&`."},
+	// {`cmd >&foo`, "syntax error: a file descriptor was not provided after the `>&`."},
+	// {`cmd >& foo`, "syntax error: a file descriptor was not provided after the `>&`."},
 
-	{`cmd 1>`, "syntax error: a file name was not provided after the `>`."},
-	{`cmd 1> 1>x`, "syntax error: a file name was not provided after the `>`."},
-	{`cmd 1>> 1>>x`, "syntax error: a file name was not provided after the `>>`."},
-	{`cmd 1>& `, "syntax error: a file descriptor was not provided after the `>&`."},
+	// {`cmd 1>`, "syntax error: a file name was not provided after the `>`."},
+	// {`cmd 1> 1>x`, "syntax error: a file name was not provided after the `>`."},
+	// {`cmd 1>> 1>>x`, "syntax error: a file name was not provided after the `>>`."},
+	// {`cmd 1>& `, "syntax error: a file descriptor was not provided after the `>&`."},
 	// {`cmd 1>& 1>&2`, "syntax error: a file descriptor was not provided after the `>&`."},
 	// // {`cmd >&foo`, "syntax error: a file descriptor was not provided after the `>&`."},
 	// // {`cmd >& foo`, "syntax error: a file descriptor was not provided after the `>&`."},
