@@ -22,12 +22,10 @@ func (p *Parser) isRedirectionToken() bool {
 
 func (p *Parser) HandleRedirection(cmd *ast.Command) {
 	switch p.curr.Type {
-	case token.GT, token.DOUBLE_GT:
-		p.fromStdoutToFile(cmd)
+	case token.GT, token.DOUBLE_GT, token.GT_AMPERSAND:
+		p.fromStdout(cmd)
 	case token.AMPERSAND_GT:
 		p.allOutputsToFile(cmd)
-	case token.GT_AMPERSAND:
-		p.fromStdoutToFd(cmd)
 	case token.LT_AMPERSAND, token.LT, token.TRIPLE_LT:
 		p.toStdin(cmd)
 	case token.INT:
@@ -35,7 +33,7 @@ func (p *Parser) HandleRedirection(cmd *ast.Command) {
 	}
 }
 
-func (p *Parser) fromStdoutToFile(cmd *ast.Command) {
+func (p *Parser) fromStdout(cmd *ast.Command) {
 	var r ast.Redirection
 	r.Src = ast.FileDescriptor("1")
 	r.Method = p.curr.Literal
@@ -83,24 +81,6 @@ func (p *Parser) allOutputsToFile(cmd *ast.Command) {
 	}
 
 	r.Dst = p.parseField()
-	cmd.Redirections = append(cmd.Redirections, r)
-}
-
-func (p *Parser) fromStdoutToFd(cmd *ast.Command) {
-	var r ast.Redirection
-	r.Src = ast.FileDescriptor("1")
-	r.Method = p.curr.Literal
-
-	p.proceed()
-	if p.curr.Type == token.BLANK {
-		p.proceed()
-	}
-
-	r.Dst = p.parseField()
-	if r.Dst == nil {
-		p.error("a file name was not provided after the `%s`", r.Method)
-	}
-
 	cmd.Redirections = append(cmd.Redirections, r)
 }
 
