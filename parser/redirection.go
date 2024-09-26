@@ -24,10 +24,10 @@ func (p *Parser) HandleRedirection(cmd *ast.Command) {
 	switch p.curr.Type {
 	case token.GT, token.DOUBLE_GT, token.GT_AMPERSAND:
 		p.fromStdout(cmd)
-	case token.AMPERSAND_GT:
-		p.allOutputsToFile(cmd)
 	case token.LT_AMPERSAND, token.LT, token.TRIPLE_LT:
 		p.toStdin(cmd)
+	case token.AMPERSAND_GT:
+		p.allOutputsToFile(cmd)
 	case token.INT:
 		p.fromOrToFileDescriptor(cmd)
 	}
