@@ -97,15 +97,3 @@ func (p *Parser) toStdin(cmd *ast.Command) {
 	r.Dst = p.parseField()
 	cmd.Redirections = append(cmd.Redirections, r)
 }
-
-func (p *Parser) toStdinFromFd(cmd *ast.Command) {
-	var r ast.Redirection
-	r.Src = ast.FileDescriptor("0")
-	r.Method = p.curr.Literal
-
-	p.proceed()
-	r.Dst = ast.FileDescriptor(p.curr.Literal)
-	p.proceed()
-
-	cmd.Redirections = append(cmd.Redirections, r)
-}
