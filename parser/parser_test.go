@@ -251,18 +251,22 @@ var errorHandlingTestCases = []errorHandlingTestCase{
 	{`cmd 'foo bar`, `syntax error: a closing single quote is missing.`},
 	{`cmd "foo bar'`, `syntax error: a closing double quote is missing.`},
 
-	{`cmd >`, "syntax error: a redirection target was not provided after the `>`."},
-	{`cmd > >file.txt`, "syntax error: a redirection target was not provided after the `>`."},
-	{`cmd >> >>foo`, "syntax error: a redirection target was not provided after the `>>`."},
-	{`cmd >& >&$foo`, "syntax error: a redirection target was not provided after the `>&`."},
+	{`cmd >`, "syntax error: a redirection operand was not provided after the `>`."},
+	{`cmd > >file.txt`, "syntax error: a redirection operand was not provided after the `>`."},
+	{`cmd >>`, "syntax error: a redirection operand was not provided after the `>>`."},
+	{`cmd >> >>foo`, "syntax error: a redirection operand was not provided after the `>>`."},
+	{`cmd >& `, "syntax error: a redirection operand was not provided after the `>&`."},
+	{`cmd >& >&$foo`, "syntax error: a redirection operand was not provided after the `>&`."},
 
-	{`cmd 1>`, "syntax error: a redirection target was not provided after the `>`."},
-	{`cmd 1> 1>x`, "syntax error: a redirection target was not provided after the `>`."},
-	{`cmd 1>> 1>>x`, "syntax error: a redirection target was not provided after the `>>`."},
-	{`cmd 1>& `, "syntax error: a redirection target was not provided after the `>&`."},
-	{`cmd 1>& 1>&2`, "syntax error: a redirection target was not provided after the `>&`."},
+	{`cmd 1>`, "syntax error: a redirection operand was not provided after the `>`."},
+	{`cmd 1> 1>x`, "syntax error: a redirection operand was not provided after the `>`."},
+	{`cmd 1>>`, "syntax error: a redirection operand was not provided after the `>>`."},
+	{`cmd 1>> 1>>x`, "syntax error: a redirection operand was not provided after the `>>`."},
+	{`cmd 1>& `, "syntax error: a redirection operand was not provided after the `>&`."},
+	{`cmd 1>& 1>&2`, "syntax error: a redirection operand was not provided after the `>&`."},
 
-	{`cmd <`, "syntax error: a redirection source was not provided after the `<`."},
+	{`cmd <`, "syntax error: a redirection operand was not provided after the `<`."},
+	{`cmd 1<`, "syntax error: a redirection operand was not provided after the `<`."},
 }
 
 func TestParserErrorHandling(t *testing.T) {

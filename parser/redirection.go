@@ -46,7 +46,7 @@ func (p *Parser) fromStdout(cmd *ast.Command) {
 	r.Dst = p.parseField()
 
 	if r.Dst == nil {
-		p.error("a redirection target was not provided after the `%s`", r.Method)
+		p.error("a redirection operand was not provided after the `%s`", r.Method)
 	}
 	cmd.Redirections = append(cmd.Redirections, r)
 }
@@ -65,7 +65,7 @@ func (p *Parser) fromOrToFileDescriptor(cmd *ast.Command) {
 
 	r.Dst = p.parseField()
 	if r.Dst == nil {
-		p.error("a redirection target was not provided after the `%s`", r.Method)
+		p.error("a redirection operand was not provided after the `%s`", r.Method)
 	}
 
 	cmd.Redirections = append(cmd.Redirections, r)
@@ -96,7 +96,7 @@ func (p *Parser) toStdin(cmd *ast.Command) {
 
 	r.Dst = p.parseField()
 	if r.Dst == nil {
-		p.error("a redirection source was not provided after the `%s`", r.Method)
+		p.error("a redirection operand was not provided after the `%s`", r.Method)
 	}
 
 	cmd.Redirections = append(cmd.Redirections, r)
