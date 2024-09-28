@@ -274,6 +274,11 @@ var errorHandlingTestCases = []errorHandlingTestCase{
 
 	{`cmd &>`, "syntax error: a redirection operand was not provided after the `&>`."},
 	{`cmd &>12>foo`, "syntax error: a redirection operand was not provided after the `&>`."},
+
+	{`cmd <<<`, "syntax error: a redirection operand was not provided after the `<<<`."},
+	{`cmd <<<<<<foo`, "syntax error: a redirection operand was not provided after the `<<<`."},
+	{`cmd 2<<<`, "syntax error: a redirection operand was not provided after the `<<<`."},
+	{`cmd <<<2<<<foo`, "syntax error: a redirection operand was not provided after the `<<<`."},
 }
 
 func TestParserErrorHandling(t *testing.T) {
