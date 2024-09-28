@@ -27,6 +27,30 @@ var redirectionTests = []testCase{
 			},
 		},
 	}},
+	{`cmd>|'file.ext' arg >| file>|/foo/bar arg2 >|"$var" arg345>|xyz 645 >|file 3>|foo.bar 45>| /foo/bar 12.34>|baz`, ast.Script{
+		Statements: []ast.Node{
+			ast.Command{
+				Name: ast.Word("cmd"),
+				Args: []ast.Node{
+					ast.Word("arg"),
+					ast.Word("arg2"),
+					ast.Word("arg345"),
+					ast.Word("645"),
+					ast.Word("12.34"),
+				}, Redirections: []ast.Redirection{
+					{Src: ast.FileDescriptor("1"), Method: ">|", Dst: ast.Word("file.ext")},
+					{Src: ast.FileDescriptor("1"), Method: ">|", Dst: ast.Word("file")},
+					{Src: ast.FileDescriptor("1"), Method: ">|", Dst: ast.Word("/foo/bar")},
+					{Src: ast.FileDescriptor("1"), Method: ">|", Dst: ast.SimpleExpansion("var")},
+					{Src: ast.FileDescriptor("1"), Method: ">|", Dst: ast.Word("xyz")},
+					{Src: ast.FileDescriptor("1"), Method: ">|", Dst: ast.Word("file")},
+					{Src: ast.FileDescriptor("3"), Method: ">|", Dst: ast.Word("foo.bar")},
+					{Src: ast.FileDescriptor("45"), Method: ">|", Dst: ast.Word("/foo/bar")},
+					{Src: ast.FileDescriptor("1"), Method: ">|", Dst: ast.Word("baz")},
+				},
+			},
+		},
+	}},
 	{`cmd>>'file.ext' arg >> file>>/foo/bar arg2 >>"$var" arg345>>xyz 123 >>file 3>>foo.bar 12.34>>baz`, ast.Script{
 		Statements: []ast.Node{
 			ast.Command{
