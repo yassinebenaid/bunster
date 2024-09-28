@@ -29,7 +29,7 @@ func (p *Parser) HandleRedirection(cmd *ast.Command) {
 	case token.AMPERSAND_GT:
 		p.allOutputsToFile(cmd)
 	case token.INT:
-		p.fromOrToFileDescriptor(cmd)
+		p.fromFileDescriptor(cmd)
 	}
 }
 
@@ -51,7 +51,7 @@ func (p *Parser) fromStdout(cmd *ast.Command) {
 	cmd.Redirections = append(cmd.Redirections, r)
 }
 
-func (p *Parser) fromOrToFileDescriptor(cmd *ast.Command) {
+func (p *Parser) fromFileDescriptor(cmd *ast.Command) {
 	var r ast.Redirection
 	r.Src = ast.FileDescriptor(p.curr.Literal)
 
