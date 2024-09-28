@@ -92,6 +92,24 @@ var redirectionTests = []testCase{
 			},
 		},
 	}},
+	{`cmd&>>'file.ext' arg &>> file&>>/foo/bar arg2 &>>"$var" 3&>>xyz`, ast.Script{
+		Statements: []ast.Node{
+			ast.Command{
+				Name: ast.Word("cmd"),
+				Args: []ast.Node{
+					ast.Word("arg"),
+					ast.Word("arg2"),
+					ast.Word("3"),
+				}, Redirections: []ast.Redirection{
+					{Src: nil, Method: "&>>", Dst: ast.Word("file.ext")},
+					{Src: nil, Method: "&>>", Dst: ast.Word("file")},
+					{Src: nil, Method: "&>>", Dst: ast.Word("/foo/bar")},
+					{Src: nil, Method: "&>>", Dst: ast.SimpleExpansion("var")},
+					{Src: nil, Method: "&>>", Dst: ast.Word("xyz")},
+				},
+			},
+		},
+	}},
 	{`cmd>&1 arg >&2 arg>&3 arg345>&4 5>&6 985 >&19 12.34>& 7 8>& 9 >& $FD 3>&$FD`, ast.Script{
 		Statements: []ast.Node{
 			ast.Command{
