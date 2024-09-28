@@ -133,7 +133,13 @@ switch_beginning:
 			tok.Type, tok.Literal = token.AND, "&&"
 		case '>':
 			l.proceed()
-			tok.Type, tok.Literal = token.AMPERSAND_GT, "&>"
+			switch l.next {
+			case '>':
+				l.proceed()
+				tok.Type, tok.Literal = token.AMPERSAND_DOUBLE_GT, "&>>"
+			default:
+				tok.Type, tok.Literal = token.AMPERSAND_GT, "&>"
+			}
 		default:
 			tok.Type, tok.Literal = token.AMPERSAND, string(l.curr)
 		}

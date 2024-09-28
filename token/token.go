@@ -70,6 +70,7 @@ const (
 	LT_AMPERSAND         // `<&`
 	PIPE_AMPERSAND       // `|&`
 	AMPERSAND_GT         // `&>`
+	AMPERSAND_DOUBLE_GT  // `&>>`
 	GT_PIPE              // `>|`
 	LT_GT                // `<>`
 	SEMICOLON            // `;`

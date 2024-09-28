@@ -77,6 +77,7 @@ func TestLexer(t *testing.T) {
 		{`<&`, []token.Token{{Type: token.LT_AMPERSAND, Literal: `<&`}}},
 		{`|&`, []token.Token{{Type: token.PIPE_AMPERSAND, Literal: `|&`}}},
 		{`&>`, []token.Token{{Type: token.AMPERSAND_GT, Literal: `&>`}}},
+		{`&>>`, []token.Token{{Type: token.AMPERSAND_DOUBLE_GT, Literal: `&>>`}}},
 		{`>|`, []token.Token{{Type: token.GT_PIPE, Literal: `>|`}}},
 		{`<>`, []token.Token{{Type: token.LT_GT, Literal: `<>`}}},
 		{`;`, []token.Token{{Type: token.SEMICOLON, Literal: `;`}}},
