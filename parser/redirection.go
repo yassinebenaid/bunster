@@ -95,5 +95,9 @@ func (p *Parser) toStdin(cmd *ast.Command) {
 	}
 
 	r.Dst = p.parseField()
+	if r.Dst == nil {
+		p.error("a redirection source was not provided after the `%s`", r.Method)
+	}
+
 	cmd.Redirections = append(cmd.Redirections, r)
 }

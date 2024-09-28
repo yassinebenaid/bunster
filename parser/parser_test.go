@@ -261,6 +261,8 @@ var errorHandlingTestCases = []errorHandlingTestCase{
 	{`cmd 1>> 1>>x`, "syntax error: a redirection target was not provided after the `>>`."},
 	{`cmd 1>& `, "syntax error: a redirection target was not provided after the `>&`."},
 	{`cmd 1>& 1>&2`, "syntax error: a redirection target was not provided after the `>&`."},
+
+	{`cmd <`, "syntax error: a redirection source was not provided after the `<`."},
 }
 
 func TestParserErrorHandling(t *testing.T) {
