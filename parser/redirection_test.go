@@ -180,6 +180,11 @@ var redirectionErrorHandlingCases = []errorHandlingTestCase{
 	{`cmd 1>& `, "syntax error: a redirection operand was not provided after the `>&`."},
 	{`cmd 1>&1>&2`, "syntax error: a redirection operand was not provided after the `>&`."},
 
+	{`cmd >|`, "syntax error: a redirection operand was not provided after the `>|`."},
+	{`cmd >|>|foo`, "syntax error: a redirection operand was not provided after the `>|`."},
+	{`cmd 1>|`, "syntax error: a redirection operand was not provided after the `>|`."},
+	{`cmd 1>|2>|foo`, "syntax error: a redirection operand was not provided after the `>|`."},
+
 	{`cmd <`, "syntax error: a redirection operand was not provided after the `<`."},
 	{`cmd < <foo`, "syntax error: a redirection operand was not provided after the `<`."},
 	{`cmd 1<`, "syntax error: a redirection operand was not provided after the `<`."},
