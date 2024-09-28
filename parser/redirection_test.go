@@ -140,3 +140,34 @@ var redirectionTests = []testCase{
 		},
 	}},
 }
+
+var redirectionErrorHandlingCases = []errorHandlingTestCase{
+	{`cmd >`, "syntax error: a redirection operand was not provided after the `>`."},
+	{`cmd > >file.txt`, "syntax error: a redirection operand was not provided after the `>`."},
+	{`cmd >>`, "syntax error: a redirection operand was not provided after the `>>`."},
+	{`cmd >> >>foo`, "syntax error: a redirection operand was not provided after the `>>`."},
+	{`cmd >& `, "syntax error: a redirection operand was not provided after the `>&`."},
+	{`cmd >& >&$foo`, "syntax error: a redirection operand was not provided after the `>&`."},
+
+	{`cmd 1>`, "syntax error: a redirection operand was not provided after the `>`."},
+	{`cmd 1>1>x`, "syntax error: a redirection operand was not provided after the `>`."},
+	{`cmd 1>>`, "syntax error: a redirection operand was not provided after the `>>`."},
+	{`cmd 1>>1>>x`, "syntax error: a redirection operand was not provided after the `>>`."},
+	{`cmd 1>& `, "syntax error: a redirection operand was not provided after the `>&`."},
+	{`cmd 1>&1>&2`, "syntax error: a redirection operand was not provided after the `>&`."},
+
+	{`cmd <`, "syntax error: a redirection operand was not provided after the `<`."},
+	{`cmd < <foo`, "syntax error: a redirection operand was not provided after the `<`."},
+	{`cmd 1<`, "syntax error: a redirection operand was not provided after the `<`."},
+	{`cmd 1<1<`, "syntax error: a redirection operand was not provided after the `<`."},
+	{`cmd 1<&`, "syntax error: a redirection operand was not provided after the `<&`."},
+	{`cmd 1<&2<foo`, "syntax error: a redirection operand was not provided after the `<&`."},
+
+	{`cmd &>`, "syntax error: a redirection operand was not provided after the `&>`."},
+	{`cmd &>12>foo`, "syntax error: a redirection operand was not provided after the `&>`."},
+
+	{`cmd <<<`, "syntax error: a redirection operand was not provided after the `<<<`."},
+	{`cmd <<<<<<foo`, "syntax error: a redirection operand was not provided after the `<<<`."},
+	{`cmd 2<<<`, "syntax error: a redirection operand was not provided after the `<<<`."},
+	{`cmd <<<2<<<foo`, "syntax error: a redirection operand was not provided after the `<<<`."},
+}

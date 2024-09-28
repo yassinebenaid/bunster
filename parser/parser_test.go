@@ -247,54 +247,33 @@ type errorHandlingTestCase struct {
 	err   string
 }
 
-var errorHandlingTestCases = []errorHandlingTestCase{
-	{`cmd 'foo bar`, `syntax error: a closing single quote is missing.`},
-	{`cmd "foo bar'`, `syntax error: a closing double quote is missing.`},
-
-	{`cmd >`, "syntax error: a redirection operand was not provided after the `>`."},
-	{`cmd > >file.txt`, "syntax error: a redirection operand was not provided after the `>`."},
-	{`cmd >>`, "syntax error: a redirection operand was not provided after the `>>`."},
-	{`cmd >> >>foo`, "syntax error: a redirection operand was not provided after the `>>`."},
-	{`cmd >& `, "syntax error: a redirection operand was not provided after the `>&`."},
-	{`cmd >& >&$foo`, "syntax error: a redirection operand was not provided after the `>&`."},
-
-	{`cmd 1>`, "syntax error: a redirection operand was not provided after the `>`."},
-	{`cmd 1>1>x`, "syntax error: a redirection operand was not provided after the `>`."},
-	{`cmd 1>>`, "syntax error: a redirection operand was not provided after the `>>`."},
-	{`cmd 1>>1>>x`, "syntax error: a redirection operand was not provided after the `>>`."},
-	{`cmd 1>& `, "syntax error: a redirection operand was not provided after the `>&`."},
-	{`cmd 1>&1>&2`, "syntax error: a redirection operand was not provided after the `>&`."},
-
-	{`cmd <`, "syntax error: a redirection operand was not provided after the `<`."},
-	{`cmd < <foo`, "syntax error: a redirection operand was not provided after the `<`."},
-	{`cmd 1<`, "syntax error: a redirection operand was not provided after the `<`."},
-	{`cmd 1<1<`, "syntax error: a redirection operand was not provided after the `<`."},
-	{`cmd 1<&`, "syntax error: a redirection operand was not provided after the `<&`."},
-	{`cmd 1<&2<foo`, "syntax error: a redirection operand was not provided after the `<&`."},
-
-	{`cmd &>`, "syntax error: a redirection operand was not provided after the `&>`."},
-	{`cmd &>12>foo`, "syntax error: a redirection operand was not provided after the `&>`."},
-
-	{`cmd <<<`, "syntax error: a redirection operand was not provided after the `<<<`."},
-	{`cmd <<<<<<foo`, "syntax error: a redirection operand was not provided after the `<<<`."},
-	{`cmd 2<<<`, "syntax error: a redirection operand was not provided after the `<<<`."},
-	{`cmd <<<2<<<foo`, "syntax error: a redirection operand was not provided after the `<<<`."},
+var errorHandlingTestCases = []struct {
+	label string
+	cases []errorHandlingTestCase
+}{
+	{"Quotes", []errorHandlingTestCase{
+		{`cmd 'foo bar`, `syntax error: a closing single quote is missing.`},
+		{`cmd "foo bar'`, `syntax error: a closing double quote is missing.`},
+	}},
+	{"Redirections", redirectionErrorHandlingCases},
 }
 
 func TestParserErrorHandling(t *testing.T) {
-	for i, tc := range errorHandlingTestCases {
-		p := parser.New(
-			lexer.New([]byte(tc.input)),
-		)
+	for _, group := range errorHandlingTestCases {
+		for i, tc := range group.cases {
+			p := parser.New(
+				lexer.New([]byte(tc.input)),
+			)
 
-		p.ParseScript()
+			p.ParseScript()
 
-		if p.Error == nil {
-			t.Fatalf("\nCase#%d: Expected Error, got nil\n", i)
-		}
+			if p.Error == nil {
+				t.Fatalf("\nGroup: %s\nCase#%d: Expected Error, got nil\n", group.label, i)
+			}
 
-		if p.Error.Error() != tc.err {
-			t.Fatalf("\nCase: %s\nwant:\n%s\ngot:\n%s", dump(i), dump(tc.err), dump(p.Error.Error()))
+			if p.Error.Error() != tc.err {
+				t.Fatalf("\nGroup: %s\nCase: %s\nwant:\n%s\ngot:\n%s", dump(group.label), dump(i), dump(tc.err), dump(p.Error.Error()))
+			}
 		}
 	}
 }
