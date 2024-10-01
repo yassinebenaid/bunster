@@ -8,6 +8,15 @@ type Script struct {
 	Statements []Node
 }
 
+type PipelineCommand struct {
+	Stderr  bool
+	Command Command
+}
+
+type Pipeline []PipelineCommand
+
+func (Pipeline) node() {}
+
 type Word string
 
 func (Word) node() {}

@@ -41,25 +41,50 @@ func (p *Parser) ParseScript() ast.Script {
 
 	for ; p.curr.Type != token.EOF; p.proceed() {
 		switch p.curr.Type {
+		case token.BLANK:
+			continue
 		default:
-			script.Statements = append(script.Statements, p.parseCommand())
+			script.Statements = append(script.Statements, p.parsePipline())
 		}
 	}
 
 	return script
 }
 
+func (p *Parser) parsePipline() ast.Pipeline {
+	var pipeline ast.Pipeline
+
+	cmd := p.parseCommand()
+	pipeline = append(pipeline, ast.PipelineCommand{Command: cmd})
+
+	for {
+		if p.curr.Type != token.PIPE {
+			break
+		}
+
+		p.proceed()
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+
+		var pipe ast.PipelineCommand
+		pipe.Command = p.parseCommand()
+		pipeline = append(pipeline, pipe)
+	}
+
+	return pipeline
+}
+
 func (p *Parser) parseCommand() ast.Command {
 	var cmd ast.Command
-
 	cmd.Name = p.parseField()
 
 loop:
 	for {
 		switch {
-		case p.curr.Type.Is(token.BLANK):
+		case p.curr.Type == token.BLANK:
 			break
-		case p.curr.Type.Is(token.EOF):
+		case p.curr.Type == token.EOF || p.curr.Type == token.PIPE:
 			break loop
 		case p.isRedirectionToken():
 			p.HandleRedirection(&cmd)
@@ -81,7 +106,7 @@ func (p *Parser) parseField() ast.Node {
 loop:
 	for {
 		switch p.curr.Type {
-		case token.BLANK, token.EOF:
+		case token.BLANK, token.EOF, token.PIPE:
 			break loop
 		case token.SIMPLE_EXPANSION:
 			nodes = append(nodes, ast.SimpleExpansion(p.curr.Literal))
