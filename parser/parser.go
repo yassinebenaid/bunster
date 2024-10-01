@@ -112,7 +112,7 @@ func (p *Parser) parseField() ast.Node {
 loop:
 	for {
 		switch p.curr.Type {
-		case token.BLANK, token.EOF, token.PIPE, token.AMPERSAND:
+		case token.BLANK, token.EOF, token.PIPE, token.PIPE_AMPERSAND:
 			break loop
 		case token.SIMPLE_EXPANSION:
 			nodes = append(nodes, ast.SimpleExpansion(p.curr.Literal))
