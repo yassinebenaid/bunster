@@ -253,11 +253,11 @@ var errorHandlingTestCases = []struct {
 	label string
 	cases []errorHandlingTestCase
 }{
-	// {"Quotes", []errorHandlingTestCase{
-	// 	{`cmd 'foo bar`, `syntax error: a closing single quote is missing.`},
-	// 	{`cmd "foo bar'`, `syntax error: a closing double quote is missing.`},
-	// }},
-	// {"Redirections", redirectionErrorHandlingCases},
+	{"Quotes", []errorHandlingTestCase{
+		{`cmd 'foo bar`, `syntax error: a closing single quote is missing.`},
+		{`cmd "foo bar'`, `syntax error: a closing double quote is missing.`},
+	}},
+	{"Redirections", redirectionErrorHandlingCases},
 }
 
 func TestParserErrorHandling(t *testing.T) {
