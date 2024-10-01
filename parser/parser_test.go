@@ -24,204 +24,204 @@ var testCases = []struct {
 	label string
 	cases []testCase
 }{
-	// {"Simle Command calls", []testCase{
-	// 	{`git`, ast.Script{
-	// 		Statements: []ast.Node{
-	// 			ast.Command{Name: ast.Word("git")},
-	// 		},
-	// 	}},
-	// 	{`foo bar baz`, ast.Script{
-	// 		Statements: []ast.Node{
-	// 			ast.Command{
-	// 				Name: ast.Word("foo"),
-	// 				Args: []ast.Node{
-	// 					ast.Word("bar"),
-	// 					ast.Word("baz"),
-	// 				},
-	// 			},
-	// 		},
-	// 	}},
-	// 	{`foo $bar $FOO_BAR_1234567890`, ast.Script{
-	// 		Statements: []ast.Node{
-	// 			ast.Command{
-	// 				Name: ast.Word("foo"),
-	// 				Args: []ast.Node{
-	// 					ast.SimpleExpansion("bar"),
-	// 					ast.SimpleExpansion("FOO_BAR_1234567890"),
-	// 				},
-	// 			},
-	// 		},
-	// 	}},
-	// 	{`/usr/bin/foo bar baz`, ast.Script{
-	// 		Statements: []ast.Node{
-	// 			ast.Command{
-	// 				Name: ast.Word("/usr/bin/foo"),
-	// 				Args: []ast.Node{
-	// 					ast.Word("bar"),
-	// 					ast.Word("baz"),
-	// 				},
-	// 			},
-	// 		},
-	// 	}},
-	// 	{`/usr/bin/foo-bar baz`, ast.Script{
-	// 		Statements: []ast.Node{
-	// 			ast.Command{
-	// 				Name: ast.Word("/usr/bin/foo-bar"),
-	// 				Args: []ast.Node{
-	// 					ast.Word("baz"),
-	// 				},
-	// 			},
-	// 		},
-	// 	}},
-	// }},
+	{"Simle Command calls", []testCase{
+		{`git`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{Name: ast.Word("git")},
+			},
+		}},
+		{`foo bar baz`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("foo"),
+					Args: []ast.Node{
+						ast.Word("bar"),
+						ast.Word("baz"),
+					},
+				},
+			},
+		}},
+		{`foo $bar $FOO_BAR_1234567890`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("foo"),
+					Args: []ast.Node{
+						ast.SimpleExpansion("bar"),
+						ast.SimpleExpansion("FOO_BAR_1234567890"),
+					},
+				},
+			},
+		}},
+		{`/usr/bin/foo bar baz`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("/usr/bin/foo"),
+					Args: []ast.Node{
+						ast.Word("bar"),
+						ast.Word("baz"),
+					},
+				},
+			},
+		}},
+		{`/usr/bin/foo-bar baz`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("/usr/bin/foo-bar"),
+					Args: []ast.Node{
+						ast.Word("baz"),
+					},
+				},
+			},
+		}},
+	}},
 
-	// {"Strings", []testCase{
-	// 	{`cmd 'hello world'`, ast.Script{
-	// 		Statements: []ast.Node{
-	// 			ast.Command{
-	// 				Name: ast.Word("cmd"),
-	// 				Args: []ast.Node{
-	// 					ast.Word("hello world"),
-	// 				},
-	// 			},
-	// 		},
-	// 	}},
-	// 	{`cmd 'if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset'`, ast.Script{
-	// 		Statements: []ast.Node{
-	// 			ast.Command{
-	// 				Name: ast.Word("cmd"),
-	// 				Args: []ast.Node{
-	// 					ast.Word("if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset"),
-	// 				},
-	// 			},
-	// 		},
-	// 	}},
-	// 	{`cmd '+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~'`, ast.Script{
-	// 		Statements: []ast.Node{
-	// 			ast.Command{
-	// 				Name: ast.Word("cmd"),
-	// 				Args: []ast.Node{
-	// 					ast.Word(`+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~`),
-	// 				},
-	// 			},
-	// 		},
-	// 	}},
-	// 	{`cmd '' '\' '$foo'`, ast.Script{
-	// 		Statements: []ast.Node{
-	// 			ast.Command{
-	// 				Name: ast.Word("cmd"),
-	// 				Args: []ast.Node{
-	// 					ast.Word(""),
-	// 					ast.Word(`\`),
-	// 					ast.Word(`$foo`),
-	// 				},
-	// 			},
-	// 		},
-	// 	}},
-	// 	{`cmd ""`, ast.Script{
-	// 		Statements: []ast.Node{
-	// 			ast.Command{
-	// 				Name: ast.Word("cmd"),
-	// 				Args: []ast.Node{
-	// 					ast.Word(""),
-	// 				},
-	// 			},
-	// 		},
-	// 	}},
-	// 	{`cmd "Hello World" "name is: $NAME and path is $DIR/$FILE"`, ast.Script{
-	// 		Statements: []ast.Node{
-	// 			ast.Command{
-	// 				Name: ast.Word("cmd"),
-	// 				Args: []ast.Node{
-	// 					ast.Word("Hello World"),
-	// 					ast.Concatination{
-	// 						Nodes: []ast.Node{
-	// 							ast.Word("name is: "),
-	// 							ast.SimpleExpansion("NAME"),
-	// 							ast.Word(" and path is "),
-	// 							ast.SimpleExpansion("DIR"),
-	// 							ast.Word("/"),
-	// 							ast.SimpleExpansion("FILE"),
-	// 						},
-	// 					},
-	// 				},
-	// 			},
-	// 		},
-	// 	}},
-	// 	{`cmd "\"" "\$ESCAPED_VAR"`, ast.Script{
-	// 		Statements: []ast.Node{
-	// 			ast.Command{
-	// 				Name: ast.Word("cmd"),
-	// 				Args: []ast.Node{
-	// 					ast.Word(`"`),
-	// 					ast.Word(`$ESCAPED_VAR`),
-	// 				},
-	// 			},
-	// 		},
-	// 	}},
-	// 	{"cmd \"\n\"", ast.Script{
-	// 		Statements: []ast.Node{
-	// 			ast.Command{
-	// 				Name: ast.Word("cmd"),
-	// 				Args: []ast.Node{
-	// 					ast.Word("\n"),
-	// 				},
-	// 			},
-	// 		},
-	// 	}},
-	// }},
+	{"Strings", []testCase{
+		{`cmd 'hello world'`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word("hello world"),
+					},
+				},
+			},
+		}},
+		{`cmd 'if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset'`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word("if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset"),
+					},
+				},
+			},
+		}},
+		{`cmd '+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~'`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word(`+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~`),
+					},
+				},
+			},
+		}},
+		{`cmd '' '\' '$foo'`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word(""),
+						ast.Word(`\`),
+						ast.Word(`$foo`),
+					},
+				},
+			},
+		}},
+		{`cmd ""`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word(""),
+					},
+				},
+			},
+		}},
+		{`cmd "Hello World" "name is: $NAME and path is $DIR/$FILE"`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word("Hello World"),
+						ast.Concatination{
+							Nodes: []ast.Node{
+								ast.Word("name is: "),
+								ast.SimpleExpansion("NAME"),
+								ast.Word(" and path is "),
+								ast.SimpleExpansion("DIR"),
+								ast.Word("/"),
+								ast.SimpleExpansion("FILE"),
+							},
+						},
+					},
+				},
+			},
+		}},
+		{`cmd "\"" "\$ESCAPED_VAR"`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word(`"`),
+						ast.Word(`$ESCAPED_VAR`),
+					},
+				},
+			},
+		}},
+		{"cmd \"\n\"", ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word("\n"),
+					},
+				},
+			},
+		}},
+	}},
 
-	// {"Concatination", []testCase{
-	// 	{`/usr/bin/$BINARY_NAME --path=/home/$USER/dir --option -f --do=something $HOME$DIR_NAME$PKG_NAME/foo`, ast.Script{
-	// 		Statements: []ast.Node{
-	// 			ast.Command{
-	// 				Name: ast.Concatination{
-	// 					Nodes: []ast.Node{
-	// 						ast.Word("/usr/bin/"),
-	// 						ast.SimpleExpansion("BINARY_NAME"),
-	// 					},
-	// 				},
-	// 				Args: []ast.Node{
-	// 					ast.Concatination{
-	// 						Nodes: []ast.Node{
-	// 							ast.Word("--path=/home/"),
-	// 							ast.SimpleExpansion("USER"),
-	// 							ast.Word("/dir"),
-	// 						},
-	// 					},
-	// 					ast.Word("--option"),
-	// 					ast.Word("-f"),
-	// 					ast.Word("--do=something"),
-	// 					ast.Concatination{
-	// 						Nodes: []ast.Node{
-	// 							ast.SimpleExpansion("HOME"),
-	// 							ast.SimpleExpansion("DIR_NAME"),
-	// 							ast.SimpleExpansion("PKG_NAME"),
-	// 							ast.Word("/foo"),
-	// 						},
-	// 					},
-	// 				},
-	// 			},
-	// 		},
-	// 	}},
-	// 	{`cmd 'foo''bar' "foo""bar" "foo"'bar' "'foo'"`, ast.Script{
-	// 		Statements: []ast.Node{
-	// 			ast.Command{
-	// 				Name: ast.Word("cmd"),
-	// 				Args: []ast.Node{
-	// 					ast.Word("foobar"),
-	// 					ast.Word("foobar"),
-	// 					ast.Word("foobar"),
-	// 					ast.Word("'foo'"),
-	// 				},
-	// 			},
-	// 		},
-	// 	}},
-	// }},
+	{"Concatination", []testCase{
+		{`/usr/bin/$BINARY_NAME --path=/home/$USER/dir --option -f --do=something $HOME$DIR_NAME$PKG_NAME/foo`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Concatination{
+						Nodes: []ast.Node{
+							ast.Word("/usr/bin/"),
+							ast.SimpleExpansion("BINARY_NAME"),
+						},
+					},
+					Args: []ast.Node{
+						ast.Concatination{
+							Nodes: []ast.Node{
+								ast.Word("--path=/home/"),
+								ast.SimpleExpansion("USER"),
+								ast.Word("/dir"),
+							},
+						},
+						ast.Word("--option"),
+						ast.Word("-f"),
+						ast.Word("--do=something"),
+						ast.Concatination{
+							Nodes: []ast.Node{
+								ast.SimpleExpansion("HOME"),
+								ast.SimpleExpansion("DIR_NAME"),
+								ast.SimpleExpansion("PKG_NAME"),
+								ast.Word("/foo"),
+							},
+						},
+					},
+				},
+			},
+		}},
+		{`cmd 'foo''bar' "foo""bar" "foo"'bar' "'foo'"`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word("foobar"),
+						ast.Word("foobar"),
+						ast.Word("foobar"),
+						ast.Word("'foo'"),
+					},
+				},
+			},
+		}},
+	}},
 
 	{"Piplines", pipesTests},
 
-	// {"Redirections", redirectionTests},
+	{"Redirections", redirectionTests},
 }
 
 func TestParser(t *testing.T) {
