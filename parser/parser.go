@@ -58,16 +58,17 @@ func (p *Parser) parsePipline() ast.Pipeline {
 	pipeline = append(pipeline, ast.PipelineCommand{Command: cmd})
 
 	for {
-		if p.curr.Type != token.PIPE {
+		if p.curr.Type != token.PIPE && p.curr.Type != token.PIPE_AMPERSAND {
 			break
 		}
+		var pipe ast.PipelineCommand
+		pipe.Stderr = p.curr.Type == token.PIPE_AMPERSAND
 
 		p.proceed()
 		if p.curr.Type == token.BLANK {
 			p.proceed()
 		}
 
-		var pipe ast.PipelineCommand
 		pipe.Command = p.parseCommand()
 		pipeline = append(pipeline, pipe)
 	}
@@ -84,7 +85,7 @@ loop:
 		switch {
 		case p.curr.Type == token.BLANK:
 			break
-		case p.curr.Type == token.EOF || p.curr.Type == token.PIPE:
+		case p.curr.Type == token.EOF || p.curr.Type == token.PIPE || p.curr.Type == token.PIPE_AMPERSAND:
 			break loop
 		case p.isRedirectionToken():
 			p.HandleRedirection(&cmd)
@@ -106,7 +107,7 @@ func (p *Parser) parseField() ast.Node {
 loop:
 	for {
 		switch p.curr.Type {
-		case token.BLANK, token.EOF, token.PIPE:
+		case token.BLANK, token.EOF, token.PIPE, token.AMPERSAND:
 			break loop
 		case token.SIMPLE_EXPANSION:
 			nodes = append(nodes, ast.SimpleExpansion(p.curr.Literal))
