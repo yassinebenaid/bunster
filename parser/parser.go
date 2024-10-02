@@ -98,11 +98,10 @@ loop:
 			cmd.Args = append(cmd.Args, p.parseField())
 		}
 
-		if !p.isRedirectionToken() {
+		if !p.isRedirectionToken() && !p.isControlToken() {
 			p.proceed()
 		}
 	}
-
 	return cmd
 }
 
@@ -218,4 +217,8 @@ func concat(n []ast.Node) ast.Node {
 	}
 
 	return conc
+}
+
+func (p *Parser) isControlToken() bool {
+	return p.curr.Type == token.PIPE || p.curr.Type == token.PIPE_AMPERSAND
 }

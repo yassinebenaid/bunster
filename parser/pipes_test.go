@@ -25,6 +25,14 @@ var pipesTests = []testCase{
 			},
 		},
 	}},
+	{`cmd arg| cmd2 \|`, ast.Script{
+		Statements: []ast.Node{
+			ast.Pipeline{
+				{Command: ast.Command{Name: ast.Word("cmd"), Args: []ast.Node{ast.Word("arg")}}, Stderr: false},
+				{Command: ast.Command{Name: ast.Word("cmd2"), Args: []ast.Node{ast.Word("|")}}, Stderr: false},
+			},
+		},
+	}},
 }
 
 var pipesErrorHandlingCases = []errorHandlingTestCase{
