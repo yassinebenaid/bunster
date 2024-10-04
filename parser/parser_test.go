@@ -258,6 +258,7 @@ var errorHandlingTestCases = []struct {
 		{`cmd "foo bar'`, `syntax error: a closing double quote is missing.`},
 	}},
 	{"Redirections", redirectionErrorHandlingCases},
+	{"Pipes", pipesErrorHandlingCases},
 }
 
 func TestParserErrorHandling(t *testing.T) {

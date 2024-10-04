@@ -67,5 +67,5 @@ var pipesTests = []testCase{
 }
 
 var pipesErrorHandlingCases = []errorHandlingTestCase{
-	// {`cmd >`, "syntax error: a pipes operand was not provided after the `>`."},
+	{`cmd |`, "syntax error: bad pipeline construction, a command is missing after `|`."},
 }

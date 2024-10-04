@@ -67,6 +67,7 @@ func (p *Parser) parsePipline() ast.Pipeline {
 			break
 		}
 		var pipe ast.PipelineCommand
+		pipeMethod := p.curr.Literal
 		pipe.Stderr = p.curr.Type == token.PIPE_AMPERSAND
 
 		p.proceed()
@@ -75,6 +76,9 @@ func (p *Parser) parsePipline() ast.Pipeline {
 		}
 
 		pipe.Command = p.parseCommand()
+		if pipe.Command.Name == nil {
+			p.error("bad pipeline construction, a command is missing after `%s`", pipeMethod)
+		}
 		pipeline = append(pipeline, pipe)
 	}
 
@@ -84,6 +88,9 @@ func (p *Parser) parsePipline() ast.Pipeline {
 func (p *Parser) parseCommand() ast.Command {
 	var cmd ast.Command
 	cmd.Name = p.parseField()
+	if cmd.Name == nil {
+		return cmd
+	}
 
 loop:
 	for {
