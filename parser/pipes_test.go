@@ -64,10 +64,19 @@ var pipesTests = []testCase{
 			},
 		},
 	}},
+	{"cmd |\n\n\t cmd2", ast.Script{
+		Statements: []ast.Node{
+			ast.Pipeline{
+				{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
+				{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: false},
+			},
+		},
+	}},
 }
 
 var pipesErrorHandlingCases = []errorHandlingTestCase{
 	{`cmd |`, "syntax error: invalid pipeline construction, a command is missing after `|`."},
 	{`cmd | foo |&`, "syntax error: invalid pipeline construction, a command is missing after `|&`."},
 	{`cmd foo | cmd >foo| |&`, "syntax error: invalid pipeline construction, a command is missing after `|`."},
+	{"cmd |\n\n\t <foo", "syntax error: invalid pipeline construction, a command is missing after `|`."},
 }

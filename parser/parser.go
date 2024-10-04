@@ -74,7 +74,7 @@ func (p *Parser) parsePipline() ast.Pipeline {
 		pipe.Stderr = p.curr.Type == token.PIPE_AMPERSAND
 
 		p.proceed()
-		if p.curr.Type == token.BLANK {
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
 		}
 
