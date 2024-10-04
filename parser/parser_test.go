@@ -27,7 +27,7 @@ var testCases = []struct {
 	{"Simle Command calls", []testCase{
 		{``, ast.Script{}},
 		{`	 	`, ast.Script{}},
-		{"\n\n\n", ast.Script{}},
+		{"\n	\n \n ", ast.Script{}},
 		{`git`, ast.Script{
 			Statements: []ast.Node{
 				ast.Command{Name: ast.Word("git")},
