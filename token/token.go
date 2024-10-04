@@ -2,10 +2,6 @@ package token
 
 type TokenType byte
 
-func (t TokenType) Is(tt TokenType) bool {
-	return t == tt
-}
-
 type Token struct {
 	Type    TokenType
 	Literal string
