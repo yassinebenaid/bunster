@@ -41,7 +41,7 @@ func (p *Parser) ParseScript() ast.Script {
 
 	for ; p.curr.Type != token.EOF; p.proceed() {
 		switch p.curr.Type {
-		case token.BLANK:
+		case token.BLANK, token.NEWLINE:
 			continue
 		default:
 			pipe := p.parsePipline()
@@ -121,7 +121,7 @@ func (p *Parser) parseField() ast.Node {
 loop:
 	for {
 		switch p.curr.Type {
-		case token.BLANK, token.EOF, token.PIPE, token.PIPE_AMPERSAND:
+		case token.BLANK, token.NEWLINE, token.EOF, token.PIPE, token.PIPE_AMPERSAND:
 			break loop
 		case token.SIMPLE_EXPANSION:
 			nodes = append(nodes, ast.SimpleExpansion(p.curr.Literal))
