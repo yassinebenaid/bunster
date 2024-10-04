@@ -33,6 +33,37 @@ var pipesTests = []testCase{
 			},
 		},
 	}},
+
+	{`cmd arg >foo 2>&1| cmd2 123 |&$var`, ast.Script{
+		Statements: []ast.Node{
+			ast.Pipeline{
+				{
+					Command: ast.Command{
+						Name: ast.Word("cmd"),
+						Args: []ast.Node{ast.Word("arg")},
+						Redirections: []ast.Redirection{
+							{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.Word("foo")},
+							{Src: ast.FileDescriptor("2"), Method: ">&", Dst: ast.Word("1")},
+						},
+					},
+					Stderr: false,
+				},
+				{
+					Command: ast.Command{
+						Name: ast.Word("cmd2"),
+						Args: []ast.Node{ast.Word("123")},
+					},
+					Stderr: false,
+				},
+				{
+					Command: ast.Command{
+						Name: ast.SimpleExpansion("var"),
+					},
+					Stderr: true,
+				},
+			},
+		},
+	}},
 }
 
 var pipesErrorHandlingCases = []errorHandlingTestCase{
