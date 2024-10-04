@@ -67,6 +67,7 @@ var pipesTests = []testCase{
 }
 
 var pipesErrorHandlingCases = []errorHandlingTestCase{
-	{`cmd |`, "syntax error: bad pipeline construction, a command is missing after `|`."},
-	{`cmd | foo |&`, "syntax error: bad pipeline construction, a command is missing after `|&`."},
+	{`cmd |`, "syntax error: invalid pipeline construction, a command is missing after `|`."},
+	{`cmd | foo |&`, "syntax error: invalid pipeline construction, a command is missing after `|&`."},
+	{`cmd foo | cmd >foo| |&`, "syntax error: invalid pipeline construction, a command is missing after `|`."},
 }

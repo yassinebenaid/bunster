@@ -253,6 +253,18 @@ var errorHandlingTestCases = []struct {
 	label string
 	cases []errorHandlingTestCase
 }{
+	{"Simple Commands", []errorHandlingTestCase{
+		{`|`, `syntax error: invalid command construction.`},
+		{`>`, `syntax error: invalid command construction.`},
+		{`>>`, `syntax error: invalid command construction.`},
+		{`1>>`, `syntax error: invalid command construction.`},
+		{`<<<`, `syntax error: invalid command construction.`},
+		{`1<<<`, `syntax error: invalid command construction.`},
+		{`1>`, `syntax error: invalid command construction.`},
+		{`1<`, `syntax error: invalid command construction.`},
+		{`1>&`, `syntax error: invalid command construction.`},
+		{`1<&`, `syntax error: invalid command construction.`},
+	}},
 	{"Quotes", []errorHandlingTestCase{
 		{`cmd 'foo bar`, `syntax error: a closing single quote is missing.`},
 		{`cmd "foo bar'`, `syntax error: a closing double quote is missing.`},
