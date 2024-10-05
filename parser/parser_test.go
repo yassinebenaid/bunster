@@ -1,7 +1,10 @@
 package parser_test
 
 import (
+	"fmt"
+	"os"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/yassinebenaid/godump"
@@ -228,8 +231,18 @@ var testCases = []struct {
 }
 
 func TestParser(t *testing.T) {
+	tgroup, tcase := os.Getenv("TEST_GROUP"), os.Getenv("TEST_CASE")
+
 	for _, group := range testCases {
+		if tgroup != "" && !strings.Contains(strings.ToLower(group.label), tgroup) {
+			continue
+		}
+
 		for i, tc := range group.cases {
+			if tcase != "" && fmt.Sprint(i) != tcase {
+				continue
+			}
+
 			p := parser.New(
 				lexer.New([]byte(tc.input)),
 			)
