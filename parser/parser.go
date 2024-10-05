@@ -44,12 +44,7 @@ func (p *Parser) ParseScript() ast.Script {
 		case token.BLANK, token.NEWLINE:
 			continue
 		default:
-			pipe := p.parsePipline()
-			if len(pipe) == 1 {
-				script.Statements = append(script.Statements, pipe[0].Command)
-			} else {
-				script.Statements = append(script.Statements, pipe)
-			}
+			script.Statements = append(script.Statements, p.parseCommandList())
 		}
 	}
 
