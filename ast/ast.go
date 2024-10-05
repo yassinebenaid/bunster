@@ -8,6 +8,14 @@ type Script struct {
 	Statements []Node
 }
 
+type LogicalCommand struct {
+	Left     Node
+	Operator string // || or &&
+	Right    Node
+}
+
+func (LogicalCommand) node() {}
+
 type PipelineCommand struct {
 	Stderr  bool
 	Command Command
