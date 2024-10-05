@@ -66,7 +66,14 @@ func (p *Parser) parseCommandList() ast.Node {
 			p.proceed()
 		}
 
-		right := p.parseCommand()
+		var right ast.Node
+		rightPipe := p.parsePipline()
+		if len(pipe) == 1 {
+			right = rightPipe[0].Command
+		} else {
+			right = rightPipe
+		}
+
 		left = ast.LogicalCommand{
 			Left:     left,
 			Operator: "&&",
