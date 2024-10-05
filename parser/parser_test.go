@@ -223,8 +223,8 @@ var testCases = []struct {
 	}},
 
 	{"Redirections", redirectionTests},
-
 	{"Piplines", pipesTests},
+	{"Logical Commands", logicalCommandsTests},
 }
 
 func TestParser(t *testing.T) {
