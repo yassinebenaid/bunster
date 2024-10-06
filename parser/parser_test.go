@@ -289,7 +289,7 @@ var errorHandlingTestCases = []struct {
 	}},
 	{"Redirections", redirectionErrorHandlingCases},
 	{"Pipes", pipesErrorHandlingCases},
-	// {"Logical Constructions", logicalCommandsErrorHandlingCases},
+	{"Logical Constructions", logicalCommandsErrorHandlingCases},
 }
 
 func TestParserErrorHandling(t *testing.T) {
