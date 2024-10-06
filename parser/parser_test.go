@@ -280,6 +280,8 @@ var errorHandlingTestCases = []struct {
 		{`1<`, `syntax error: invalid command construction.`},
 		{`1>&`, `syntax error: invalid command construction.`},
 		{`1<&`, `syntax error: invalid command construction.`},
+		{`&& cmd2`, `syntax error: invalid command construction.`},
+		{`|| cmd2`, `syntax error: invalid command construction.`},
 	}},
 	{"Quotes", []errorHandlingTestCase{
 		{`cmd 'foo bar`, `syntax error: a closing single quote is missing.`},
@@ -287,6 +289,7 @@ var errorHandlingTestCases = []struct {
 	}},
 	{"Redirections", redirectionErrorHandlingCases},
 	{"Pipes", pipesErrorHandlingCases},
+	// {"Logical Constructions", logicalCommandsErrorHandlingCases},
 }
 
 func TestParserErrorHandling(t *testing.T) {

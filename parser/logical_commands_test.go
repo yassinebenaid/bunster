@@ -236,3 +236,7 @@ var logicalCommandsTests = []testCase{
 		},
 	}},
 }
+
+var logicalCommandsErrorHandlingCases = []errorHandlingTestCase{
+	{`cmd &&`, "syntax error: invalid logical construction, a command is missing after `&&`."},
+}
