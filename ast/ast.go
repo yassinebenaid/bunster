@@ -34,7 +34,7 @@ type Word string
 func (Word) node() {}
 
 type Redirection struct {
-	Src    Node
+	Src    string
 	Method string
 	Dst    Node
 }

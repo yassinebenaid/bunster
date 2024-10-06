@@ -30,8 +30,8 @@ var logicalCommandsTests = []testCase{
 							Name: ast.Word("cmd"),
 							Args: []ast.Node{ast.Word("arg")},
 							Redirections: []ast.Redirection{
-								{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.Word("foo")},
-								{Src: ast.FileDescriptor("0"), Method: "<<<", Dst: ast.Word("foo bar")},
+								{Src: "1", Method: ">", Dst: ast.Word("foo")},
+								{Src: "0", Method: "<<<", Dst: ast.Word("foo bar")},
 							},
 						},
 						Stderr: false,
@@ -41,7 +41,7 @@ var logicalCommandsTests = []testCase{
 							Name: ast.Word("cmd2"),
 							Args: []ast.Node{ast.Word("foo bar baz")},
 							Redirections: []ast.Redirection{
-								{Src: ast.FileDescriptor("0"), Method: "<", Dst: ast.Word("input.txt")},
+								{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 							},
 						},
 						Stderr: false,
@@ -54,8 +54,8 @@ var logicalCommandsTests = []testCase{
 							Name: ast.Word("cmd"),
 							Args: []ast.Node{ast.SimpleExpansion("var")},
 							Redirections: []ast.Redirection{
-								{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.Word("foo")},
-								{Src: ast.FileDescriptor("3"), Method: "<<<", Dst: ast.Word("foo bar")},
+								{Src: "1", Method: ">", Dst: ast.Word("foo")},
+								{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
 							},
 						},
 						Stderr: false,
@@ -65,7 +65,7 @@ var logicalCommandsTests = []testCase{
 							Name: ast.Word("cmd2"),
 							Args: []ast.Node{ast.Word("foo bar baz")},
 							Redirections: []ast.Redirection{
-								{Src: ast.FileDescriptor("0"), Method: "<", Dst: ast.Word("input.txt")},
+								{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 							},
 						},
 						Stderr: true,
@@ -136,8 +136,8 @@ var logicalCommandsTests = []testCase{
 							Name: ast.Word("cmd"),
 							Args: []ast.Node{ast.Word("arg")},
 							Redirections: []ast.Redirection{
-								{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.Word("foo")},
-								{Src: ast.FileDescriptor("0"), Method: "<<<", Dst: ast.Word("foo bar")},
+								{Src: "1", Method: ">", Dst: ast.Word("foo")},
+								{Src: "0", Method: "<<<", Dst: ast.Word("foo bar")},
 							},
 						},
 						Stderr: false,
@@ -147,7 +147,7 @@ var logicalCommandsTests = []testCase{
 							Name: ast.Word("cmd2"),
 							Args: []ast.Node{ast.Word("foo bar baz")},
 							Redirections: []ast.Redirection{
-								{Src: ast.FileDescriptor("0"), Method: "<", Dst: ast.Word("input.txt")},
+								{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 							},
 						},
 						Stderr: false,
@@ -160,8 +160,8 @@ var logicalCommandsTests = []testCase{
 							Name: ast.Word("cmd"),
 							Args: []ast.Node{ast.SimpleExpansion("var")},
 							Redirections: []ast.Redirection{
-								{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.Word("foo")},
-								{Src: ast.FileDescriptor("3"), Method: "<<<", Dst: ast.Word("foo bar")},
+								{Src: "1", Method: ">", Dst: ast.Word("foo")},
+								{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
 							},
 						},
 						Stderr: false,
@@ -171,7 +171,7 @@ var logicalCommandsTests = []testCase{
 							Name: ast.Word("cmd2"),
 							Args: []ast.Node{ast.Word("foo bar baz")},
 							Redirections: []ast.Redirection{
-								{Src: ast.FileDescriptor("0"), Method: "<", Dst: ast.Word("input.txt")},
+								{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 							},
 						},
 						Stderr: true,

@@ -36,7 +36,7 @@ func (p *Parser) HandleRedirection(cmd *ast.Command) {
 
 func (p *Parser) fromStdout(cmd *ast.Command) {
 	var r ast.Redirection
-	r.Src = ast.FileDescriptor("1")
+	r.Src = "1"
 	r.Method = p.curr.Literal
 
 	p.proceed()
@@ -54,7 +54,7 @@ func (p *Parser) fromStdout(cmd *ast.Command) {
 
 func (p *Parser) fromFileDescriptor(cmd *ast.Command) {
 	var r ast.Redirection
-	r.Src = ast.FileDescriptor(p.curr.Literal)
+	r.Src = p.curr.Literal
 
 	p.proceed()
 	r.Method = p.curr.Literal
@@ -90,7 +90,7 @@ func (p *Parser) allOutputsToFile(cmd *ast.Command) {
 
 func (p *Parser) toStdin(cmd *ast.Command) {
 	var r ast.Redirection
-	r.Src = ast.FileDescriptor("0")
+	r.Src = "0"
 	r.Method = p.curr.Literal
 
 	p.proceed()

@@ -42,8 +42,8 @@ var pipesTests = []testCase{
 						Name: ast.Word("cmd"),
 						Args: []ast.Node{ast.Word("arg")},
 						Redirections: []ast.Redirection{
-							{Src: ast.FileDescriptor("1"), Method: ">", Dst: ast.Word("foo")},
-							{Src: ast.FileDescriptor("2"), Method: ">&", Dst: ast.Word("1")},
+							{Src: "1", Method: ">", Dst: ast.Word("foo")},
+							{Src: "2", Method: ">&", Dst: ast.Word("1")},
 						},
 					},
 					Stderr: false,
