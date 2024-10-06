@@ -81,7 +81,7 @@ func (p *Parser) parseCommandList() ast.Node {
 			right = rightPipe
 		}
 
-		left = ast.LogicalCommand{
+		left = ast.BinaryConstruction{
 			Left:     left,
 			Operator: operator,
 			Right:    right,

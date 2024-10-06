@@ -8,13 +8,13 @@ type Script struct {
 	Statements []Node
 }
 
-type LogicalCommand struct {
+type BinaryConstruction struct {
 	Left     Node
 	Operator string // || or &&
 	Right    Node
 }
 
-func (LogicalCommand) node() {}
+func (BinaryConstruction) node() {}
 
 type BackgroundCommand struct {
 	Node
