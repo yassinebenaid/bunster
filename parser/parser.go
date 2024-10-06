@@ -135,7 +135,7 @@ loop:
 		switch {
 		case p.curr.Type == token.BLANK:
 			break
-		case p.curr.Type == token.EOF || p.curr.Type == token.NEWLINE:
+		case p.curr.Type == token.EOF || p.curr.Type == token.NEWLINE || p.curr.Type == token.SEMICOLON:
 			break loop
 		case p.isRedirectionToken():
 			p.HandleRedirection(&cmd)
@@ -160,7 +160,7 @@ func (p *Parser) parseField() ast.Node {
 loop:
 	for {
 		switch p.curr.Type {
-		case token.BLANK, token.NEWLINE, token.EOF:
+		case token.BLANK, token.NEWLINE, token.SEMICOLON, token.EOF:
 			break loop
 		case token.SIMPLE_EXPANSION:
 			nodes = append(nodes, ast.SimpleExpansion(p.curr.Literal))
