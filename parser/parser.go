@@ -69,7 +69,7 @@ func (p *Parser) parseCommandList() ast.Node {
 	for p.curr.Type == token.AND || p.curr.Type == token.OR {
 		operator := p.curr.Literal
 		p.proceed()
-		for p.curr.Type == token.BLANK {
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
 		}
 
