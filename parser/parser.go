@@ -60,7 +60,8 @@ func (p *Parser) parseCommandList() ast.Node {
 		left = pipe
 	}
 
-	for p.curr.Type == token.AND {
+	for p.curr.Type == token.AND || p.curr.Type == token.OR {
+		operator := p.curr.Literal
 		p.proceed()
 		for p.curr.Type == token.BLANK {
 			p.proceed()
@@ -76,7 +77,7 @@ func (p *Parser) parseCommandList() ast.Node {
 
 		left = ast.LogicalCommand{
 			Left:     left,
-			Operator: "&&",
+			Operator: operator,
 			Right:    right,
 		}
 	}
@@ -128,7 +129,7 @@ loop:
 		switch {
 		case p.curr.Type == token.BLANK:
 			break
-		case p.curr.Type == token.EOF || p.curr.Type == token.PIPE || p.curr.Type == token.PIPE_AMPERSAND || p.curr.Type == token.AND:
+		case p.curr.Type == token.EOF || p.curr.Type == token.PIPE || p.curr.Type == token.PIPE_AMPERSAND || p.curr.Type == token.AND || p.curr.Type == token.OR:
 			break loop
 		case p.isRedirectionToken():
 			p.HandleRedirection(&cmd)
@@ -258,5 +259,5 @@ func concat(n []ast.Node) ast.Node {
 }
 
 func (p *Parser) isControlToken() bool {
-	return p.curr.Type == token.PIPE || p.curr.Type == token.PIPE_AMPERSAND || p.curr.Type == token.AND
+	return p.curr.Type == token.PIPE || p.curr.Type == token.PIPE_AMPERSAND || p.curr.Type == token.AND || p.curr.Type == token.OR
 }
