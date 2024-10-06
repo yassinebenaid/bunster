@@ -31,19 +31,12 @@ var testCases = []struct {
 		{``, ast.Script{}},
 		{`	 	`, ast.Script{}},
 		{"\n	\n \n ", ast.Script{}},
-		{`git`, ast.Script{
-			Statements: []ast.Node{
-				ast.Command{Name: ast.Word("git")},
-			},
-		}},
+		{`git`, ast.Script{Statements: []ast.Node{ast.Command{Name: ast.Word("git")}}}},
 		{`foo bar baz`, ast.Script{
 			Statements: []ast.Node{
 				ast.Command{
 					Name: ast.Word("foo"),
-					Args: []ast.Node{
-						ast.Word("bar"),
-						ast.Word("baz"),
-					},
+					Args: []ast.Node{ast.Word("bar"), ast.Word("baz")},
 				},
 			},
 		}},
