@@ -214,4 +214,25 @@ var logicalCommandsTests = []testCase{
 			},
 		},
 	}},
+	{` cmd || cmd2 && cmd3 || cmd4 && cmd5`, ast.Script{
+		Statements: []ast.Node{
+			ast.LogicalCommand{
+				Left: ast.LogicalCommand{
+					Left: ast.LogicalCommand{
+						Left: ast.LogicalCommand{
+							Left:     ast.Command{Name: ast.Word("cmd")},
+							Operator: "||",
+							Right:    ast.Command{Name: ast.Word("cmd2")},
+						},
+						Operator: "&&",
+						Right:    ast.Command{Name: ast.Word("cmd3")},
+					},
+					Operator: "||",
+					Right:    ast.Command{Name: ast.Word("cmd4")},
+				},
+				Operator: "&&",
+				Right:    ast.Command{Name: ast.Word("cmd5")},
+			},
+		},
+	}},
 }
