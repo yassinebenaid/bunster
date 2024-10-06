@@ -41,10 +41,6 @@ type Redirection struct {
 
 func (Redirection) node() {}
 
-type FileDescriptor string
-
-func (FileDescriptor) node() {}
-
 type Command struct {
 	Name         Node
 	Args         []Node
