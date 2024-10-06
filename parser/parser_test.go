@@ -221,6 +221,17 @@ var testCases = []struct {
 	{"Redirections", redirectionTests},
 	{"Piplines", pipesTests},
 	{"Logical Commands", logicalCommandsTests},
+	{"Background Commands", []testCase{
+		{`cmd &`, ast.Script{
+			Statements: []ast.Node{
+				ast.BackgroundCommand{
+					Node: ast.Command{
+						Name: ast.Word("cmd"),
+					},
+				},
+			},
+		}},
+	}},
 }
 
 func TestParser(t *testing.T) {

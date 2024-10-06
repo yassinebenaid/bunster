@@ -60,6 +60,12 @@ func (p *Parser) parseCommandList() ast.Node {
 		left = pipe
 	}
 
+	if p.curr.Type == token.AMPERSAND {
+		return ast.BackgroundCommand{
+			Node: left,
+		}
+	}
+
 	for p.curr.Type == token.AND || p.curr.Type == token.OR {
 		operator := p.curr.Literal
 		p.proceed()
@@ -129,11 +135,15 @@ loop:
 		switch {
 		case p.curr.Type == token.BLANK:
 			break
-		case p.curr.Type == token.EOF || p.curr.Type == token.PIPE || p.curr.Type == token.PIPE_AMPERSAND || p.curr.Type == token.AND || p.curr.Type == token.OR:
+		case p.curr.Type == token.EOF:
 			break loop
 		case p.isRedirectionToken():
 			p.HandleRedirection(&cmd)
 		default:
+			if p.isControlToken() {
+				break loop
+			}
+
 			cmd.Args = append(cmd.Args, p.parseField())
 		}
 
@@ -259,5 +269,9 @@ func concat(n []ast.Node) ast.Node {
 }
 
 func (p *Parser) isControlToken() bool {
-	return p.curr.Type == token.PIPE || p.curr.Type == token.PIPE_AMPERSAND || p.curr.Type == token.AND || p.curr.Type == token.OR
+	return p.curr.Type == token.PIPE ||
+		p.curr.Type == token.PIPE_AMPERSAND ||
+		p.curr.Type == token.AND ||
+		p.curr.Type == token.OR ||
+		p.curr.Type == token.AMPERSAND
 }

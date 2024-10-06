@@ -16,6 +16,10 @@ type LogicalCommand struct {
 
 func (LogicalCommand) node() {}
 
+type BackgroundCommand struct {
+	Node
+}
+
 type PipelineCommand struct {
 	Stderr  bool
 	Command Command
