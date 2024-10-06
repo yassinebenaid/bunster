@@ -135,7 +135,7 @@ loop:
 		switch {
 		case p.curr.Type == token.BLANK:
 			break
-		case p.curr.Type == token.EOF:
+		case p.curr.Type == token.EOF || p.curr.Type == token.NEWLINE:
 			break loop
 		case p.isRedirectionToken():
 			p.HandleRedirection(&cmd)

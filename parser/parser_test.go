@@ -66,10 +66,14 @@ var testCases = []struct {
 			Statements: []ast.Node{
 				ast.Command{
 					Name: ast.Word("/usr/bin/foo-bar"),
-					Args: []ast.Node{
-						ast.Word("baz"),
-					},
+					Args: []ast.Node{ast.Word("baz")},
 				},
+			},
+		}},
+		{"cmd1 \n cmd2", ast.Script{
+			Statements: []ast.Node{
+				ast.Command{Name: ast.Word("cmd1")},
+				ast.Command{Name: ast.Word("cmd2")},
 			},
 		}},
 	}},
