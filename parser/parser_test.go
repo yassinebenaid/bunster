@@ -224,7 +224,7 @@ var testCases = []struct {
 	{"Background Commands", []testCase{
 		{`cmd &`, ast.Script{
 			Statements: []ast.Node{
-				ast.BackgroundCommand{
+				ast.BackgroundConstruction{
 					Node: ast.Command{
 						Name: ast.Word("cmd"),
 					},

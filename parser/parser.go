@@ -61,7 +61,7 @@ func (p *Parser) parseCommandList() ast.Node {
 	}
 
 	if p.curr.Type == token.AMPERSAND {
-		return ast.BackgroundCommand{
+		return ast.BackgroundConstruction{
 			Node: left,
 		}
 	}

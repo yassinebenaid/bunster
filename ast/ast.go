@@ -16,7 +16,7 @@ type BinaryConstruction struct {
 
 func (BinaryConstruction) node() {}
 
-type BackgroundCommand struct {
+type BackgroundConstruction struct {
 	Node
 }
 
