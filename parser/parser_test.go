@@ -299,6 +299,13 @@ var errorHandlingTestCases = []struct {
 		{`1<&`, `syntax error: invalid command construction.`},
 		{`&& cmd2`, `syntax error: invalid command construction.`},
 		{`|| cmd2`, `syntax error: invalid command construction.`},
+		{`& cmd2`, `syntax error: invalid command construction.`},
+		{`cmd & || cmd2`, `syntax error: invalid command construction.`},
+		{`cmd & && cmd2`, `syntax error: invalid command construction.`},
+		{`cmd & | cmd2`, `syntax error: invalid command construction.`},
+		{`cmd || & cmd2`, `syntax error: invalid command construction.`},
+		{`cmd && & cmd2`, `syntax error: invalid command construction.`},
+		{`cmd | & cmd2`, "syntax error: invalid pipeline construction, a command is missing after `|`."},
 	}},
 	{"Quotes", []errorHandlingTestCase{
 		{`cmd 'foo bar`, `syntax error: a closing single quote is missing.`},
