@@ -60,7 +60,7 @@ func (p *Parser) parseCommandList() ast.Node {
 		left = pipe
 	}
 
-	if p.curr.Type == token.AND {
+	for p.curr.Type == token.AND {
 		p.proceed()
 		for p.curr.Type == token.BLANK {
 			p.proceed()
