@@ -220,8 +220,8 @@ var testCases = []struct {
 
 	{"Redirections", redirectionTests},
 	{"Piplines", pipesTests},
-	{"Logical Commands", logicalCommandsTests},
-	{"Background Commands", []testCase{
+	{"Binary Constructions", logicalCommandsTests},
+	{"Background Constructions", []testCase{
 		{`cmd &`, ast.Script{
 			Statements: []ast.Node{
 				ast.BackgroundConstruction{
