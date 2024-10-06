@@ -77,6 +77,56 @@ var testCases = []struct {
 			},
 		}},
 	}},
+	{"Simle Command calls", []testCase{
+		{``, ast.Script{}},
+		{`	 	`, ast.Script{}},
+		{"\n	\n \n ", ast.Script{}},
+		{`git`, ast.Script{Statements: []ast.Node{ast.Command{Name: ast.Word("git")}}}},
+		{`foo bar baz`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("foo"),
+					Args: []ast.Node{ast.Word("bar"), ast.Word("baz")},
+				},
+			},
+		}},
+		{`foo $bar $FOO_BAR_1234567890`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("foo"),
+					Args: []ast.Node{
+						ast.SimpleExpansion("bar"),
+						ast.SimpleExpansion("FOO_BAR_1234567890"),
+					},
+				},
+			},
+		}},
+		{`/usr/bin/foo bar baz`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("/usr/bin/foo"),
+					Args: []ast.Node{
+						ast.Word("bar"),
+						ast.Word("baz"),
+					},
+				},
+			},
+		}},
+		{`/usr/bin/foo-bar baz`, ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("/usr/bin/foo-bar"),
+					Args: []ast.Node{ast.Word("baz")},
+				},
+			},
+		}},
+		{"cmd1 \n cmd2", ast.Script{
+			Statements: []ast.Node{
+				ast.Command{Name: ast.Word("cmd1")},
+				ast.Command{Name: ast.Word("cmd2")},
+			},
+		}},
+	}},
 
 	{"Strings", []testCase{
 		{`cmd 'hello world'`, ast.Script{
@@ -162,19 +212,6 @@ var testCases = []struct {
 				},
 			},
 		}},
-		{"cmd \"\n\"", ast.Script{
-			Statements: []ast.Node{
-				ast.Command{
-					Name: ast.Word("cmd"),
-					Args: []ast.Node{
-						ast.Word("\n"),
-					},
-				},
-			},
-		}},
-	}},
-
-	{"Concatination", []testCase{
 		{`/usr/bin/$BINARY_NAME --path=/home/$USER/dir --option -f --do=something $HOME$DIR_NAME$PKG_NAME/foo`, ast.Script{
 			Statements: []ast.Node{
 				ast.Command{
@@ -220,8 +257,17 @@ var testCases = []struct {
 				},
 			},
 		}},
+		{"cmd \"\n\"", ast.Script{
+			Statements: []ast.Node{
+				ast.Command{
+					Name: ast.Word("cmd"),
+					Args: []ast.Node{
+						ast.Word("\n"),
+					},
+				},
+			},
+		}},
 	}},
-
 	{"Redirections", redirectionTests},
 	{"Piplines", pipesTests},
 	{"Binary Constructions", logicalCommandsTests},
