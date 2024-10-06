@@ -120,10 +120,12 @@ var testCases = []struct {
 				},
 			},
 		}},
-		{"cmd1 \n cmd2", ast.Script{
+		{"cmd1 \n cmd2\ncmd3 \n cmd4 arg1 arg2", ast.Script{
 			Statements: []ast.Node{
 				ast.Command{Name: ast.Word("cmd1")},
 				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Name: ast.Word("cmd3")},
+				ast.Command{Name: ast.Word("cmd4"), Args: []ast.Node{ast.Word("arg1"), ast.Word("arg2")}},
 			},
 		}},
 	}},
