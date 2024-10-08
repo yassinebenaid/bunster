@@ -115,7 +115,6 @@ const (
 	BLANK            // Spaces and tabs
 	NEWLINE          //  `\n`
 	SPECIAL_VAR      // Special variables like $?, $#, $@, $*, $$, $!, $0, $1, $2, ...
-	ESCAPE_CHAR      // Escaped characters like \n, \t, \\
 	OTHER            // anything else
 	EOF              // end of file
 )

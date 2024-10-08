@@ -14,7 +14,6 @@ const (
 type Lexer struct {
 	input []byte
 	pos   int
-	prev  byte
 	curr  byte
 	next  byte
 	ctx   context
@@ -308,16 +307,12 @@ switch_beginning:
 		}
 	case isLetter(l.curr):
 		tok.Literal = string(l.curr)
-		isEscaped := l.prev == '\\'
-
 		for isLetter(l.next) {
 			l.proceed()
 			tok.Literal += string(l.curr)
 		}
 
-		if isEscaped {
-			tok.Type = token.OTHER
-		} else if keyword, ok := token.Keywords[tok.Literal]; ok {
+		if keyword, ok := token.Keywords[tok.Literal]; ok {
 			tok.Type = keyword
 		} else {
 			tok.Type = token.WORD
@@ -350,16 +345,13 @@ switch_beginning:
 	case l.curr == '\\':
 		l.proceed()
 		switch l.curr {
-		case '\\', ' ', '\t', '$', '|', '&', '>', '<', ';', '(', ')', '"':
-			tok.Type, tok.Literal = token.OTHER, string(l.curr)
+		case 0:
+			tok.Type = token.EOF
 		case '\n':
 			l.proceed()
-			fallthrough
-		default:
-			// If the current token did not match any of the above control tokens. Then we need to go throught the switch again.
-			// This way we will ignore the \ backslash while returning a valid token.
-			// Otherwise, we would be returning an invalid token with 0 type which is not expected.
 			goto switch_beginning
+		default:
+			tok.Type, tok.Literal = token.ESCAPED_CHAR, string(l.curr)
 		}
 	case l.curr == 0:
 		tok.Type = token.EOF
@@ -377,7 +369,6 @@ func isLetter(b byte) bool {
 }
 
 func (l *Lexer) proceed() {
-	l.prev = l.curr
 	l.curr = l.next
 	if l.pos >= len(l.input) {
 		l.next = 0
