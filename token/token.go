@@ -108,7 +108,7 @@ const (
 	TILDE                // `~`
 
 	SIMPLE_EXPANSION // Simple variable expansion. eg. $variable_name.
-	FILE_DESCRIPTOR  // 0-9 in io redirection. eg `>&`, `<&`, ...
+	ESCAPED_CHAR     // characters preceded by '\'. ...
 	Word             // Variable names, functions and other identifiers.
 	INT              // Integer numbers
 	FLOAT            //  float numbers
