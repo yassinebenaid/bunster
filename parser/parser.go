@@ -60,12 +60,6 @@ func (p *Parser) parseCommandList() ast.Node {
 		left = pipe
 	}
 
-	if p.curr.Type == token.AMPERSAND {
-		return ast.BackgroundConstruction{
-			Node: left,
-		}
-	}
-
 	for p.curr.Type == token.AND || p.curr.Type == token.OR {
 		operator := p.curr.Literal
 		p.proceed()
@@ -86,6 +80,10 @@ func (p *Parser) parseCommandList() ast.Node {
 			Operator: operator,
 			Right:    right,
 		}
+	}
+
+	if p.curr.Type == token.AMPERSAND {
+		return ast.BackgroundConstruction{Node: left}
 	}
 
 	return left

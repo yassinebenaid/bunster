@@ -124,6 +124,22 @@ var logicalCommandsTests = []testCase{
 		},
 	}},
 
+	{" cmd && cmd2 && cmd3 &", ast.Script{
+		Statements: []ast.Node{
+			ast.BackgroundConstruction{
+				Node: ast.BinaryConstruction{
+					Left: ast.BinaryConstruction{
+						Left:     ast.Command{Name: ast.Word("cmd")},
+						Operator: "&&",
+						Right:    ast.Command{Name: ast.Word("cmd2")},
+					},
+					Operator: "&&",
+					Right:    ast.Command{Name: ast.Word("cmd3")},
+				},
+			},
+		},
+	}},
+
 	{` cmd || cmd2 `, ast.Script{
 		Statements: []ast.Node{
 			ast.BinaryConstruction{
