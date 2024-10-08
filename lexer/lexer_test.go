@@ -119,13 +119,13 @@ func TestLexer(t *testing.T) {
 
 		// identifiers
 		{`foo bar foo-bar`, []token.Token{
-			{Type: token.Word, Literal: `foo`},
+			{Type: token.WORD, Literal: `foo`},
 			{Type: token.BLANK, Literal: ` `},
-			{Type: token.Word, Literal: `bar`},
+			{Type: token.WORD, Literal: `bar`},
 			{Type: token.BLANK, Literal: ` `},
-			{Type: token.Word, Literal: `foo`},
+			{Type: token.WORD, Literal: `foo`},
 			{Type: token.MINUS, Literal: `-`},
-			{Type: token.Word, Literal: `bar`},
+			{Type: token.WORD, Literal: `bar`},
 		}},
 
 		// Special Variables
@@ -152,7 +152,7 @@ func TestLexer(t *testing.T) {
 		}},
 		{`$1something`, []token.Token{
 			{Type: token.SPECIAL_VAR, Literal: "1"},
-			{Type: token.Word, Literal: "something"},
+			{Type: token.WORD, Literal: "something"},
 		}},
 		{`$$ $@ $? $# $! $_ $*`, []token.Token{
 			{Type: token.SPECIAL_VAR, Literal: "$"},
@@ -175,7 +175,7 @@ func TestLexer(t *testing.T) {
 			{Type: token.BLANK, Literal: ` `},
 			{Type: token.SIMPLE_EXPANSION, Literal: `variable`},
 			{Type: token.MINUS, Literal: `-`},
-			{Type: token.Word, Literal: `name`},
+			{Type: token.WORD, Literal: `name`},
 			{Type: token.BLANK, Literal: ` `},
 			{Type: token.SIMPLE_EXPANSION, Literal: `concatinated`},
 			{Type: token.SIMPLE_EXPANSION, Literal: `VAIABLE`},
@@ -185,7 +185,7 @@ func TestLexer(t *testing.T) {
 		{`0123456789 abc1234 123.456 .123 123. 1.2.3 .abc 1.c 12.34abc`, []token.Token{
 			{Type: token.INT, Literal: `0123456789`},
 			{Type: token.BLANK, Literal: ` `},
-			{Type: token.Word, Literal: `abc`},
+			{Type: token.WORD, Literal: `abc`},
 			{Type: token.INT, Literal: `1234`},
 			{Type: token.BLANK, Literal: ` `},
 			{Type: token.FLOAT, Literal: `123.456`},
@@ -198,13 +198,13 @@ func TestLexer(t *testing.T) {
 			{Type: token.FLOAT, Literal: `.3`},
 			{Type: token.BLANK, Literal: ` `},
 			{Type: token.OTHER, Literal: `.`},
-			{Type: token.Word, Literal: `abc`},
+			{Type: token.WORD, Literal: `abc`},
 			{Type: token.BLANK, Literal: ` `},
 			{Type: token.FLOAT, Literal: `1.`},
-			{Type: token.Word, Literal: `c`},
+			{Type: token.WORD, Literal: `c`},
 			{Type: token.BLANK, Literal: ` `},
 			{Type: token.FLOAT, Literal: `12.34`},
-			{Type: token.Word, Literal: `abc`},
+			{Type: token.WORD, Literal: `abc`},
 		}},
 		// Blank
 		{"  	\t", []token.Token{
@@ -216,7 +216,7 @@ func TestLexer(t *testing.T) {
 		{`\\`, []token.Token{{Type: token.OTHER, Literal: `\`}}},
 		{`\ `, []token.Token{{Type: token.OTHER, Literal: ` `}}},
 		{`\	`, []token.Token{{Type: token.OTHER, Literal: `	`}}}, // this is a tab
-		{`\$foo`, []token.Token{{Type: token.OTHER, Literal: `$`}, {Type: token.Word, Literal: `foo`}}},
+		{`\$foo`, []token.Token{{Type: token.OTHER, Literal: `$`}, {Type: token.WORD, Literal: `foo`}}},
 		{`\|`, []token.Token{{Type: token.OTHER, Literal: `|`}}},
 		{`\&`, []token.Token{{Type: token.OTHER, Literal: `&`}}},
 		{`\>`, []token.Token{{Type: token.OTHER, Literal: `>`}}},
@@ -225,7 +225,7 @@ func TestLexer(t *testing.T) {
 		{`\(`, []token.Token{{Type: token.OTHER, Literal: `(`}}},
 		{`\)`, []token.Token{{Type: token.OTHER, Literal: `)`}}},
 		{`\foo`, []token.Token{{Type: token.OTHER, Literal: `foo`}}},
-		{"\\\nfoo", []token.Token{{Type: token.Word, Literal: "foo"}}},
+		{"\\\nfoo", []token.Token{{Type: token.WORD, Literal: "foo"}}},
 		{`\"`, []token.Token{{Type: token.OTHER, Literal: `"`}}},
 
 		// escaped keywords

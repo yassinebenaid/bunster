@@ -109,7 +109,7 @@ const (
 
 	SIMPLE_EXPANSION // Simple variable expansion. eg. $variable_name.
 	ESCAPED_CHAR     // characters preceded by '\'. ...
-	Word             // Variable names, functions and other identifiers.
+	WORD             // Variable names, functions and other identifiers.
 	INT              // Integer numbers
 	FLOAT            //  float numbers
 	BLANK            // Spaces and tabs

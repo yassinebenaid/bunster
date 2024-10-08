@@ -320,7 +320,7 @@ switch_beginning:
 		} else if keyword, ok := token.Keywords[tok.Literal]; ok {
 			tok.Type = keyword
 		} else {
-			tok.Type = token.Word
+			tok.Type = token.WORD
 		}
 	case (l.curr >= '0' && l.curr <= '9') || (l.curr == '.' && (l.next >= '0' && l.next <= '9')):
 		tok.Type, tok.Literal = token.INT, string(l.curr)
