@@ -1,10 +1,8 @@
 <div align="center">
-<img width="124"   src="https://github.com/user-attachments/assets/2302f523-4a9e-4553-9317-e3bf0683ca78"/>
+<img width="200"   src="./docs/logo.png"/>
 </div>
 
 <div align="center">
 
-# Elia
+# Bunny
 </div>
-
-foo bar
