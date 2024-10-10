@@ -211,15 +211,24 @@ var testCases = []struct {
 				},
 			},
 		}},
-		{`cmd "\"" "\$ESCAPED_VAR"`, ast.Script{
+		{`cmd "\"" "\$ESCAPED_VAR" "\foo\bar\\" \$var \" \foo`, ast.Script{
 			Statements: []ast.Node{
 				ast.Command{
 					Name: ast.Word("cmd"),
 					Args: []ast.Node{
 						ast.Word(`"`),
 						ast.Word(`$ESCAPED_VAR`),
+						ast.Word(`\foo\bar\`),
+						ast.Word(`$var`),
+						ast.Word(`"`),
+						ast.Word(`foo`),
 					},
 				},
+			},
+		}},
+		{"cmd \"\\\nfoo\"", ast.Script{
+			Statements: []ast.Node{
+				ast.Command{Name: ast.Word("cmd"), Args: []ast.Node{ast.Word(`foo`)}},
 			},
 		}},
 		{`/usr/bin/$BINARY_NAME --path=/home/$USER/dir --option -f --do=something $HOME$DIR_NAME$PKG_NAME/foo`, ast.Script{

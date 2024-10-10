@@ -216,6 +216,8 @@ loop:
 		switch p.curr.Type {
 		case token.DOUBLE_QUOTE, token.EOF:
 			break loop
+		case token.ESCAPED_CHAR:
+			nodes = append(nodes, ast.Word("\\"+p.curr.Literal))
 		case token.SIMPLE_EXPANSION:
 			nodes = append(nodes, ast.SimpleExpansion(p.curr.Literal))
 		default:
