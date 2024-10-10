@@ -1,6 +1,6 @@
 package parser_test
 
-import "github.com/yassinebenaid/nbs/ast"
+import "github.com/yassinebenaid/bunny/ast"
 
 var logicalCommandsTests = []testCase{
 	{` cmd && cmd2 `, ast.Script{

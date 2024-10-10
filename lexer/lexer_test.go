@@ -3,9 +3,9 @@ package lexer_test
 import (
 	"testing"
 
+	"github.com/yassinebenaid/bunny/lexer"
+	"github.com/yassinebenaid/bunny/token"
 	"github.com/yassinebenaid/godump"
-	"github.com/yassinebenaid/nbs/lexer"
-	"github.com/yassinebenaid/nbs/token"
 )
 
 var dump = (&godump.Dumper{

@@ -1,4 +1,4 @@
-module github.com/yassinebenaid/nbs
+module github.com/yassinebenaid/bunny
 
 go 1.22.3
 
