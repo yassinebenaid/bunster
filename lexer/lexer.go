@@ -347,6 +347,8 @@ switch_beginning:
 		switch l.curr {
 		case 0:
 			tok.Type = token.EOF
+		case '"', '\\', '$':
+			tok.Type, tok.Literal = token.OTHER, string(l.curr)
 		case '\n':
 			l.proceed()
 			goto switch_beginning

@@ -213,10 +213,11 @@ func TestLexer(t *testing.T) {
 
 		// Escapes
 		{`\`, []token.Token{{Type: token.EOF}}},
-		{`\\`, []token.Token{{Type: token.ESCAPED_CHAR, Literal: `\`}}},
+		{`\\`, []token.Token{{Type: token.OTHER, Literal: `\`}}},
+		{`\"`, []token.Token{{Type: token.OTHER, Literal: `"`}}},
+		{`\$foo`, []token.Token{{Type: token.OTHER, Literal: `$`}, {Type: token.WORD, Literal: `foo`}}},
 		{`\ `, []token.Token{{Type: token.ESCAPED_CHAR, Literal: ` `}}},
 		{`\	`, []token.Token{{Type: token.ESCAPED_CHAR, Literal: `	`}}}, // this is a tab
-		{`\$foo`, []token.Token{{Type: token.ESCAPED_CHAR, Literal: `$`}, {Type: token.WORD, Literal: `foo`}}},
 		{`\|`, []token.Token{{Type: token.ESCAPED_CHAR, Literal: `|`}}},
 		{`\&`, []token.Token{{Type: token.ESCAPED_CHAR, Literal: `&`}}},
 		{`\>`, []token.Token{{Type: token.ESCAPED_CHAR, Literal: `>`}}},
@@ -226,7 +227,6 @@ func TestLexer(t *testing.T) {
 		{`\)`, []token.Token{{Type: token.ESCAPED_CHAR, Literal: `)`}}},
 		{`\foo`, []token.Token{{Type: token.ESCAPED_CHAR, Literal: `f`}, {Type: token.WORD, Literal: `oo`}}},
 		{"\\\nfoo", []token.Token{{Type: token.WORD, Literal: "foo"}}},
-		{`\"`, []token.Token{{Type: token.ESCAPED_CHAR, Literal: `"`}}},
 
 		// Literal strings
 		{`'hello world'`, []token.Token{
