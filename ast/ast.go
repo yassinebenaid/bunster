@@ -58,3 +58,10 @@ type Concatination struct {
 }
 
 func (Concatination) node() {}
+
+type Loop struct {
+	Head Node
+	Body []Node
+}
+
+func (Loop) node() {}
