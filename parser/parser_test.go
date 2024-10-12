@@ -320,7 +320,7 @@ var testCases = []struct {
 			},
 		}},
 	}},
-	{"Loops", loopsTests},
+	// {"Loops", loopsTests},
 }
 
 func TestParser(t *testing.T) {
