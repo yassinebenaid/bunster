@@ -122,6 +122,10 @@ func (p *Parser) parsePipline() ast.Pipeline {
 }
 
 func (p *Parser) parseCommand() ast.Node {
+	if compound := p.getCompoundParser(); compound != nil {
+		return compound()
+	}
+
 	var cmd ast.Command
 	cmd.Name = p.parseField()
 	if cmd.Name == nil {

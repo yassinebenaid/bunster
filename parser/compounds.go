@@ -1,14 +1,20 @@
 package parser
 
 import (
+	"github.com/yassinebenaid/bunny/ast"
 	"github.com/yassinebenaid/bunny/token"
 )
 
-func (p *Parser) isCompound() bool {
+func (p *Parser) getCompoundParser() func() ast.Node {
 	switch p.curr.Type {
 	case token.WHILE:
-		return true
+		return p.parseWhileLoop
+	default:
+		return nil
 	}
+}
 
-	return false
+func (p *Parser) parseWhileLoop() ast.Node {
+	var loop ast.Loop
+	return loop
 }
