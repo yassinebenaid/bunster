@@ -22,7 +22,7 @@ type BackgroundConstruction struct {
 
 type PipelineCommand struct {
 	Stderr  bool
-	Command Command
+	Command Node
 }
 
 type Pipeline []PipelineCommand

@@ -93,7 +93,7 @@ func (p *Parser) parsePipline() ast.Pipeline {
 	var pipeline ast.Pipeline
 
 	cmd := p.parseCommand()
-	if cmd.Name == nil {
+	if cmd == nil {
 		p.error("invalid command construction")
 	}
 	pipeline = append(pipeline, ast.PipelineCommand{Command: cmd})
@@ -112,7 +112,7 @@ func (p *Parser) parsePipline() ast.Pipeline {
 		}
 
 		pipe.Command = p.parseCommand()
-		if pipe.Command.Name == nil {
+		if pipe.Command == nil {
 			p.error("invalid pipeline construction, a command is missing after `%s`", pipeMethod)
 		}
 		pipeline = append(pipeline, pipe)
@@ -121,11 +121,11 @@ func (p *Parser) parsePipline() ast.Pipeline {
 	return pipeline
 }
 
-func (p *Parser) parseCommand() ast.Command {
+func (p *Parser) parseCommand() ast.Node {
 	var cmd ast.Command
 	cmd.Name = p.parseField()
 	if cmd.Name == nil {
-		return cmd
+		return nil
 	}
 
 loop:
