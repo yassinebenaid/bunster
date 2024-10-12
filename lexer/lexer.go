@@ -194,12 +194,7 @@ switch_beginning:
 			tok.Type, tok.Literal = token.RIGHT_BRACKET, string(l.curr)
 		}
 	case l.curr == ';':
-		if l.next == ';' {
-			l.proceed()
-			tok.Type, tok.Literal = token.DOUBLE_SEMICOLON, ";;"
-		} else {
-			tok.Type, tok.Literal = token.SEMICOLON, string(l.curr)
-		}
+		tok.Type, tok.Literal = token.SEMICOLON, string(l.curr)
 	case l.curr == '=':
 		switch l.next {
 		case '=':

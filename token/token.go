@@ -70,7 +70,6 @@ const (
 	GT_PIPE              // `>|`
 	LT_GT                // `<>`
 	SEMICOLON            // `;`
-	DOUBLE_SEMICOLON     // `;;`
 	LEFT_PAREN           // `(`
 	RIGHT_PAREN          // `)`
 	DOUBLE_LEFT_PAREN    // `((`

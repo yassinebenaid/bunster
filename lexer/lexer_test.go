@@ -81,7 +81,6 @@ func TestLexer(t *testing.T) {
 		{`>|`, []token.Token{{Type: token.GT_PIPE, Literal: `>|`}}},
 		{`<>`, []token.Token{{Type: token.LT_GT, Literal: `<>`}}},
 		{`;`, []token.Token{{Type: token.SEMICOLON, Literal: `;`}}},
-		{`;;`, []token.Token{{Type: token.DOUBLE_SEMICOLON, Literal: `;;`}}},
 		{`(`, []token.Token{{Type: token.LEFT_PAREN, Literal: `(`}}},
 		{`)`, []token.Token{{Type: token.RIGHT_PAREN, Literal: `)`}}},
 		{`((`, []token.Token{{Type: token.DOUBLE_LEFT_PAREN, Literal: `((`}}},

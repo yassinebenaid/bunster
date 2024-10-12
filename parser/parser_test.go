@@ -395,6 +395,7 @@ var errorHandlingTestCases = []struct {
 		{`cmd || ; cmd2`, `syntax error: invalid command construction.`},
 		{`cmd && ; cmd2`, `syntax error: invalid command construction.`},
 		{`cmd | ; cmd2`, "syntax error: invalid pipeline construction, a command is missing after `|`."},
+		{`cmd ;;`, "syntax error: invalid command construction."},
 	}},
 	{"Quotes", []errorHandlingTestCase{
 		{`cmd 'foo bar`, `syntax error: a closing single quote is missing.`},
