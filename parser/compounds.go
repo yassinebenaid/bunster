@@ -36,11 +36,17 @@ func (p *Parser) parseWhileLoop() ast.Node {
 		p.proceed()
 	}
 
-	loop.Body = append(loop.Body, p.parseCommandList())
-	p.proceed()
-	if p.curr.Type == token.BLANK {
-		p.proceed()
+	for p.curr.Type != token.DONE && p.curr.Type != token.EOF {
+		loop.Body = append(loop.Body, p.parseCommandList())
+		if p.curr.Type == token.SEMICOLON {
+			p.proceed()
+		}
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
 	}
+
+	p.proceed()
 
 	return loop
 }
