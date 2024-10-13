@@ -200,4 +200,41 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
+	{`while cmd; do echo "foo"; done | while cmd; do echo "foo"; done |& while cmd; do echo "foo"; done `, ast.Script{
+		Statements: []ast.Node{
+			ast.Pipeline{
+				ast.PipelineCommand{
+					Command: ast.Loop{
+						Head: []ast.Node{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Node{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						},
+					},
+				},
+				ast.PipelineCommand{
+					Command: ast.Loop{
+						Head: []ast.Node{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Node{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						},
+					},
+				},
+				ast.PipelineCommand{
+					Stderr: true,
+					Command: ast.Loop{
+						Head: []ast.Node{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Node{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						},
+					},
+				},
+			},
+		},
+	}},
 }
