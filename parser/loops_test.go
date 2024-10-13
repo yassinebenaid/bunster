@@ -260,4 +260,36 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
+
+	// Nesting loops
+	{`while
+		while cmd; do echo "foo"; done
+	do
+		while cmd; do echo "foo"; done
+	done`, ast.Script{
+		Statements: []ast.Node{
+			ast.Loop{
+				Head: []ast.Node{
+					ast.Loop{
+						Head: []ast.Node{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Node{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						},
+					},
+				},
+				Body: []ast.Node{
+					ast.Loop{
+						Head: []ast.Node{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Node{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						},
+					},
+				},
+			},
+		},
+	}},
 }
