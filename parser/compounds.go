@@ -53,6 +53,8 @@ loop:
 		switch {
 		case p.curr.Type == token.BLANK:
 			p.proceed()
+		case p.isRedirectionToken():
+			p.HandleRedirection(&loop.Redirections)
 		default:
 			break loop
 		}
