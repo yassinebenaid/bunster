@@ -237,4 +237,27 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
+	{`while cmd; do echo "foo"; done && while cmd; do echo "foo"; done`, ast.Script{
+		Statements: []ast.Node{
+			ast.BinaryConstruction{
+				Left: ast.Loop{
+					Head: []ast.Node{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+					Body: []ast.Node{
+						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+					},
+				},
+				Operator: "&&",
+				Right: ast.Loop{
+					Head: []ast.Node{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+					Body: []ast.Node{
+						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+					},
+				},
+			},
+		},
+	}},
 }
