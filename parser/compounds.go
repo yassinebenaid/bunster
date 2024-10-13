@@ -17,7 +17,7 @@ func (p *Parser) getCompoundParser() func() ast.Node {
 func (p *Parser) parseWhileLoop() ast.Node {
 	var loop ast.Loop
 	p.proceed()
-	if p.curr.Type == token.BLANK {
+	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()
 	}
 
@@ -26,13 +26,13 @@ func (p *Parser) parseWhileLoop() ast.Node {
 		if p.curr.Type == token.SEMICOLON {
 			p.proceed()
 		}
-		if p.curr.Type == token.BLANK {
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
 		}
 	}
 
 	p.proceed()
-	if p.curr.Type == token.BLANK {
+	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()
 	}
 
@@ -41,7 +41,7 @@ func (p *Parser) parseWhileLoop() ast.Node {
 		if p.curr.Type == token.SEMICOLON {
 			p.proceed()
 		}
-		if p.curr.Type == token.BLANK {
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
 		}
 	}
