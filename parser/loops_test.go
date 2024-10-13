@@ -66,4 +66,124 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
+	{`while
+		cmd >foo arg <<<"foo bar" |
+		cmd2 <input.txt 'foo bar baz' &&
+		cmd >foo $var 3<<<"foo bar" |&
+		cmd2 "foo bar baz" <input.txt;
+	do
+		cmd >foo arg <<<"foo bar" |
+		cmd2 <input.txt 'foo bar baz' &&
+		cmd >foo $var 3<<<"foo bar" |&
+		cmd2 "foo bar baz" <input.txt &
+	done;`, ast.Script{
+		Statements: []ast.Node{
+			ast.Loop{
+				Head: []ast.Node{
+					ast.BinaryConstruction{
+						Left: ast.Pipeline{
+							{
+								Command: ast.Command{
+									Name: ast.Word("cmd"),
+									Args: []ast.Node{ast.Word("arg")},
+									Redirections: []ast.Redirection{
+										{Src: "1", Method: ">", Dst: ast.Word("foo")},
+										{Src: "0", Method: "<<<", Dst: ast.Word("foo bar")},
+									},
+								},
+								Stderr: false,
+							},
+							{
+								Command: ast.Command{
+									Name: ast.Word("cmd2"),
+									Args: []ast.Node{ast.Word("foo bar baz")},
+									Redirections: []ast.Redirection{
+										{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+									},
+								},
+								Stderr: false,
+							},
+						},
+						Operator: "&&",
+						Right: ast.Pipeline{
+							{
+								Command: ast.Command{
+									Name: ast.Word("cmd"),
+									Args: []ast.Node{ast.SimpleExpansion("var")},
+									Redirections: []ast.Redirection{
+										{Src: "1", Method: ">", Dst: ast.Word("foo")},
+										{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
+									},
+								},
+								Stderr: false,
+							},
+							{
+								Command: ast.Command{
+									Name: ast.Word("cmd2"),
+									Args: []ast.Node{ast.Word("foo bar baz")},
+									Redirections: []ast.Redirection{
+										{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+									},
+								},
+								Stderr: true,
+							},
+						},
+					},
+				},
+				Body: []ast.Node{
+					ast.BackgroundConstruction{
+						Node: ast.BinaryConstruction{
+							Left: ast.Pipeline{
+								{
+									Command: ast.Command{
+										Name: ast.Word("cmd"),
+										Args: []ast.Node{ast.Word("arg")},
+										Redirections: []ast.Redirection{
+											{Src: "1", Method: ">", Dst: ast.Word("foo")},
+											{Src: "0", Method: "<<<", Dst: ast.Word("foo bar")},
+										},
+									},
+									Stderr: false,
+								},
+								{
+									Command: ast.Command{
+										Name: ast.Word("cmd2"),
+										Args: []ast.Node{ast.Word("foo bar baz")},
+										Redirections: []ast.Redirection{
+											{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+										},
+									},
+									Stderr: false,
+								},
+							},
+							Operator: "&&",
+							Right: ast.Pipeline{
+								{
+									Command: ast.Command{
+										Name: ast.Word("cmd"),
+										Args: []ast.Node{ast.SimpleExpansion("var")},
+										Redirections: []ast.Redirection{
+											{Src: "1", Method: ">", Dst: ast.Word("foo")},
+											{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
+										},
+									},
+									Stderr: false,
+								},
+								{
+									Command: ast.Command{
+										Name: ast.Word("cmd2"),
+										Args: []ast.Node{ast.Word("foo bar baz")},
+										Redirections: []ast.Redirection{
+											{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+										},
+									},
+									Stderr: true,
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}},
 }

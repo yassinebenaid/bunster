@@ -23,7 +23,7 @@ func (p *Parser) parseWhileLoop() ast.Node {
 
 	for p.curr.Type != token.DO && p.curr.Type != token.EOF {
 		loop.Head = append(loop.Head, p.parseCommandList())
-		if p.curr.Type == token.SEMICOLON {
+		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
 			p.proceed()
 		}
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
@@ -38,7 +38,7 @@ func (p *Parser) parseWhileLoop() ast.Node {
 
 	for p.curr.Type != token.DONE && p.curr.Type != token.EOF {
 		loop.Body = append(loop.Body, p.parseCommandList())
-		if p.curr.Type == token.SEMICOLON {
+		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
 			p.proceed()
 		}
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
