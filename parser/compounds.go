@@ -47,6 +47,9 @@ func (p *Parser) parseWhileLoop() ast.Node {
 	}
 
 	p.proceed()
+	for p.curr.Type == token.BLANK {
+		p.proceed()
+	}
 
 	return loop
 }
