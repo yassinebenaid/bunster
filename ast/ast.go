@@ -60,7 +60,7 @@ type Concatination struct {
 func (Concatination) node() {}
 
 type Loop struct {
-	Head Node
+	Head []Node
 	Body []Node
 }
 

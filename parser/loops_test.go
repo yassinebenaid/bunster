@@ -6,7 +6,7 @@ var loopsTests = []testCase{
 	{`while cmd; do echo "Hello World"; done`, ast.Script{
 		Statements: []ast.Node{
 			ast.Loop{
-				Head: ast.Command{Name: ast.Word("cmd")},
+				Head: []ast.Node{ast.Command{Name: ast.Word("cmd")}},
 				Body: []ast.Node{
 					ast.Command{
 						Name: ast.Word("echo"),

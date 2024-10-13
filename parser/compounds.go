@@ -1,8 +1,6 @@
 package parser
 
 import (
-	"fmt"
-
 	"github.com/yassinebenaid/bunny/ast"
 	"github.com/yassinebenaid/bunny/token"
 )
@@ -23,15 +21,16 @@ func (p *Parser) parseWhileLoop() ast.Node {
 		p.proceed()
 	}
 
-	loop.Head = p.parseCommandList()
+	for p.curr.Type != token.DO && p.curr.Type != token.EOF {
+		loop.Head = append(loop.Head, p.parseCommandList())
+		if p.curr.Type == token.SEMICOLON {
+			p.proceed()
+		}
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+	}
 
-	if p.curr.Type == token.SEMICOLON {
-		p.proceed()
-	}
-	if p.curr.Type == token.BLANK {
-		p.proceed()
-	}
-	fmt.Println(p.curr.Literal)
 	p.proceed()
 	if p.curr.Type == token.BLANK {
 		p.proceed()
