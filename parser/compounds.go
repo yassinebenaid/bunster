@@ -47,8 +47,15 @@ func (p *Parser) parseWhileLoop() ast.Node {
 	}
 
 	p.proceed()
-	for p.curr.Type == token.BLANK {
-		p.proceed()
+
+loop:
+	for {
+		switch {
+		case p.curr.Type == token.BLANK:
+			p.proceed()
+		default:
+			break loop
+		}
 	}
 
 	return loop

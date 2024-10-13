@@ -292,4 +292,20 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
+	// {`while cmd; do echo "foo"; done >output.txt <input.txt`, ast.Script{
+	// 	Statements: []ast.Node{
+	// 		ast.Loop{
+	// 			Head: []ast.Node{
+	// 				ast.Command{Name: ast.Word("cmd")},
+	// 			},
+	// 			Body: []ast.Node{
+	// 				ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+	// 			},
+	// 			Redirections: []ast.Redirection{
+	// 				{Src: "1", Method: ">", Dst: ast.Word("output.ext")},
+	// 				{Src: "0", Method: "<", Dst: ast.Word("input.ext")},
+	// 			},
+	// 		},
+	// 	},
+	// }},
 }
