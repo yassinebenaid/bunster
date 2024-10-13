@@ -301,7 +301,25 @@ var testCases = []struct {
 				ast.Command{Name: ast.Word("cmd2")},
 			},
 		}},
-		{` cmd | cmd2 |& cmd3 | cmd4 |& cmd5 & cmd | cmd2 |& cmd3 | cmd4 |& cmd5`, ast.Script{
+		{`cmd && cmd2 & cmd3 && cmd4&`, ast.Script{
+			Statements: []ast.Node{
+				ast.BackgroundConstruction{
+					Node: ast.BinaryConstruction{
+						Left:     ast.Command{Name: ast.Word("cmd")},
+						Operator: "&&",
+						Right:    ast.Command{Name: ast.Word("cmd2")},
+					},
+				},
+				ast.BackgroundConstruction{
+					Node: ast.BinaryConstruction{
+						Left:     ast.Command{Name: ast.Word("cmd3")},
+						Operator: "&&",
+						Right:    ast.Command{Name: ast.Word("cmd4")},
+					},
+				},
+			},
+		}},
+		{` cmd | cmd2 |& cmd3 | cmd4 |& cmd5 foo& cmd | cmd2 |& cmd3 | cmd4 |& cmd5`, ast.Script{
 			Statements: []ast.Node{
 				ast.BackgroundConstruction{
 					Node: ast.Pipeline{
@@ -309,7 +327,7 @@ var testCases = []struct {
 						{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: false},
 						{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: true},
 						{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: false},
-						{Command: ast.Command{Name: ast.Word("cmd5")}, Stderr: true},
+						{Command: ast.Command{Name: ast.Word("cmd5"), Args: []ast.Node{ast.Word("foo")}}, Stderr: true},
 					},
 				},
 				ast.Pipeline{
