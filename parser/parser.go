@@ -140,7 +140,7 @@ loop:
 		case p.curr.Type == token.EOF:
 			break loop
 		case p.isRedirectionToken():
-			p.HandleRedirection(&cmd)
+			p.HandleRedirection(&cmd.Redirections)
 		default:
 			if p.isControlToken() {
 				break loop

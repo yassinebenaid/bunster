@@ -21,20 +21,20 @@ func (p *Parser) isRedirectionToken() bool {
 	return false
 }
 
-func (p *Parser) HandleRedirection(cmd *ast.Command) {
+func (p *Parser) HandleRedirection(rt *[]ast.Redirection) {
 	switch p.curr.Type {
 	case token.GT, token.DOUBLE_GT, token.GT_AMPERSAND, token.GT_PIPE:
-		p.fromStdout(cmd)
+		p.fromStdout(rt)
 	case token.LT_AMPERSAND, token.LT, token.TRIPLE_LT:
-		p.toStdin(cmd)
+		p.toStdin(rt)
 	case token.AMPERSAND_GT, token.AMPERSAND_DOUBLE_GT:
-		p.allOutputsToFile(cmd)
+		p.allOutputsToFile(rt)
 	case token.INT:
-		p.fromFileDescriptor(cmd)
+		p.fromFileDescriptor(rt)
 	}
 }
 
-func (p *Parser) fromStdout(cmd *ast.Command) {
+func (p *Parser) fromStdout(rt *[]ast.Redirection) {
 	var r ast.Redirection
 	r.Src = "1"
 	r.Method = p.curr.Literal
@@ -49,10 +49,10 @@ func (p *Parser) fromStdout(cmd *ast.Command) {
 	if r.Dst == nil {
 		p.error("a redirection operand was not provided after the `%s`", r.Method)
 	}
-	cmd.Redirections = append(cmd.Redirections, r)
+	*rt = append(*rt, r)
 }
 
-func (p *Parser) fromFileDescriptor(cmd *ast.Command) {
+func (p *Parser) fromFileDescriptor(rt *[]ast.Redirection) {
 	var r ast.Redirection
 	r.Src = p.curr.Literal
 
@@ -69,10 +69,10 @@ func (p *Parser) fromFileDescriptor(cmd *ast.Command) {
 		p.error("a redirection operand was not provided after the `%s`", r.Method)
 	}
 
-	cmd.Redirections = append(cmd.Redirections, r)
+	*rt = append(*rt, r)
 }
 
-func (p *Parser) allOutputsToFile(cmd *ast.Command) {
+func (p *Parser) allOutputsToFile(rt *[]ast.Redirection) {
 	var r ast.Redirection
 	r.Method = p.curr.Literal
 
@@ -85,10 +85,10 @@ func (p *Parser) allOutputsToFile(cmd *ast.Command) {
 	if r.Dst == nil {
 		p.error("a redirection operand was not provided after the `%s`", r.Method)
 	}
-	cmd.Redirections = append(cmd.Redirections, r)
+	*rt = append(*rt, r)
 }
 
-func (p *Parser) toStdin(cmd *ast.Command) {
+func (p *Parser) toStdin(rt *[]ast.Redirection) {
 	var r ast.Redirection
 	r.Src = "0"
 	r.Method = p.curr.Literal
@@ -103,5 +103,5 @@ func (p *Parser) toStdin(cmd *ast.Command) {
 		p.error("a redirection operand was not provided after the `%s`", r.Method)
 	}
 
-	cmd.Redirections = append(cmd.Redirections, r)
+	*rt = append(*rt, r)
 }
