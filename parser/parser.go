@@ -69,7 +69,7 @@ func (p *Parser) parseCommandList() ast.Node {
 
 		var right ast.Node
 		rightPipe := p.parsePipline()
-		if len(pipe) == 1 {
+		if len(rightPipe) == 1 {
 			right = rightPipe[0].Command
 		} else {
 			right = rightPipe

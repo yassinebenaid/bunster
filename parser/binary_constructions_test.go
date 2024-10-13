@@ -21,6 +21,18 @@ var logicalCommandsTests = []testCase{
 			},
 		},
 	}},
+	{` cmd1 | cmd2 && cmd3 `, ast.Script{
+		Statements: []ast.Node{
+			ast.BinaryConstruction{
+				Left: ast.Pipeline{
+					{Command: ast.Command{Name: ast.Word("cmd1")}},
+					{Command: ast.Command{Name: ast.Word("cmd2")}},
+				},
+				Operator: "&&",
+				Right:    ast.Command{Name: ast.Word("cmd3")},
+			},
+		},
+	}},
 	{`cmd >foo arg <<<"foo bar" | cmd2 <input.txt 'foo bar baz' && cmd >foo $var 3<<<"foo bar" |& cmd2 "foo bar baz" <input.txt `, ast.Script{
 		Statements: []ast.Node{
 			ast.BinaryConstruction{
