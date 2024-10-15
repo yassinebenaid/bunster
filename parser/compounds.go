@@ -33,8 +33,7 @@ func (p *Parser) parseWhileLoop() ast.Node {
 
 	if loop.Head == nil {
 		p.error("expected command list after `while`")
-	}
-	if p.curr.Type != token.DO {
+	} else if p.curr.Type != token.DO {
 		p.error("expected `do`, found `%s`", p.curr.Literal)
 	}
 
@@ -51,6 +50,12 @@ func (p *Parser) parseWhileLoop() ast.Node {
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
 		}
+	}
+
+	if loop.Body == nil {
+		p.error("expected command list after `do`")
+	} else if p.curr.Type != token.DONE {
+		p.error("expected `done` to close `while` loop")
 	}
 
 	p.proceed()
