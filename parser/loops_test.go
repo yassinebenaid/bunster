@@ -186,7 +186,7 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
-	{`while cmd; do echo "foo"; done &`, ast.Script{
+	{`while cmd; do echo "foo"; done & while cmd; do cmd; done & cmd`, ast.Script{
 		Statements: []ast.Node{
 			ast.BackgroundConstruction{
 				Node: ast.Loop{
@@ -198,6 +198,17 @@ var loopsTests = []testCase{
 					},
 				},
 			},
+			ast.BackgroundConstruction{
+				Node: ast.Loop{
+					Head: []ast.Node{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+					Body: []ast.Node{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+				},
+			},
+			ast.Command{Name: ast.Word("cmd")},
 		},
 	}},
 	{`while cmd; do echo "foo"; done | while cmd; do echo "foo"; done |& while cmd; do echo "foo"; done `, ast.Script{
