@@ -382,9 +382,9 @@ var loopsTests = []testCase{
 		},
 	}},
 
-	//
+	//-----------------------------------------------------------
 	// UNTIL LOOPS
-	//
+	//-----------------------------------------------------------
 	{`until cmd1; cmd2; cmd3; do echo "foo"; echo bar; echo 'baz'; done;`, ast.Script{
 		Statements: []ast.Node{
 			ast.Loop{
@@ -398,6 +398,365 @@ var loopsTests = []testCase{
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("bar")}},
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
+				},
+			},
+		},
+	}},
+	{`until
+		cmd1
+		cmd2
+		cmd3
+	do
+		echo "foo"
+		echo bar
+		echo 'baz'
+	done;`, ast.Script{
+		Statements: []ast.Node{
+			ast.Loop{
+				Head: []ast.Node{
+					ast.Command{Name: ast.Word("cmd1")},
+					ast.Command{Name: ast.Word("cmd2")},
+					ast.Command{Name: ast.Word("cmd3")},
+				},
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("bar")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
+				},
+			},
+		},
+	}},
+	{`until
+		cmd1 | cmd2 && cmd3
+	do
+		echo 'baz'
+	done;`, ast.Script{
+		Statements: []ast.Node{
+			ast.Loop{
+				Head: []ast.Node{
+					ast.BinaryConstruction{
+						Left: ast.Pipeline{
+							{Command: ast.Command{Name: ast.Word("cmd1")}},
+							{Command: ast.Command{Name: ast.Word("cmd2")}},
+						},
+						Operator: "&&",
+						Right:    ast.Command{Name: ast.Word("cmd3")},
+					},
+				},
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
+				},
+			},
+		},
+	}},
+	{`until
+		cmd >foo arg <<<"foo bar" |
+		cmd2 <input.txt 'foo bar baz' &&
+		cmd >foo $var 3<<<"foo bar" |&
+		cmd2 "foo bar baz" <input.txt;
+	do
+		cmd >foo arg <<<"foo bar" |
+		cmd2 <input.txt 'foo bar baz' &&
+		cmd >foo $var 3<<<"foo bar" |&
+		cmd2 "foo bar baz" <input.txt &
+	done;`, ast.Script{
+		Statements: []ast.Node{
+			ast.Loop{
+				Head: []ast.Node{
+					ast.BinaryConstruction{
+						Left: ast.Pipeline{
+							{
+								Command: ast.Command{
+									Name: ast.Word("cmd"),
+									Args: []ast.Node{ast.Word("arg")},
+									Redirections: []ast.Redirection{
+										{Src: "1", Method: ">", Dst: ast.Word("foo")},
+										{Src: "0", Method: "<<<", Dst: ast.Word("foo bar")},
+									},
+								},
+								Stderr: false,
+							},
+							{
+								Command: ast.Command{
+									Name: ast.Word("cmd2"),
+									Args: []ast.Node{ast.Word("foo bar baz")},
+									Redirections: []ast.Redirection{
+										{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+									},
+								},
+								Stderr: false,
+							},
+						},
+						Operator: "&&",
+						Right: ast.Pipeline{
+							{
+								Command: ast.Command{
+									Name: ast.Word("cmd"),
+									Args: []ast.Node{ast.SimpleExpansion("var")},
+									Redirections: []ast.Redirection{
+										{Src: "1", Method: ">", Dst: ast.Word("foo")},
+										{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
+									},
+								},
+								Stderr: false,
+							},
+							{
+								Command: ast.Command{
+									Name: ast.Word("cmd2"),
+									Args: []ast.Node{ast.Word("foo bar baz")},
+									Redirections: []ast.Redirection{
+										{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+									},
+								},
+								Stderr: true,
+							},
+						},
+					},
+				},
+				Body: []ast.Node{
+					ast.BackgroundConstruction{
+						Node: ast.BinaryConstruction{
+							Left: ast.Pipeline{
+								{
+									Command: ast.Command{
+										Name: ast.Word("cmd"),
+										Args: []ast.Node{ast.Word("arg")},
+										Redirections: []ast.Redirection{
+											{Src: "1", Method: ">", Dst: ast.Word("foo")},
+											{Src: "0", Method: "<<<", Dst: ast.Word("foo bar")},
+										},
+									},
+									Stderr: false,
+								},
+								{
+									Command: ast.Command{
+										Name: ast.Word("cmd2"),
+										Args: []ast.Node{ast.Word("foo bar baz")},
+										Redirections: []ast.Redirection{
+											{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+										},
+									},
+									Stderr: false,
+								},
+							},
+							Operator: "&&",
+							Right: ast.Pipeline{
+								{
+									Command: ast.Command{
+										Name: ast.Word("cmd"),
+										Args: []ast.Node{ast.SimpleExpansion("var")},
+										Redirections: []ast.Redirection{
+											{Src: "1", Method: ">", Dst: ast.Word("foo")},
+											{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
+										},
+									},
+									Stderr: false,
+								},
+								{
+									Command: ast.Command{
+										Name: ast.Word("cmd2"),
+										Args: []ast.Node{ast.Word("foo bar baz")},
+										Redirections: []ast.Redirection{
+											{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+										},
+									},
+									Stderr: true,
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}},
+	{`until cmd; do echo "foo"; done & until cmd; do cmd; done & cmd`, ast.Script{
+		Statements: []ast.Node{
+			ast.BackgroundConstruction{
+				Node: ast.Loop{
+					Head: []ast.Node{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+					Body: []ast.Node{
+						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+					},
+				},
+			},
+			ast.BackgroundConstruction{
+				Node: ast.Loop{
+					Head: []ast.Node{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+					Body: []ast.Node{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+				},
+			},
+			ast.Command{Name: ast.Word("cmd")},
+		},
+	}},
+	{`until cmd; do echo "foo"; done | until cmd; do echo "foo"; done |& until cmd; do echo "foo"; done `, ast.Script{
+		Statements: []ast.Node{
+			ast.Pipeline{
+				ast.PipelineCommand{
+					Command: ast.Loop{
+						Head: []ast.Node{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Node{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						},
+					},
+				},
+				ast.PipelineCommand{
+					Command: ast.Loop{
+						Head: []ast.Node{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Node{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						},
+					},
+				},
+				ast.PipelineCommand{
+					Stderr: true,
+					Command: ast.Loop{
+						Head: []ast.Node{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Node{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						},
+					},
+				},
+			},
+		},
+	}},
+	{`until cmd; do echo "foo"; done && until cmd; do echo "foo"; done`, ast.Script{
+		Statements: []ast.Node{
+			ast.BinaryConstruction{
+				Left: ast.Loop{
+					Head: []ast.Node{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+					Body: []ast.Node{
+						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+					},
+				},
+				Operator: "&&",
+				Right: ast.Loop{
+					Head: []ast.Node{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+					Body: []ast.Node{
+						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+					},
+				},
+			},
+		},
+	}},
+
+	// Nesting loops
+	{`until
+		until cmd; do echo "foo"; done
+	do
+		until cmd; do echo "foo"; done
+	done`, ast.Script{
+		Statements: []ast.Node{
+			ast.Loop{
+				Head: []ast.Node{
+					ast.Loop{
+						Head: []ast.Node{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Node{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						},
+					},
+				},
+				Body: []ast.Node{
+					ast.Loop{
+						Head: []ast.Node{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Node{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						},
+					},
+				},
+			},
+		},
+	}},
+	{`until cmd; do echo "foo"; done >output.txt <input.txt 2>error.txt >&3 \
+	 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6`, ast.Script{
+		Statements: []ast.Node{
+			ast.Loop{
+				Head: []ast.Node{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+				},
+				Redirections: []ast.Redirection{
+					{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
+					{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+					{Src: "2", Method: ">", Dst: ast.Word("error.txt")},
+					{Src: "1", Method: ">&", Dst: ast.Word("3")},
+					{Src: "1", Method: ">>", Dst: ast.Word("output.txt")},
+					{Src: "0", Method: "<<<", Dst: ast.Word("input.txt")},
+					{Src: "2", Method: ">>", Dst: ast.Word("error.txt")},
+					{Method: "&>", Dst: ast.Word("all.txt")},
+					{Method: "&>>", Dst: ast.Word("all.txt")},
+					{Src: "0", Method: "<&", Dst: ast.Word("4")},
+					{Src: "5", Method: "<&", Dst: ast.Word("6")},
+				},
+			},
+		},
+	}},
+	{`\until cmd; do echo "foo"; done`, ast.Script{
+		Statements: []ast.Node{
+			ast.Command{Name: ast.Word("until"), Args: []ast.Node{ast.Word("cmd")}},
+			ast.Command{Name: ast.Word("do"), Args: []ast.Node{ast.Word("echo"), ast.Word("foo")}},
+			ast.Command{Name: ast.Word("done")},
+		},
+	}},
+	{`until cmd; \do; do echo "foo"; \done; done`, ast.Script{
+		Statements: []ast.Node{
+			ast.Loop{
+				Head: []ast.Node{
+					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Name: ast.Word("do")},
+				},
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+					ast.Command{Name: ast.Word("done")},
+				},
+			},
+		},
+	}},
+	{"until cmd; do cmd2; done; until cmd; do cmd2; done \n  until cmd; do cmd2; done", ast.Script{
+		Statements: []ast.Node{
+			ast.Loop{
+				Head: []ast.Node{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("cmd2")},
+				},
+			},
+			ast.Loop{
+				Head: []ast.Node{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("cmd2")},
+				},
+			},
+			ast.Loop{
+				Head: []ast.Node{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("cmd2")},
 				},
 			},
 		},
