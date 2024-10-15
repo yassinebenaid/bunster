@@ -34,6 +34,9 @@ func (p *Parser) parseWhileLoop() ast.Node {
 	if loop.Head == nil {
 		p.error("expected command list after `while`")
 	}
+	if p.curr.Type != token.DO {
+		p.error("expected `do`, found `%s`", p.curr.Literal)
+	}
 
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {

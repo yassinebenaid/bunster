@@ -345,6 +345,7 @@ var loopsErrorHandlingCases = []errorHandlingTestCase{
 	{`while`, "syntax error: expected command list after `while`."},
 	{`while do`, "syntax error: expected command list after `while`."},
 	{`while; do`, "syntax error: invalid command construction."},
+	{`while cmd; done`, "syntax error: expected `do`, found `done`."},
 	{`while done`, "syntax error: expected command list after `while`."},
 	{`while; done`, "syntax error: invalid command construction."},
 }
