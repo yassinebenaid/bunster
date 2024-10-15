@@ -7,7 +7,7 @@ import (
 
 func (p *Parser) getCompoundParser() func() ast.Node {
 	switch p.curr.Type {
-	case token.WHILE:
+	case token.WHILE, token.UNTIL:
 		return p.parseWhileLoop
 	default:
 		return nil
@@ -16,6 +16,7 @@ func (p *Parser) getCompoundParser() func() ast.Node {
 
 func (p *Parser) parseWhileLoop() ast.Node {
 	var loop ast.Loop
+	loop.Negate = p.curr.Type == token.UNTIL
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()

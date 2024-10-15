@@ -3,6 +3,9 @@ package parser_test
 import "github.com/yassinebenaid/bunny/ast"
 
 var loopsTests = []testCase{
+	//
+	// WHILE LOOPS
+	//
 	{`while cmd1; cmd2; cmd3; do echo "foo"; echo bar; echo 'baz'; done;`, ast.Script{
 		Statements: []ast.Node{
 			ast.Loop{
@@ -374,6 +377,27 @@ var loopsTests = []testCase{
 				},
 				Body: []ast.Node{
 					ast.Command{Name: ast.Word("cmd2")},
+				},
+			},
+		},
+	}},
+
+	//
+	// UNTIL LOOPS
+	//
+	{`until cmd1; cmd2; cmd3; do echo "foo"; echo bar; echo 'baz'; done;`, ast.Script{
+		Statements: []ast.Node{
+			ast.Loop{
+				Negate: true,
+				Head: []ast.Node{
+					ast.Command{Name: ast.Word("cmd1")},
+					ast.Command{Name: ast.Word("cmd2")},
+					ast.Command{Name: ast.Word("cmd3")},
+				},
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("bar")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
 				},
 			},
 		},
