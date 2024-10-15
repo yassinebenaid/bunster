@@ -292,7 +292,7 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
-	{`while cmd; do echo "foo"; done >output.txt <input.txt 2>error.txt >&3`, ast.Script{
+	{`while cmd; do echo "foo"; done >output.txt <input.txt 2>error.txt >&3 >>output.txt <<<input.txt 2>>error.txt >>&3 `, ast.Script{
 		Statements: []ast.Node{
 			ast.Loop{
 				Head: []ast.Node{
