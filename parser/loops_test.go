@@ -782,6 +782,7 @@ var loopsTests = []testCase{
 }
 
 var loopsErrorHandlingCases = []errorHandlingTestCase{
+	// WHILE LOOPS
 	{`while`, "syntax error: expected command list after `while`."},
 	{`while do`, "syntax error: expected command list after `while`."},
 	{`while; do`, "syntax error: invalid command construction."},
@@ -792,4 +793,16 @@ var loopsErrorHandlingCases = []errorHandlingTestCase{
 	{`while cmd;do cmd`, "syntax error: expected `done` to close `while` loop."},
 	{`while cmd;do cmd; done arg`, "syntax error: unexpected token `arg`."},
 	{`while cmd;do cmd; done <in >out <<<etc arg`, "syntax error: unexpected token `arg`."},
+
+	// UNTIL LOOPS
+	{`until`, "syntax error: expected command list after `until`."},
+	{`until do`, "syntax error: expected command list after `until`."},
+	{`until; do`, "syntax error: invalid command construction."},
+	{`until cmd; done`, "syntax error: expected `do`, found `done`."},
+	{`until done`, "syntax error: expected command list after `until`."},
+	{`until; done`, "syntax error: invalid command construction."},
+	{`until cmd;do done`, "syntax error: expected command list after `do`."},
+	{`until cmd;do cmd`, "syntax error: expected `done` to close `until` loop."},
+	{`until cmd;do cmd; done arg`, "syntax error: unexpected token `arg`."},
+	{`until cmd;do cmd; done <in >out <<<etc arg`, "syntax error: unexpected token `arg`."},
 }
