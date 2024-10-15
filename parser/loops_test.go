@@ -318,4 +318,11 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
+	{`\while cmd; do echo "foo"; done`, ast.Script{
+		Statements: []ast.Node{
+			ast.Command{Name: ast.Word("while"), Args: []ast.Node{ast.Word("cmd")}},
+			ast.Command{Name: ast.Word("do"), Args: []ast.Node{ast.Word("echo"), ast.Word("foo")}},
+			ast.Command{Name: ast.Word("done")},
+		},
+	}},
 }
