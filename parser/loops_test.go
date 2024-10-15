@@ -413,6 +413,7 @@ var loopsTests = []testCase{
 	done;`, ast.Script{
 		Statements: []ast.Node{
 			ast.Loop{
+				Negate: true,
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd1")},
 					ast.Command{Name: ast.Word("cmd2")},
@@ -433,6 +434,7 @@ var loopsTests = []testCase{
 	done;`, ast.Script{
 		Statements: []ast.Node{
 			ast.Loop{
+				Negate: true,
 				Head: []ast.Node{
 					ast.BinaryConstruction{
 						Left: ast.Pipeline{
@@ -462,6 +464,7 @@ var loopsTests = []testCase{
 	done;`, ast.Script{
 		Statements: []ast.Node{
 			ast.Loop{
+				Negate: true,
 				Head: []ast.Node{
 					ast.BinaryConstruction{
 						Left: ast.Pipeline{
@@ -573,6 +576,7 @@ var loopsTests = []testCase{
 		Statements: []ast.Node{
 			ast.BackgroundConstruction{
 				Node: ast.Loop{
+					Negate: true,
 					Head: []ast.Node{
 						ast.Command{Name: ast.Word("cmd")},
 					},
@@ -583,6 +587,7 @@ var loopsTests = []testCase{
 			},
 			ast.BackgroundConstruction{
 				Node: ast.Loop{
+					Negate: true,
 					Head: []ast.Node{
 						ast.Command{Name: ast.Word("cmd")},
 					},
@@ -599,6 +604,7 @@ var loopsTests = []testCase{
 			ast.Pipeline{
 				ast.PipelineCommand{
 					Command: ast.Loop{
+						Negate: true,
 						Head: []ast.Node{
 							ast.Command{Name: ast.Word("cmd")},
 						},
@@ -609,6 +615,7 @@ var loopsTests = []testCase{
 				},
 				ast.PipelineCommand{
 					Command: ast.Loop{
+						Negate: true,
 						Head: []ast.Node{
 							ast.Command{Name: ast.Word("cmd")},
 						},
@@ -620,6 +627,7 @@ var loopsTests = []testCase{
 				ast.PipelineCommand{
 					Stderr: true,
 					Command: ast.Loop{
+						Negate: true,
 						Head: []ast.Node{
 							ast.Command{Name: ast.Word("cmd")},
 						},
@@ -635,6 +643,7 @@ var loopsTests = []testCase{
 		Statements: []ast.Node{
 			ast.BinaryConstruction{
 				Left: ast.Loop{
+					Negate: true,
 					Head: []ast.Node{
 						ast.Command{Name: ast.Word("cmd")},
 					},
@@ -644,6 +653,7 @@ var loopsTests = []testCase{
 				},
 				Operator: "&&",
 				Right: ast.Loop{
+					Negate: true,
 					Head: []ast.Node{
 						ast.Command{Name: ast.Word("cmd")},
 					},
@@ -663,8 +673,10 @@ var loopsTests = []testCase{
 	done`, ast.Script{
 		Statements: []ast.Node{
 			ast.Loop{
+				Negate: true,
 				Head: []ast.Node{
 					ast.Loop{
+						Negate: true,
 						Head: []ast.Node{
 							ast.Command{Name: ast.Word("cmd")},
 						},
@@ -675,6 +687,7 @@ var loopsTests = []testCase{
 				},
 				Body: []ast.Node{
 					ast.Loop{
+						Negate: true,
 						Head: []ast.Node{
 							ast.Command{Name: ast.Word("cmd")},
 						},
@@ -690,6 +703,7 @@ var loopsTests = []testCase{
 	 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6`, ast.Script{
 		Statements: []ast.Node{
 			ast.Loop{
+				Negate: true,
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd")},
 				},
@@ -722,6 +736,7 @@ var loopsTests = []testCase{
 	{`until cmd; \do; do echo "foo"; \done; done`, ast.Script{
 		Statements: []ast.Node{
 			ast.Loop{
+				Negate: true,
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd")},
 					ast.Command{Name: ast.Word("do")},
@@ -736,6 +751,7 @@ var loopsTests = []testCase{
 	{"until cmd; do cmd2; done; until cmd; do cmd2; done \n  until cmd; do cmd2; done", ast.Script{
 		Statements: []ast.Node{
 			ast.Loop{
+				Negate: true,
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd")},
 				},
@@ -744,6 +760,7 @@ var loopsTests = []testCase{
 				},
 			},
 			ast.Loop{
+				Negate: true,
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd")},
 				},
@@ -752,6 +769,7 @@ var loopsTests = []testCase{
 				},
 			},
 			ast.Loop{
+				Negate: true,
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd")},
 				},
