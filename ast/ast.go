@@ -60,6 +60,7 @@ type Concatination struct {
 func (Concatination) node() {}
 
 type Loop struct {
+	Negate       bool
 	Head         []Node
 	Body         []Node
 	Redirections []Redirection
