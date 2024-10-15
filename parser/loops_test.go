@@ -339,6 +339,34 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
+	{"while cmd; do cmd2; done; while cmd; do cmd2; done \n  while cmd; do cmd2; done", ast.Script{
+		Statements: []ast.Node{
+			ast.Loop{
+				Head: []ast.Node{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("cmd2")},
+				},
+			},
+			ast.Loop{
+				Head: []ast.Node{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("cmd2")},
+				},
+			},
+			ast.Loop{
+				Head: []ast.Node{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("cmd2")},
+				},
+			},
+		},
+	}},
 }
 
 var loopsErrorHandlingCases = []errorHandlingTestCase{
