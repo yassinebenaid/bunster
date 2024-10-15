@@ -293,7 +293,7 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`while cmd; do echo "foo"; done >output.txt <input.txt 2>error.txt >&3 \
-	 	>>output.txt <<<input.txt 2>>error.txt`, ast.Script{
+	 	>>output.txt <<<input.txt 2>>error.txt &>all.txt`, ast.Script{
 		Statements: []ast.Node{
 			ast.Loop{
 				Head: []ast.Node{
@@ -310,6 +310,7 @@ var loopsTests = []testCase{
 					{Src: "1", Method: ">>", Dst: ast.Word("output.txt")},
 					{Src: "0", Method: "<<<", Dst: ast.Word("input.txt")},
 					{Src: "2", Method: ">>", Dst: ast.Word("error.txt")},
+					{Method: "&>", Dst: ast.Word("all.txt")},
 				},
 			},
 		},
