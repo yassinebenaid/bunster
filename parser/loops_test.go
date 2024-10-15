@@ -334,7 +334,7 @@ var loopsTests = []testCase{
 				},
 				Body: []ast.Node{
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
-					ast.Command{Name: ast.Word("done")}},
+					ast.Command{Name: ast.Word("done")},
 				},
 			},
 		},
