@@ -16,6 +16,7 @@ func (p *Parser) getCompoundParser() func() ast.Node {
 
 func (p *Parser) parseWhileLoop() ast.Node {
 	var loop ast.Loop
+	loopKeyword := p.curr.Literal
 	loop.Negate = p.curr.Type == token.UNTIL
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
@@ -33,7 +34,7 @@ func (p *Parser) parseWhileLoop() ast.Node {
 	}
 
 	if loop.Head == nil {
-		p.error("expected command list after `while`")
+		p.error("expected command list after `%s`", loopKeyword)
 	} else if p.curr.Type != token.DO {
 		p.error("expected `do`, found `%s`", p.curr.Literal)
 	}
@@ -56,7 +57,7 @@ func (p *Parser) parseWhileLoop() ast.Node {
 	if loop.Body == nil {
 		p.error("expected command list after `do`")
 	} else if p.curr.Type != token.DONE {
-		p.error("expected `done` to close `while` loop")
+		p.error("expected `done` to close `%s` loop", loopKeyword)
 	}
 
 	p.proceed()
