@@ -72,5 +72,9 @@ loop:
 		}
 	}
 
+	if !p.isControlToken() && p.curr.Type != token.EOF {
+		p.error("unexpected token `%s`", p.curr.Literal)
+	}
+
 	return loop
 }

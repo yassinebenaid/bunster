@@ -350,4 +350,6 @@ var loopsErrorHandlingCases = []errorHandlingTestCase{
 	{`while; done`, "syntax error: invalid command construction."},
 	{`while cmd;do done`, "syntax error: expected command list after `do`."},
 	{`while cmd;do cmd`, "syntax error: expected `done` to close `while` loop."},
+	{`while cmd;do cmd; done arg`, "syntax error: unexpected token `arg`."},
+	{`while cmd;do cmd; done <in >out <<<etc arg`, "syntax error: unexpected token `arg`."},
 }
