@@ -7,4 +7,4 @@
 # Bunny
 </div>
 
-Compile shell scripts into self contained executable programs.
+Compile shell scripts into self contained executable binaries.
