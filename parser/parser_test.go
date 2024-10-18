@@ -289,6 +289,9 @@ var testCases = []struct {
 			},
 		}},
 	}},
+	{"Comments", []testCase{
+		{`# foo bar`, ast.Script{}},
+	}},
 	{"Redirections", redirectionTests},
 	{"Piplines", pipesTests},
 	{"Binary Constructions", logicalCommandsTests},
