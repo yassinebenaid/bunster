@@ -143,6 +143,10 @@ loop:
 			break
 		case p.curr.Type == token.EOF:
 			break loop
+		case p.curr.Type == token.HASH:
+			for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+				p.proceed()
+			}
 		case p.isRedirectionToken():
 			p.HandleRedirection(&cmd.Redirections)
 		default:
