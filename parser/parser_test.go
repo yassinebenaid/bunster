@@ -299,6 +299,11 @@ var testCases = []struct {
 				ast.Command{Name: ast.Word("cmd")},
 			},
 		}},
+		{"cmd#not-comment arg#not-comment", ast.Script{
+			Statements: []ast.Node{
+				ast.Command{Name: ast.Word("cmd#not-comment"), Args: []ast.Node{ast.Word("arg#not-comment")}},
+			},
+		}},
 	}},
 	{"Redirections", redirectionTests},
 	{"Piplines", pipesTests},
