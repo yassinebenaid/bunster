@@ -290,7 +290,10 @@ var testCases = []struct {
 		}},
 	}},
 	{"Comments", []testCase{
+		{`#`, ast.Script{}},
 		{`# foo bar`, ast.Script{}},
+		{`	 # foo bar`, ast.Script{}},
+		{"# foo bar    \n    \t # baz", ast.Script{}},
 	}},
 	{"Redirections", redirectionTests},
 	{"Piplines", pipesTests},
