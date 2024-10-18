@@ -3,12 +3,15 @@ package parser
 import (
 	"github.com/yassinebenaid/bunny/ast"
 	"github.com/yassinebenaid/bunny/token"
+	"github.com/yassinebenaid/godump"
 )
 
 func (p *Parser) getCompoundParser() func() ast.Node {
 	switch p.curr.Type {
 	case token.WHILE, token.UNTIL:
 		return p.parseWhileLoop
+	case token.FOR:
+		return p.parseForLoop
 	default:
 		return nil
 	}
@@ -78,5 +81,65 @@ loop:
 		p.error("unexpected token `%s`", p.curr.Literal)
 	}
 
+	return loop
+}
+
+func (p *Parser) parseForLoop() ast.Node {
+	var loop ast.RangeLoop
+	p.proceed()
+	for p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+	loop.Var = p.curr.Literal
+	p.proceed()
+
+	if p.curr.Type == token.SEMICOLON {
+		p.proceed()
+	}
+	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+		p.proceed()
+	}
+
+	// DO
+	p.proceed()
+	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+		p.proceed()
+	}
+
+	for p.curr.Type != token.DONE && p.curr.Type != token.EOF {
+		loop.Body = append(loop.Body, p.parseCommandList())
+		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
+			p.proceed()
+		}
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+			p.proceed()
+		}
+	}
+
+	if loop.Body == nil {
+		p.error("expected command list after `do`")
+	} else if p.curr.Type != token.DONE {
+		p.error("expected `done` to close `for` loop")
+	}
+
+	p.proceed()
+
+loop:
+	for {
+		switch {
+		case p.curr.Type == token.BLANK:
+			p.proceed()
+		case p.isRedirectionToken():
+			p.HandleRedirection(&loop.Redirections)
+		default:
+			break loop
+		}
+	}
+
+	if !p.isControlToken() && p.curr.Type != token.EOF {
+		p.error("unexpected token `%s`", p.curr.Literal)
+	}
+
+	godump.Dump(loop)
 	return loop
 }

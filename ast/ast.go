@@ -69,8 +69,9 @@ type Loop struct {
 func (Loop) node() {}
 
 type RangeLoop struct {
-	Var  string
-	Body []Node
+	Var          string
+	Body         []Node
+	Redirections []Redirection
 }
 
 func (RangeLoop) node() {}
