@@ -67,3 +67,10 @@ type Loop struct {
 }
 
 func (Loop) node() {}
+
+type RangeLoop struct {
+	Var  string
+	Body []Node
+}
+
+func (RangeLoop) node() {}
