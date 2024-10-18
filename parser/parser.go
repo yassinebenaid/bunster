@@ -43,6 +43,10 @@ func (p *Parser) ParseScript() ast.Script {
 		switch p.curr.Type {
 		case token.BLANK, token.NEWLINE:
 			continue
+		case token.HASH:
+			for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+				p.proceed()
+			}
 		default:
 			script.Statements = append(script.Statements, p.parseCommandList())
 		}
