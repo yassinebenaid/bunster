@@ -103,7 +103,9 @@ func (p *Parser) parseForLoop() ast.Node {
 		p.proceed()
 	}
 
-	// DO
+	if p.curr.Type != token.DO {
+		p.error("expected `do`, found `%s`", p.curr.Literal)
+	}
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()
