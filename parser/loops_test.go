@@ -952,6 +952,7 @@ var loopsErrorHandlingCases = []errorHandlingTestCase{
 
 	// FOR LOOPS (over positional arguments)
 	{`for`, "syntax error: expected identifier after `for`."},
+	{"for \n var do done", "syntax error: expected identifier after `for`."},
 	{`for do`, "syntax error: expected identifier after `for`."},
 	{`for; do`, "syntax error: expected identifier after `for`."},
 	{`for var done`, "syntax error: expected `do`, found `done`."},
