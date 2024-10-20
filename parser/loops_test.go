@@ -795,6 +795,35 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
+	{`
+	for varname
+	do
+		echo "foo"
+	 	echo bar;
+		echo 'baz';
+	done
+	`, ast.Script{
+		Statements: []ast.Node{
+			ast.RangeLoop{
+				Var: "varname",
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("bar")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
+				},
+			},
+		},
+	}},
+	{`for varname do cmd; done`, ast.Script{
+		Statements: []ast.Node{
+			ast.RangeLoop{
+				Var: "varname",
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+			},
+		},
+	}},
 }
 
 var loopsErrorHandlingCases = []errorHandlingTestCase{
