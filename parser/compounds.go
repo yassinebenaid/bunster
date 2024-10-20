@@ -90,6 +90,9 @@ func (p *Parser) parseForLoop() ast.Node {
 	for p.curr.Type == token.BLANK {
 		p.proceed()
 	}
+	if p.curr.Type != token.WORD {
+		p.error("expected identifier after `for`")
+	}
 	loop.Var = p.curr.Literal
 	p.proceed()
 

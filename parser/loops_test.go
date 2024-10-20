@@ -909,4 +909,7 @@ var loopsErrorHandlingCases = []errorHandlingTestCase{
 	{`until cmd;do cmd`, "syntax error: expected `done` to close `until` loop."},
 	{`until cmd;do cmd; done arg`, "syntax error: unexpected token `arg`."},
 	{`until cmd;do cmd; done <in >out <<<etc arg`, "syntax error: unexpected token `arg`."},
+
+	// FOR LOOPS (over positional arguments)
+	{`for`, "syntax error: expected identifier after `for`."},
 }
