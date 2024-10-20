@@ -824,6 +824,18 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
+	{`for varname do cmd; done &`, ast.Script{
+		Statements: []ast.Node{
+			ast.BackgroundConstruction{
+				Node: ast.RangeLoop{
+					Var: "varname",
+					Body: []ast.Node{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+				},
+			},
+		},
+	}},
 	{`for varname do cmd; done | cmd |& for varname do cmd; done`, ast.Script{
 		Statements: []ast.Node{
 			ast.Pipeline{
