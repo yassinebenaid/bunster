@@ -915,4 +915,9 @@ var loopsErrorHandlingCases = []errorHandlingTestCase{
 	{`for do`, "syntax error: expected identifier after `for`."},
 	{`for; do`, "syntax error: expected identifier after `for`."},
 	{`for var done`, "syntax error: expected `do`, found `done`."},
+	{`for done`, "syntax error: expected identifier after `for`."},
+	{`for var do done`, "syntax error: expected command list after `do`."},
+	{`for var do cmd `, "syntax error: expected `done` to close `for` loop."},
+	{`for var do cmd; done arg`, "syntax error: unexpected token `arg`."},
+	{`for var do cmd; done <in >out <<<etc arg`, "syntax error: unexpected token `arg`."},
 }
