@@ -936,6 +936,23 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
+	{`for var in foo bar $baz "foobar" 'bar-baz'; do cmd; done`, ast.Script{
+		Statements: []ast.Node{
+			ast.RangeLoop{
+				Var: "var",
+				Operands: []ast.Node{
+					ast.Word("foo"),
+					ast.Word("bar"),
+					ast.SimpleExpansion("baz"),
+					ast.Word("foobar"),
+					ast.Word("bar-baz"),
+				},
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+			},
+		},
+	}},
 }
 
 var loopsErrorHandlingCases = []errorHandlingTestCase{

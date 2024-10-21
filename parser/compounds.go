@@ -105,6 +105,9 @@ func (p *Parser) parseForLoop() ast.Node {
 		}
 		for p.curr.Type != token.NEWLINE && p.curr.Type != token.SEMICOLON && p.curr.Type != token.EOF {
 			loop.Operands = append(loop.Operands, p.parseField())
+			if p.curr.Type == token.BLANK {
+				p.proceed()
+			}
 		}
 	}
 
