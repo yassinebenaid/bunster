@@ -926,7 +926,7 @@ var loopsTests = []testCase{
 	{`for var in foo; do cmd; done`, ast.Script{
 		Statements: []ast.Node{
 			ast.RangeLoop{
-				Var: "varname",
+				Var: "var",
 				Operands: []ast.Node{
 					ast.Word("foo"),
 				},
