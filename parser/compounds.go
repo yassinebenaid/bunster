@@ -109,6 +109,9 @@ func (p *Parser) parseForLoop() ast.Node {
 				p.proceed()
 			}
 		}
+		if loop.Operands == nil {
+			p.error("missing operand after `in`")
+		}
 	}
 
 	if p.curr.Type == token.SEMICOLON {

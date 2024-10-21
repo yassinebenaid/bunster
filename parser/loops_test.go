@@ -996,4 +996,5 @@ var loopsErrorHandlingCases = []errorHandlingTestCase{
 	{`for \var do cmd; done`, "syntax error: expected identifier after `for`."},
 	{`for var foo do cmd; done`, "syntax error: expected `do`, found `foo`."},
 	{`for invalid-var-name do cmd; done`, "syntax error: expected `do`, found `-`."},
+	{`for n in; do cmd; done`, "syntax error: missing operand after `in`."},
 }
