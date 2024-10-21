@@ -923,6 +923,19 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
+	{`for var in foo; do cmd; done`, ast.Script{
+		Statements: []ast.Node{
+			ast.RangeLoop{
+				Var: "varname",
+				Operands: []ast.Node{
+					ast.Word("foo"),
+				},
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+			},
+		},
+	}},
 }
 
 var loopsErrorHandlingCases = []errorHandlingTestCase{

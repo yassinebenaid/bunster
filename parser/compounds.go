@@ -3,7 +3,6 @@ package parser
 import (
 	"github.com/yassinebenaid/bunny/ast"
 	"github.com/yassinebenaid/bunny/token"
-	"github.com/yassinebenaid/godump"
 )
 
 func (p *Parser) getCompoundParser() func() ast.Node {
@@ -145,6 +144,5 @@ loop:
 		p.error("unexpected token `%s`", p.curr.Literal)
 	}
 
-	godump.Dump(loop)
 	return loop
 }
