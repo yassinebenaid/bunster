@@ -70,6 +70,7 @@ func (Loop) node() {}
 
 type RangeLoop struct {
 	Var          string
+	Operands     []Node
 	Body         []Node
 	Redirections []Redirection
 }
