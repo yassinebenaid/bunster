@@ -104,13 +104,17 @@ func (p *Parser) parseForLoop() ast.Node {
 			p.proceed()
 		}
 		for p.curr.Type != token.NEWLINE && p.curr.Type != token.SEMICOLON && p.curr.Type != token.EOF {
-			loop.Operands = append(loop.Operands, p.parseField())
+			member := p.parseField()
+			if member == nil {
+				break
+			}
+			loop.Operands = append(loop.Operands, member)
 			if p.curr.Type == token.BLANK {
 				p.proceed()
 			}
 		}
 		if loop.Operands == nil {
-			p.error("missing operand after `in`")
+			p.error("expected operand after `in`, found `%s`", p.curr.Literal)
 		}
 	}
 
