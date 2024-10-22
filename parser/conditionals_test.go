@@ -395,4 +395,5 @@ var conditionalsErrorHandlingCases = []errorHandlingTestCase{
 	{`if cmd;then cmd; fi arg`, "syntax error: unexpected token `arg`."},
 	{`if cmd;then cmd; fi <in >out <<<etc arg`, "syntax error: unexpected token `arg`."},
 	{`if cmd;then cmd;else fi`, "syntax error: expected command list after `else`."},
+	{`if cmd;then cmd;else; fi`, "syntax error: invalid command construction."},
 }
