@@ -259,4 +259,35 @@ var conditionalsTests = []testCase{
 			},
 		},
 	}},
+	// Nesting loops
+	{`if
+		if cmd; then echo "foo"; fi
+	then
+		if cmd; then echo "foo"; fi
+	fi`, ast.Script{
+		Statements: []ast.Node{
+			ast.If{
+				Head: []ast.Node{
+					ast.If{
+						Head: []ast.Node{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Node{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						},
+					},
+				},
+				Body: []ast.Node{
+					ast.If{
+						Head: []ast.Node{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Node{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						},
+					},
+				},
+			},
+		},
+	}},
 }
