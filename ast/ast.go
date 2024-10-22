@@ -80,6 +80,7 @@ func (RangeLoop) node() {}
 type If struct {
 	Head         []Node
 	Body         []Node
+	Alternate    []Node
 	Redirections []Redirection
 }
 
