@@ -201,13 +201,29 @@ func (p *Parser) parseIf() ast.Node {
 		p.proceed()
 	}
 
-	for p.curr.Type != token.FI && p.curr.Type != token.EOF {
+	for p.curr.Type != token.FI && p.curr.Type != token.ELSE && p.curr.Type != token.EOF {
 		cond.Body = append(cond.Body, p.parseCommandList())
 		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
 			p.proceed()
 		}
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
+		}
+	}
+
+	if p.curr.Type == token.ELSE {
+		p.proceed()
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+			p.proceed()
+		}
+		for p.curr.Type != token.FI && p.curr.Type != token.EOF {
+			cond.Alternate = append(cond.Alternate, p.parseCommandList())
+			if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
+				p.proceed()
+			}
+			for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+				p.proceed()
+			}
 		}
 	}
 
