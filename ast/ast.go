@@ -76,3 +76,8 @@ type RangeLoop struct {
 }
 
 func (RangeLoop) node() {}
+
+type If struct {
+	Head []Node
+	Body []Node
+}
