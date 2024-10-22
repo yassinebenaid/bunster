@@ -11,6 +11,8 @@ func (p *Parser) getCompoundParser() func() ast.Node {
 		return p.parseWhileLoop
 	case token.FOR:
 		return p.parseForLoop
+	case token.IF:
+		return p.parseIf
 	default:
 		return nil
 	}
@@ -169,4 +171,69 @@ loop:
 	}
 
 	return loop
+}
+
+func (p *Parser) parseIf() ast.Node {
+	var cond ast.If
+	p.proceed()
+	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+		p.proceed()
+	}
+
+	for p.curr.Type != token.THEN && p.curr.Type != token.FI && p.curr.Type != token.EOF {
+		cond.Head = append(cond.Head, p.parseCommandList())
+		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
+			p.proceed()
+		}
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+			p.proceed()
+		}
+	}
+
+	if cond.Head == nil {
+		p.error("expected command list after `if`")
+	} else if p.curr.Type != token.THEN {
+		p.error("expected `do`, found `%s`", p.curr.Literal)
+	}
+
+	p.proceed()
+	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+		p.proceed()
+	}
+
+	for p.curr.Type != token.FI && p.curr.Type != token.EOF {
+		cond.Body = append(cond.Body, p.parseCommandList())
+		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
+			p.proceed()
+		}
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+			p.proceed()
+		}
+	}
+
+	if cond.Body == nil {
+		p.error("expected command list after `do`")
+	} else if p.curr.Type != token.FI {
+		p.error("expected `done` to close `if` condition")
+	}
+
+	p.proceed()
+
+	// loop:
+	// 	for {
+	// 		switch {
+	// 		case p.curr.Type == token.BLANK:
+	// 			p.proceed()
+	// 		case p.isRedirectionToken():
+	// 			p.HandleRedirection(&cond.Redirections)
+	// 		default:
+	// 			break loop
+	// 		}
+	// 	}
+
+	if !p.isControlToken() && p.curr.Type != token.EOF {
+		p.error("unexpected token `%s`", p.curr.Literal)
+	}
+
+	return cond
 }
