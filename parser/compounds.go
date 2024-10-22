@@ -214,7 +214,7 @@ func (p *Parser) parseIf() ast.Node {
 	if cond.Body == nil {
 		p.error("expected command list after `then`")
 	} else if p.curr.Type != token.FI {
-		p.error("expected `done` to close `if` condition")
+		p.error("expected `fi` to close `if` command")
 	}
 
 	p.proceed()
