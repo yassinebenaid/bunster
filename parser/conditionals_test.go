@@ -236,7 +236,7 @@ var conditionalsTests = []testCase{
 			},
 		},
 	}},
-	{`if cmd; then echo "foo"; fi && if cmd; then echo "foo"; fi`, ast.Script{
+	{`if cmd; then echo "foo"; fi && if cmd; then echo "foo"; fi;`, ast.Script{
 		Statements: []ast.Node{
 			ast.BinaryConstruction{
 				Left: ast.If{
