@@ -199,4 +199,41 @@ var conditionalsTests = []testCase{
 			ast.Command{Name: ast.Word("cmd")},
 		},
 	}},
+	{`if cmd; then echo "foo"; fi | if cmd; then echo "foo"; fi |& if cmd; then echo "foo"; fi `, ast.Script{
+		Statements: []ast.Node{
+			ast.Pipeline{
+				ast.PipelineCommand{
+					Command: ast.If{
+						Head: []ast.Node{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Node{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						},
+					},
+				},
+				ast.PipelineCommand{
+					Command: ast.If{
+						Head: []ast.Node{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Node{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						},
+					},
+				},
+				ast.PipelineCommand{
+					Stderr: true,
+					Command: ast.If{
+						Head: []ast.Node{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Node{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						},
+					},
+				},
+			},
+		},
+	}},
 }

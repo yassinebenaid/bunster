@@ -193,7 +193,7 @@ func (p *Parser) parseIf() ast.Node {
 	if cond.Head == nil {
 		p.error("expected command list after `if`")
 	} else if p.curr.Type != token.THEN {
-		p.error("expected `do`, found `%s`", p.curr.Literal)
+		p.error("expected `then`, found `%s`", p.curr.Literal)
 	}
 
 	p.proceed()
@@ -212,7 +212,7 @@ func (p *Parser) parseIf() ast.Node {
 	}
 
 	if cond.Body == nil {
-		p.error("expected command list after `do`")
+		p.error("expected command list after `then`")
 	} else if p.curr.Type != token.FI {
 		p.error("expected `done` to close `if` condition")
 	}
