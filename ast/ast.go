@@ -81,3 +81,5 @@ type If struct {
 	Head []Node
 	Body []Node
 }
+
+func (If) node() {}
