@@ -219,17 +219,17 @@ func (p *Parser) parseIf() ast.Node {
 
 	p.proceed()
 
-	// loop:
-	// 	for {
-	// 		switch {
-	// 		case p.curr.Type == token.BLANK:
-	// 			p.proceed()
-	// 		case p.isRedirectionToken():
-	// 			p.HandleRedirection(&cond.Redirections)
-	// 		default:
-	// 			break loop
-	// 		}
-	// 	}
+loop:
+	for {
+		switch {
+		case p.curr.Type == token.BLANK:
+			p.proceed()
+		case p.isRedirectionToken():
+			p.HandleRedirection(&cond.Redirections)
+		default:
+			break loop
+		}
+	}
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr.Literal)

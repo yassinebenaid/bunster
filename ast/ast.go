@@ -78,8 +78,9 @@ type RangeLoop struct {
 func (RangeLoop) node() {}
 
 type If struct {
-	Head []Node
-	Body []Node
+	Head         []Node
+	Body         []Node
+	Redirections []Redirection
 }
 
 func (If) node() {}

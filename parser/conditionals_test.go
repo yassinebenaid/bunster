@@ -174,4 +174,29 @@ var conditionalsTests = []testCase{
 			},
 		},
 	}},
+	{`if cmd; then echo "foo"; fi & if cmd; then cmd; fi & cmd`, ast.Script{
+		Statements: []ast.Node{
+			ast.BackgroundConstruction{
+				Node: ast.If{
+					Head: []ast.Node{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+					Body: []ast.Node{
+						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+					},
+				},
+			},
+			ast.BackgroundConstruction{
+				Node: ast.If{
+					Head: []ast.Node{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+					Body: []ast.Node{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+				},
+			},
+			ast.Command{Name: ast.Word("cmd")},
+		},
+	}},
 }
