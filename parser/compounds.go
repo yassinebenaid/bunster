@@ -211,6 +211,10 @@ func (p *Parser) parseIf() ast.Node {
 		}
 	}
 
+	if cond.Body == nil {
+		p.error("expected command list after `then`")
+	}
+
 	if p.curr.Type == token.ELSE {
 		p.proceed()
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
@@ -225,11 +229,12 @@ func (p *Parser) parseIf() ast.Node {
 				p.proceed()
 			}
 		}
+		if cond.Alternate == nil {
+			p.error("expected command list after `else`")
+		}
 	}
 
-	if cond.Body == nil {
-		p.error("expected command list after `then`")
-	} else if p.curr.Type != token.FI {
+	if p.curr.Type != token.FI {
 		p.error("expected `fi` to close `if` command")
 	}
 
