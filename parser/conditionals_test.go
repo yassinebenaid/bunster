@@ -316,4 +316,32 @@ var conditionalsTests = []testCase{
 			},
 		},
 	}},
+	{"if cmd; then cmd2; fi; if cmd; then cmd2; fi \n  if cmd; then cmd2; fi", ast.Script{
+		Statements: []ast.Node{
+			ast.If{
+				Head: []ast.Node{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("cmd2")},
+				},
+			},
+			ast.If{
+				Head: []ast.Node{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("cmd2")},
+				},
+			},
+			ast.If{
+				Head: []ast.Node{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("cmd2")},
+				},
+			},
+		},
+	}},
 }
