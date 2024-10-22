@@ -290,4 +290,30 @@ var conditionalsTests = []testCase{
 			},
 		},
 	}},
+	{`if cmd; then echo "foo"; fi >output.txt <input.txt 2>error.txt >&3 \
+	 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6`, ast.Script{
+		Statements: []ast.Node{
+			ast.If{
+				Head: []ast.Node{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+				Body: []ast.Node{
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+				},
+				Redirections: []ast.Redirection{
+					{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
+					{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+					{Src: "2", Method: ">", Dst: ast.Word("error.txt")},
+					{Src: "1", Method: ">&", Dst: ast.Word("3")},
+					{Src: "1", Method: ">>", Dst: ast.Word("output.txt")},
+					{Src: "0", Method: "<<<", Dst: ast.Word("input.txt")},
+					{Src: "2", Method: ">>", Dst: ast.Word("error.txt")},
+					{Method: "&>", Dst: ast.Word("all.txt")},
+					{Method: "&>>", Dst: ast.Word("all.txt")},
+					{Src: "0", Method: "<&", Dst: ast.Word("4")},
+					{Src: "5", Method: "<&", Dst: ast.Word("6")},
+				},
+			},
+		},
+	}},
 }
