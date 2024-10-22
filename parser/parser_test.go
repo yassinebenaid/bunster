@@ -442,6 +442,7 @@ var errorHandlingTestCases = []struct {
 	{"Pipes", pipesErrorHandlingCases},
 	{"Logical Constructions", logicalCommandsErrorHandlingCases},
 	{"Loops", loopsErrorHandlingCases},
+	{"Conditionals", conditionalsErrorHandlingCases},
 }
 
 func TestParserErrorHandling(t *testing.T) {
