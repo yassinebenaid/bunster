@@ -411,6 +411,8 @@ var conditionalsTests = []testCase{
 		cmd;
 	elif cmd; then
 		cmd;
+	else
+		cmd
 	fi`, ast.Script{
 		Statements: []ast.Node{
 			ast.If{
@@ -445,6 +447,9 @@ var conditionalsTests = []testCase{
 							ast.Command{Name: ast.Word("cmd")},
 						},
 					},
+				},
+				Alternate: []ast.Node{
+					ast.Command{Name: ast.Word("cmd")},
 				},
 			},
 		},
