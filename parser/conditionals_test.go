@@ -474,4 +474,6 @@ var conditionalsErrorHandlingCases = []errorHandlingTestCase{
 
 	{`if cmd;then cmd;else fi`, "syntax error: expected command list after `else`."},
 	{`if cmd;then cmd;else; fi`, "syntax error: invalid command construction."},
+
+	{`then`, "syntax error: `then` is a reserved keyword, cannot be used a command name."},
 }
