@@ -323,8 +323,8 @@ var logicalCommandsTests = []testCase{
 }
 
 var logicalCommandsErrorHandlingCases = []errorHandlingTestCase{
-	{`cmd &&`, "syntax error: invalid command construction."},
-	{`cmd ||`, "syntax error: invalid command construction."},
-	{`cmd || cmd && cmd ||`, "syntax error: invalid command construction."},
-	{`cmd && cmd || cmd &&`, "syntax error: invalid command construction."},
+	{`cmd &&`, "syntax error: unexpected end of file, expected command name."},
+	{`cmd ||`, "syntax error: unexpected end of file, expected command name."},
+	{`cmd || cmd && cmd ||`, "syntax error: unexpected end of file, expected command name."},
+	{`cmd && cmd || cmd &&`, "syntax error: unexpected end of file, expected command name."},
 }
