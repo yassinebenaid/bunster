@@ -1,7 +1,17 @@
 package ast
 
 type Node interface {
-	node() // Just to distinguish it.
+	node()
+}
+
+type Statement interface {
+	Node
+	stmt()
+}
+
+type Expression interface {
+	Node
+	expr()
 }
 
 type Script struct {
@@ -14,8 +24,6 @@ type BinaryConstruction struct {
 	Right    Node
 }
 
-func (BinaryConstruction) node() {}
-
 type BackgroundConstruction struct {
 	Node
 }
@@ -27,11 +35,7 @@ type PipelineCommand struct {
 
 type Pipeline []PipelineCommand
 
-func (Pipeline) node() {}
-
 type Word string
-
-func (Word) node() {}
 
 type Redirection struct {
 	Src    string
@@ -39,25 +43,17 @@ type Redirection struct {
 	Dst    Node
 }
 
-func (Redirection) node() {}
-
 type Command struct {
 	Name         Node
 	Args         []Node
 	Redirections []Redirection
 }
 
-func (Command) node() {}
-
 type SimpleExpansion string
-
-func (SimpleExpansion) node() {}
 
 type Concatination struct {
 	Nodes []Node
 }
-
-func (Concatination) node() {}
 
 type Loop struct {
 	Negate       bool
@@ -66,16 +62,12 @@ type Loop struct {
 	Redirections []Redirection
 }
 
-func (Loop) node() {}
-
 type RangeLoop struct {
 	Var          string
 	Operands     []Node
 	Body         []Node
 	Redirections []Redirection
 }
-
-func (RangeLoop) node() {}
 
 type If struct {
 	Head         []Node
@@ -90,4 +82,27 @@ type Elif struct {
 	Body []Node
 }
 
-func (If) node() {}
+func (Word) node()               {}
+func (Redirection) node()        {}
+func (SimpleExpansion) node()    {}
+func (Concatination) node()      {}
+func (Command) node()            {}
+func (Pipeline) node()           {}
+func (BinaryConstruction) node() {}
+func (Loop) node()               {}
+func (RangeLoop) node()          {}
+func (If) node()                 {}
+
+// Expressions
+func (Word) expr()            {}
+func (Redirection) expr()     {}
+func (SimpleExpansion) expr() {}
+func (Concatination) expr()   {}
+
+// Statements
+func (Command) stmt()            {}
+func (Pipeline) stmt()           {}
+func (BinaryConstruction) stmt() {}
+func (Loop) stmt()               {}
+func (RangeLoop) stmt()          {}
+func (If) stmt()                 {}
