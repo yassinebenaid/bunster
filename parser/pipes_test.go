@@ -4,7 +4,7 @@ import "github.com/yassinebenaid/bunny/ast"
 
 var pipesTests = []testCase{
 	{` cmd | cmd2 |& cmd3 | cmd4 |& cmd5`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Pipeline{
 				{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
 				{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: false},
@@ -15,7 +15,7 @@ var pipesTests = []testCase{
 		},
 	}},
 	{`cmd|cmd2|&cmd3|cmd4|&cmd5`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Pipeline{
 				{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
 				{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: false},
@@ -26,7 +26,7 @@ var pipesTests = []testCase{
 		},
 	}},
 	{`cmd arg| cmd2 \|`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Pipeline{
 				{Command: ast.Command{Name: ast.Word("cmd"), Args: []ast.Node{ast.Word("arg")}}, Stderr: false},
 				{Command: ast.Command{Name: ast.Word("cmd2"), Args: []ast.Node{ast.Word("|")}}, Stderr: false},
@@ -35,7 +35,7 @@ var pipesTests = []testCase{
 	}},
 
 	{`cmd arg >foo 2>&1| cmd2 123 |&$var`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Pipeline{
 				{
 					Command: ast.Command{
@@ -65,7 +65,7 @@ var pipesTests = []testCase{
 		},
 	}},
 	{"cmd |\n\n\t cmd2", ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Pipeline{
 				{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
 				{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: false},

@@ -55,8 +55,8 @@ func (p *Parser) ParseScript() ast.Script {
 	return script
 }
 
-func (p *Parser) parseCommandList() ast.Node {
-	var left ast.Node
+func (p *Parser) parseCommandList() ast.Statement {
+	var left ast.Statement
 	pipe := p.parsePipline()
 	if len(pipe) == 1 {
 		left = pipe[0].Command
@@ -71,7 +71,7 @@ func (p *Parser) parseCommandList() ast.Node {
 			p.proceed()
 		}
 
-		var right ast.Node
+		var right ast.Statement
 		rightPipe := p.parsePipline()
 		if len(rightPipe) == 1 {
 			right = rightPipe[0].Command
@@ -87,7 +87,7 @@ func (p *Parser) parseCommandList() ast.Node {
 	}
 
 	if p.curr.Type == token.AMPERSAND {
-		return ast.BackgroundConstruction{Node: left}
+		return ast.BackgroundConstruction{Statement: left}
 	}
 
 	return left
@@ -117,7 +117,7 @@ func (p *Parser) parsePipline() ast.Pipeline {
 	return pipeline
 }
 
-func (p *Parser) parseCommand() ast.Node {
+func (p *Parser) parseCommand() ast.Statement {
 	if p.curr.Type == token.EOF {
 		p.error("unexpected end of file, expected command name")
 	}

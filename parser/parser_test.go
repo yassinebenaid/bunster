@@ -31,9 +31,9 @@ var testCases = []struct {
 		{``, ast.Script{}},
 		{`	 	`, ast.Script{}},
 		{"\n	\n \n ", ast.Script{}},
-		{`git`, ast.Script{Statements: []ast.Node{ast.Command{Name: ast.Word("git")}}}},
+		{`git`, ast.Script{Statements: []ast.Statement{ast.Command{Name: ast.Word("git")}}}},
 		{`foo bar baz`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("foo"),
 					Args: []ast.Node{ast.Word("bar"), ast.Word("baz")},
@@ -41,7 +41,7 @@ var testCases = []struct {
 			},
 		}},
 		{`foo $bar $FOO_BAR_1234567890`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("foo"),
 					Args: []ast.Node{
@@ -52,7 +52,7 @@ var testCases = []struct {
 			},
 		}},
 		{`/usr/bin/foo bar baz`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("/usr/bin/foo"),
 					Args: []ast.Node{
@@ -63,7 +63,7 @@ var testCases = []struct {
 			},
 		}},
 		{`/usr/bin/foo-bar baz`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("/usr/bin/foo-bar"),
 					Args: []ast.Node{ast.Word("baz")},
@@ -71,7 +71,7 @@ var testCases = []struct {
 			},
 		}},
 		{"cmd1 \n cmd2", ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd1")},
 				ast.Command{Name: ast.Word("cmd2")},
 			},
@@ -81,9 +81,9 @@ var testCases = []struct {
 		{``, ast.Script{}},
 		{`	 	`, ast.Script{}},
 		{"\n	\n \n ", ast.Script{}},
-		{`git`, ast.Script{Statements: []ast.Node{ast.Command{Name: ast.Word("git")}}}},
+		{`git`, ast.Script{Statements: []ast.Statement{ast.Command{Name: ast.Word("git")}}}},
 		{`foo bar baz`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("foo"),
 					Args: []ast.Node{ast.Word("bar"), ast.Word("baz")},
@@ -91,7 +91,7 @@ var testCases = []struct {
 			},
 		}},
 		{`foo $bar $FOO_BAR_1234567890`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("foo"),
 					Args: []ast.Node{
@@ -102,7 +102,7 @@ var testCases = []struct {
 			},
 		}},
 		{`/usr/bin/foo bar baz`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("/usr/bin/foo"),
 					Args: []ast.Node{
@@ -113,7 +113,7 @@ var testCases = []struct {
 			},
 		}},
 		{`/usr/bin/foo-bar baz`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("/usr/bin/foo-bar"),
 					Args: []ast.Node{ast.Word("baz")},
@@ -121,7 +121,7 @@ var testCases = []struct {
 			},
 		}},
 		{"cmd1\n cmd2\ncmd3\n cmd4 arg1 arg2\ncmd5", ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd1")},
 				ast.Command{Name: ast.Word("cmd2")},
 				ast.Command{Name: ast.Word("cmd3")},
@@ -130,7 +130,7 @@ var testCases = []struct {
 			},
 		}},
 		{"cmd1; cmd2;cmd3; cmd4 arg1 arg2;cmd5", ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd1")},
 				ast.Command{Name: ast.Word("cmd2")},
 				ast.Command{Name: ast.Word("cmd3")},
@@ -142,7 +142,7 @@ var testCases = []struct {
 
 	{"Strings", []testCase{
 		{`cmd 'hello world'`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
 					Args: []ast.Node{
@@ -152,7 +152,7 @@ var testCases = []struct {
 			},
 		}},
 		{`cmd 'if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset'`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
 					Args: []ast.Node{
@@ -162,7 +162,7 @@ var testCases = []struct {
 			},
 		}},
 		{`cmd '+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~'`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
 					Args: []ast.Node{
@@ -172,7 +172,7 @@ var testCases = []struct {
 			},
 		}},
 		{`cmd '' '\' '$foo'`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
 					Args: []ast.Node{
@@ -184,7 +184,7 @@ var testCases = []struct {
 			},
 		}},
 		{`cmd ""`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
 					Args: []ast.Node{
@@ -194,7 +194,7 @@ var testCases = []struct {
 			},
 		}},
 		{`cmd "Hello World" "name is: $NAME and path is $DIR/$FILE"`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
 					Args: []ast.Node{
@@ -214,7 +214,7 @@ var testCases = []struct {
 			},
 		}},
 		{`cmd "\"" "\$ESCAPED_VAR" "\foo\bar\\" \$var \" \foo`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
 					Args: []ast.Node{
@@ -229,12 +229,12 @@ var testCases = []struct {
 			},
 		}},
 		{"cmd \"\\\nfoo\"", ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd"), Args: []ast.Node{ast.Word(`foo`)}},
 			},
 		}},
 		{`/usr/bin/$BINARY_NAME --path=/home/$USER/dir --option -f --do=something $HOME$DIR_NAME$PKG_NAME/foo`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Concatination{
 						Nodes: []ast.Node{
@@ -266,7 +266,7 @@ var testCases = []struct {
 			},
 		}},
 		{`cmd 'foo''bar' "foo""bar" "foo"'bar' "'foo'"`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
 					Args: []ast.Node{
@@ -279,7 +279,7 @@ var testCases = []struct {
 			},
 		}},
 		{"cmd \"\n\"", ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
 					Args: []ast.Node{
@@ -295,12 +295,12 @@ var testCases = []struct {
 		{`	 # foo bar`, ast.Script{}},
 		{"# foo bar    \n    \t # baz", ast.Script{}},
 		{"cmd # comment", ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
 			},
 		}},
 		{"cmd#not-comment arg#not-comment", ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd#not-comment"), Args: []ast.Node{ast.Word("arg#not-comment")}},
 			},
 		}},
@@ -310,24 +310,24 @@ var testCases = []struct {
 	{"Binary Constructions", logicalCommandsTests},
 	{"Background Constructions", []testCase{
 		{`cmd & cmd2`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.BackgroundConstruction{
-					Node: ast.Command{Name: ast.Word("cmd")},
+					Statement: ast.Command{Name: ast.Word("cmd")},
 				},
 				ast.Command{Name: ast.Word("cmd2")},
 			},
 		}},
 		{`cmd && cmd2 & cmd3 && cmd4&`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.BackgroundConstruction{
-					Node: ast.BinaryConstruction{
+					Statement: ast.BinaryConstruction{
 						Left:     ast.Command{Name: ast.Word("cmd")},
 						Operator: "&&",
 						Right:    ast.Command{Name: ast.Word("cmd2")},
 					},
 				},
 				ast.BackgroundConstruction{
-					Node: ast.BinaryConstruction{
+					Statement: ast.BinaryConstruction{
 						Left:     ast.Command{Name: ast.Word("cmd3")},
 						Operator: "&&",
 						Right:    ast.Command{Name: ast.Word("cmd4")},
@@ -336,9 +336,9 @@ var testCases = []struct {
 			},
 		}},
 		{` cmd | cmd2 |& cmd3 | cmd4 |& cmd5 foo& cmd | cmd2 |& cmd3 | cmd4 |& cmd5`, ast.Script{
-			Statements: []ast.Node{
+			Statements: []ast.Statement{
 				ast.BackgroundConstruction{
-					Node: ast.Pipeline{
+					Statement: ast.Pipeline{
 						{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
 						{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: false},
 						{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: true},

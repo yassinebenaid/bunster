@@ -4,7 +4,7 @@ import "github.com/yassinebenaid/bunny/ast"
 
 var logicalCommandsTests = []testCase{
 	{` cmd && cmd2 `, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left:     ast.Command{Name: ast.Word("cmd")},
 				Operator: "&&",
@@ -13,7 +13,7 @@ var logicalCommandsTests = []testCase{
 		},
 	}},
 	{`cmd&&cmd2`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left:     ast.Command{Name: ast.Word("cmd")},
 				Operator: "&&",
@@ -22,7 +22,7 @@ var logicalCommandsTests = []testCase{
 		},
 	}},
 	{` cmd1 | cmd2 && cmd3 `, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left: ast.Pipeline{
 					{Command: ast.Command{Name: ast.Word("cmd1")}},
@@ -34,7 +34,7 @@ var logicalCommandsTests = []testCase{
 		},
 	}},
 	{`cmd >foo arg <<<"foo bar" | cmd2 <input.txt 'foo bar baz' && cmd >foo $var 3<<<"foo bar" |& cmd2 "foo bar baz" <input.txt `, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left: ast.Pipeline{
 					{
@@ -87,7 +87,7 @@ var logicalCommandsTests = []testCase{
 		},
 	}},
 	{` cmd && cmd2 && cmd3 && cmd4`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left: ast.BinaryConstruction{
 					Left: ast.BinaryConstruction{
@@ -104,7 +104,7 @@ var logicalCommandsTests = []testCase{
 		},
 	}},
 	{` cmd&&cmd2&&cmd3&&cmd4`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left: ast.BinaryConstruction{
 					Left: ast.BinaryConstruction{
@@ -122,7 +122,7 @@ var logicalCommandsTests = []testCase{
 	}},
 
 	{" cmd && cmd2; cmd3 && cmd4\n", ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left:     ast.Command{Name: ast.Word("cmd")},
 				Operator: "&&",
@@ -137,9 +137,9 @@ var logicalCommandsTests = []testCase{
 	}},
 
 	{" cmd && cmd2 && cmd3 & cmd", ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BackgroundConstruction{
-				Node: ast.BinaryConstruction{
+				Statement: ast.BinaryConstruction{
 					Left: ast.BinaryConstruction{
 						Left:     ast.Command{Name: ast.Word("cmd")},
 						Operator: "&&",
@@ -154,7 +154,7 @@ var logicalCommandsTests = []testCase{
 	}},
 
 	{` cmd || cmd2 `, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left:     ast.Command{Name: ast.Word("cmd")},
 				Operator: "||",
@@ -163,7 +163,7 @@ var logicalCommandsTests = []testCase{
 		},
 	}},
 	{`cmd||cmd2`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left:     ast.Command{Name: ast.Word("cmd")},
 				Operator: "||",
@@ -172,7 +172,7 @@ var logicalCommandsTests = []testCase{
 		},
 	}},
 	{`cmd >foo arg <<<"foo bar" | cmd2 <input.txt 'foo bar baz' || cmd >foo $var 3<<<"foo bar" |& cmd2 "foo bar baz" <input.txt `, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left: ast.Pipeline{
 					{
@@ -225,7 +225,7 @@ var logicalCommandsTests = []testCase{
 		},
 	}},
 	{` cmd || cmd2 || cmd3 || cmd4`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left: ast.BinaryConstruction{
 					Left: ast.BinaryConstruction{
@@ -242,7 +242,7 @@ var logicalCommandsTests = []testCase{
 		},
 	}},
 	{` cmd||cmd2||cmd3||cmd4`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left: ast.BinaryConstruction{
 					Left: ast.BinaryConstruction{
@@ -259,7 +259,7 @@ var logicalCommandsTests = []testCase{
 		},
 	}},
 	{` cmd || cmd2 && cmd3 || cmd4 && cmd5`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left: ast.BinaryConstruction{
 					Left: ast.BinaryConstruction{
@@ -280,7 +280,7 @@ var logicalCommandsTests = []testCase{
 		},
 	}},
 	{"cmd || \n\t\n cmd2 ", ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left:     ast.Command{Name: ast.Word("cmd")},
 				Operator: "||",
@@ -290,7 +290,7 @@ var logicalCommandsTests = []testCase{
 	}},
 
 	{" cmd || cmd2; cmd3 || cmd4\n", ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left:     ast.Command{Name: ast.Word("cmd")},
 				Operator: "||",
@@ -305,9 +305,9 @@ var logicalCommandsTests = []testCase{
 	}},
 
 	{" cmd || cmd2 || cmd3 & cmd", ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BackgroundConstruction{
-				Node: ast.BinaryConstruction{
+				Statement: ast.BinaryConstruction{
 					Left: ast.BinaryConstruction{
 						Left:     ast.Command{Name: ast.Word("cmd")},
 						Operator: "||",

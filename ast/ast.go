@@ -15,22 +15,22 @@ type Expression interface {
 }
 
 type Script struct {
-	Statements []Node
+	Statements []Statement
 }
 
 type BinaryConstruction struct {
-	Left     Node
+	Left     Statement
 	Operator string // || or &&
-	Right    Node
+	Right    Statement
 }
 
 type BackgroundConstruction struct {
-	Node
+	Statement
 }
 
 type PipelineCommand struct {
 	Stderr  bool
-	Command Node
+	Command Statement
 }
 
 type Pipeline []PipelineCommand
@@ -57,23 +57,23 @@ type Concatination struct {
 
 type Loop struct {
 	Negate       bool
-	Head         []Node
-	Body         []Node
+	Head         []Statement
+	Body         []Statement
 	Redirections []Redirection
 }
 
 type RangeLoop struct {
 	Var          string
 	Operands     []Node
-	Body         []Node
+	Body         []Statement
 	Redirections []Redirection
 }
 
 type If struct {
-	Head         []Node
-	Body         []Node
+	Head         []Statement
+	Body         []Statement
 	Elifs        []Elif
-	Alternate    []Node
+	Alternate    []Statement
 	Redirections []Redirection
 }
 

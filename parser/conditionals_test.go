@@ -4,7 +4,7 @@ import "github.com/yassinebenaid/bunny/ast"
 
 var conditionalsTests = []testCase{
 	{`if cmd; then cmd2; fi`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.If{
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd")},
@@ -20,7 +20,7 @@ var conditionalsTests = []testCase{
 	 then
 		cmd2;
 	fi`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.If{
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd")},
@@ -36,7 +36,7 @@ var conditionalsTests = []testCase{
 	 then
 		echo 'baz'
 	fi`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.If{
 				Head: []ast.Node{
 					ast.BinaryConstruction{
@@ -65,7 +65,7 @@ var conditionalsTests = []testCase{
 		cmd >foo $var 3<<<"foo bar" |&
 		cmd2 "foo bar baz" <input.txt &
 	fi;`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.If{
 				Head: []ast.Node{
 					ast.BinaryConstruction{
@@ -120,7 +120,7 @@ var conditionalsTests = []testCase{
 				},
 				Body: []ast.Node{
 					ast.BackgroundConstruction{
-						Node: ast.BinaryConstruction{
+						Statement: ast.BinaryConstruction{
 							Left: ast.Pipeline{
 								{
 									Command: ast.Command{
@@ -175,9 +175,9 @@ var conditionalsTests = []testCase{
 		},
 	}},
 	{`if cmd; then echo "foo"; fi & if cmd; then cmd; fi & cmd`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BackgroundConstruction{
-				Node: ast.If{
+				Statement: ast.If{
 					Head: []ast.Node{
 						ast.Command{Name: ast.Word("cmd")},
 					},
@@ -187,7 +187,7 @@ var conditionalsTests = []testCase{
 				},
 			},
 			ast.BackgroundConstruction{
-				Node: ast.If{
+				Statement: ast.If{
 					Head: []ast.Node{
 						ast.Command{Name: ast.Word("cmd")},
 					},
@@ -200,7 +200,7 @@ var conditionalsTests = []testCase{
 		},
 	}},
 	{`if cmd; then echo "foo"; fi | if cmd; then echo "foo"; fi |& if cmd; then echo "foo"; fi `, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Pipeline{
 				ast.PipelineCommand{
 					Command: ast.If{
@@ -237,7 +237,7 @@ var conditionalsTests = []testCase{
 		},
 	}},
 	{`if cmd; then echo "foo"; fi && if cmd; then echo "foo"; fi;`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left: ast.If{
 					Head: []ast.Node{
@@ -265,7 +265,7 @@ var conditionalsTests = []testCase{
 	then
 		if cmd; then echo "foo"; fi
 	fi`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.If{
 				Head: []ast.Node{
 					ast.If{
@@ -292,7 +292,7 @@ var conditionalsTests = []testCase{
 	}},
 	{`if cmd; then echo "foo"; fi >output.txt <input.txt 2>error.txt >&3 \
 	 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.If{
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd")},
@@ -317,7 +317,7 @@ var conditionalsTests = []testCase{
 		},
 	}},
 	{"if cmd; then cmd2; fi; if cmd; then cmd2; fi \n  if cmd; then cmd2; fi", ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.If{
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd")},
@@ -346,7 +346,7 @@ var conditionalsTests = []testCase{
 	}},
 
 	{`if cmd; then cmd2; else cmd3; fi`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.If{
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd")},
@@ -367,7 +367,7 @@ var conditionalsTests = []testCase{
 	else
 		cmd3;
 	fi`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.If{
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd")},
@@ -382,7 +382,7 @@ var conditionalsTests = []testCase{
 		},
 	}},
 	{`if cmd; then cmd2; elif cmd3; then cmd4; fi`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.If{
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd")},
@@ -414,7 +414,7 @@ var conditionalsTests = []testCase{
 	else
 		cmd
 	fi`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.If{
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd")},

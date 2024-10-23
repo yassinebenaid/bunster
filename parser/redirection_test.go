@@ -4,7 +4,7 @@ import "github.com/yassinebenaid/bunny/ast"
 
 var redirectionTests = []testCase{
 	{`cmd>'file.ext' arg > file>/foo/bar arg2 >"$var" arg345>xyz 645 >file 3>foo.bar 45> /foo/bar 12.34>baz`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Node{
@@ -28,7 +28,7 @@ var redirectionTests = []testCase{
 		},
 	}},
 	{`cmd>|'file.ext' arg >| file>|/foo/bar arg2 >|"$var" arg345>|xyz 645 >|file 3>|foo.bar 45>| /foo/bar 12.34>|baz`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Node{
@@ -52,7 +52,7 @@ var redirectionTests = []testCase{
 		},
 	}},
 	{`cmd>>'file.ext' arg >> file>>/foo/bar arg2 >>"$var" arg345>>xyz 123 >>file 3>>foo.bar 12.34>>baz`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Node{
@@ -75,7 +75,7 @@ var redirectionTests = []testCase{
 		},
 	}},
 	{`cmd&>'file.ext' arg &> file&>/foo/bar arg2 &>"$var" 3&>xyz`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Node{
@@ -93,7 +93,7 @@ var redirectionTests = []testCase{
 		},
 	}},
 	{`cmd&>>'file.ext' arg &>> file&>>/foo/bar arg2 &>>"$var" 3&>>xyz`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Node{
@@ -111,7 +111,7 @@ var redirectionTests = []testCase{
 		},
 	}},
 	{`cmd>&1 arg >&2 arg>&3 arg345>&4 5>&6 985 >&19 12.34>& 7 8>& 9 >& $FD 3>&$FD`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Node{
@@ -136,7 +136,7 @@ var redirectionTests = []testCase{
 		},
 	}},
 	{`cmd<'file.ext' arg < file</foo/bar arg123<foo 3<bar 928 <bar 282 <&123 <&3 4<&5 6<& 7 <& "$FD" <&'9'`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Node{
@@ -162,7 +162,7 @@ var redirectionTests = []testCase{
 		},
 	}},
 	{`cmd<<<'foo bar' arg <<< foo<<<foo-bar arg2 <<<"$var" 3<<<foobar <<<123 4<<<123 5<<< 	776`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Node{

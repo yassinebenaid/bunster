@@ -7,7 +7,7 @@ var loopsTests = []testCase{
 	// WHILE LOOPS
 	//
 	{`while cmd1; cmd2; cmd3; do echo "foo"; echo bar; echo 'baz'; done;`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Loop{
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd1")},
@@ -31,7 +31,7 @@ var loopsTests = []testCase{
 		echo bar
 		echo 'baz'
 	done;`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Loop{
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd1")},
@@ -51,7 +51,7 @@ var loopsTests = []testCase{
 	do
 		echo 'baz'
 	done;`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Loop{
 				Head: []ast.Node{
 					ast.BinaryConstruction{
@@ -80,7 +80,7 @@ var loopsTests = []testCase{
 		cmd >foo $var 3<<<"foo bar" |&
 		cmd2 "foo bar baz" <input.txt &
 	done;`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Loop{
 				Head: []ast.Node{
 					ast.BinaryConstruction{
@@ -135,7 +135,7 @@ var loopsTests = []testCase{
 				},
 				Body: []ast.Node{
 					ast.BackgroundConstruction{
-						Node: ast.BinaryConstruction{
+						Statement: ast.BinaryConstruction{
 							Left: ast.Pipeline{
 								{
 									Command: ast.Command{
@@ -190,9 +190,9 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`while cmd; do echo "foo"; done & while cmd; do cmd; done & cmd`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BackgroundConstruction{
-				Node: ast.Loop{
+				Statement: ast.Loop{
 					Head: []ast.Node{
 						ast.Command{Name: ast.Word("cmd")},
 					},
@@ -202,7 +202,7 @@ var loopsTests = []testCase{
 				},
 			},
 			ast.BackgroundConstruction{
-				Node: ast.Loop{
+				Statement: ast.Loop{
 					Head: []ast.Node{
 						ast.Command{Name: ast.Word("cmd")},
 					},
@@ -215,7 +215,7 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`while cmd; do echo "foo"; done | while cmd; do echo "foo"; done |& while cmd; do echo "foo"; done `, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Pipeline{
 				ast.PipelineCommand{
 					Command: ast.Loop{
@@ -252,7 +252,7 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`while cmd; do echo "foo"; done && while cmd; do echo "foo"; done`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left: ast.Loop{
 					Head: []ast.Node{
@@ -281,7 +281,7 @@ var loopsTests = []testCase{
 	do
 		while cmd; do echo "foo"; done
 	done`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Loop{
 				Head: []ast.Node{
 					ast.Loop{
@@ -308,7 +308,7 @@ var loopsTests = []testCase{
 	}},
 	{`while cmd; do echo "foo"; done >output.txt <input.txt 2>error.txt >&3 \
 	 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Loop{
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd")},
@@ -333,7 +333,7 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`while cmd; \do; do echo "foo"; \done; done`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Loop{
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd")},
@@ -347,7 +347,7 @@ var loopsTests = []testCase{
 		},
 	}},
 	{"while cmd; do cmd2; done; while cmd; do cmd2; done \n  while cmd; do cmd2; done", ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Loop{
 				Head: []ast.Node{
 					ast.Command{Name: ast.Word("cmd")},
@@ -379,7 +379,7 @@ var loopsTests = []testCase{
 	// UNTIL LOOPS
 	//-----------------------------------------------------------
 	{`until cmd1; cmd2; cmd3; do echo "foo"; echo bar; echo 'baz'; done;`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Loop{
 				Negate: true,
 				Head: []ast.Node{
@@ -404,7 +404,7 @@ var loopsTests = []testCase{
 		echo bar
 		echo 'baz'
 	done;`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Loop{
 				Negate: true,
 				Head: []ast.Node{
@@ -425,7 +425,7 @@ var loopsTests = []testCase{
 	do
 		echo 'baz'
 	done;`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Loop{
 				Negate: true,
 				Head: []ast.Node{
@@ -455,7 +455,7 @@ var loopsTests = []testCase{
 		cmd >foo $var 3<<<"foo bar" |&
 		cmd2 "foo bar baz" <input.txt &
 	done;`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Loop{
 				Negate: true,
 				Head: []ast.Node{
@@ -511,7 +511,7 @@ var loopsTests = []testCase{
 				},
 				Body: []ast.Node{
 					ast.BackgroundConstruction{
-						Node: ast.BinaryConstruction{
+						Statement: ast.BinaryConstruction{
 							Left: ast.Pipeline{
 								{
 									Command: ast.Command{
@@ -566,9 +566,9 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`until cmd; do echo "foo"; done & until cmd; do cmd; done & cmd`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BackgroundConstruction{
-				Node: ast.Loop{
+				Statement: ast.Loop{
 					Negate: true,
 					Head: []ast.Node{
 						ast.Command{Name: ast.Word("cmd")},
@@ -579,7 +579,7 @@ var loopsTests = []testCase{
 				},
 			},
 			ast.BackgroundConstruction{
-				Node: ast.Loop{
+				Statement: ast.Loop{
 					Negate: true,
 					Head: []ast.Node{
 						ast.Command{Name: ast.Word("cmd")},
@@ -593,7 +593,7 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`until cmd; do echo "foo"; done | until cmd; do echo "foo"; done |& until cmd; do echo "foo"; done `, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Pipeline{
 				ast.PipelineCommand{
 					Command: ast.Loop{
@@ -633,7 +633,7 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`until cmd; do echo "foo"; done && until cmd; do echo "foo"; done`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left: ast.Loop{
 					Negate: true,
@@ -664,7 +664,7 @@ var loopsTests = []testCase{
 	do
 		until cmd; do echo "foo"; done
 	done`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Loop{
 				Negate: true,
 				Head: []ast.Node{
@@ -694,7 +694,7 @@ var loopsTests = []testCase{
 	}},
 	{`until cmd; do echo "foo"; done >output.txt <input.txt 2>error.txt >&3 \
 	 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Loop{
 				Negate: true,
 				Head: []ast.Node{
@@ -720,7 +720,7 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`until cmd; \do; do echo "foo"; \done; done`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Loop{
 				Negate: true,
 				Head: []ast.Node{
@@ -735,7 +735,7 @@ var loopsTests = []testCase{
 		},
 	}},
 	{"until cmd; do cmd2; done; until cmd; do cmd2; done \n  until cmd; do cmd2; done", ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Loop{
 				Negate: true,
 				Head: []ast.Node{
@@ -770,7 +770,7 @@ var loopsTests = []testCase{
 	// FOR LOOPS
 	//
 	{`for varname; do echo "foo"; echo bar; echo 'baz'; done;`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.RangeLoop{
 				Var: "varname",
 				Body: []ast.Node{
@@ -789,7 +789,7 @@ var loopsTests = []testCase{
 		echo 'baz';
 	done
 	`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.RangeLoop{
 				Var: "varname",
 				Body: []ast.Node{
@@ -801,7 +801,7 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`for varname do cmd; done`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.RangeLoop{
 				Var: "varname",
 				Body: []ast.Node{
@@ -811,9 +811,9 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`for varname do cmd; done &`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BackgroundConstruction{
-				Node: ast.RangeLoop{
+				Statement: ast.RangeLoop{
 					Var: "varname",
 					Body: []ast.Node{
 						ast.Command{Name: ast.Word("cmd")},
@@ -823,7 +823,7 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`for varname do cmd; done | cmd |& for varname do cmd; done`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.Pipeline{
 				{
 					Command: ast.RangeLoop{
@@ -847,7 +847,7 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`for varname do cmd; done && cmd || for varname do cmd; done`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left: ast.BinaryConstruction{
 					Left: ast.RangeLoop{
@@ -871,7 +871,7 @@ var loopsTests = []testCase{
 	}},
 	// Nesting
 	{`for varname do for varname do cmd; done; done`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.RangeLoop{
 				Var: "varname",
 				Body: []ast.Node{
@@ -887,7 +887,7 @@ var loopsTests = []testCase{
 	}},
 	{`for varname do cmd; done >output.txt <input.txt 2>error.txt >&3 \
 		 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.RangeLoop{
 				Var: "varname",
 				Body: []ast.Node{
@@ -910,7 +910,7 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`for var in foo; do cmd; done`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.RangeLoop{
 				Var: "var",
 				Operands: []ast.Node{
@@ -923,7 +923,7 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`for var in foo bar $baz "foobar" 'bar-baz'; do cmd; done`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.RangeLoop{
 				Var: "var",
 				Operands: []ast.Node{
@@ -943,7 +943,7 @@ var loopsTests = []testCase{
 	 do
 		cmd
 	 done`, ast.Script{
-		Statements: []ast.Node{
+		Statements: []ast.Statement{
 			ast.RangeLoop{
 				Var: "var",
 				Operands: []ast.Node{

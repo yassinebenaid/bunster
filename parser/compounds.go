@@ -5,7 +5,7 @@ import (
 	"github.com/yassinebenaid/bunny/token"
 )
 
-func (p *Parser) getCompoundParser() func() ast.Node {
+func (p *Parser) getCompoundParser() func() ast.Statement {
 	switch p.curr.Type {
 	case token.WHILE, token.UNTIL:
 		return p.parseWhileLoop
@@ -21,7 +21,7 @@ func (p *Parser) getCompoundParser() func() ast.Node {
 	}
 }
 
-func (p *Parser) parseWhileLoop() ast.Node {
+func (p *Parser) parseWhileLoop() ast.Statement {
 	var loop ast.Loop
 	loopKeyword := p.curr.Literal
 	loop.Negate = p.curr.Type == token.UNTIL
@@ -88,7 +88,7 @@ loop:
 	return loop
 }
 
-func (p *Parser) parseForLoop() ast.Node {
+func (p *Parser) parseForLoop() ast.Statement {
 	var loop ast.RangeLoop
 	p.proceed()
 	for p.curr.Type == token.BLANK {
@@ -176,7 +176,7 @@ loop:
 	return loop
 }
 
-func (p *Parser) parseIf() ast.Node {
+func (p *Parser) parseIf() ast.Statement {
 	var cond ast.If
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
