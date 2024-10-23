@@ -6,10 +6,10 @@ var conditionalsTests = []testCase{
 	{`if cmd; then cmd2; fi`, ast.Script{
 		Statements: []ast.Statement{
 			ast.If{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd2")},
 				},
 			},
@@ -22,10 +22,10 @@ var conditionalsTests = []testCase{
 	fi`, ast.Script{
 		Statements: []ast.Statement{
 			ast.If{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd2")},
 				},
 			},
@@ -38,7 +38,7 @@ var conditionalsTests = []testCase{
 	fi`, ast.Script{
 		Statements: []ast.Statement{
 			ast.If{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.BinaryConstruction{
 						Left: ast.Pipeline{
 							{Command: ast.Command{Name: ast.Word("cmd1")}},
@@ -48,7 +48,7 @@ var conditionalsTests = []testCase{
 						Right:    ast.Command{Name: ast.Word("cmd3")},
 					},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
 				},
 			},
@@ -67,7 +67,7 @@ var conditionalsTests = []testCase{
 	fi;`, ast.Script{
 		Statements: []ast.Statement{
 			ast.If{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.BinaryConstruction{
 						Left: ast.Pipeline{
 							{
@@ -118,7 +118,7 @@ var conditionalsTests = []testCase{
 						},
 					},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.BackgroundConstruction{
 						Statement: ast.BinaryConstruction{
 							Left: ast.Pipeline{
@@ -178,20 +178,20 @@ var conditionalsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.BackgroundConstruction{
 				Statement: ast.If{
-					Head: []ast.Node{
+					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
-					Body: []ast.Node{
+					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					},
 				},
 			},
 			ast.BackgroundConstruction{
 				Statement: ast.If{
-					Head: []ast.Node{
+					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
-					Body: []ast.Node{
+					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
 				},
@@ -204,20 +204,20 @@ var conditionalsTests = []testCase{
 			ast.Pipeline{
 				ast.PipelineCommand{
 					Command: ast.If{
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 						},
 					},
 				},
 				ast.PipelineCommand{
 					Command: ast.If{
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 						},
 					},
@@ -225,10 +225,10 @@ var conditionalsTests = []testCase{
 				ast.PipelineCommand{
 					Stderr: true,
 					Command: ast.If{
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 						},
 					},
@@ -240,19 +240,19 @@ var conditionalsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left: ast.If{
-					Head: []ast.Node{
+					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
-					Body: []ast.Node{
+					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					},
 				},
 				Operator: "&&",
 				Right: ast.If{
-					Head: []ast.Node{
+					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
-					Body: []ast.Node{
+					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					},
 				},
@@ -267,22 +267,22 @@ var conditionalsTests = []testCase{
 	fi`, ast.Script{
 		Statements: []ast.Statement{
 			ast.If{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.If{
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 						},
 					},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.If{
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 						},
 					},
@@ -294,10 +294,10 @@ var conditionalsTests = []testCase{
 	 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6`, ast.Script{
 		Statements: []ast.Statement{
 			ast.If{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 				},
 				Redirections: []ast.Redirection{
@@ -319,26 +319,26 @@ var conditionalsTests = []testCase{
 	{"if cmd; then cmd2; fi; if cmd; then cmd2; fi \n  if cmd; then cmd2; fi", ast.Script{
 		Statements: []ast.Statement{
 			ast.If{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd2")},
 				},
 			},
 			ast.If{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd2")},
 				},
 			},
 			ast.If{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd2")},
 				},
 			},
@@ -348,13 +348,13 @@ var conditionalsTests = []testCase{
 	{`if cmd; then cmd2; else cmd3; fi`, ast.Script{
 		Statements: []ast.Statement{
 			ast.If{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd2")},
 				},
-				Alternate: []ast.Node{
+				Alternate: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd3")},
 				},
 			},
@@ -369,13 +369,13 @@ var conditionalsTests = []testCase{
 	fi`, ast.Script{
 		Statements: []ast.Statement{
 			ast.If{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd2")},
 				},
-				Alternate: []ast.Node{
+				Alternate: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd3")},
 				},
 			},
@@ -384,18 +384,18 @@ var conditionalsTests = []testCase{
 	{`if cmd; then cmd2; elif cmd3; then cmd4; fi`, ast.Script{
 		Statements: []ast.Statement{
 			ast.If{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd2")},
 				},
 				Elifs: []ast.Elif{
 					{
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd3")},
 						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd4")},
 						},
 					},
@@ -416,39 +416,39 @@ var conditionalsTests = []testCase{
 	fi`, ast.Script{
 		Statements: []ast.Statement{
 			ast.If{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
 				Elifs: []ast.Elif{
 					{
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
-						Body: []ast.Node{
-							ast.Command{Name: ast.Word("cmd")},
-						},
-					},
-					{
-						Head: []ast.Node{
-							ast.Command{Name: ast.Word("cmd")},
-						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
 					},
 					{
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+					},
+					{
+						Head: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
 					},
 				},
-				Alternate: []ast.Node{
+				Alternate: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
 			},

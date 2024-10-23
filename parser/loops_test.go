@@ -9,12 +9,12 @@ var loopsTests = []testCase{
 	{`while cmd1; cmd2; cmd3; do echo "foo"; echo bar; echo 'baz'; done;`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Loop{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd1")},
 					ast.Command{Name: ast.Word("cmd2")},
 					ast.Command{Name: ast.Word("cmd3")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("bar")}},
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
@@ -33,12 +33,12 @@ var loopsTests = []testCase{
 	done;`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Loop{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd1")},
 					ast.Command{Name: ast.Word("cmd2")},
 					ast.Command{Name: ast.Word("cmd3")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("bar")}},
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
@@ -53,7 +53,7 @@ var loopsTests = []testCase{
 	done;`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Loop{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.BinaryConstruction{
 						Left: ast.Pipeline{
 							{Command: ast.Command{Name: ast.Word("cmd1")}},
@@ -63,7 +63,7 @@ var loopsTests = []testCase{
 						Right:    ast.Command{Name: ast.Word("cmd3")},
 					},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
 				},
 			},
@@ -82,7 +82,7 @@ var loopsTests = []testCase{
 	done;`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Loop{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.BinaryConstruction{
 						Left: ast.Pipeline{
 							{
@@ -133,7 +133,7 @@ var loopsTests = []testCase{
 						},
 					},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.BackgroundConstruction{
 						Statement: ast.BinaryConstruction{
 							Left: ast.Pipeline{
@@ -193,20 +193,20 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.BackgroundConstruction{
 				Statement: ast.Loop{
-					Head: []ast.Node{
+					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
-					Body: []ast.Node{
+					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					},
 				},
 			},
 			ast.BackgroundConstruction{
 				Statement: ast.Loop{
-					Head: []ast.Node{
+					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
-					Body: []ast.Node{
+					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
 				},
@@ -219,20 +219,20 @@ var loopsTests = []testCase{
 			ast.Pipeline{
 				ast.PipelineCommand{
 					Command: ast.Loop{
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 						},
 					},
 				},
 				ast.PipelineCommand{
 					Command: ast.Loop{
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 						},
 					},
@@ -240,10 +240,10 @@ var loopsTests = []testCase{
 				ast.PipelineCommand{
 					Stderr: true,
 					Command: ast.Loop{
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 						},
 					},
@@ -255,19 +255,19 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left: ast.Loop{
-					Head: []ast.Node{
+					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
-					Body: []ast.Node{
+					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					},
 				},
 				Operator: "&&",
 				Right: ast.Loop{
-					Head: []ast.Node{
+					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
-					Body: []ast.Node{
+					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					},
 				},
@@ -283,22 +283,22 @@ var loopsTests = []testCase{
 	done`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Loop{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Loop{
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 						},
 					},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Loop{
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 						},
 					},
@@ -310,10 +310,10 @@ var loopsTests = []testCase{
 	 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Loop{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 				},
 				Redirections: []ast.Redirection{
@@ -335,11 +335,11 @@ var loopsTests = []testCase{
 	{`while cmd; \do; do echo "foo"; \done; done`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Loop{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 					ast.Command{Name: ast.Word("do")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					ast.Command{Name: ast.Word("done")},
 				},
@@ -349,26 +349,26 @@ var loopsTests = []testCase{
 	{"while cmd; do cmd2; done; while cmd; do cmd2; done \n  while cmd; do cmd2; done", ast.Script{
 		Statements: []ast.Statement{
 			ast.Loop{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd2")},
 				},
 			},
 			ast.Loop{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd2")},
 				},
 			},
 			ast.Loop{
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd2")},
 				},
 			},
@@ -382,12 +382,12 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.Loop{
 				Negate: true,
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd1")},
 					ast.Command{Name: ast.Word("cmd2")},
 					ast.Command{Name: ast.Word("cmd3")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("bar")}},
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
@@ -407,12 +407,12 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.Loop{
 				Negate: true,
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd1")},
 					ast.Command{Name: ast.Word("cmd2")},
 					ast.Command{Name: ast.Word("cmd3")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("bar")}},
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
@@ -428,7 +428,7 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.Loop{
 				Negate: true,
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.BinaryConstruction{
 						Left: ast.Pipeline{
 							{Command: ast.Command{Name: ast.Word("cmd1")}},
@@ -438,7 +438,7 @@ var loopsTests = []testCase{
 						Right:    ast.Command{Name: ast.Word("cmd3")},
 					},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
 				},
 			},
@@ -458,7 +458,7 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.Loop{
 				Negate: true,
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.BinaryConstruction{
 						Left: ast.Pipeline{
 							{
@@ -509,7 +509,7 @@ var loopsTests = []testCase{
 						},
 					},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.BackgroundConstruction{
 						Statement: ast.BinaryConstruction{
 							Left: ast.Pipeline{
@@ -570,10 +570,10 @@ var loopsTests = []testCase{
 			ast.BackgroundConstruction{
 				Statement: ast.Loop{
 					Negate: true,
-					Head: []ast.Node{
+					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
-					Body: []ast.Node{
+					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					},
 				},
@@ -581,10 +581,10 @@ var loopsTests = []testCase{
 			ast.BackgroundConstruction{
 				Statement: ast.Loop{
 					Negate: true,
-					Head: []ast.Node{
+					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
-					Body: []ast.Node{
+					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
 				},
@@ -598,10 +598,10 @@ var loopsTests = []testCase{
 				ast.PipelineCommand{
 					Command: ast.Loop{
 						Negate: true,
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 						},
 					},
@@ -609,10 +609,10 @@ var loopsTests = []testCase{
 				ast.PipelineCommand{
 					Command: ast.Loop{
 						Negate: true,
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 						},
 					},
@@ -621,10 +621,10 @@ var loopsTests = []testCase{
 					Stderr: true,
 					Command: ast.Loop{
 						Negate: true,
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 						},
 					},
@@ -637,20 +637,20 @@ var loopsTests = []testCase{
 			ast.BinaryConstruction{
 				Left: ast.Loop{
 					Negate: true,
-					Head: []ast.Node{
+					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
-					Body: []ast.Node{
+					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					},
 				},
 				Operator: "&&",
 				Right: ast.Loop{
 					Negate: true,
-					Head: []ast.Node{
+					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
-					Body: []ast.Node{
+					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					},
 				},
@@ -667,24 +667,24 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.Loop{
 				Negate: true,
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Loop{
 						Negate: true,
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 						},
 					},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Loop{
 						Negate: true,
-						Head: []ast.Node{
+						Head: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 						},
 					},
@@ -697,10 +697,10 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.Loop{
 				Negate: true,
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 				},
 				Redirections: []ast.Redirection{
@@ -723,11 +723,11 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.Loop{
 				Negate: true,
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 					ast.Command{Name: ast.Word("do")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					ast.Command{Name: ast.Word("done")},
 				},
@@ -738,28 +738,28 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.Loop{
 				Negate: true,
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd2")},
 				},
 			},
 			ast.Loop{
 				Negate: true,
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd2")},
 				},
 			},
 			ast.Loop{
 				Negate: true,
-				Head: []ast.Node{
+				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd2")},
 				},
 			},
@@ -773,7 +773,7 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.RangeLoop{
 				Var: "varname",
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("bar")}},
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
@@ -792,7 +792,7 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.RangeLoop{
 				Var: "varname",
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("bar")}},
 					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
@@ -804,7 +804,7 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.RangeLoop{
 				Var: "varname",
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
 			},
@@ -815,7 +815,7 @@ var loopsTests = []testCase{
 			ast.BackgroundConstruction{
 				Statement: ast.RangeLoop{
 					Var: "varname",
-					Body: []ast.Node{
+					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
 				},
@@ -828,7 +828,7 @@ var loopsTests = []testCase{
 				{
 					Command: ast.RangeLoop{
 						Var: "varname",
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
 					},
@@ -838,7 +838,7 @@ var loopsTests = []testCase{
 					Stderr: true,
 					Command: ast.RangeLoop{
 						Var: "varname",
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
 					},
@@ -852,7 +852,7 @@ var loopsTests = []testCase{
 				Left: ast.BinaryConstruction{
 					Left: ast.RangeLoop{
 						Var: "varname",
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
 					},
@@ -862,7 +862,7 @@ var loopsTests = []testCase{
 				Operator: "||",
 				Right: ast.RangeLoop{
 					Var: "varname",
-					Body: []ast.Node{
+					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
 				},
@@ -874,10 +874,10 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.RangeLoop{
 				Var: "varname",
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.RangeLoop{
 						Var: "varname",
-						Body: []ast.Node{
+						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
 					},
@@ -890,7 +890,7 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.RangeLoop{
 				Var: "varname",
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
 				Redirections: []ast.Redirection{
@@ -916,7 +916,7 @@ var loopsTests = []testCase{
 				Operands: []ast.Node{
 					ast.Word("foo"),
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
 			},
@@ -933,7 +933,7 @@ var loopsTests = []testCase{
 					ast.Word("foobar"),
 					ast.Word("bar-baz"),
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
 			},
@@ -953,7 +953,7 @@ var loopsTests = []testCase{
 					ast.Word("foobar"),
 					ast.Word("bar-baz"),
 				},
-				Body: []ast.Node{
+				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
 			},

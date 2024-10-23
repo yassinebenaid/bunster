@@ -78,8 +78,8 @@ type If struct {
 }
 
 type Elif struct {
-	Head []Node
-	Body []Node
+	Head []Statement
+	Body []Statement
 }
 
 func (Word) node()               {}
