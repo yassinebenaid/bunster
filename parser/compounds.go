@@ -183,7 +183,7 @@ func (p *Parser) parseIf() ast.Node {
 		p.proceed()
 	}
 
-	for p.curr.Type != token.THEN && p.curr.Type != token.EOF {
+	for p.curr.Type != token.THEN && p.curr.Type != token.FI && p.curr.Type != token.EOF {
 		cond.Head = append(cond.Head, p.parseCommandList())
 		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
 			p.proceed()
