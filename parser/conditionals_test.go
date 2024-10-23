@@ -467,6 +467,11 @@ var conditionalsErrorHandlingCases = []errorHandlingTestCase{
 	{`if cmd;then cmd`, "syntax error: expected `fi` to close `if` command."},
 	{`if cmd;then cmd; fi arg`, "syntax error: unexpected token `arg`."},
 	{`if cmd;then cmd; fi <in >out <<<etc arg`, "syntax error: unexpected token `arg`."},
+
+	{`if cmd; then cmd;elif fi`, "syntax error: expected command list after `elif`."},
+	{`if cmd; then cmd;elif cmd; fi`, "syntax error: expected `then`, found `fi`."},
+	{`if cmd; then cmd;elif cmd; then fi`, "syntax error: expected command list after `then`."},
+
 	{`if cmd;then cmd;else fi`, "syntax error: expected command list after `else`."},
 	{`if cmd;then cmd;else; fi`, "syntax error: invalid command construction."},
 }
