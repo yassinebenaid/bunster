@@ -332,13 +332,6 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
-	{`\while cmd; do echo "foo"; done`, ast.Script{
-		Statements: []ast.Node{
-			ast.Command{Name: ast.Word("while"), Args: []ast.Node{ast.Word("cmd")}},
-			ast.Command{Name: ast.Word("do"), Args: []ast.Node{ast.Word("echo"), ast.Word("foo")}},
-			ast.Command{Name: ast.Word("done")},
-		},
-	}},
 	{`while cmd; \do; do echo "foo"; \done; done`, ast.Script{
 		Statements: []ast.Node{
 			ast.Loop{
@@ -726,13 +719,6 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
-	{`\until cmd; do echo "foo"; done`, ast.Script{
-		Statements: []ast.Node{
-			ast.Command{Name: ast.Word("until"), Args: []ast.Node{ast.Word("cmd")}},
-			ast.Command{Name: ast.Word("do"), Args: []ast.Node{ast.Word("echo"), ast.Word("foo")}},
-			ast.Command{Name: ast.Word("done")},
-		},
-	}},
 	{`until cmd; \do; do echo "foo"; \done; done`, ast.Script{
 		Statements: []ast.Node{
 			ast.Loop{
@@ -1020,4 +1006,6 @@ var loopsErrorHandlingCases = []errorHandlingTestCase{
 	{"for n in foo \n bar; do cmd; done", "syntax error: expected `do`, found `bar`."},
 	{"for n in &; do cmd; done", "syntax error: unexpected token `&`."},
 	{"for n in foo &; do cmd; done", "syntax error: unexpected token `&`."},
+
+	{`do`, "syntax error: `do` is a reserved keyword, cannot be used a command name."},
 }
