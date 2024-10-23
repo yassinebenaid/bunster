@@ -477,4 +477,5 @@ var conditionalsErrorHandlingCases = []errorHandlingTestCase{
 
 	{`then`, "syntax error: `then` is a reserved keyword, cannot be used a command name."},
 	{`elif`, "syntax error: `elif` is a reserved keyword, cannot be used a command name."},
+	{`else`, "syntax error: `else` is a reserved keyword, cannot be used a command name."},
 }
