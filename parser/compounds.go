@@ -215,7 +215,7 @@ func (p *Parser) parseIf() ast.Node {
 		p.error("expected command list after `then`")
 	}
 
-	if p.curr.Type == token.ELIF {
+	for p.curr.Type == token.ELIF {
 		p.proceed()
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
