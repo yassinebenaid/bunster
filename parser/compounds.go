@@ -13,7 +13,7 @@ func (p *Parser) getCompoundParser() func() ast.Node {
 		return p.parseForLoop
 	case token.IF:
 		return p.parseIf
-	case token.THEN:
+	case token.THEN, token.ELIF:
 		p.error("`%s` is a reserved keyword, cannot be used a command name", p.curr.Literal)
 		fallthrough
 	default:
