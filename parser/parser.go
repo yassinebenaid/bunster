@@ -133,6 +133,7 @@ func (p *Parser) parseCommand() ast.Node {
 	var cmd ast.Command
 	cmd.Name = p.parseField()
 	if cmd.Name == nil {
+		p.error("`%s` is a special character and cannot be used as a command name", p.curr.Literal)
 		return nil
 	}
 
