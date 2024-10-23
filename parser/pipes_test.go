@@ -28,8 +28,8 @@ var pipesTests = []testCase{
 	{`cmd arg| cmd2 \|`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Pipeline{
-				{Command: ast.Command{Name: ast.Word("cmd"), Args: []ast.Node{ast.Word("arg")}}, Stderr: false},
-				{Command: ast.Command{Name: ast.Word("cmd2"), Args: []ast.Node{ast.Word("|")}}, Stderr: false},
+				{Command: ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg")}}, Stderr: false},
+				{Command: ast.Command{Name: ast.Word("cmd2"), Args: []ast.Expression{ast.Word("|")}}, Stderr: false},
 			},
 		},
 	}},
@@ -40,7 +40,7 @@ var pipesTests = []testCase{
 				{
 					Command: ast.Command{
 						Name: ast.Word("cmd"),
-						Args: []ast.Node{ast.Word("arg")},
+						Args: []ast.Expression{ast.Word("arg")},
 						Redirections: []ast.Redirection{
 							{Src: "1", Method: ">", Dst: ast.Word("foo")},
 							{Src: "2", Method: ">&", Dst: ast.Word("1")},
@@ -51,7 +51,7 @@ var pipesTests = []testCase{
 				{
 					Command: ast.Command{
 						Name: ast.Word("cmd2"),
-						Args: []ast.Node{ast.Word("123")},
+						Args: []ast.Expression{ast.Word("123")},
 					},
 					Stderr: false,
 				},

@@ -40,7 +40,7 @@ var logicalCommandsTests = []testCase{
 					{
 						Command: ast.Command{
 							Name: ast.Word("cmd"),
-							Args: []ast.Node{ast.Word("arg")},
+							Args: []ast.Expression{ast.Word("arg")},
 							Redirections: []ast.Redirection{
 								{Src: "1", Method: ">", Dst: ast.Word("foo")},
 								{Src: "0", Method: "<<<", Dst: ast.Word("foo bar")},
@@ -51,7 +51,7 @@ var logicalCommandsTests = []testCase{
 					{
 						Command: ast.Command{
 							Name: ast.Word("cmd2"),
-							Args: []ast.Node{ast.Word("foo bar baz")},
+							Args: []ast.Expression{ast.Word("foo bar baz")},
 							Redirections: []ast.Redirection{
 								{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 							},
@@ -64,7 +64,7 @@ var logicalCommandsTests = []testCase{
 					{
 						Command: ast.Command{
 							Name: ast.Word("cmd"),
-							Args: []ast.Node{ast.SimpleExpansion("var")},
+							Args: []ast.Expression{ast.SimpleExpansion("var")},
 							Redirections: []ast.Redirection{
 								{Src: "1", Method: ">", Dst: ast.Word("foo")},
 								{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
@@ -75,7 +75,7 @@ var logicalCommandsTests = []testCase{
 					{
 						Command: ast.Command{
 							Name: ast.Word("cmd2"),
-							Args: []ast.Node{ast.Word("foo bar baz")},
+							Args: []ast.Expression{ast.Word("foo bar baz")},
 							Redirections: []ast.Redirection{
 								{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 							},
@@ -178,7 +178,7 @@ var logicalCommandsTests = []testCase{
 					{
 						Command: ast.Command{
 							Name: ast.Word("cmd"),
-							Args: []ast.Node{ast.Word("arg")},
+							Args: []ast.Expression{ast.Word("arg")},
 							Redirections: []ast.Redirection{
 								{Src: "1", Method: ">", Dst: ast.Word("foo")},
 								{Src: "0", Method: "<<<", Dst: ast.Word("foo bar")},
@@ -189,7 +189,7 @@ var logicalCommandsTests = []testCase{
 					{
 						Command: ast.Command{
 							Name: ast.Word("cmd2"),
-							Args: []ast.Node{ast.Word("foo bar baz")},
+							Args: []ast.Expression{ast.Word("foo bar baz")},
 							Redirections: []ast.Redirection{
 								{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 							},
@@ -202,7 +202,7 @@ var logicalCommandsTests = []testCase{
 					{
 						Command: ast.Command{
 							Name: ast.Word("cmd"),
-							Args: []ast.Node{ast.SimpleExpansion("var")},
+							Args: []ast.Expression{ast.SimpleExpansion("var")},
 							Redirections: []ast.Redirection{
 								{Src: "1", Method: ">", Dst: ast.Word("foo")},
 								{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
@@ -213,7 +213,7 @@ var logicalCommandsTests = []testCase{
 					{
 						Command: ast.Command{
 							Name: ast.Word("cmd2"),
-							Args: []ast.Node{ast.Word("foo bar baz")},
+							Args: []ast.Expression{ast.Word("foo bar baz")},
 							Redirections: []ast.Redirection{
 								{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 							},

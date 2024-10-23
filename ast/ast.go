@@ -44,15 +44,15 @@ type Redirection struct {
 }
 
 type Command struct {
-	Name         Node
-	Args         []Node
+	Name         Expression
+	Args         []Expression
 	Redirections []Redirection
 }
 
 type SimpleExpansion string
 
 type Concatination struct {
-	Nodes []Node
+	Nodes []Expression
 }
 
 type Loop struct {

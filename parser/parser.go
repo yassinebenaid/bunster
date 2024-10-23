@@ -160,8 +160,8 @@ loop:
 	return cmd
 }
 
-func (p *Parser) parseField() ast.Node {
-	var nodes []ast.Node
+func (p *Parser) parseField() ast.Expression {
+	var nodes []ast.Expression
 
 loop:
 	for {
@@ -210,14 +210,14 @@ func (p *Parser) parseLiteralString() ast.Word {
 	return ast.Word(word)
 }
 
-func (p *Parser) parseString() ast.Node {
+func (p *Parser) parseString() ast.Expression {
 	p.proceed()
 
 	if p.curr.Type == token.DOUBLE_QUOTE {
 		return ast.Word("")
 	}
 
-	var nodes []ast.Node
+	var nodes []ast.Expression
 
 loop:
 	for {
@@ -242,7 +242,7 @@ loop:
 	return concat(nodes)
 }
 
-func concat(n []ast.Node) ast.Node {
+func concat(n []ast.Expression) ast.Expression {
 	var conc ast.Concatination
 	var mergedWords ast.Word
 	var hasWords bool

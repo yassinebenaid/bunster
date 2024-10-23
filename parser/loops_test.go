@@ -15,9 +15,9 @@ var loopsTests = []testCase{
 					ast.Command{Name: ast.Word("cmd3")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("bar")}},
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
 				},
 			},
 		},
@@ -39,9 +39,9 @@ var loopsTests = []testCase{
 					ast.Command{Name: ast.Word("cmd3")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("bar")}},
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
 				},
 			},
 		},
@@ -64,7 +64,7 @@ var loopsTests = []testCase{
 					},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
 				},
 			},
 		},
@@ -88,7 +88,7 @@ var loopsTests = []testCase{
 							{
 								Command: ast.Command{
 									Name: ast.Word("cmd"),
-									Args: []ast.Node{ast.Word("arg")},
+									Args: []ast.Expression{ast.Word("arg")},
 									Redirections: []ast.Redirection{
 										{Src: "1", Method: ">", Dst: ast.Word("foo")},
 										{Src: "0", Method: "<<<", Dst: ast.Word("foo bar")},
@@ -99,7 +99,7 @@ var loopsTests = []testCase{
 							{
 								Command: ast.Command{
 									Name: ast.Word("cmd2"),
-									Args: []ast.Node{ast.Word("foo bar baz")},
+									Args: []ast.Expression{ast.Word("foo bar baz")},
 									Redirections: []ast.Redirection{
 										{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 									},
@@ -112,7 +112,7 @@ var loopsTests = []testCase{
 							{
 								Command: ast.Command{
 									Name: ast.Word("cmd"),
-									Args: []ast.Node{ast.SimpleExpansion("var")},
+									Args: []ast.Expression{ast.SimpleExpansion("var")},
 									Redirections: []ast.Redirection{
 										{Src: "1", Method: ">", Dst: ast.Word("foo")},
 										{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
@@ -123,7 +123,7 @@ var loopsTests = []testCase{
 							{
 								Command: ast.Command{
 									Name: ast.Word("cmd2"),
-									Args: []ast.Node{ast.Word("foo bar baz")},
+									Args: []ast.Expression{ast.Word("foo bar baz")},
 									Redirections: []ast.Redirection{
 										{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 									},
@@ -140,7 +140,7 @@ var loopsTests = []testCase{
 								{
 									Command: ast.Command{
 										Name: ast.Word("cmd"),
-										Args: []ast.Node{ast.Word("arg")},
+										Args: []ast.Expression{ast.Word("arg")},
 										Redirections: []ast.Redirection{
 											{Src: "1", Method: ">", Dst: ast.Word("foo")},
 											{Src: "0", Method: "<<<", Dst: ast.Word("foo bar")},
@@ -151,7 +151,7 @@ var loopsTests = []testCase{
 								{
 									Command: ast.Command{
 										Name: ast.Word("cmd2"),
-										Args: []ast.Node{ast.Word("foo bar baz")},
+										Args: []ast.Expression{ast.Word("foo bar baz")},
 										Redirections: []ast.Redirection{
 											{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 										},
@@ -164,7 +164,7 @@ var loopsTests = []testCase{
 								{
 									Command: ast.Command{
 										Name: ast.Word("cmd"),
-										Args: []ast.Node{ast.SimpleExpansion("var")},
+										Args: []ast.Expression{ast.SimpleExpansion("var")},
 										Redirections: []ast.Redirection{
 											{Src: "1", Method: ">", Dst: ast.Word("foo")},
 											{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
@@ -175,7 +175,7 @@ var loopsTests = []testCase{
 								{
 									Command: ast.Command{
 										Name: ast.Word("cmd2"),
-										Args: []ast.Node{ast.Word("foo bar baz")},
+										Args: []ast.Expression{ast.Word("foo bar baz")},
 										Redirections: []ast.Redirection{
 											{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 										},
@@ -197,7 +197,7 @@ var loopsTests = []testCase{
 						ast.Command{Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 			},
@@ -223,7 +223,7 @@ var loopsTests = []testCase{
 							ast.Command{Name: ast.Word("cmd")},
 						},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 						},
 					},
 				},
@@ -233,7 +233,7 @@ var loopsTests = []testCase{
 							ast.Command{Name: ast.Word("cmd")},
 						},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 						},
 					},
 				},
@@ -244,7 +244,7 @@ var loopsTests = []testCase{
 							ast.Command{Name: ast.Word("cmd")},
 						},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 						},
 					},
 				},
@@ -259,7 +259,7 @@ var loopsTests = []testCase{
 						ast.Command{Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 				Operator: "&&",
@@ -268,7 +268,7 @@ var loopsTests = []testCase{
 						ast.Command{Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 			},
@@ -289,7 +289,7 @@ var loopsTests = []testCase{
 							ast.Command{Name: ast.Word("cmd")},
 						},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 						},
 					},
 				},
@@ -299,7 +299,7 @@ var loopsTests = []testCase{
 							ast.Command{Name: ast.Word("cmd")},
 						},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 						},
 					},
 				},
@@ -314,7 +314,7 @@ var loopsTests = []testCase{
 					ast.Command{Name: ast.Word("cmd")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 				},
 				Redirections: []ast.Redirection{
 					{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -340,7 +340,7 @@ var loopsTests = []testCase{
 					ast.Command{Name: ast.Word("do")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					ast.Command{Name: ast.Word("done")},
 				},
 			},
@@ -388,9 +388,9 @@ var loopsTests = []testCase{
 					ast.Command{Name: ast.Word("cmd3")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("bar")}},
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
 				},
 			},
 		},
@@ -413,9 +413,9 @@ var loopsTests = []testCase{
 					ast.Command{Name: ast.Word("cmd3")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("bar")}},
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
 				},
 			},
 		},
@@ -439,7 +439,7 @@ var loopsTests = []testCase{
 					},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
 				},
 			},
 		},
@@ -464,7 +464,7 @@ var loopsTests = []testCase{
 							{
 								Command: ast.Command{
 									Name: ast.Word("cmd"),
-									Args: []ast.Node{ast.Word("arg")},
+									Args: []ast.Expression{ast.Word("arg")},
 									Redirections: []ast.Redirection{
 										{Src: "1", Method: ">", Dst: ast.Word("foo")},
 										{Src: "0", Method: "<<<", Dst: ast.Word("foo bar")},
@@ -475,7 +475,7 @@ var loopsTests = []testCase{
 							{
 								Command: ast.Command{
 									Name: ast.Word("cmd2"),
-									Args: []ast.Node{ast.Word("foo bar baz")},
+									Args: []ast.Expression{ast.Word("foo bar baz")},
 									Redirections: []ast.Redirection{
 										{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 									},
@@ -488,7 +488,7 @@ var loopsTests = []testCase{
 							{
 								Command: ast.Command{
 									Name: ast.Word("cmd"),
-									Args: []ast.Node{ast.SimpleExpansion("var")},
+									Args: []ast.Expression{ast.SimpleExpansion("var")},
 									Redirections: []ast.Redirection{
 										{Src: "1", Method: ">", Dst: ast.Word("foo")},
 										{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
@@ -499,7 +499,7 @@ var loopsTests = []testCase{
 							{
 								Command: ast.Command{
 									Name: ast.Word("cmd2"),
-									Args: []ast.Node{ast.Word("foo bar baz")},
+									Args: []ast.Expression{ast.Word("foo bar baz")},
 									Redirections: []ast.Redirection{
 										{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 									},
@@ -516,7 +516,7 @@ var loopsTests = []testCase{
 								{
 									Command: ast.Command{
 										Name: ast.Word("cmd"),
-										Args: []ast.Node{ast.Word("arg")},
+										Args: []ast.Expression{ast.Word("arg")},
 										Redirections: []ast.Redirection{
 											{Src: "1", Method: ">", Dst: ast.Word("foo")},
 											{Src: "0", Method: "<<<", Dst: ast.Word("foo bar")},
@@ -527,7 +527,7 @@ var loopsTests = []testCase{
 								{
 									Command: ast.Command{
 										Name: ast.Word("cmd2"),
-										Args: []ast.Node{ast.Word("foo bar baz")},
+										Args: []ast.Expression{ast.Word("foo bar baz")},
 										Redirections: []ast.Redirection{
 											{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 										},
@@ -540,7 +540,7 @@ var loopsTests = []testCase{
 								{
 									Command: ast.Command{
 										Name: ast.Word("cmd"),
-										Args: []ast.Node{ast.SimpleExpansion("var")},
+										Args: []ast.Expression{ast.SimpleExpansion("var")},
 										Redirections: []ast.Redirection{
 											{Src: "1", Method: ">", Dst: ast.Word("foo")},
 											{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
@@ -551,7 +551,7 @@ var loopsTests = []testCase{
 								{
 									Command: ast.Command{
 										Name: ast.Word("cmd2"),
-										Args: []ast.Node{ast.Word("foo bar baz")},
+										Args: []ast.Expression{ast.Word("foo bar baz")},
 										Redirections: []ast.Redirection{
 											{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 										},
@@ -574,7 +574,7 @@ var loopsTests = []testCase{
 						ast.Command{Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 			},
@@ -602,7 +602,7 @@ var loopsTests = []testCase{
 							ast.Command{Name: ast.Word("cmd")},
 						},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 						},
 					},
 				},
@@ -613,7 +613,7 @@ var loopsTests = []testCase{
 							ast.Command{Name: ast.Word("cmd")},
 						},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 						},
 					},
 				},
@@ -625,7 +625,7 @@ var loopsTests = []testCase{
 							ast.Command{Name: ast.Word("cmd")},
 						},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 						},
 					},
 				},
@@ -641,7 +641,7 @@ var loopsTests = []testCase{
 						ast.Command{Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 				Operator: "&&",
@@ -651,7 +651,7 @@ var loopsTests = []testCase{
 						ast.Command{Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 			},
@@ -674,7 +674,7 @@ var loopsTests = []testCase{
 							ast.Command{Name: ast.Word("cmd")},
 						},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 						},
 					},
 				},
@@ -685,7 +685,7 @@ var loopsTests = []testCase{
 							ast.Command{Name: ast.Word("cmd")},
 						},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 						},
 					},
 				},
@@ -701,7 +701,7 @@ var loopsTests = []testCase{
 					ast.Command{Name: ast.Word("cmd")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 				},
 				Redirections: []ast.Redirection{
 					{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -728,7 +728,7 @@ var loopsTests = []testCase{
 					ast.Command{Name: ast.Word("do")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					ast.Command{Name: ast.Word("done")},
 				},
 			},
@@ -774,9 +774,9 @@ var loopsTests = []testCase{
 			ast.RangeLoop{
 				Var: "varname",
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("bar")}},
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
 				},
 			},
 		},
@@ -793,9 +793,9 @@ var loopsTests = []testCase{
 			ast.RangeLoop{
 				Var: "varname",
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("foo")}},
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("bar")}},
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Node{ast.Word("baz")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
+					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
 				},
 			},
 		},

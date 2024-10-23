@@ -36,7 +36,7 @@ var testCases = []struct {
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("foo"),
-					Args: []ast.Node{ast.Word("bar"), ast.Word("baz")},
+					Args: []ast.Expression{ast.Word("bar"), ast.Word("baz")},
 				},
 			},
 		}},
@@ -44,7 +44,7 @@ var testCases = []struct {
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("foo"),
-					Args: []ast.Node{
+					Args: []ast.Expression{
 						ast.SimpleExpansion("bar"),
 						ast.SimpleExpansion("FOO_BAR_1234567890"),
 					},
@@ -55,7 +55,7 @@ var testCases = []struct {
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("/usr/bin/foo"),
-					Args: []ast.Node{
+					Args: []ast.Expression{
 						ast.Word("bar"),
 						ast.Word("baz"),
 					},
@@ -66,7 +66,7 @@ var testCases = []struct {
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("/usr/bin/foo-bar"),
-					Args: []ast.Node{ast.Word("baz")},
+					Args: []ast.Expression{ast.Word("baz")},
 				},
 			},
 		}},
@@ -86,7 +86,7 @@ var testCases = []struct {
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("foo"),
-					Args: []ast.Node{ast.Word("bar"), ast.Word("baz")},
+					Args: []ast.Expression{ast.Word("bar"), ast.Word("baz")},
 				},
 			},
 		}},
@@ -94,7 +94,7 @@ var testCases = []struct {
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("foo"),
-					Args: []ast.Node{
+					Args: []ast.Expression{
 						ast.SimpleExpansion("bar"),
 						ast.SimpleExpansion("FOO_BAR_1234567890"),
 					},
@@ -105,7 +105,7 @@ var testCases = []struct {
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("/usr/bin/foo"),
-					Args: []ast.Node{
+					Args: []ast.Expression{
 						ast.Word("bar"),
 						ast.Word("baz"),
 					},
@@ -116,7 +116,7 @@ var testCases = []struct {
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("/usr/bin/foo-bar"),
-					Args: []ast.Node{ast.Word("baz")},
+					Args: []ast.Expression{ast.Word("baz")},
 				},
 			},
 		}},
@@ -125,7 +125,7 @@ var testCases = []struct {
 				ast.Command{Name: ast.Word("cmd1")},
 				ast.Command{Name: ast.Word("cmd2")},
 				ast.Command{Name: ast.Word("cmd3")},
-				ast.Command{Name: ast.Word("cmd4"), Args: []ast.Node{ast.Word("arg1"), ast.Word("arg2")}},
+				ast.Command{Name: ast.Word("cmd4"), Args: []ast.Expression{ast.Word("arg1"), ast.Word("arg2")}},
 				ast.Command{Name: ast.Word("cmd5")},
 			},
 		}},
@@ -134,7 +134,7 @@ var testCases = []struct {
 				ast.Command{Name: ast.Word("cmd1")},
 				ast.Command{Name: ast.Word("cmd2")},
 				ast.Command{Name: ast.Word("cmd3")},
-				ast.Command{Name: ast.Word("cmd4"), Args: []ast.Node{ast.Word("arg1"), ast.Word("arg2")}},
+				ast.Command{Name: ast.Word("cmd4"), Args: []ast.Expression{ast.Word("arg1"), ast.Word("arg2")}},
 				ast.Command{Name: ast.Word("cmd5")},
 			},
 		}},
@@ -145,7 +145,7 @@ var testCases = []struct {
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
-					Args: []ast.Node{
+					Args: []ast.Expression{
 						ast.Word("hello world"),
 					},
 				},
@@ -155,7 +155,7 @@ var testCases = []struct {
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
-					Args: []ast.Node{
+					Args: []ast.Expression{
 						ast.Word("if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset"),
 					},
 				},
@@ -165,7 +165,7 @@ var testCases = []struct {
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
-					Args: []ast.Node{
+					Args: []ast.Expression{
 						ast.Word(`+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~`),
 					},
 				},
@@ -175,7 +175,7 @@ var testCases = []struct {
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
-					Args: []ast.Node{
+					Args: []ast.Expression{
 						ast.Word(""),
 						ast.Word(`\`),
 						ast.Word(`$foo`),
@@ -187,7 +187,7 @@ var testCases = []struct {
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
-					Args: []ast.Node{
+					Args: []ast.Expression{
 						ast.Word(""),
 					},
 				},
@@ -197,10 +197,10 @@ var testCases = []struct {
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
-					Args: []ast.Node{
+					Args: []ast.Expression{
 						ast.Word("Hello World"),
 						ast.Concatination{
-							Nodes: []ast.Node{
+							Nodes: []ast.Expression{
 								ast.Word("name is: "),
 								ast.SimpleExpansion("NAME"),
 								ast.Word(" and path is "),
@@ -217,7 +217,7 @@ var testCases = []struct {
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
-					Args: []ast.Node{
+					Args: []ast.Expression{
 						ast.Word(`"`),
 						ast.Word(`$ESCAPED_VAR`),
 						ast.Word(`\foo\bar\`),
@@ -230,21 +230,21 @@ var testCases = []struct {
 		}},
 		{"cmd \"\\\nfoo\"", ast.Script{
 			Statements: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd"), Args: []ast.Node{ast.Word(`foo`)}},
+				ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word(`foo`)}},
 			},
 		}},
 		{`/usr/bin/$BINARY_NAME --path=/home/$USER/dir --option -f --do=something $HOME$DIR_NAME$PKG_NAME/foo`, ast.Script{
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Concatination{
-						Nodes: []ast.Node{
+						Nodes: []ast.Expression{
 							ast.Word("/usr/bin/"),
 							ast.SimpleExpansion("BINARY_NAME"),
 						},
 					},
-					Args: []ast.Node{
+					Args: []ast.Expression{
 						ast.Concatination{
-							Nodes: []ast.Node{
+							Nodes: []ast.Expression{
 								ast.Word("--path=/home/"),
 								ast.SimpleExpansion("USER"),
 								ast.Word("/dir"),
@@ -254,7 +254,7 @@ var testCases = []struct {
 						ast.Word("-f"),
 						ast.Word("--do=something"),
 						ast.Concatination{
-							Nodes: []ast.Node{
+							Nodes: []ast.Expression{
 								ast.SimpleExpansion("HOME"),
 								ast.SimpleExpansion("DIR_NAME"),
 								ast.SimpleExpansion("PKG_NAME"),
@@ -269,7 +269,7 @@ var testCases = []struct {
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
-					Args: []ast.Node{
+					Args: []ast.Expression{
 						ast.Word("foobar"),
 						ast.Word("foobar"),
 						ast.Word("foobar"),
@@ -282,7 +282,7 @@ var testCases = []struct {
 			Statements: []ast.Statement{
 				ast.Command{
 					Name: ast.Word("cmd"),
-					Args: []ast.Node{
+					Args: []ast.Expression{
 						ast.Word("\n"),
 					},
 				},
@@ -301,7 +301,7 @@ var testCases = []struct {
 		}},
 		{"cmd#not-comment arg#not-comment", ast.Script{
 			Statements: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd#not-comment"), Args: []ast.Node{ast.Word("arg#not-comment")}},
+				ast.Command{Name: ast.Word("cmd#not-comment"), Args: []ast.Expression{ast.Word("arg#not-comment")}},
 			},
 		}},
 	}},
@@ -343,7 +343,7 @@ var testCases = []struct {
 						{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: false},
 						{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: true},
 						{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: false},
-						{Command: ast.Command{Name: ast.Word("cmd5"), Args: []ast.Node{ast.Word("foo")}}, Stderr: true},
+						{Command: ast.Command{Name: ast.Word("cmd5"), Args: []ast.Expression{ast.Word("foo")}}, Stderr: true},
 					},
 				},
 				ast.Pipeline{

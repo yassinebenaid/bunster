@@ -7,7 +7,7 @@ var redirectionTests = []testCase{
 		Statements: []ast.Statement{
 			ast.Command{
 				Name: ast.Word("cmd"),
-				Args: []ast.Node{
+				Args: []ast.Expression{
 					ast.Word("arg"),
 					ast.Word("arg2"),
 					ast.Word("arg345"),
@@ -31,7 +31,7 @@ var redirectionTests = []testCase{
 		Statements: []ast.Statement{
 			ast.Command{
 				Name: ast.Word("cmd"),
-				Args: []ast.Node{
+				Args: []ast.Expression{
 					ast.Word("arg"),
 					ast.Word("arg2"),
 					ast.Word("arg345"),
@@ -55,7 +55,7 @@ var redirectionTests = []testCase{
 		Statements: []ast.Statement{
 			ast.Command{
 				Name: ast.Word("cmd"),
-				Args: []ast.Node{
+				Args: []ast.Expression{
 					ast.Word("arg"),
 					ast.Word("arg2"),
 					ast.Word("arg345"),
@@ -78,7 +78,7 @@ var redirectionTests = []testCase{
 		Statements: []ast.Statement{
 			ast.Command{
 				Name: ast.Word("cmd"),
-				Args: []ast.Node{
+				Args: []ast.Expression{
 					ast.Word("arg"),
 					ast.Word("arg2"),
 					ast.Word("3"),
@@ -96,7 +96,7 @@ var redirectionTests = []testCase{
 		Statements: []ast.Statement{
 			ast.Command{
 				Name: ast.Word("cmd"),
-				Args: []ast.Node{
+				Args: []ast.Expression{
 					ast.Word("arg"),
 					ast.Word("arg2"),
 					ast.Word("3"),
@@ -114,7 +114,7 @@ var redirectionTests = []testCase{
 		Statements: []ast.Statement{
 			ast.Command{
 				Name: ast.Word("cmd"),
-				Args: []ast.Node{
+				Args: []ast.Expression{
 					ast.Word("arg"),
 					ast.Word("arg"),
 					ast.Word("arg345"),
@@ -139,7 +139,7 @@ var redirectionTests = []testCase{
 		Statements: []ast.Statement{
 			ast.Command{
 				Name: ast.Word("cmd"),
-				Args: []ast.Node{
+				Args: []ast.Expression{
 					ast.Word("arg"),
 					ast.Word("arg123"),
 					ast.Word("928"),
@@ -165,7 +165,7 @@ var redirectionTests = []testCase{
 		Statements: []ast.Statement{
 			ast.Command{
 				Name: ast.Word("cmd"),
-				Args: []ast.Node{
+				Args: []ast.Expression{
 					ast.Word("arg"),
 					ast.Word("arg2"),
 				}, Redirections: []ast.Redirection{
