@@ -75,8 +75,8 @@ var pipesTests = []testCase{
 }
 
 var pipesErrorHandlingCases = []errorHandlingTestCase{
-	{`cmd |`, "syntax error: invalid pipeline construction, a command is missing after `|`."},
-	{`cmd | foo |&`, "syntax error: invalid pipeline construction, a command is missing after `|&`."},
-	{`cmd foo | cmd >foo| |&`, "syntax error: invalid pipeline construction, a command is missing after `|`."},
-	{"cmd |\n\n\t <foo", "syntax error: invalid pipeline construction, a command is missing after `|`."},
+	{`cmd |`, "syntax error: unexpected end of file, expected command name."},
+	{`cmd | foo |&`, "syntax error: unexpected end of file, expected command name."},
+	{`cmd foo | cmd >foo| |&`, "syntax error: `|&` has a special meaning here and cannot be used as a command name."},
+	{"cmd |\n\n\t <foo", "syntax error: `<` has a special meaning here and cannot be used as a command name."},
 }
