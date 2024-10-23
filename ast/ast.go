@@ -40,7 +40,7 @@ type Word string
 type Redirection struct {
 	Src    string
 	Method string
-	Dst    Node
+	Dst    Expression
 }
 
 type Command struct {
@@ -64,7 +64,7 @@ type Loop struct {
 
 type RangeLoop struct {
 	Var          string
-	Operands     []Node
+	Operands     []Expression
 	Body         []Statement
 	Redirections []Redirection
 }

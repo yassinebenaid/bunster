@@ -913,7 +913,7 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.RangeLoop{
 				Var: "var",
-				Operands: []ast.Node{
+				Operands: []ast.Expression{
 					ast.Word("foo"),
 				},
 				Body: []ast.Statement{
@@ -926,7 +926,7 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.RangeLoop{
 				Var: "var",
-				Operands: []ast.Node{
+				Operands: []ast.Expression{
 					ast.Word("foo"),
 					ast.Word("bar"),
 					ast.SimpleExpansion("baz"),
@@ -946,7 +946,7 @@ var loopsTests = []testCase{
 		Statements: []ast.Statement{
 			ast.RangeLoop{
 				Var: "var",
-				Operands: []ast.Node{
+				Operands: []ast.Expression{
 					ast.Word("foo"),
 					ast.Word("bar"),
 					ast.SimpleExpansion("baz"),
