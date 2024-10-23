@@ -201,7 +201,7 @@ func (p *Parser) parseIf() ast.Node {
 		p.proceed()
 	}
 
-	for p.curr.Type != token.FI && p.curr.Type != token.ELSE && p.curr.Type != token.EOF {
+	for p.curr.Type != token.FI && p.curr.Type != token.ELIF && p.curr.Type != token.ELSE && p.curr.Type != token.EOF {
 		cond.Body = append(cond.Body, p.parseCommandList())
 		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
 			p.proceed()
@@ -213,6 +213,52 @@ func (p *Parser) parseIf() ast.Node {
 
 	if cond.Body == nil {
 		p.error("expected command list after `then`")
+	}
+
+	if p.curr.Type == token.ELIF {
+		p.proceed()
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+			p.proceed()
+		}
+
+		var elif ast.Elif
+
+		for p.curr.Type != token.THEN && p.curr.Type != token.FI && p.curr.Type != token.EOF {
+			elif.Head = append(elif.Head, p.parseCommandList())
+			if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
+				p.proceed()
+			}
+			for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+				p.proceed()
+			}
+		}
+
+		if elif.Head == nil {
+			p.error("expected command list after `elif`")
+		} else if p.curr.Type != token.THEN {
+			p.error("expected `then`, found `%s`", p.curr.Literal)
+		}
+
+		p.proceed()
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+			p.proceed()
+		}
+
+		for p.curr.Type != token.FI && p.curr.Type != token.ELIF && p.curr.Type != token.ELSE && p.curr.Type != token.EOF {
+			elif.Body = append(elif.Body, p.parseCommandList())
+			if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
+				p.proceed()
+			}
+			for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+				p.proceed()
+			}
+		}
+
+		if elif.Body == nil {
+			p.error("expected command list after `then`")
+		}
+
+		cond.Elifs = append(cond.Elifs, elif)
 	}
 
 	if p.curr.Type == token.ELSE {
