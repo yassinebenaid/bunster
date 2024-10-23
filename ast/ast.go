@@ -80,8 +80,14 @@ func (RangeLoop) node() {}
 type If struct {
 	Head         []Node
 	Body         []Node
+	Elifs        []Elif
 	Alternate    []Node
 	Redirections []Redirection
+}
+
+type Elif struct {
+	Head []Node
+	Body []Node
 }
 
 func (If) node() {}
