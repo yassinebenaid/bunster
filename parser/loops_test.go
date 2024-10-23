@@ -1008,4 +1008,5 @@ var loopsErrorHandlingCases = []errorHandlingTestCase{
 	{"for n in foo &; do cmd; done", "syntax error: unexpected token `&`."},
 
 	{`do`, "syntax error: `do` is a reserved keyword, cannot be used a command name."},
+	{`done`, "syntax error: `done` is a reserved keyword, cannot be used a command name."},
 }
