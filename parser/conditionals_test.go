@@ -459,10 +459,10 @@ var conditionalsTests = []testCase{
 var conditionalsErrorHandlingCases = []errorHandlingTestCase{
 	{`if`, "syntax error: expected command list after `if`."},
 	{`if then`, "syntax error: expected command list after `if`."},
-	{`if; then`, "syntax error: invalid command construction."},
+	{`if; then`, "syntax error: `;` has a special meaning here and cannot be used as a command name."},
 	{`if cmd; fi`, "syntax error: expected `then`, found `fi`."},
 	{`if fi`, "syntax error: expected command list after `if`."},
-	{`if; fi`, "syntax error: invalid command construction."},
+	{`if; fi`, "syntax error: `;` has a special meaning here and cannot be used as a command name."},
 	{`if cmd;then fi`, "syntax error: expected command list after `then`."},
 	{`if cmd;then cmd`, "syntax error: expected `fi` to close `if` command."},
 	{`if cmd;then cmd; fi arg`, "syntax error: unexpected token `arg`."},
@@ -473,7 +473,7 @@ var conditionalsErrorHandlingCases = []errorHandlingTestCase{
 	{`if cmd; then cmd;elif cmd; then fi`, "syntax error: expected command list after `then`."},
 
 	{`if cmd;then cmd;else fi`, "syntax error: expected command list after `else`."},
-	{`if cmd;then cmd;else; fi`, "syntax error: invalid command construction."},
+	{`if cmd;then cmd;else; fi`, "syntax error: `;` has a special meaning here and cannot be used as a command name."},
 
 	{`then`, "syntax error: `then` is a reserved keyword, cannot be used a command name."},
 	{`elif`, "syntax error: `elif` is a reserved keyword, cannot be used a command name."},
