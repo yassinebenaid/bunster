@@ -82,6 +82,17 @@ type Elif struct {
 	Body []Statement
 }
 
+type Case struct {
+	Word         Expression
+	Cases        []CaseItem
+	Redirections []Redirection
+}
+
+type CaseItem struct {
+	Patterns []Expression
+	Body     []Statement
+}
+
 func (Word) node()               {}
 func (Redirection) node()        {}
 func (SimpleExpansion) node()    {}
@@ -106,3 +117,4 @@ func (BinaryConstruction) stmt() {}
 func (Loop) stmt()               {}
 func (RangeLoop) stmt()          {}
 func (If) stmt()                 {}
+func (Case) stmt()               {}
