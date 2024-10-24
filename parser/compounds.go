@@ -13,6 +13,8 @@ func (p *Parser) getCompoundParser() func() ast.Statement {
 		return p.parseForLoop
 	case token.IF:
 		return p.parseIf
+	case token.CASE:
+		return p.parseCase
 	case token.THEN, token.ELIF, token.ELSE, token.FI, token.DO, token.DONE:
 		p.error("`%s` is a reserved keyword, cannot be used a command name", p.curr.Literal)
 		fallthrough
@@ -306,4 +308,8 @@ loop:
 	}
 
 	return cond
+}
+
+func (p *Parser) parseCase() ast.Statement {
+	return nil
 }
