@@ -103,6 +103,7 @@ func (BinaryConstruction) node() {}
 func (Loop) node()               {}
 func (RangeLoop) node()          {}
 func (If) node()                 {}
+func (Case) node()               {}
 
 // Expressions
 func (Word) expr()            {}

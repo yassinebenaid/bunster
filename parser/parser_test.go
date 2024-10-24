@@ -358,6 +358,7 @@ var testCases = []struct {
 	}},
 	{"Loops", loopsTests},
 	{"Conditionals", conditionalsTests},
+	{"Case", caseTests},
 }
 
 func TestParser(t *testing.T) {
