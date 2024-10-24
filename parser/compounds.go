@@ -311,5 +311,27 @@ loop:
 }
 
 func (p *Parser) parseCase() ast.Statement {
-	return nil
+	var stmt ast.Case
+	p.proceed()
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
+	stmt.Word = p.parseField()
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
+	// in
+	p.proceed()
+	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+		p.proceed()
+	}
+
+	var item ast.CaseItem
+	item.Patterns = append(item.Patterns, p.parseField())
+
+	stmt.Cases = append(stmt.Cases, item)
+
+	return stmt
 }
