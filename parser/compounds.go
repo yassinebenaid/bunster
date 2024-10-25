@@ -335,8 +335,15 @@ func (p *Parser) parseCase() ast.Statement {
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()
 	}
-	item.Body = append(item.Body, p.parseCommandList())
-	p.proceed()
+	for p.curr.Type != token.ESAC && p.curr.Type != token.EOF {
+		item.Body = append(item.Body, p.parseCommandList())
+		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
+			p.proceed()
+		}
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+			p.proceed()
+		}
+	}
 	stmt.Cases = append(stmt.Cases, item)
 
 	p.proceed()
