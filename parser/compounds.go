@@ -111,7 +111,7 @@ func (p *Parser) parseForLoop() ast.Statement {
 			p.proceed()
 		}
 		for p.curr.Type != token.NEWLINE && p.curr.Type != token.SEMICOLON && p.curr.Type != token.EOF {
-			member := p.parseField()
+			member := p.parseExpression()
 			if member == nil {
 				p.error("unexpected token `%s`", p.curr.Literal)
 				break
@@ -317,7 +317,7 @@ func (p *Parser) parseCase() ast.Statement {
 		p.proceed()
 	}
 
-	stmt.Word = p.parseField()
+	stmt.Word = p.parseExpression()
 	if p.curr.Type == token.BLANK {
 		p.proceed()
 	}
@@ -329,7 +329,7 @@ func (p *Parser) parseCase() ast.Statement {
 	}
 
 	var item ast.CaseItem
-	item.Patterns = append(item.Patterns, p.parseField())
+	item.Patterns = append(item.Patterns, p.parseExpression())
 
 	stmt.Cases = append(stmt.Cases, item)
 

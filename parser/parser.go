@@ -127,7 +127,7 @@ func (p *Parser) parseCommand() ast.Statement {
 	}
 
 	var cmd ast.Command
-	cmd.Name = p.parseField()
+	cmd.Name = p.parseExpression()
 	if cmd.Name == nil {
 		p.error("`%s` has a special meaning here and cannot be used as a command name", p.curr.Literal)
 	}
@@ -150,7 +150,7 @@ loop:
 				break loop
 			}
 
-			cmd.Args = append(cmd.Args, p.parseField())
+			cmd.Args = append(cmd.Args, p.parseExpression())
 		}
 
 		if !p.isRedirectionToken() && !p.isControlToken() {
@@ -160,8 +160,8 @@ loop:
 	return cmd
 }
 
-func (p *Parser) parseField() ast.Expression {
-	var nodes []ast.Expression
+func (p *Parser) parseExpression() ast.Expression {
+	var exprs []ast.Expression
 
 loop:
 	for {
@@ -169,13 +169,13 @@ loop:
 		case token.BLANK, token.EOF:
 			break loop
 		case token.SIMPLE_EXPANSION:
-			nodes = append(nodes, ast.SimpleExpansion(p.curr.Literal))
+			exprs = append(exprs, ast.SimpleExpansion(p.curr.Literal))
 		case token.SINGLE_QUOTE:
-			nodes = append(nodes, p.parseLiteralString())
+			exprs = append(exprs, p.parseLiteralString())
 		case token.DOUBLE_QUOTE:
-			nodes = append(nodes, p.parseString())
+			exprs = append(exprs, p.parseString())
 		case token.INT:
-			if len(nodes) == 0 && p.isRedirectionToken() {
+			if len(exprs) == 0 && p.isRedirectionToken() {
 				break loop
 			}
 			fallthrough
@@ -184,13 +184,13 @@ loop:
 				break loop
 			}
 
-			nodes = append(nodes, ast.Word(p.curr.Literal))
+			exprs = append(exprs, ast.Word(p.curr.Literal))
 		}
 
 		p.proceed()
 	}
 
-	return concat(nodes)
+	return concat(exprs)
 }
 
 func (p *Parser) parseLiteralString() ast.Word {
@@ -217,7 +217,7 @@ func (p *Parser) parseString() ast.Expression {
 		return ast.Word("")
 	}
 
-	var nodes []ast.Expression
+	var exprs []ast.Expression
 
 loop:
 	for {
@@ -225,11 +225,11 @@ loop:
 		case token.DOUBLE_QUOTE, token.EOF:
 			break loop
 		case token.ESCAPED_CHAR:
-			nodes = append(nodes, ast.Word("\\"+p.curr.Literal))
+			exprs = append(exprs, ast.Word("\\"+p.curr.Literal))
 		case token.SIMPLE_EXPANSION:
-			nodes = append(nodes, ast.SimpleExpansion(p.curr.Literal))
+			exprs = append(exprs, ast.SimpleExpansion(p.curr.Literal))
 		default:
-			nodes = append(nodes, ast.Word(p.curr.Literal))
+			exprs = append(exprs, ast.Word(p.curr.Literal))
 		}
 
 		p.proceed()
@@ -239,7 +239,7 @@ loop:
 		p.error("a closing double quote is missing")
 	}
 
-	return concat(nodes)
+	return concat(exprs)
 }
 
 func concat(n []ast.Expression) ast.Expression {

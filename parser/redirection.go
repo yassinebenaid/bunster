@@ -44,7 +44,7 @@ func (p *Parser) fromStdout(rt *[]ast.Redirection) {
 		p.proceed()
 	}
 
-	r.Dst = p.parseField()
+	r.Dst = p.parseExpression()
 
 	if r.Dst == nil {
 		p.error("a redirection operand was not provided after the `%s`", r.Method)
@@ -64,7 +64,7 @@ func (p *Parser) fromFileDescriptor(rt *[]ast.Redirection) {
 		p.proceed()
 	}
 
-	r.Dst = p.parseField()
+	r.Dst = p.parseExpression()
 	if r.Dst == nil {
 		p.error("a redirection operand was not provided after the `%s`", r.Method)
 	}
@@ -81,7 +81,7 @@ func (p *Parser) allOutputsToFile(rt *[]ast.Redirection) {
 		p.proceed()
 	}
 
-	r.Dst = p.parseField()
+	r.Dst = p.parseExpression()
 	if r.Dst == nil {
 		p.error("a redirection operand was not provided after the `%s`", r.Method)
 	}
@@ -98,7 +98,7 @@ func (p *Parser) toStdin(rt *[]ast.Redirection) {
 		p.proceed()
 	}
 
-	r.Dst = p.parseField()
+	r.Dst = p.parseExpression()
 	if r.Dst == nil {
 		p.error("a redirection operand was not provided after the `%s`", r.Method)
 	}
