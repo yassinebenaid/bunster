@@ -283,5 +283,7 @@ func (p *Parser) isControlToken() bool {
 		p.curr.Type == token.OR ||
 		p.curr.Type == token.AMPERSAND ||
 		p.curr.Type == token.SEMICOLON ||
-		p.curr.Type == token.NEWLINE
+		p.curr.Type == token.NEWLINE ||
+		p.curr.Type == token.LEFT_PAREN ||
+		p.curr.Type == token.RIGHT_PAREN
 }
