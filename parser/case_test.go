@@ -417,3 +417,7 @@ var caseTests = []testCase{
 		},
 	}},
 }
+
+var caseErrorHandlingCases = []errorHandlingTestCase{
+	{`case`, "syntax error: expected operand after `case`."},
+}

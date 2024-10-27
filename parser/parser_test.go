@@ -443,7 +443,8 @@ var errorHandlingTestCases = []struct {
 	{"Pipes", pipesErrorHandlingCases},
 	{"Logical Constructions", logicalCommandsErrorHandlingCases},
 	{"Loops", loopsErrorHandlingCases},
-	{"Conditionals", conditionalsErrorHandlingCases},
+	{"Conditionals", ifErrorHandlingCases},
+	{"Case", caseErrorHandlingCases},
 }
 
 func TestParserErrorHandling(t *testing.T) {

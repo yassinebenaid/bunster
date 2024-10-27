@@ -456,7 +456,7 @@ var conditionalsTests = []testCase{
 	}},
 }
 
-var conditionalsErrorHandlingCases = []errorHandlingTestCase{
+var ifErrorHandlingCases = []errorHandlingTestCase{
 	{`if`, "syntax error: expected command list after `if`."},
 	{`if then`, "syntax error: expected command list after `if`."},
 	{`if; then`, "syntax error: `;` has a special meaning here and cannot be used as a command name."},
