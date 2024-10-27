@@ -326,7 +326,9 @@ func (p *Parser) parseCase() ast.Statement {
 		p.proceed()
 	}
 
-	// in
+	if p.curr.Type != token.IN {
+		p.error("unexpected token `%s`, expected `in`", p.curr.Literal)
+	}
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()
