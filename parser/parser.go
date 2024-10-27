@@ -48,7 +48,11 @@ func (p *Parser) ParseScript() ast.Script {
 				p.proceed()
 			}
 		default:
-			script.Statements = append(script.Statements, p.parseCommandList())
+			if cmdList := p.parseCommandList(); cmdList != nil {
+				script.Statements = append(script.Statements, cmdList)
+			} else {
+				return script
+			}
 		}
 	}
 
@@ -58,7 +62,10 @@ func (p *Parser) ParseScript() ast.Script {
 func (p *Parser) parseCommandList() ast.Statement {
 	var left ast.Statement
 	pipe := p.parsePipline()
-	if len(pipe) == 1 {
+
+	if pipe == nil {
+		return nil
+	} else if len(pipe) == 1 {
 		left = pipe[0].Command
 	} else {
 		left = pipe
@@ -73,7 +80,9 @@ func (p *Parser) parseCommandList() ast.Statement {
 
 		var right ast.Statement
 		rightPipe := p.parsePipline()
-		if len(rightPipe) == 1 {
+		if rightPipe == nil {
+			return nil
+		} else if len(rightPipe) == 1 {
 			right = rightPipe[0].Command
 		} else {
 			right = rightPipe
@@ -96,7 +105,11 @@ func (p *Parser) parseCommandList() ast.Statement {
 func (p *Parser) parsePipline() ast.Pipeline {
 	var pipeline ast.Pipeline
 
-	pipeline = append(pipeline, ast.PipelineCommand{Command: p.parseCommand()})
+	cmd := p.parseCommand()
+	if cmd == nil {
+		return nil
+	}
+	pipeline = append(pipeline, ast.PipelineCommand{Command: cmd})
 
 	for {
 		if p.curr.Type != token.PIPE && p.curr.Type != token.PIPE_AMPERSAND {
@@ -111,6 +124,9 @@ func (p *Parser) parsePipline() ast.Pipeline {
 		}
 
 		pipe.Command = p.parseCommand()
+		if pipe.Command == nil {
+			return nil
+		}
 		pipeline = append(pipeline, pipe)
 	}
 
@@ -120,6 +136,7 @@ func (p *Parser) parsePipline() ast.Pipeline {
 func (p *Parser) parseCommand() ast.Statement {
 	if p.curr.Type == token.EOF {
 		p.error("unexpected end of file, expected command name")
+		return nil
 	}
 
 	if compound := p.getCompoundParser(); compound != nil {
@@ -130,6 +147,7 @@ func (p *Parser) parseCommand() ast.Statement {
 	cmd.Name = p.parseExpression()
 	if cmd.Name == nil {
 		p.error("`%s` has a special meaning here and cannot be used as a command name", p.curr.Literal)
+		return nil
 	}
 
 loop:

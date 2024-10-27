@@ -336,7 +336,11 @@ func (p *Parser) parseCase() ast.Statement {
 		p.proceed()
 	}
 	for p.curr.Type != token.ESAC && p.curr.Type != token.EOF {
-		item.Body = append(item.Body, p.parseCommandList())
+		cmdList := p.parseCommandList()
+		if cmdList == nil {
+			return nil
+		}
+		item.Body = append(item.Body, cmdList)
 		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
 			p.proceed()
 		}
