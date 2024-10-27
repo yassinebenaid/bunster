@@ -335,12 +335,27 @@ func (p *Parser) parseCase() ast.Statement {
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()
 	}
-	for p.curr.Type != token.ESAC && p.curr.Type != token.EOF {
+
+	for {
+		if p.curr.Type == token.ESAC || p.curr.Type == token.EOF {
+			break
+		}
 		cmdList := p.parseCommandList()
 		if cmdList == nil {
 			return nil
 		}
 		item.Body = append(item.Body, cmdList)
+
+		if p.curr.Type == token.SEMICOLON && p.next.Type == token.SEMICOLON {
+			p.proceed()
+			p.proceed()
+
+			for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+				p.proceed()
+			}
+
+			break
+		}
 		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
 			p.proceed()
 		}
