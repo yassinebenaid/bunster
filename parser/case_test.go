@@ -210,7 +210,7 @@ var caseTests = []testCase{
 			},
 		},
 	}},
-	{`case $foo in bar) cmd;; esac & case $foo in bar) cmd;; esac`, ast.Script{
+	{`case $foo in bar) cmd;; esac & case $foo in bar) cmd;; esac & cmd`, ast.Script{
 		Statements: []ast.Statement{
 			ast.BackgroundConstruction{
 				Statement: ast.Case{
@@ -226,18 +226,21 @@ var caseTests = []testCase{
 					},
 				},
 			},
-			ast.Case{
-				Word: ast.Var("foo"),
-				Cases: []ast.CaseItem{
-					{
-						Patterns: []ast.Expression{ast.Word("bar")},
-						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd")},
+			ast.BackgroundConstruction{
+				Statement: ast.Case{
+					Word: ast.Var("foo"),
+					Cases: []ast.CaseItem{
+						{
+							Patterns: []ast.Expression{ast.Word("bar")},
+							Body: []ast.Statement{
+								ast.Command{Name: ast.Word("cmd")},
+							},
+							Terminator: ";;",
 						},
-						Terminator: ";;",
 					},
 				},
 			},
+			ast.Command{Name: ast.Word("cmd")},
 		},
 	}},
 }
