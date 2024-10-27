@@ -243,4 +243,42 @@ var caseTests = []testCase{
 			ast.Command{Name: ast.Word("cmd")},
 		},
 	}},
+	{`case $foo in bar) cmd;; esac | case $foo in bar) cmd;; esac |& cmd`, ast.Script{
+		Statements: []ast.Statement{
+			ast.Pipeline{
+				ast.PipelineCommand{
+					Command: ast.Case{
+						Word: ast.Var("foo"),
+						Cases: []ast.CaseItem{
+							{
+								Patterns: []ast.Expression{ast.Word("bar")},
+								Body: []ast.Statement{
+									ast.Command{Name: ast.Word("cmd")},
+								},
+								Terminator: ";;",
+							},
+						},
+					},
+				},
+				ast.PipelineCommand{
+					Command: ast.Case{
+						Word: ast.Var("foo"),
+						Cases: []ast.CaseItem{
+							{
+								Patterns: []ast.Expression{ast.Word("bar")},
+								Body: []ast.Statement{
+									ast.Command{Name: ast.Word("cmd")},
+								},
+								Terminator: ";;",
+							},
+						},
+					},
+				},
+				ast.PipelineCommand{
+					Stderr:  true,
+					Command: ast.Command{Name: ast.Word("cmd")},
+				},
+			},
+		},
+	}},
 }
