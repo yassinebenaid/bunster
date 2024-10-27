@@ -49,7 +49,7 @@ type Command struct {
 	Redirections []Redirection
 }
 
-type SimpleExpansion string
+type Var string
 
 type Concatination struct {
 	Nodes []Expression
@@ -96,7 +96,7 @@ type CaseItem struct {
 
 func (Word) node()               {}
 func (Redirection) node()        {}
-func (SimpleExpansion) node()    {}
+func (Var) node()                {}
 func (Concatination) node()      {}
 func (Command) node()            {}
 func (Pipeline) node()           {}
@@ -107,10 +107,10 @@ func (If) node()                 {}
 func (Case) node()               {}
 
 // Expressions
-func (Word) expr()            {}
-func (Redirection) expr()     {}
-func (SimpleExpansion) expr() {}
-func (Concatination) expr()   {}
+func (Word) expr()          {}
+func (Redirection) expr()   {}
+func (Var) expr()           {}
+func (Concatination) expr() {}
 
 // Statements
 func (Command) stmt()            {}

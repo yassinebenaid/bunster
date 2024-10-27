@@ -45,8 +45,8 @@ var testCases = []struct {
 				ast.Command{
 					Name: ast.Word("foo"),
 					Args: []ast.Expression{
-						ast.SimpleExpansion("bar"),
-						ast.SimpleExpansion("FOO_BAR_1234567890"),
+						ast.Var("bar"),
+						ast.Var("FOO_BAR_1234567890"),
 					},
 				},
 			},
@@ -95,8 +95,8 @@ var testCases = []struct {
 				ast.Command{
 					Name: ast.Word("foo"),
 					Args: []ast.Expression{
-						ast.SimpleExpansion("bar"),
-						ast.SimpleExpansion("FOO_BAR_1234567890"),
+						ast.Var("bar"),
+						ast.Var("FOO_BAR_1234567890"),
 					},
 				},
 			},
@@ -202,11 +202,11 @@ var testCases = []struct {
 						ast.Concatination{
 							Nodes: []ast.Expression{
 								ast.Word("name is: "),
-								ast.SimpleExpansion("NAME"),
+								ast.Var("NAME"),
 								ast.Word(" and path is "),
-								ast.SimpleExpansion("DIR"),
+								ast.Var("DIR"),
 								ast.Word("/"),
-								ast.SimpleExpansion("FILE"),
+								ast.Var("FILE"),
 							},
 						},
 					},
@@ -239,14 +239,14 @@ var testCases = []struct {
 					Name: ast.Concatination{
 						Nodes: []ast.Expression{
 							ast.Word("/usr/bin/"),
-							ast.SimpleExpansion("BINARY_NAME"),
+							ast.Var("BINARY_NAME"),
 						},
 					},
 					Args: []ast.Expression{
 						ast.Concatination{
 							Nodes: []ast.Expression{
 								ast.Word("--path=/home/"),
-								ast.SimpleExpansion("USER"),
+								ast.Var("USER"),
 								ast.Word("/dir"),
 							},
 						},
@@ -255,9 +255,9 @@ var testCases = []struct {
 						ast.Word("--do=something"),
 						ast.Concatination{
 							Nodes: []ast.Expression{
-								ast.SimpleExpansion("HOME"),
-								ast.SimpleExpansion("DIR_NAME"),
-								ast.SimpleExpansion("PKG_NAME"),
+								ast.Var("HOME"),
+								ast.Var("DIR_NAME"),
+								ast.Var("PKG_NAME"),
 								ast.Word("/foo"),
 							},
 						},

@@ -187,7 +187,7 @@ loop:
 		case token.BLANK, token.EOF:
 			break loop
 		case token.SIMPLE_EXPANSION:
-			exprs = append(exprs, ast.SimpleExpansion(p.curr.Literal))
+			exprs = append(exprs, ast.Var(p.curr.Literal))
 		case token.SINGLE_QUOTE:
 			exprs = append(exprs, p.parseLiteralString())
 		case token.DOUBLE_QUOTE:
@@ -245,7 +245,7 @@ loop:
 		case token.ESCAPED_CHAR:
 			exprs = append(exprs, ast.Word("\\"+p.curr.Literal))
 		case token.SIMPLE_EXPANSION:
-			exprs = append(exprs, ast.SimpleExpansion(p.curr.Literal))
+			exprs = append(exprs, ast.Var(p.curr.Literal))
 		default:
 			exprs = append(exprs, ast.Word(p.curr.Literal))
 		}

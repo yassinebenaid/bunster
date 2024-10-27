@@ -64,7 +64,7 @@ var logicalCommandsTests = []testCase{
 					{
 						Command: ast.Command{
 							Name: ast.Word("cmd"),
-							Args: []ast.Expression{ast.SimpleExpansion("var")},
+							Args: []ast.Expression{ast.Var("var")},
 							Redirections: []ast.Redirection{
 								{Src: "1", Method: ">", Dst: ast.Word("foo")},
 								{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
@@ -202,7 +202,7 @@ var logicalCommandsTests = []testCase{
 					{
 						Command: ast.Command{
 							Name: ast.Word("cmd"),
-							Args: []ast.Expression{ast.SimpleExpansion("var")},
+							Args: []ast.Expression{ast.Var("var")},
 							Redirections: []ast.Redirection{
 								{Src: "1", Method: ">", Dst: ast.Word("foo")},
 								{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},

@@ -57,7 +57,7 @@ var pipesTests = []testCase{
 				},
 				{
 					Command: ast.Command{
-						Name: ast.SimpleExpansion("var"),
+						Name: ast.Var("var"),
 					},
 					Stderr: true,
 				},

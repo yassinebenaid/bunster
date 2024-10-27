@@ -112,7 +112,7 @@ var loopsTests = []testCase{
 							{
 								Command: ast.Command{
 									Name: ast.Word("cmd"),
-									Args: []ast.Expression{ast.SimpleExpansion("var")},
+									Args: []ast.Expression{ast.Var("var")},
 									Redirections: []ast.Redirection{
 										{Src: "1", Method: ">", Dst: ast.Word("foo")},
 										{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
@@ -164,7 +164,7 @@ var loopsTests = []testCase{
 								{
 									Command: ast.Command{
 										Name: ast.Word("cmd"),
-										Args: []ast.Expression{ast.SimpleExpansion("var")},
+										Args: []ast.Expression{ast.Var("var")},
 										Redirections: []ast.Redirection{
 											{Src: "1", Method: ">", Dst: ast.Word("foo")},
 											{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
@@ -488,7 +488,7 @@ var loopsTests = []testCase{
 							{
 								Command: ast.Command{
 									Name: ast.Word("cmd"),
-									Args: []ast.Expression{ast.SimpleExpansion("var")},
+									Args: []ast.Expression{ast.Var("var")},
 									Redirections: []ast.Redirection{
 										{Src: "1", Method: ">", Dst: ast.Word("foo")},
 										{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
@@ -540,7 +540,7 @@ var loopsTests = []testCase{
 								{
 									Command: ast.Command{
 										Name: ast.Word("cmd"),
-										Args: []ast.Expression{ast.SimpleExpansion("var")},
+										Args: []ast.Expression{ast.Var("var")},
 										Redirections: []ast.Redirection{
 											{Src: "1", Method: ">", Dst: ast.Word("foo")},
 											{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
@@ -929,7 +929,7 @@ var loopsTests = []testCase{
 				Operands: []ast.Expression{
 					ast.Word("foo"),
 					ast.Word("bar"),
-					ast.SimpleExpansion("baz"),
+					ast.Var("baz"),
 					ast.Word("foobar"),
 					ast.Word("bar-baz"),
 				},
@@ -949,7 +949,7 @@ var loopsTests = []testCase{
 				Operands: []ast.Expression{
 					ast.Word("foo"),
 					ast.Word("bar"),
-					ast.SimpleExpansion("baz"),
+					ast.Var("baz"),
 					ast.Word("foobar"),
 					ast.Word("bar-baz"),
 				},
