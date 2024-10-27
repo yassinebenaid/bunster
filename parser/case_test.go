@@ -121,13 +121,13 @@ var caseTests = []testCase{
 			},
 		},
 	}},
-	{`case foo in
+	{`case $foo in
 		bar|'foo'|$var ) cmd "arg" arg;;
 		bar    |   'foo'   |   $var   ) cmd "arg" arg;;
 	esac`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Case{
-				Word: ast.Word("foo"),
+				Word: ast.SimpleExpansion("foo"),
 				Cases: []ast.CaseItem{
 					{
 						Patterns: []ast.Expression{
