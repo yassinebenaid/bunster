@@ -419,5 +419,5 @@ var caseTests = []testCase{
 }
 
 var caseErrorHandlingCases = []errorHandlingTestCase{
-	{`case`, "syntax error: expected operand after `case`."},
+	{`case`, "syntax error: incomplete `case` statement, an operand is required after `case`."},
 }

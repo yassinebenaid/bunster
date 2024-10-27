@@ -318,6 +318,10 @@ func (p *Parser) parseCase() ast.Statement {
 	}
 
 	stmt.Word = p.parseExpression()
+	if stmt.Word == nil {
+		p.error("incomplete `case` statement, an operand is required after `case`")
+	}
+
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()
 	}
