@@ -332,6 +332,9 @@ func (p *Parser) parseCase() ast.Statement {
 		var item ast.CaseItem
 		item.Patterns = append(item.Patterns, p.parseExpression())
 		// )
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
 		p.proceed()
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()

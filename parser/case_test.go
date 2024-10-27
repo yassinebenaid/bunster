@@ -38,7 +38,7 @@ var caseTests = []testCase{
 	}},
 	{`case foo
 	in
-		bar)
+		bar )
 			cmd "arg" arg
 			cmd arg 'arg'
 			cmd arg 'arg'
@@ -121,4 +121,25 @@ var caseTests = []testCase{
 			},
 		},
 	}},
+	// {`case foo in
+	// 	bar|'foo'|$var ) cmd "arg" arg
+	// esac`, ast.Script{
+	// 	Statements: []ast.Statement{
+	// 		ast.Case{
+	// 			Word: ast.Word("foo"),
+	// 			Cases: []ast.CaseItem{
+	// 				{
+	// 					Patterns: []ast.Expression{
+	// 						ast.Word("bar"),
+	// 						ast.Word("foo"),
+	// 						ast.SimpleExpansion("var"),
+	// 					},
+	// 					Body: []ast.Statement{
+	// 						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+	// 					},
+	// 				},
+	// 			},
+	// 		},
+	// 	},
+	// }},
 }
