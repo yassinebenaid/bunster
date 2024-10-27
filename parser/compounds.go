@@ -328,42 +328,44 @@ func (p *Parser) parseCase() ast.Statement {
 		p.proceed()
 	}
 
-	var item ast.CaseItem
-	item.Patterns = append(item.Patterns, p.parseExpression())
-	// )
-	p.proceed()
-	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+	for p.curr.Type != token.ESAC && p.curr.Type != token.EOF {
+		var item ast.CaseItem
+		item.Patterns = append(item.Patterns, p.parseExpression())
+		// )
 		p.proceed()
-	}
-
-	for {
-		if p.curr.Type == token.ESAC || p.curr.Type == token.EOF {
-			break
-		}
-		cmdList := p.parseCommandList()
-		if cmdList == nil {
-			return nil
-		}
-		item.Body = append(item.Body, cmdList)
-
-		if p.curr.Type == token.SEMICOLON && p.next.Type == token.SEMICOLON {
-			p.proceed()
-			p.proceed()
-
-			for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
-				p.proceed()
-			}
-
-			break
-		}
-		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
-			p.proceed()
-		}
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
 		}
+
+		for {
+			if p.curr.Type == token.ESAC || p.curr.Type == token.EOF {
+				break
+			}
+			cmdList := p.parseCommandList()
+			if cmdList == nil {
+				return nil
+			}
+			item.Body = append(item.Body, cmdList)
+
+			if p.curr.Type == token.SEMICOLON && p.next.Type == token.SEMICOLON {
+				p.proceed()
+				p.proceed()
+
+				for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+					p.proceed()
+				}
+
+				break
+			}
+			if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
+				p.proceed()
+			}
+			for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+				p.proceed()
+			}
+		}
+		stmt.Cases = append(stmt.Cases, item)
 	}
-	stmt.Cases = append(stmt.Cases, item)
 
 	p.proceed()
 	return stmt
