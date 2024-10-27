@@ -50,18 +50,9 @@ var caseTests = []testCase{
 					{
 						Patterns: []ast.Expression{ast.Word("bar")},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{
-								ast.Word("arg"),
-								ast.Word("arg"),
-							}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{
-								ast.Word("arg"),
-								ast.Word("arg"),
-							}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{
-								ast.Word("arg"),
-								ast.Word("arg"),
-							}},
+							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 						},
 					},
 				},
@@ -90,52 +81,25 @@ var caseTests = []testCase{
 					{
 						Patterns: []ast.Expression{ast.Word("bar")},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{
-								ast.Word("arg"),
-								ast.Word("arg"),
-							}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{
-								ast.Word("arg"),
-								ast.Word("arg"),
-							}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{
-								ast.Word("arg"),
-								ast.Word("arg"),
-							}},
+							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 						},
 					},
 					{
 						Patterns: []ast.Expression{ast.Word("baz")},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{
-								ast.Word("arg"),
-								ast.Word("arg"),
-							}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{
-								ast.Word("arg"),
-								ast.Word("arg"),
-							}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{
-								ast.Word("arg"),
-								ast.Word("arg"),
-							}},
+							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 						},
 					},
 					{
 						Patterns: []ast.Expression{ast.Word("boo")},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{
-								ast.Word("arg"),
-								ast.Word("arg"),
-							}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{
-								ast.Word("arg"),
-								ast.Word("arg"),
-							}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{
-								ast.Word("arg"),
-								ast.Word("arg"),
-							}},
+							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 						},
 					},
 				},
