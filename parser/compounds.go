@@ -330,6 +330,9 @@ func (p *Parser) parseCase() ast.Statement {
 
 	for p.curr.Type != token.ESAC && p.curr.Type != token.EOF {
 		var item ast.CaseItem
+		if p.curr.Type == token.LEFT_PAREN {
+			p.proceed()
+		}
 
 		for {
 			pattern := p.parseExpression()
