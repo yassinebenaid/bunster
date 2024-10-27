@@ -351,6 +351,22 @@ func (p *Parser) parseCase() ast.Statement {
 				p.proceed()
 				p.proceed()
 
+				item.Terminator = ";;"
+				if p.curr.Type == token.AMPERSAND {
+					item.Terminator = ";;&"
+					p.proceed()
+				}
+				for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+					p.proceed()
+				}
+
+				break
+			}
+			if p.curr.Type == token.SEMICOLON && p.next.Type == token.AMPERSAND {
+				p.proceed()
+				p.proceed()
+
+				item.Terminator = ";&"
 				for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 					p.proceed()
 				}

@@ -89,8 +89,9 @@ type Case struct {
 }
 
 type CaseItem struct {
-	Patterns []Expression
-	Body     []Statement
+	Patterns   []Expression
+	Body       []Statement
+	Terminator string
 }
 
 func (Word) node()               {}

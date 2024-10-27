@@ -68,8 +68,12 @@ var caseTests = []testCase{
 		baz)
 			cmd "arg" arg
 			cmd arg 'arg'
-			cmd arg 'arg';;
+			cmd arg 'arg';&
 		boo)
+			cmd "arg" arg
+			cmd arg 'arg'
+			cmd arg 'arg';;&
+		fab)
 			cmd "arg" arg
 			cmd arg 'arg'
 			cmd arg 'arg'
@@ -85,6 +89,7 @@ var caseTests = []testCase{
 							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 						},
+						Terminator: ";;",
 					},
 					{
 						Patterns: []ast.Expression{ast.Word("baz")},
@@ -93,9 +98,19 @@ var caseTests = []testCase{
 							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 						},
+						Terminator: ";&",
 					},
 					{
 						Patterns: []ast.Expression{ast.Word("boo")},
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						},
+						Terminator: ";;&",
+					},
+					{
+						Patterns: []ast.Expression{ast.Word("fab")},
 						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
