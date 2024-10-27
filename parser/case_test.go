@@ -184,4 +184,30 @@ var caseTests = []testCase{
 			},
 		},
 	}},
+	{`case $foo in (bar) cmd;; (bar | 'foo') cmd;; esac`, ast.Script{
+		Statements: []ast.Statement{
+			ast.Case{
+				Word: ast.Var("foo"),
+				Cases: []ast.CaseItem{
+					{
+						Patterns: []ast.Expression{ast.Word("bar")},
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Terminator: ";;",
+					},
+					{
+						Patterns: []ast.Expression{
+							ast.Word("bar"),
+							ast.Word("foo"),
+						},
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Terminator: ";;",
+					},
+				},
+			},
+		},
+	}},
 }
