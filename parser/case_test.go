@@ -421,5 +421,7 @@ var caseTests = []testCase{
 var caseErrorHandlingCases = []errorHandlingTestCase{
 	{`case`, "syntax error: incomplete `case` statement, an operand is required after `case`."},
 	{`case;`, "syntax error: incomplete `case` statement, an operand is required after `case`."},
-	{`case foo;`, "syntax error: unexpected token `;`, expected `in`."},
+	{`case foo;`, "syntax error: expected `in`, found `;`."},
+	{`case foo`, "syntax error: expected `in`, found `end of file`."},
+	{`case foo in`, "syntax error: expected `esac` to close `case` command."},
 }

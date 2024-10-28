@@ -351,7 +351,7 @@ switch_beginning:
 			tok.Type, tok.Literal = token.ESCAPED_CHAR, string(l.curr)
 		}
 	case l.curr == 0:
-		tok.Type = token.EOF
+		tok.Type, tok.Literal = token.EOF, "end of file"
 	default:
 		tok.Type, tok.Literal = token.OTHER, string(l.curr)
 	}

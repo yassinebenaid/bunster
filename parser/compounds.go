@@ -327,7 +327,7 @@ func (p *Parser) parseCase() ast.Statement {
 	}
 
 	if p.curr.Type != token.IN {
-		p.error("unexpected token `%s`, expected `in`", p.curr.Literal)
+		p.error("expected `in`, found `%s`", p.curr.Literal)
 	}
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
@@ -413,6 +413,9 @@ func (p *Parser) parseCase() ast.Statement {
 		stmt.Cases = append(stmt.Cases, item)
 	}
 
+	if p.curr.Type != token.ESAC {
+		p.error("expected `esac` to close `case` command")
+	}
 	p.proceed()
 
 loop:
