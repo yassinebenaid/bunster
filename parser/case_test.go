@@ -446,6 +446,14 @@ var caseTests = []testCase{
 			},
 		},
 	}},
+
+	{`case esac in esac`, ast.Script{
+		Statements: []ast.Statement{
+			ast.Case{
+				Word: ast.Word("esac"),
+			},
+		},
+	}},
 }
 
 var caseErrorHandlingCases = []errorHandlingTestCase{
