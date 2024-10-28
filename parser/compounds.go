@@ -358,9 +358,13 @@ func (p *Parser) parseCase() ast.Statement {
 				p.proceed()
 			}
 		}
-		// )
+
 		if p.curr.Type == token.BLANK {
 			p.proceed()
+		}
+
+		if p.curr.Type != token.RIGHT_PAREN {
+			p.error("expected `)`, found `%s`", p.curr.Literal)
 		}
 		p.proceed()
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
