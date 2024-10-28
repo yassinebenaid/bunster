@@ -341,7 +341,7 @@ switch_beginning:
 		l.proceed()
 		switch l.curr {
 		case 0:
-			tok.Type = token.EOF
+			tok.Type, tok.Literal = token.EOF, "end of file"
 		case '"', '\\', '$':
 			tok.Type, tok.Literal = token.OTHER, string(l.curr)
 		case '\n':

@@ -211,7 +211,7 @@ func TestLexer(t *testing.T) {
 		}},
 
 		// Escapes
-		{`\`, []token.Token{{Type: token.EOF}}},
+		{`\`, []token.Token{{Type: token.EOF, Literal: "end of file"}}},
 		{`\\`, []token.Token{{Type: token.OTHER, Literal: `\`}}},
 		{`\"`, []token.Token{{Type: token.OTHER, Literal: `"`}}},
 		{`\$foo`, []token.Token{{Type: token.OTHER, Literal: `$`}, {Type: token.WORD, Literal: `foo`}}},
@@ -304,7 +304,7 @@ func TestLexer(t *testing.T) {
 			{Type: token.OTHER, Literal: "@"},
 		}},
 		{"\n", []token.Token{{Type: token.NEWLINE, Literal: "\n"}}},
-		{``, []token.Token{{Type: token.EOF}}},
+		{``, []token.Token{{Type: token.EOF, Literal: "end of file"}}},
 	}
 
 	for i, tc := range testCases {
@@ -313,7 +313,7 @@ func TestLexer(t *testing.T) {
 		for j, tn := range tc.tokens {
 			result := l.NextToken()
 			if tn != result {
-				t.Fatalf("\nCase: %d:%d\nWant:\n%s\nGot:\n%s", i, j, dump(tn), dump(result))
+				t.Fatalf("\nCase: %d:%d\nInput: %s\nWant:\n%s\nGot:\n%s", i, j, dump(tc.input), dump(tn), dump(result))
 			}
 		}
 
