@@ -454,6 +454,9 @@ var caseTests = []testCase{
 			},
 		},
 	}},
+
+	// TODO: see if we must resolve compatibility here or not
+	// Inputs: `case esac in bar);; esac`, `case esac in bar);& esac`, `case esac in bar);;& esac`
 }
 
 var caseErrorHandlingCases = []errorHandlingTestCase{
