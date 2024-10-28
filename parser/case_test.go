@@ -431,6 +431,21 @@ var caseTests = []testCase{
 			},
 		},
 	}},
+
+	{`case esac in bar) cmd;; esac`, ast.Script{
+		Statements: []ast.Statement{
+			ast.Case{
+				Word: ast.Word("esac"),
+				Cases: []ast.CaseItem{
+					{
+						Patterns:   []ast.Expression{ast.Word("bar")},
+						Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+						Terminator: ";;",
+					},
+				},
+			},
+		},
+	}},
 }
 
 var caseErrorHandlingCases = []errorHandlingTestCase{
