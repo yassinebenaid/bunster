@@ -455,6 +455,35 @@ var caseTests = []testCase{
 		},
 	}},
 
+	{`case word in
+ 		pattern) cmd; ;;
+   		pattern) cmd; ;&
+	 	pattern) cmd; ;;&
+	esac`, ast.Script{
+		Statements: []ast.Statement{
+			ast.Case{
+				Word: ast.Word("word"),
+				Cases: []ast.CaseItem{
+					{
+						Patterns:   []ast.Expression{ast.Word("pattern")},
+						Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+						Terminator: ";;",
+					},
+					{
+						Patterns:   []ast.Expression{ast.Word("pattern")},
+						Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+						Terminator: ";&",
+					},
+					{
+						Patterns:   []ast.Expression{ast.Word("pattern")},
+						Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+						Terminator: ";;&",
+					},
+				},
+			},
+		},
+	}},
+
 	// TODO: see if we must resolve compatibility here or not
 	// Inputs: `case esac in bar);; esac`, `case esac in bar);& esac`, `case esac in bar);;& esac`
 }
