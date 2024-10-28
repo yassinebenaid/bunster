@@ -343,7 +343,7 @@ func (p *Parser) parseCase() ast.Statement {
 		for {
 			pattern := p.parseExpression()
 			if pattern == nil {
-				panic(p.curr.Literal)
+				p.error("invalid pattern provided, unexpected token `%s`", p.curr.Literal)
 			}
 			item.Patterns = append(item.Patterns, pattern)
 
