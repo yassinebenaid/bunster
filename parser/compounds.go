@@ -381,7 +381,10 @@ func (p *Parser) parseCase() ast.Statement {
 			}
 			item.Body = append(item.Body, cmdList)
 
-			if (p.curr.Type == token.SEMICOLON && p.next.Type != token.SEMICOLON && p.next.Type != token.AMPERSAND) || p.curr.Type == token.AMPERSAND {
+			if (p.curr.Type == token.SEMICOLON &&
+				p.next.Type != token.SEMICOLON &&
+				p.next.Type != token.AMPERSAND) ||
+				p.curr.Type == token.AMPERSAND {
 				p.proceed()
 			}
 			for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
