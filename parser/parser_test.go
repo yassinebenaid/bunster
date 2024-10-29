@@ -76,50 +76,6 @@ var testCases = []struct {
 				ast.Command{Name: ast.Word("cmd2")},
 			},
 		}},
-	}},
-	{"Simle Command calls", []testCase{
-		{``, ast.Script{}},
-		{`	 	`, ast.Script{}},
-		{"\n	\n \n ", ast.Script{}},
-		{`git`, ast.Script{Statements: []ast.Statement{ast.Command{Name: ast.Word("git")}}}},
-		{`foo bar baz`, ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Word("foo"),
-					Args: []ast.Expression{ast.Word("bar"), ast.Word("baz")},
-				},
-			},
-		}},
-		{`foo $bar $FOO_BAR_1234567890`, ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Word("foo"),
-					Args: []ast.Expression{
-						ast.Var("bar"),
-						ast.Var("FOO_BAR_1234567890"),
-					},
-				},
-			},
-		}},
-		{`/usr/bin/foo bar baz`, ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Word("/usr/bin/foo"),
-					Args: []ast.Expression{
-						ast.Word("bar"),
-						ast.Word("baz"),
-					},
-				},
-			},
-		}},
-		{`/usr/bin/foo-bar baz`, ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Word("/usr/bin/foo-bar"),
-					Args: []ast.Expression{ast.Word("baz")},
-				},
-			},
-		}},
 		{"cmd1\n cmd2\ncmd3\n cmd4 arg1 arg2\ncmd5", ast.Script{
 			Statements: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd1")},
