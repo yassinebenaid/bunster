@@ -79,7 +79,7 @@ var substitutionTests = []testCase{
 			},
 		},
 	}},
-	{`$(cmd; cmd) | $(cmd; cmd)&& $(cmd; cmd)`, ast.Script{
+	{`$(cmd; cmd) arg | $(cmd; cmd)&& $(cmd; cmd)`, ast.Script{
 		Statements: []ast.Statement{
 			ast.BinaryConstruction{
 				Left: ast.Pipeline{
@@ -88,6 +88,9 @@ var substitutionTests = []testCase{
 							Name: ast.CommandSubstitution{
 								ast.Command{Name: ast.Word("cmd")},
 								ast.Command{Name: ast.Word("cmd")},
+							},
+							Args: []ast.Expression{
+								ast.Word("arg"),
 							},
 						},
 					},
