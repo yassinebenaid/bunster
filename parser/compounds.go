@@ -300,7 +300,11 @@ func (p *Parser) parseIf() ast.Statement {
 			p.proceed()
 		}
 		for p.curr.Type != token.FI && p.curr.Type != token.EOF {
-			cond.Alternate = append(cond.Alternate, p.parseCommandList())
+			cmdList := p.parseCommandList()
+			if cmdList == nil {
+				return nil
+			}
+			cond.Alternate = append(cond.Alternate, cmdList)
 			if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
 				p.proceed()
 			}

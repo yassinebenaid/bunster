@@ -483,6 +483,8 @@ var ifErrorHandlingCases = []errorHandlingTestCase{
 	{`if cmd; then cmd; elif cmd| |;then cmd; fi`, "syntax error: `|` has a special meaning here and cannot be used as a command name."},
 	{`if cmd; then cmd; elif cmd;then cmd|; fi`, "syntax error: `;` has a special meaning here and cannot be used as a command name."},
 	{`if cmd; then cmd; elif cmd;then cmd| |; fi`, "syntax error: `|` has a special meaning here and cannot be used as a command name."},
+	{`if cmd; then cmd; else cmd|; fi`, "syntax error: `;` has a special meaning here and cannot be used as a command name."},
+	{`if cmd; then cmd; else cmd| |; fi`, "syntax error: `|` has a special meaning here and cannot be used as a command name."},
 
 	{`then`, "syntax error: `then` is a reserved keyword, cannot be used a command name."},
 	{`elif`, "syntax error: `elif` is a reserved keyword, cannot be used a command name."},
