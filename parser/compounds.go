@@ -249,7 +249,11 @@ func (p *Parser) parseIf() ast.Statement {
 		var elif ast.Elif
 
 		for p.curr.Type != token.THEN && p.curr.Type != token.FI && p.curr.Type != token.EOF {
-			elif.Head = append(elif.Head, p.parseCommandList())
+			cmdList := p.parseCommandList()
+			if cmdList == nil {
+				return nil
+			}
+			elif.Head = append(elif.Head, cmdList)
 			if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
 				p.proceed()
 			}
@@ -270,7 +274,11 @@ func (p *Parser) parseIf() ast.Statement {
 		}
 
 		for p.curr.Type != token.FI && p.curr.Type != token.ELIF && p.curr.Type != token.ELSE && p.curr.Type != token.EOF {
-			elif.Body = append(elif.Body, p.parseCommandList())
+			cmdList := p.parseCommandList()
+			if cmdList == nil {
+				return nil
+			}
+			elif.Body = append(elif.Body, cmdList)
 			if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
 				p.proceed()
 			}
