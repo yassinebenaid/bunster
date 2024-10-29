@@ -317,7 +317,23 @@ var testCases = []struct {
 	{"Case", caseTests},
 
 	{"Command Group", []testCase{
+		{`{ cmd; }`, ast.Script{
+			Statements: []ast.Statement{
+				ast.Group{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+			},
+		}},
 		{`{ cmd; cmd; }`, ast.Script{
+			Statements: []ast.Statement{
+				ast.Group{
+					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Name: ast.Word("cmd")},
+				},
+			},
+		}},
+
+		{`{cmd;cmd;}`, ast.Script{
 			Statements: []ast.Statement{
 				ast.Group{
 					ast.Command{Name: ast.Word("cmd")},
