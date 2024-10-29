@@ -294,6 +294,19 @@ var groupingTests = []testCase{
 			},
 		},
 	}},
+	{`( (cmd) )`, ast.Script{
+		Statements: []ast.Statement{
+			ast.SubShell{
+				Body: []ast.Statement{
+					ast.SubShell{
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+					},
+				},
+			},
+		},
+	}},
 }
 
 var groupingErrorHandlingCases = []errorHandlingTestCase{
