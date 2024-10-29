@@ -479,7 +479,7 @@ loop:
 func (p *Parser) parseGroup() ast.Statement {
 	var group ast.Group
 	p.proceed()
-	if p.curr.Type == token.BLANK {
+	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()
 	}
 
