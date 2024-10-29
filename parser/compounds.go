@@ -17,6 +17,8 @@ func (p *Parser) getCompoundParser() func() ast.Statement {
 		return p.parseCase
 	case token.LEFT_BRACE:
 		return p.parseGroup
+	case token.LEFT_PAREN:
+		return p.parseSubShell
 	case token.THEN, token.ELIF, token.ELSE, token.FI, token.DO, token.DONE, token.ESAC:
 		p.error("`%s` is a reserved keyword, cannot be used a command name", p.curr.Literal)
 		fallthrough
@@ -477,6 +479,44 @@ loop:
 }
 
 func (p *Parser) parseGroup() ast.Statement {
+	var group ast.Group
+	p.proceed()
+	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+		p.proceed()
+	}
+
+	for p.curr.Type != token.RIGHT_BRACE && p.curr.Type != token.EOF {
+		cmdList := p.parseCommandList()
+		if cmdList == nil {
+			return nil
+		}
+		group = append(group, cmdList)
+		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
+			p.proceed()
+		}
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+			p.proceed()
+		}
+	}
+
+	if len(group) == 0 {
+		p.error("expeceted a command list after `{`")
+	}
+
+	if p.curr.Type != token.RIGHT_BRACE {
+		p.error("unexpected end of file, expeceted `}`")
+	}
+
+	p.proceed()
+
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
+	return group
+}
+
+func (p *Parser) parseSubShell() ast.Statement {
 	var group ast.Group
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
