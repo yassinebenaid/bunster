@@ -383,6 +383,28 @@ var testCases = []struct {
 				},
 			},
 		}},
+
+		{`{cmd; cmd;} | {cmd; cmd;}&& {cmd; cmd;}`, ast.Script{
+			Statements: []ast.Statement{
+				ast.BinaryConstruction{
+					Left: ast.Pipeline{
+						{Command: ast.Group{
+							ast.Command{Name: ast.Word("cmd")},
+							ast.Command{Name: ast.Word("cmd")},
+						}},
+						{Command: ast.Group{
+							ast.Command{Name: ast.Word("cmd")},
+							ast.Command{Name: ast.Word("cmd")},
+						}},
+					},
+					Operator: "&&",
+					Right: ast.Group{
+						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Name: ast.Word("cmd")},
+					},
+				},
+			},
+		}},
 	}},
 }
 

@@ -507,5 +507,9 @@ func (p *Parser) parseGroup() ast.Statement {
 
 	p.proceed()
 
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
 	return group
 }
