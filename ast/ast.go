@@ -94,7 +94,10 @@ type CaseItem struct {
 	Terminator string
 }
 
-type Group []Statement
+type Group struct {
+	Body         []Statement
+	Redirections []Redirection
+}
 
 type SubShell struct {
 	Body         []Statement
