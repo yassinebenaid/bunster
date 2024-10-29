@@ -475,6 +475,8 @@ var ifErrorHandlingCases = []errorHandlingTestCase{
 	{`if cmd;then cmd;else fi`, "syntax error: expected command list after `else`."},
 	{`if cmd;then cmd;else; fi`, "syntax error: `;` has a special meaning here and cannot be used as a command name."},
 
+	{`if cmd;then cmd|; fi`, "syntax error: `;` has a special meaning here and cannot be used as a command name."},
+
 	{`then`, "syntax error: `then` is a reserved keyword, cannot be used a command name."},
 	{`elif`, "syntax error: `elif` is a reserved keyword, cannot be used a command name."},
 	{`else`, "syntax error: `else` is a reserved keyword, cannot be used a command name."},
