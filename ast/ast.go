@@ -96,7 +96,10 @@ type CaseItem struct {
 
 type Group []Statement
 
-type SubShell []Statement
+type SubShell struct {
+	Body         []Statement
+	Redirections []Redirection
+}
 
 func (Word) node()               {}
 func (Redirection) node()        {}

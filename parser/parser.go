@@ -192,8 +192,8 @@ loop:
 			exprs = append(exprs, p.parseLiteralString())
 		case token.DOUBLE_QUOTE:
 			exprs = append(exprs, p.parseString())
-		case token.DOLLAR_PAREN:
-			exprs = append(exprs, p.parseSubShell())
+		// case token.DOLLAR_PAREN:
+		// 	exprs = append(exprs, p.parseSubShell())
 		case token.INT:
 			if len(exprs) == 0 && p.isRedirectionToken() {
 				break loop

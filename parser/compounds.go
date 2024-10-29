@@ -516,7 +516,7 @@ func (p *Parser) parseGroup() ast.Statement {
 	return group
 }
 
-func (p *Parser) parseSubShell() ast.SubShell {
+func (p *Parser) parseSubShell() ast.Statement {
 	var group ast.SubShell
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
@@ -528,7 +528,7 @@ func (p *Parser) parseSubShell() ast.SubShell {
 		if cmdList == nil {
 			return nil
 		}
-		group = append(group, cmdList)
+		group.Body = append(group.Body, cmdList)
 		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
 			p.proceed()
 		}
@@ -537,7 +537,7 @@ func (p *Parser) parseSubShell() ast.SubShell {
 		}
 	}
 
-	if len(group) == 0 {
+	if len(group.Body) == 0 {
 		p.error("expeceted a command list after `(`")
 	}
 
