@@ -353,6 +353,14 @@ var testCases = []struct {
 				},
 			},
 		}},
+		{`{cmd&cmd&}`, ast.Script{
+			Statements: []ast.Statement{
+				ast.Group{
+					ast.BackgroundConstruction{Statement: ast.Command{Name: ast.Word("cmd")}},
+					ast.BackgroundConstruction{Statement: ast.Command{Name: ast.Word("cmd")}},
+				},
+			},
+		}},
 	}},
 }
 
