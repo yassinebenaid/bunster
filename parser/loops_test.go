@@ -989,6 +989,10 @@ var loopsErrorHandlingCases = []errorHandlingTestCase{
 	{`until cmd;do cmd`, "syntax error: expected `done` to close `until` loop."},
 	{`until cmd;do cmd; done arg`, "syntax error: unexpected token `arg`."},
 	{`until cmd;do cmd; done <in >out <<<etc arg`, "syntax error: unexpected token `arg`."},
+	{`until cmd |;do cmd; done`, "syntax error: `;` has a special meaning here and cannot be used as a command name."},
+	{`until cmd | &;do cmd; done`, "syntax error: `&` has a special meaning here and cannot be used as a command name."},
+	{`until cmd;do cmd && | ; done`, "syntax error: `|` has a special meaning here and cannot be used as a command name."},
+	{`until cmd;do cmd &&; done`, "syntax error: `;` has a special meaning here and cannot be used as a command name."},
 
 	// FOR LOOPS (over positional arguments)
 	{`for`, "syntax error: expected identifier after `for`."},
