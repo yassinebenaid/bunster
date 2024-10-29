@@ -501,9 +501,9 @@ func (p *Parser) parseGroup() ast.Statement {
 		p.error("expeceted a command list after `{`")
 	}
 
-	// if p.curr.Type != token.ESAC {
-	// 	p.error("expected `esac` to close `case` command")
-	// }
+	if p.curr.Type != token.RIGHT_BRACE {
+		p.error("unexpected end of file, expeceted `}`")
+	}
 
 	p.proceed()
 
