@@ -192,12 +192,14 @@ var groupingTests = []testCase{
 
 var groupingErrorHandlingCases = []errorHandlingTestCase{
 	{`{`, "syntax error: expeceted a command list after `{`."},
+	{`{}`, "syntax error: expeceted a command list after `{`."},
 	{`{cmd`, "syntax error: unexpected end of file, expeceted `}`."},
 	{`{cmd}`, "syntax error: unexpected end of file, expeceted `}`."},
 	{`{cmd |;}`, "syntax error: `;` has a special meaning here and cannot be used as a command name."},
 	{`{cmd | |}`, "syntax error: `|` has a special meaning here and cannot be used as a command name."},
 
 	{`(`, "syntax error: expeceted a command list after `(`."},
+	{`()`, "syntax error: expeceted a command list after `(`."},
 	{`(cmd`, "syntax error: unexpected end of file, expeceted `)`."},
 	{`(cmd |)`, "syntax error: `)` has a special meaning here and cannot be used as a command name."},
 	{`(cmd | |)`, "syntax error: `|` has a special meaning here and cannot be used as a command name."},
