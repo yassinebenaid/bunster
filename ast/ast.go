@@ -96,6 +96,8 @@ type CaseItem struct {
 
 type Group []Statement
 
+type SubShell []Statement
+
 func (Word) node()               {}
 func (Redirection) node()        {}
 func (Var) node()                {}
@@ -108,6 +110,7 @@ func (RangeLoop) node()          {}
 func (If) node()                 {}
 func (Case) node()               {}
 func (Group) node()              {}
+func (SubShell) node()           {}
 
 // Expressions
 func (Word) expr()          {}
@@ -124,3 +127,4 @@ func (RangeLoop) stmt()          {}
 func (If) stmt()                 {}
 func (Case) stmt()               {}
 func (Group) stmt()              {}
+func (SubShell) stmt()           {}
