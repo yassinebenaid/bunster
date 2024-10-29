@@ -15,7 +15,7 @@ func (p *Parser) getCompoundParser() func() ast.Statement {
 		return p.parseIf
 	case token.CASE:
 		return p.parseCase
-	case token.THEN, token.ELIF, token.ELSE, token.FI, token.DO, token.DONE:
+	case token.THEN, token.ELIF, token.ELSE, token.FI, token.DO, token.DONE, token.ESAC:
 		p.error("`%s` is a reserved keyword, cannot be used a command name", p.curr.Literal)
 		fallthrough
 	default:
