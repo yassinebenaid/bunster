@@ -91,6 +91,13 @@ var groupingTests = []testCase{
 			},
 		},
 	}},
+	{`{cmd};}`, ast.Script{
+		Statements: []ast.Statement{
+			ast.Group{
+				ast.Command{Name: ast.Word("cmd}")},
+			},
+		},
+	}},
 
 	{`( cmd )`, ast.Script{
 		Statements: []ast.Statement{
