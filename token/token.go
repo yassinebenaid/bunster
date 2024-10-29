@@ -73,7 +73,6 @@ const (
 	LEFT_PAREN           // `(`
 	RIGHT_PAREN          // `)`
 	DOUBLE_LEFT_PAREN    // `((`
-	DOUBLE_RIGHT_PAREN   // `))`
 	LEFT_BRACKET         // `[`
 	RIGHT_BRACKET        // `]`
 	DOUBLE_LEFT_BRACKET  // `[[`

@@ -84,7 +84,6 @@ func TestLexer(t *testing.T) {
 		{`(`, []token.Token{{Type: token.LEFT_PAREN, Literal: `(`}}},
 		{`)`, []token.Token{{Type: token.RIGHT_PAREN, Literal: `)`}}},
 		{`((`, []token.Token{{Type: token.DOUBLE_LEFT_PAREN, Literal: `((`}}},
-		{`))`, []token.Token{{Type: token.DOUBLE_RIGHT_PAREN, Literal: `))`}}},
 		{`[`, []token.Token{{Type: token.LEFT_BRACKET, Literal: `[`}}},
 		{`]`, []token.Token{{Type: token.RIGHT_BRACKET, Literal: `]`}}},
 		{`[[`, []token.Token{{Type: token.DOUBLE_LEFT_BRACKET, Literal: `[[`}}},

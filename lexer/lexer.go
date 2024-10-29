@@ -214,12 +214,7 @@ switch_beginning:
 			tok.Type, tok.Literal = token.LEFT_PAREN, string(l.curr)
 		}
 	case l.curr == ')':
-		if l.next == ')' {
-			l.proceed()
-			tok.Type, tok.Literal = token.DOUBLE_RIGHT_PAREN, "))"
-		} else {
-			tok.Type, tok.Literal = token.RIGHT_PAREN, string(l.curr)
-		}
+		tok.Type, tok.Literal = token.RIGHT_PAREN, string(l.curr)
 	case l.curr == ',':
 		if l.next == ',' {
 			l.proceed()
