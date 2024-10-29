@@ -517,7 +517,7 @@ func (p *Parser) parseGroup() ast.Statement {
 }
 
 func (p *Parser) parseSubShell() ast.Statement {
-	var group ast.SubShell
+	var shell ast.SubShell
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()
@@ -528,7 +528,7 @@ func (p *Parser) parseSubShell() ast.Statement {
 		if cmdList == nil {
 			return nil
 		}
-		group.Body = append(group.Body, cmdList)
+		shell.Body = append(shell.Body, cmdList)
 		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
 			p.proceed()
 		}
@@ -537,7 +537,7 @@ func (p *Parser) parseSubShell() ast.Statement {
 		}
 	}
 
-	if len(group.Body) == 0 {
+	if len(shell.Body) == 0 {
 		p.error("expeceted a command list after `(`")
 	}
 
@@ -547,9 +547,21 @@ func (p *Parser) parseSubShell() ast.Statement {
 
 	p.proceed()
 
-	if p.curr.Type == token.BLANK {
-		p.proceed()
+loop:
+	for {
+		switch {
+		case p.curr.Type == token.BLANK:
+			p.proceed()
+		case p.isRedirectionToken():
+			p.HandleRedirection(&shell.Redirections)
+		default:
+			break loop
+		}
 	}
 
-	return group
+	if !p.isControlToken() && p.curr.Type != token.EOF {
+		p.error("unexpected token `%s`", p.curr.Literal)
+	}
+
+	return shell
 }

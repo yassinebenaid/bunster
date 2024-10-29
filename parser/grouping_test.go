@@ -221,7 +221,6 @@ var groupingTests = []testCase{
 			ast.SubShell{
 				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
-					ast.Command{Name: ast.Word("cmd")},
 				},
 				Redirections: []ast.Redirection{
 					{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
