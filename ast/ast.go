@@ -94,6 +94,8 @@ type CaseItem struct {
 	Terminator string
 }
 
+type Group []Statement
+
 func (Word) node()               {}
 func (Redirection) node()        {}
 func (Var) node()                {}
@@ -105,6 +107,7 @@ func (Loop) node()               {}
 func (RangeLoop) node()          {}
 func (If) node()                 {}
 func (Case) node()               {}
+func (Group) node()              {}
 
 // Expressions
 func (Word) expr()          {}
@@ -120,3 +123,4 @@ func (Loop) stmt()               {}
 func (RangeLoop) stmt()          {}
 func (If) stmt()                 {}
 func (Case) stmt()               {}
+func (Group) stmt()              {}
