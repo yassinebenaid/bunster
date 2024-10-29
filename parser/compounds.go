@@ -517,13 +517,13 @@ func (p *Parser) parseGroup() ast.Statement {
 }
 
 func (p *Parser) parseSubShell() ast.Statement {
-	var group ast.Group
+	var group ast.SubShell
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()
 	}
 
-	for p.curr.Type != token.RIGHT_BRACE && p.curr.Type != token.EOF {
+	for p.curr.Type != token.RIGHT_PAREN && p.curr.Type != token.EOF {
 		cmdList := p.parseCommandList()
 		if cmdList == nil {
 			return nil
@@ -541,7 +541,7 @@ func (p *Parser) parseSubShell() ast.Statement {
 		p.error("expeceted a command list after `{`")
 	}
 
-	if p.curr.Type != token.RIGHT_BRACE {
+	if p.curr.Type != token.RIGHT_PAREN {
 		p.error("unexpected end of file, expeceted `}`")
 	}
 
