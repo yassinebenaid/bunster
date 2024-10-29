@@ -496,4 +496,7 @@ var caseErrorHandlingCases = []errorHandlingTestCase{
 	{`case foo in`, "syntax error: expected `esac` to close `case` command."},
 	{`case foo in ) esac`, "syntax error: invalid pattern provided, unexpected token `)`."},
 	{`case foo in pattern foo esac`, "syntax error: expected `)`, found `foo`."},
+	{`case foo in pattern) foo esac`, "syntax error: expected `esac` to close `case` command."},
+	{`case foo in pattern) foo;;; esac`, "syntax error: invalid pattern provided, unexpected token `;`."},
+	{`case foo in pattern) foo;;;& esac`, "syntax error: invalid pattern provided, unexpected token `;`."},
 }
