@@ -117,6 +117,7 @@ func (Word) expr()          {}
 func (Redirection) expr()   {}
 func (Var) expr()           {}
 func (Concatination) expr() {}
+func (SubShell) expr()      {}
 
 // Statements
 func (Command) stmt()            {}
