@@ -32,16 +32,19 @@ var substitutionTests = []testCase{
 			},
 		},
 	}},
-	// {`$(
-	// 	cmd
-	//  	cmd
-	// )`, ast.Script{
-	// 	Statements: []ast.Statement{
-	// 		ast.CommandSubstitution{
-	// 			ast.Command{Name: ast.Word("cmd")},
-	// 			ast.Command{Name: ast.Word("cmd")},
-	// 		},
-	// }},
+	{`$(
+		cmd
+	 	cmd
+	)`, ast.Script{
+		Statements: []ast.Statement{
+			ast.Command{
+				Name: ast.CommandSubstitution{
+					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Name: ast.Word("cmd")},
+				},
+			},
+		},
+	}},
 	// {`$(cmd&cmd&)`, ast.Script{
 	// 	Statements: []ast.Statement{
 	// 		ast.CommandSubstitution{
