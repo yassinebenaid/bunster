@@ -27,7 +27,7 @@ func (p *Parser) parseCommandSubstitution() ast.Expression {
 	}
 
 	if len(cmds) == 0 {
-		p.error("expeceted a command list after `(`")
+		p.error("expeceted a command list after `$(`")
 	}
 
 	if p.curr.Type != token.RIGHT_PAREN {
