@@ -18,7 +18,7 @@ func (p *Parser) getCompoundParser() func() ast.Statement {
 	case token.LEFT_BRACE:
 		return p.parseGroup
 	case token.LEFT_PAREN:
-		return p.parseSubShell
+		return func() ast.Statement { return p.parseSubShell() }
 	case token.THEN, token.ELIF, token.ELSE, token.FI, token.DO, token.DONE, token.ESAC:
 		p.error("`%s` is a reserved keyword, cannot be used a command name", p.curr.Literal)
 		fallthrough
@@ -516,7 +516,7 @@ func (p *Parser) parseGroup() ast.Statement {
 	return group
 }
 
-func (p *Parser) parseSubShell() ast.Statement {
+func (p *Parser) parseSubShell() ast.SubShell {
 	var group ast.SubShell
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
