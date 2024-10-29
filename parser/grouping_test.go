@@ -6,15 +6,19 @@ var groupingTests = []testCase{
 	{`{ cmd; }`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Group{
-				ast.Command{Name: ast.Word("cmd")},
+				Body: []ast.Statement{
+					ast.Command{Name: ast.Word("cmd")},
+				},
 			},
 		},
 	}},
 	{`{ cmd; cmd; }`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Group{
-				ast.Command{Name: ast.Word("cmd")},
-				ast.Command{Name: ast.Word("cmd")},
+				Body: []ast.Statement{
+					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Name: ast.Word("cmd")},
+				},
 			},
 		},
 	}},
@@ -22,8 +26,10 @@ var groupingTests = []testCase{
 	{`{cmd;cmd;}`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Group{
-				ast.Command{Name: ast.Word("cmd")},
-				ast.Command{Name: ast.Word("cmd")},
+				Body: []ast.Statement{
+					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Name: ast.Word("cmd")},
+				},
 			},
 		},
 	}},
@@ -34,37 +40,43 @@ var groupingTests = []testCase{
 	}`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Group{
-				ast.Command{Name: ast.Word("cmd")},
-				ast.Command{Name: ast.Word("cmd")},
+				Body: []ast.Statement{
+					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Name: ast.Word("cmd")},
+				},
 			},
 		},
 	}},
 	{`{cmd&cmd&}`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Group{
-				ast.BackgroundConstruction{Statement: ast.Command{Name: ast.Word("cmd")}},
-				ast.BackgroundConstruction{Statement: ast.Command{Name: ast.Word("cmd")}},
+				Body: []ast.Statement{
+					ast.BackgroundConstruction{Statement: ast.Command{Name: ast.Word("cmd")}},
+					ast.BackgroundConstruction{Statement: ast.Command{Name: ast.Word("cmd")}},
+				},
 			},
 		},
 	}},
 	{`{cmd1 | cmd2 && cmd3; cmd1 | cmd2 && cmd3;}`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Group{
-				ast.BinaryConstruction{
-					Left: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd1")}},
-						{Command: ast.Command{Name: ast.Word("cmd2")}},
+				Body: []ast.Statement{
+					ast.BinaryConstruction{
+						Left: ast.Pipeline{
+							{Command: ast.Command{Name: ast.Word("cmd1")}},
+							{Command: ast.Command{Name: ast.Word("cmd2")}},
+						},
+						Operator: "&&",
+						Right:    ast.Command{Name: ast.Word("cmd3")},
 					},
-					Operator: "&&",
-					Right:    ast.Command{Name: ast.Word("cmd3")},
-				},
-				ast.BinaryConstruction{
-					Left: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd1")}},
-						{Command: ast.Command{Name: ast.Word("cmd2")}},
+					ast.BinaryConstruction{
+						Left: ast.Pipeline{
+							{Command: ast.Command{Name: ast.Word("cmd1")}},
+							{Command: ast.Command{Name: ast.Word("cmd2")}},
+						},
+						Operator: "&&",
+						Right:    ast.Command{Name: ast.Word("cmd3")},
 					},
-					Operator: "&&",
-					Right:    ast.Command{Name: ast.Word("cmd3")},
 				},
 			},
 		},
@@ -75,18 +87,24 @@ var groupingTests = []testCase{
 			ast.BinaryConstruction{
 				Left: ast.Pipeline{
 					{Command: ast.Group{
-						ast.Command{Name: ast.Word("cmd")},
-						ast.Command{Name: ast.Word("cmd")},
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+							ast.Command{Name: ast.Word("cmd")},
+						},
 					}},
 					{Command: ast.Group{
-						ast.Command{Name: ast.Word("cmd")},
-						ast.Command{Name: ast.Word("cmd")},
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+							ast.Command{Name: ast.Word("cmd")},
+						},
 					}},
 				},
 				Operator: "&&",
 				Right: ast.Group{
-					ast.Command{Name: ast.Word("cmd")},
-					ast.Command{Name: ast.Word("cmd")},
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Name: ast.Word("cmd")},
+					},
 				},
 			},
 		},
@@ -94,7 +112,9 @@ var groupingTests = []testCase{
 	{`{cmd};}`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Group{
-				ast.Command{Name: ast.Word("cmd}")},
+				Body: []ast.Statement{
+					ast.Command{Name: ast.Word("cmd}")},
+				},
 			},
 		},
 	}},

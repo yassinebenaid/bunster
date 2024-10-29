@@ -490,7 +490,7 @@ func (p *Parser) parseGroup() ast.Statement {
 		if cmdList == nil {
 			return nil
 		}
-		group = append(group, cmdList)
+		group.Body = append(group.Body, cmdList)
 		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
 			p.proceed()
 		}
@@ -499,7 +499,7 @@ func (p *Parser) parseGroup() ast.Statement {
 		}
 	}
 
-	if len(group) == 0 {
+	if len(group.Body) == 0 {
 		p.error("expeceted a command list after `{`")
 	}
 
