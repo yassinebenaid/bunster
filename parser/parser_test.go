@@ -315,6 +315,17 @@ var testCases = []struct {
 	{"Loops", loopsTests},
 	{"Conditionals", conditionalsTests},
 	{"Case", caseTests},
+
+	{"Command Group", []testCase{
+		{`{cmd; cmd}`, ast.Script{
+			Statements: []ast.Statement{
+				ast.Group{
+					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Name: ast.Word("cmd")},
+				},
+			},
+		}},
+	}},
 }
 
 func TestParser(t *testing.T) {
