@@ -58,7 +58,11 @@ func (p *Parser) parseWhileLoop() ast.Statement {
 	}
 
 	for p.curr.Type != token.DONE && p.curr.Type != token.EOF {
-		loop.Body = append(loop.Body, p.parseCommandList())
+		cmdList := p.parseCommandList()
+		if cmdList == nil {
+			return nil
+		}
+		loop.Body = append(loop.Body, cmdList)
 		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
 			p.proceed()
 		}
