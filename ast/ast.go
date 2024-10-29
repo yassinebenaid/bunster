@@ -104,26 +104,29 @@ type SubShell struct {
 	Redirections []Redirection
 }
 
-func (Word) node()               {}
-func (Redirection) node()        {}
-func (Var) node()                {}
-func (Concatination) node()      {}
-func (Command) node()            {}
-func (Pipeline) node()           {}
-func (BinaryConstruction) node() {}
-func (Loop) node()               {}
-func (RangeLoop) node()          {}
-func (If) node()                 {}
-func (Case) node()               {}
-func (Group) node()              {}
-func (SubShell) node()           {}
+type CommandSubstitution []Redirection
+
+func (Word) node()                {}
+func (Redirection) node()         {}
+func (Var) node()                 {}
+func (Concatination) node()       {}
+func (Command) node()             {}
+func (Pipeline) node()            {}
+func (BinaryConstruction) node()  {}
+func (Loop) node()                {}
+func (RangeLoop) node()           {}
+func (If) node()                  {}
+func (Case) node()                {}
+func (Group) node()               {}
+func (SubShell) node()            {}
+func (CommandSubstitution) node() {}
 
 // Expressions
-func (Word) expr()          {}
-func (Redirection) expr()   {}
-func (Var) expr()           {}
-func (Concatination) expr() {}
-func (SubShell) expr()      {}
+func (Word) expr()                {}
+func (Redirection) expr()         {}
+func (Var) expr()                 {}
+func (Concatination) expr()       {}
+func (CommandSubstitution) expr() {}
 
 // Statements
 func (Command) stmt()            {}
