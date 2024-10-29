@@ -456,9 +456,9 @@ var caseTests = []testCase{
 	}},
 
 	{`case word in
- 		pattern) cmd; ;;
-   		pattern) cmd; ;&
-	 	pattern) cmd; ;;&
+ 		pattern	) cmd; ;;
+   		pattern ) cmd; ;&
+	 	pattern ) cmd; ;;&
 	esac`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Case{
