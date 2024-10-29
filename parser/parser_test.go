@@ -317,6 +317,7 @@ var testCases = []struct {
 	{"Case", caseTests},
 
 	{"Command Group", groupingTests},
+	{"Subsitutions", substitutionTests},
 }
 
 func TestParser(t *testing.T) {

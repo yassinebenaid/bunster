@@ -104,7 +104,7 @@ type SubShell struct {
 	Redirections []Redirection
 }
 
-type CommandSubstitution []Redirection
+type CommandSubstitution []Statement
 
 func (Word) node()                {}
 func (Redirection) node()         {}
