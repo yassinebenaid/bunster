@@ -291,6 +291,9 @@ var groupingErrorHandlingCases = []errorHandlingTestCase{
 	{`{cmd |;}`, "syntax error: `;` has a special meaning here and cannot be used as a command name."},
 	{`{cmd | |}`, "syntax error: `|` has a special meaning here and cannot be used as a command name."},
 
+	{`{cmd;} arg`, "syntax error: unexpected token `arg`."},
+	{`{cmd;} <in >out <<<etc arg`, "syntax error: unexpected token `arg`."},
+
 	{`(`, "syntax error: expeceted a command list after `(`."},
 	{`()`, "syntax error: expeceted a command list after `(`."},
 	{`(cmd`, "syntax error: unexpected end of file, expeceted `)`."},
