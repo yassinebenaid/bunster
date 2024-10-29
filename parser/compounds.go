@@ -538,11 +538,11 @@ func (p *Parser) parseSubShell() ast.Statement {
 	}
 
 	if len(group) == 0 {
-		p.error("expeceted a command list after `{`")
+		p.error("expeceted a command list after `(`")
 	}
 
 	if p.curr.Type != token.RIGHT_PAREN {
-		p.error("unexpected end of file, expeceted `}`")
+		p.error("unexpected end of file, expeceted `)`")
 	}
 
 	p.proceed()
