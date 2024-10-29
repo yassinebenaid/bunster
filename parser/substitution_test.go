@@ -45,13 +45,16 @@ var substitutionTests = []testCase{
 			},
 		},
 	}},
-	// {`$(cmd&cmd&)`, ast.Script{
-	// 	Statements: []ast.Statement{
-	// 		ast.CommandSubstitution{
-	// 			ast.BackgroundConstruction{Statement: ast.Command{Name: ast.Word("cmd")}},
-	// 			ast.BackgroundConstruction{Statement: ast.Command{Name: ast.Word("cmd")}},
-	// 		},
-	// }},
+	{`$(cmd&cmd&)`, ast.Script{
+		Statements: []ast.Statement{
+			ast.Command{
+				Name: ast.CommandSubstitution{
+					ast.BackgroundConstruction{Statement: ast.Command{Name: ast.Word("cmd")}},
+					ast.BackgroundConstruction{Statement: ast.Command{Name: ast.Word("cmd")}},
+				},
+			},
+		},
+	}},
 	// {`$(cmd1 | cmd2 && cmd3; cmd1 | cmd2 && cmd3)`, ast.Script{
 	// 	Statements: []ast.Statement{
 	// 		ast.CommandSubstitution{
