@@ -497,6 +497,14 @@ func (p *Parser) parseGroup() ast.Statement {
 		}
 	}
 
+	if len(group) == 0 {
+		p.error("expeceted a command list after `{`")
+	}
+
+	// if p.curr.Type != token.ESAC {
+	// 	p.error("expected `esac` to close `case` command")
+	// }
+
 	p.proceed()
 
 	return group

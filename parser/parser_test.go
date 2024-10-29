@@ -470,8 +470,12 @@ var errorHandlingTestCases = []struct {
 	{"Loops", loopsErrorHandlingCases},
 	{"Conditionals", ifErrorHandlingCases},
 	{"Case", caseErrorHandlingCases},
+	{"Command Group", []errorHandlingTestCase{
+		{`{`, "syntax error: expeceted a command list after `{`."},
+	}},
 }
 
+// unexpected end of file, expeceted a command list after `{`
 func TestParserErrorHandling(t *testing.T) {
 	tgroup, tcase := os.Getenv("TEST_GROUP"), os.Getenv("TEST_CASE")
 
