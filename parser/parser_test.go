@@ -473,6 +473,7 @@ var errorHandlingTestCases = []struct {
 	{"Command Group", []errorHandlingTestCase{
 		{`{`, "syntax error: expeceted a command list after `{`."},
 		{`{cmd`, "syntax error: unexpected end of file, expeceted `}`."},
+		{`{cmd}`, "syntax error: unexpected end of file, expeceted `}`."},
 	}},
 }
 
