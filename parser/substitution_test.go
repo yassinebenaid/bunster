@@ -277,6 +277,44 @@ var substitutionTests = []testCase{
 			},
 		},
 	}},
+	{`<( <(cmd) )`, ast.Script{
+		Statements: []ast.Statement{
+			ast.Command{
+				Name: ast.ProcessSubstitution{
+					Direction: '<',
+					Body: []ast.Statement{
+						ast.Command{
+							Name: ast.ProcessSubstitution{
+								Direction: '<',
+								Body: []ast.Statement{
+									ast.Command{Name: ast.Word("cmd")},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}},
+	{`<(<(cmd))`, ast.Script{
+		Statements: []ast.Statement{
+			ast.Command{
+				Name: ast.ProcessSubstitution{
+					Direction: '<',
+					Body: []ast.Statement{
+						ast.Command{
+							Name: ast.ProcessSubstitution{
+								Direction: '<',
+								Body: []ast.Statement{
+									ast.Command{Name: ast.Word("cmd")},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}},
 }
 
 var substitutionErrorHandlingCases = []errorHandlingTestCase{
