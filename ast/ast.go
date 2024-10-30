@@ -106,6 +106,11 @@ type SubShell struct {
 
 type CommandSubstitution []Statement
 
+type ProcessSubstitution struct {
+	Direction rune
+	Body      []Statement
+}
+
 func (Word) node()                {}
 func (Redirection) node()         {}
 func (Var) node()                 {}
@@ -120,6 +125,7 @@ func (Case) node()                {}
 func (Group) node()               {}
 func (SubShell) node()            {}
 func (CommandSubstitution) node() {}
+func (ProcessSubstitution) node() {}
 
 // Expressions
 func (Word) expr()                {}
@@ -127,6 +133,7 @@ func (Redirection) expr()         {}
 func (Var) expr()                 {}
 func (Concatination) expr()       {}
 func (CommandSubstitution) expr() {}
+func (ProcessSubstitution) expr() {}
 
 // Statements
 func (Command) stmt()            {}
