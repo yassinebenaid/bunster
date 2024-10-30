@@ -234,6 +234,49 @@ var substitutionTests = []testCase{
 			},
 		},
 	}},
+	{`<(cmd; cmd) arg | <(cmd; cmd)&& <(cmd; cmd)`, ast.Script{
+		Statements: []ast.Statement{
+			ast.BinaryConstruction{
+				Left: ast.Pipeline{
+					{
+						Command: ast.Command{
+							Name: ast.ProcessSubstitution{
+								Body: []ast.Statement{
+									ast.Command{Name: ast.Word("cmd")},
+									ast.Command{Name: ast.Word("cmd")},
+								},
+								Direction: '<',
+							},
+							Args: []ast.Expression{
+								ast.Word("arg"),
+							},
+						},
+					},
+					{
+						Command: ast.Command{
+							Name: ast.ProcessSubstitution{
+								Body: []ast.Statement{
+									ast.Command{Name: ast.Word("cmd")},
+									ast.Command{Name: ast.Word("cmd")},
+								},
+								Direction: '<',
+							},
+						},
+					},
+				},
+				Operator: "&&",
+				Right: ast.Command{
+					Name: ast.ProcessSubstitution{
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Direction: '<',
+					},
+				},
+			},
+		},
+	}},
 }
 
 var substitutionErrorHandlingCases = []errorHandlingTestCase{
