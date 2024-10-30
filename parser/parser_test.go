@@ -360,6 +360,7 @@ var errorHandlingTestCases = []struct {
 	cases []errorHandlingTestCase
 }{
 	{"Simple Commands", []errorHandlingTestCase{
+		{`)`, "syntax error: `)` has a special meaning here and cannot be used as a command name."},
 		{`|`, "syntax error: `|` has a special meaning here and cannot be used as a command name."},
 		{`>`, "syntax error: `>` has a special meaning here and cannot be used as a command name."},
 		{`>>`, "syntax error: `>>` has a special meaning here and cannot be used as a command name."},
