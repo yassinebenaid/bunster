@@ -165,6 +165,19 @@ var substitutionTests = []testCase{
 			},
 		},
 	}},
+	{`<( cmd; cmd; )`, ast.Script{
+		Statements: []ast.Statement{
+			ast.Command{
+				Name: ast.ProcessSubstitution{
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Name: ast.Word("cmd")},
+					},
+					Direction: '<',
+				},
+			},
+		},
+	}},
 }
 
 var substitutionErrorHandlingCases = []errorHandlingTestCase{
