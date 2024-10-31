@@ -79,7 +79,21 @@ func (p *Parser) parseProcessSubstitution() ast.Expression {
 func (p *Parser) parseParameterExpansion() ast.Expression {
 	var exp ast.Expression
 	p.proceed()
-	exp = ast.Var(p.curr.Literal)
+
+	param := p.curr.Literal
+	p.proceed()
+
+	switch p.curr.Type {
+	case token.RIGHT_BRACE:
+		exp = ast.Var(param)
+	case token.MINUS:
+		p.proceed()
+		exp = ast.VarOrDefault{
+			Name:    param,
+			Default: p.parseExpression(),
+		}
+	}
+
 	p.proceed()
 	return exp
 }

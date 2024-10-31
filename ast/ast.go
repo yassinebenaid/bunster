@@ -111,6 +111,12 @@ type ProcessSubstitution struct {
 	Body      []Statement
 }
 
+type VarOrDefault struct {
+	Name         string
+	Default      Expression
+	CheckForNull bool
+}
+
 func (Word) node()                {}
 func (Redirection) node()         {}
 func (Var) node()                 {}
@@ -126,6 +132,7 @@ func (Group) node()               {}
 func (SubShell) node()            {}
 func (CommandSubstitution) node() {}
 func (ProcessSubstitution) node() {}
+func (VarOrDefault) node()        {}
 
 // Expressions
 func (Word) expr()                {}
@@ -134,6 +141,7 @@ func (Var) expr()                 {}
 func (Concatination) expr()       {}
 func (CommandSubstitution) expr() {}
 func (ProcessSubstitution) expr() {}
+func (VarOrDefault) expr()        {}
 
 // Statements
 func (Command) stmt()            {}
