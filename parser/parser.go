@@ -196,6 +196,8 @@ loop:
 			exprs = append(exprs, p.parseCommandSubstitution())
 		case token.GT_PAREN, token.LT_PAREN:
 			exprs = append(exprs, p.parseProcessSubstitution())
+		case token.DOLLAR_BRACE:
+			exprs = append(exprs, p.parseParameterExpansion())
 		case token.INT:
 			if len(exprs) == 0 && p.isRedirectionToken() {
 				break loop

@@ -75,3 +75,11 @@ func (p *Parser) parseProcessSubstitution() ast.Expression {
 
 	return process
 }
+
+func (p *Parser) parseParameterExpansion() ast.Expression {
+	var exp ast.Expression
+	p.proceed()
+	exp = ast.Var(p.curr.Literal)
+	p.proceed()
+	return exp
+}
