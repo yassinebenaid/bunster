@@ -23,6 +23,8 @@ type Parser struct {
 	curr  token.Token
 	next  token.Token
 	Error error
+
+	stopOnRightBrace bool
 }
 
 func (p *Parser) error(msg string, args ...any) {
@@ -198,6 +200,12 @@ loop:
 			exprs = append(exprs, p.parseProcessSubstitution())
 		case token.DOLLAR_BRACE:
 			exprs = append(exprs, p.parseParameterExpansion())
+		case token.RIGHT_BRACE:
+			if p.stopOnRightBrace {
+				p.stopOnRightBrace = false
+				break loop
+			}
+			exprs = append(exprs, ast.Word(p.curr.Literal))
 		case token.INT:
 			if len(exprs) == 0 && p.isRedirectionToken() {
 				break loop

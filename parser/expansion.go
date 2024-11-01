@@ -88,6 +88,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 		exp = ast.Var(param)
 	case token.MINUS:
 		p.proceed()
+		p.stopOnRightBrace = true
 		exp = ast.VarOrDefault{
 			Name:    param,
 			Default: p.parseExpression(),
