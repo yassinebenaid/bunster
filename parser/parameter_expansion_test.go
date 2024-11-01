@@ -12,7 +12,7 @@ var parameterExpansionCases = []testCase{
 			},
 		},
 	}}},
-	{`cmd ${var-default} ${var-$default} ${var:-default} ${var:-$default}`, ast.Script{Statements: []ast.Statement{
+	{`cmd ${var-default} ${var-${default}} ${var:-default} ${var:-${default}} `, ast.Script{Statements: []ast.Statement{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
