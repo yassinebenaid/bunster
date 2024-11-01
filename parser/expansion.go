@@ -95,6 +95,9 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 		}
 	}
 
-	p.proceed()
+	if p.curr.Type != token.RIGHT_BRACE {
+		panic("Not }")
+	}
+
 	return exp
 }

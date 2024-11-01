@@ -3,13 +3,22 @@ package parser_test
 import "github.com/yassinebenaid/bunny/ast"
 
 var parameterExpansionCases = []testCase{
-	{`${var}`, ast.Script{Statements: []ast.Statement{
-		ast.Command{Name: ast.Var("var")},
+	{`cmd ${var} ${var} `, ast.Script{Statements: []ast.Statement{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.Var("var"),
+				ast.Var("var"),
+			},
+		},
 	}}},
-	{`${var-default}`, ast.Script{Statements: []ast.Statement{
-		ast.Command{Name: ast.VarOrDefault{
-			Name:    "var",
-			Default: ast.Word("default"),
-		}},
+	{`cmd ${var-default} ${var-$default}`, ast.Script{Statements: []ast.Statement{
+		ast.Command{
+			Name: ast.Word("default"),
+			Args: []ast.Expression{
+				ast.VarOrDefault{Name: "var", Default: ast.Var("default")},
+				ast.VarOrDefault{Name: "var", Default: ast.Var("default")},
+			},
+		},
 	}}},
 }
