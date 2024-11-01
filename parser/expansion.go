@@ -86,17 +86,19 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 	switch p.curr.Type {
 	case token.RIGHT_BRACE:
 		exp = ast.Var(param)
-	case token.MINUS:
+	case token.MINUS, token.COLON_MINUS:
+		checkForNull := p.curr.Type == token.COLON_MINUS
 		p.proceed()
 		p.stopOnRightBrace = true
 		exp = ast.VarOrDefault{
-			Name:    param,
-			Default: p.parseExpression(),
+			Name:         param,
+			Default:      p.parseExpression(),
+			CheckForNull: checkForNull,
 		}
 	}
 
 	if p.curr.Type != token.RIGHT_BRACE {
-		panic("Not }")
+		panic("Not }, it is: " + p.curr.Literal)
 	}
 
 	return exp
