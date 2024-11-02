@@ -106,6 +106,12 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 			Name:  param,
 			Error: p.parseExpansionOperandExpression(),
 		}
+	case token.COLON_PLUS:
+		p.proceed()
+		exp = ast.CheckAndUse{
+			Name:  param,
+			Value: p.parseExpansionOperandExpression(),
+		}
 	}
 
 	if p.curr.Type != token.RIGHT_BRACE {

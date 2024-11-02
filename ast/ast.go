@@ -127,6 +127,11 @@ type VarOrFail struct {
 	Error Expression
 }
 
+type CheckAndUse struct {
+	Name  string
+	Value Expression
+}
+
 func (Word) node()                {}
 func (Redirection) node()         {}
 func (Var) node()                 {}
@@ -145,6 +150,7 @@ func (ProcessSubstitution) node() {}
 func (VarOrDefault) node()        {}
 func (VarOrSet) node()            {}
 func (VarOrFail) node()           {}
+func (CheckAndUse) node()         {}
 
 // Expressions
 func (Word) expr()                {}
@@ -156,6 +162,7 @@ func (ProcessSubstitution) expr() {}
 func (VarOrDefault) expr()        {}
 func (VarOrSet) expr()            {}
 func (VarOrFail) expr()           {}
+func (CheckAndUse) expr()         {}
 
 // Statements
 func (Command) stmt()            {}
