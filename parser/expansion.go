@@ -95,6 +95,12 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 			Default:      p.parseExpansionOperandExpression(),
 			CheckForNull: checkForNull,
 		}
+	case token.COLON_ASSIGN:
+		p.proceed()
+		exp = ast.VarOrSet{
+			Name:    param,
+			Default: p.parseExpansionOperandExpression(),
+		}
 	}
 
 	if p.curr.Type != token.RIGHT_BRACE {

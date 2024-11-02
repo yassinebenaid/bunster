@@ -117,6 +117,11 @@ type VarOrDefault struct {
 	CheckForNull bool
 }
 
+type VarOrSet struct {
+	Name    string
+	Default Expression
+}
+
 func (Word) node()                {}
 func (Redirection) node()         {}
 func (Var) node()                 {}
@@ -133,6 +138,7 @@ func (SubShell) node()            {}
 func (CommandSubstitution) node() {}
 func (ProcessSubstitution) node() {}
 func (VarOrDefault) node()        {}
+func (VarOrSet) node()            {}
 
 // Expressions
 func (Word) expr()                {}
@@ -142,6 +148,7 @@ func (Concatination) expr()       {}
 func (CommandSubstitution) expr() {}
 func (ProcessSubstitution) expr() {}
 func (VarOrDefault) expr()        {}
+func (VarOrSet) expr()            {}
 
 // Statements
 func (Command) stmt()            {}

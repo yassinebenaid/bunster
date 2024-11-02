@@ -12,7 +12,7 @@ var parameterExpansionCases = []testCase{
 			},
 		},
 	}}},
-	{`cmd ${var-default} ${var-${default}} ${var- $foo bar baz | & ; 2> < }`, ast.Script{Statements: []ast.Statement{
+	{`cmd ${var-default} ${var-${default}} ${var- $foo bar "baz" | & ; 2> < }`, ast.Script{Statements: []ast.Statement{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -31,7 +31,7 @@ var parameterExpansionCases = []testCase{
 			},
 		},
 	}}},
-	{`cmd ${var:-default} ${var:-${default}} ${var:- $foo bar baz | & ; 2> < }`, ast.Script{Statements: []ast.Statement{
+	{`cmd ${var:-default} ${var:-${default}} ${var:- $foo bar "baz" | & ; 2> < }`, ast.Script{Statements: []ast.Statement{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -47,6 +47,25 @@ var parameterExpansionCases = []testCase{
 						},
 					},
 					CheckForNull: true,
+				},
+			},
+		},
+	}}},
+	{`cmd ${var:=default} ${var:=${default}} ${var:= $foo bar "baz" | & ; 2> < }`, ast.Script{Statements: []ast.Statement{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.VarOrSet{Name: "var", Default: ast.Word("default")},
+				ast.VarOrSet{Name: "var", Default: ast.Var("default")},
+				ast.VarOrSet{
+					Name: "var",
+					Default: ast.Concatination{
+						Nodes: []ast.Expression{
+							ast.Word(" "),
+							ast.Var("foo"),
+							ast.Word(" bar baz | & ; 2> < "),
+						},
+					},
 				},
 			},
 		},
