@@ -110,7 +110,7 @@ func (p *Parser) parseExpansionOperandExpression() ast.Expression {
 loop:
 	for {
 		switch p.curr.Type {
-		case token.EOF:
+		case token.RIGHT_BRACE, token.EOF:
 			break loop
 		case token.SIMPLE_EXPANSION:
 			exprs = append(exprs, ast.Var(p.curr.Literal))
@@ -124,12 +124,6 @@ loop:
 			exprs = append(exprs, p.parseProcessSubstitution())
 		case token.DOLLAR_BRACE:
 			exprs = append(exprs, p.parseParameterExpansion())
-		case token.RIGHT_BRACE:
-			if p.stopOnRightBrace {
-				p.stopOnRightBrace = false
-				break loop
-			}
-			exprs = append(exprs, ast.Word(p.curr.Literal))
 		default:
 			exprs = append(exprs, ast.Word(p.curr.Literal))
 		}
