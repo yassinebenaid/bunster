@@ -122,6 +122,11 @@ type VarOrSet struct {
 	Default Expression
 }
 
+type VarOrFail struct {
+	Name  string
+	Error Expression
+}
+
 func (Word) node()                {}
 func (Redirection) node()         {}
 func (Var) node()                 {}
@@ -139,6 +144,7 @@ func (CommandSubstitution) node() {}
 func (ProcessSubstitution) node() {}
 func (VarOrDefault) node()        {}
 func (VarOrSet) node()            {}
+func (VarOrFail) node()           {}
 
 // Expressions
 func (Word) expr()                {}
@@ -149,6 +155,7 @@ func (CommandSubstitution) expr() {}
 func (ProcessSubstitution) expr() {}
 func (VarOrDefault) expr()        {}
 func (VarOrSet) expr()            {}
+func (VarOrFail) expr()           {}
 
 // Statements
 func (Command) stmt()            {}

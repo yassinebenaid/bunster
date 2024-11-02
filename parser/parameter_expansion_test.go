@@ -70,4 +70,23 @@ var parameterExpansionCases = []testCase{
 			},
 		},
 	}}},
+	{`cmd ${var:?error} ${var:?${error}} ${var:? $foo bar "baz" | & ; 2> < }`, ast.Script{Statements: []ast.Statement{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.VarOrFail{Name: "var", Error: ast.Word("error")},
+				ast.VarOrFail{Name: "var", Error: ast.Var("error")},
+				ast.VarOrFail{
+					Name: "var",
+					Error: ast.Concatination{
+						Nodes: []ast.Expression{
+							ast.Word(" "),
+							ast.Var("foo"),
+							ast.Word(" bar baz | & ; 2> < "),
+						},
+					},
+				},
+			},
+		},
+	}}},
 }
