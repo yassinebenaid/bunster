@@ -89,7 +89,6 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 	case token.MINUS, token.COLON_MINUS:
 		checkForNull := p.curr.Type == token.COLON_MINUS
 		p.proceed()
-		p.stopOnRightBrace = true
 		exp = ast.VarOrDefault{
 			Name:         param,
 			Default:      p.parseExpansionOperandExpression(),
