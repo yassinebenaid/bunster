@@ -92,7 +92,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 		p.stopOnRightBrace = true
 		exp = ast.VarOrDefault{
 			Name:         param,
-			Default:      p.parseExpression(),
+			Default:      p.parseExpansionOperandExpression(),
 			CheckForNull: checkForNull,
 		}
 	}
@@ -102,4 +102,40 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 	}
 
 	return exp
+}
+
+func (p *Parser) parseExpansionOperandExpression() ast.Expression {
+	var exprs []ast.Expression
+
+loop:
+	for {
+		switch p.curr.Type {
+		case token.EOF:
+			break loop
+		case token.SIMPLE_EXPANSION:
+			exprs = append(exprs, ast.Var(p.curr.Literal))
+		case token.SINGLE_QUOTE:
+			exprs = append(exprs, p.parseLiteralString())
+		case token.DOUBLE_QUOTE:
+			exprs = append(exprs, p.parseString())
+		case token.DOLLAR_PAREN:
+			exprs = append(exprs, p.parseCommandSubstitution())
+		case token.GT_PAREN, token.LT_PAREN:
+			exprs = append(exprs, p.parseProcessSubstitution())
+		case token.DOLLAR_BRACE:
+			exprs = append(exprs, p.parseParameterExpansion())
+		case token.RIGHT_BRACE:
+			if p.stopOnRightBrace {
+				p.stopOnRightBrace = false
+				break loop
+			}
+			exprs = append(exprs, ast.Word(p.curr.Literal))
+		default:
+			exprs = append(exprs, ast.Word(p.curr.Literal))
+		}
+
+		p.proceed()
+	}
+
+	return concat(exprs)
 }
