@@ -132,6 +132,12 @@ type CheckAndUse struct {
 	Value Expression
 }
 
+type ChangeCase struct {
+	Name     string
+	Operator string
+	Pattern  Expression
+}
+
 func (Word) node()                {}
 func (Redirection) node()         {}
 func (Var) node()                 {}
@@ -151,6 +157,7 @@ func (VarOrDefault) node()        {}
 func (VarOrSet) node()            {}
 func (VarOrFail) node()           {}
 func (CheckAndUse) node()         {}
+func (ChangeCase) node()          {}
 
 // Expressions
 func (Word) expr()                {}
@@ -163,6 +170,7 @@ func (VarOrDefault) expr()        {}
 func (VarOrSet) expr()            {}
 func (VarOrFail) expr()           {}
 func (CheckAndUse) expr()         {}
+func (ChangeCase) expr()          {}
 
 // Statements
 func (Command) stmt()            {}

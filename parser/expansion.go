@@ -112,6 +112,14 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 			Name:  param,
 			Value: p.parseExpansionOperandExpression(),
 		}
+	case token.CIRCUMFLEX:
+		operator := p.curr.Literal
+		p.proceed()
+		exp = ast.ChangeCase{
+			Name:     param,
+			Operator: operator,
+			Pattern:  p.parseExpansionOperandExpression(),
+		}
 	}
 
 	if p.curr.Type != token.RIGHT_BRACE {
