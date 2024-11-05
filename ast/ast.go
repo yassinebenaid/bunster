@@ -140,7 +140,7 @@ type ChangeCase struct {
 
 type VarCount string
 
-type RemoveMatch struct {
+type MatchAndRemove struct {
 	Name     string
 	Operator string
 	Pattern  Expression
@@ -167,7 +167,7 @@ func (VarOrFail) node()           {}
 func (CheckAndUse) node()         {}
 func (ChangeCase) node()          {}
 func (VarCount) node()            {}
-func (RemoveMatch) node()         {}
+func (MatchAndRemove) node()      {}
 
 // Expressions
 func (Word) expr()                {}
@@ -182,7 +182,7 @@ func (VarOrFail) expr()           {}
 func (CheckAndUse) expr()         {}
 func (ChangeCase) expr()          {}
 func (VarCount) expr()            {}
-func (RemoveMatch) expr()         {}
+func (MatchAndRemove) expr()      {}
 
 // Statements
 func (Command) stmt()            {}

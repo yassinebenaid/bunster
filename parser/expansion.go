@@ -133,7 +133,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 				p.proceed()
 			}
 
-			exp = ast.RemoveMatch{
+			exp = ast.MatchAndRemove{
 				Name:     param,
 				Operator: operator,
 				Pattern:  p.parseExpansionOperandExpression(),
