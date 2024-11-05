@@ -99,7 +99,6 @@ const (
 	COLON_MINUS          // `:-`
 	COLON_PLUS           // `:+`
 	COLON_QUESTION       // `:?`
-	DOUBLE_SLASH         // `//`
 	DOUBLE_DOT           // `..`
 	INCREMENT            // `++`
 	DECREMENT            // `--`

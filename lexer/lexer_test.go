@@ -109,7 +109,6 @@ func TestLexer(t *testing.T) {
 		{`:-`, []token.Token{{Type: token.COLON_MINUS, Literal: `:-`}}},
 		{`:+`, []token.Token{{Type: token.COLON_PLUS, Literal: `:+`}}},
 		{`:?`, []token.Token{{Type: token.COLON_QUESTION, Literal: `:?`}}},
-		{`//`, []token.Token{{Type: token.DOUBLE_SLASH, Literal: `//`}}},
 		{`..`, []token.Token{{Type: token.DOUBLE_DOT, Literal: `..`}}},
 		{`++`, []token.Token{{Type: token.INCREMENT, Literal: `++`}}},
 		{`--`, []token.Token{{Type: token.DECREMENT, Literal: `--`}}},
