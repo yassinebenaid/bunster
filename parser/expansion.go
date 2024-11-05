@@ -125,7 +125,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 				Operator: operator,
 				Pattern:  p.parseExpansionOperandExpression(),
 			}
-		case token.HASH:
+		case token.HASH, token.PERCENT:
 			operator := p.curr.Literal
 			p.proceed()
 			if p.curr.Type == token.HASH {
