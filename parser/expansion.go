@@ -112,7 +112,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 			Name:  param,
 			Value: p.parseExpansionOperandExpression(),
 		}
-	case token.CIRCUMFLEX, token.DOUBLE_CIRCUMFLEX:
+	case token.CIRCUMFLEX, token.DOUBLE_CIRCUMFLEX, token.COMMA:
 		operator := p.curr.Literal
 		p.proceed()
 		exp = ast.ChangeCase{
