@@ -147,9 +147,12 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 				Operator: operator,
 				Pattern:  p.parseExpansionOperandExpression(token.SLASH),
 			}
-			p.proceed()
 
-			mar.Value = p.parseExpansionOperandExpression(0)
+			if p.curr.Type == token.SLASH {
+				p.proceed()
+				mar.Value = p.parseExpansionOperandExpression(0)
+			}
+
 			exp = mar
 		}
 	}
