@@ -166,9 +166,6 @@ switch_beginning:
 		}
 	case l.curr == '/':
 		switch l.next {
-		case '/':
-			l.proceed()
-			tok.Type, tok.Literal = token.DOUBLE_SLASH, "//"
 		case '=':
 			l.proceed()
 			tok.Type, tok.Literal = token.SLASH_ASSIGN, "/="

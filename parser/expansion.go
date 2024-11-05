@@ -138,9 +138,13 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 				Operator: operator,
 				Pattern:  p.parseExpansionOperandExpression(0),
 			}
-		case token.SLASH, token.DOUBLE_SLASH:
+		case token.SLASH:
 			operator := p.curr.Literal
 			p.proceed()
+			if p.curr.Type == token.SLASH || p.curr.Type == token.HASH {
+				operator += p.curr.Literal
+				p.proceed()
+			}
 
 			mar := ast.MatchAndReplace{
 				Name:     param,
