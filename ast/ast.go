@@ -138,6 +138,8 @@ type ChangeCase struct {
 	Pattern  Expression
 }
 
+type VarCount string
+
 func (Word) node()                {}
 func (Redirection) node()         {}
 func (Var) node()                 {}
@@ -158,6 +160,7 @@ func (VarOrSet) node()            {}
 func (VarOrFail) node()           {}
 func (CheckAndUse) node()         {}
 func (ChangeCase) node()          {}
+func (VarCount) node()            {}
 
 // Expressions
 func (Word) expr()                {}
@@ -171,6 +174,7 @@ func (VarOrSet) expr()            {}
 func (VarOrFail) expr()           {}
 func (CheckAndUse) expr()         {}
 func (ChangeCase) expr()          {}
+func (VarCount) expr()            {}
 
 // Statements
 func (Command) stmt()            {}

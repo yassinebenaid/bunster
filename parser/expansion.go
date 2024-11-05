@@ -80,45 +80,51 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 	var exp ast.Expression
 	p.proceed()
 
-	param := p.curr.Literal
-	p.proceed()
+	if p.curr.Type == token.HASH {
+		p.proceed()
+		exp = ast.VarCount(p.curr.Literal)
+		p.proceed()
+	} else {
+		param := p.curr.Literal
+		p.proceed()
 
-	switch p.curr.Type {
-	case token.RIGHT_BRACE:
-		exp = ast.Var(param)
-	case token.MINUS, token.COLON_MINUS:
-		checkForNull := p.curr.Type == token.COLON_MINUS
-		p.proceed()
-		exp = ast.VarOrDefault{
-			Name:         param,
-			Default:      p.parseExpansionOperandExpression(),
-			CheckForNull: checkForNull,
-		}
-	case token.COLON_ASSIGN:
-		p.proceed()
-		exp = ast.VarOrSet{
-			Name:    param,
-			Default: p.parseExpansionOperandExpression(),
-		}
-	case token.COLON_QUESTION:
-		p.proceed()
-		exp = ast.VarOrFail{
-			Name:  param,
-			Error: p.parseExpansionOperandExpression(),
-		}
-	case token.COLON_PLUS:
-		p.proceed()
-		exp = ast.CheckAndUse{
-			Name:  param,
-			Value: p.parseExpansionOperandExpression(),
-		}
-	case token.CIRCUMFLEX, token.DOUBLE_CIRCUMFLEX, token.COMMA, token.DOUBLE_COMMA:
-		operator := p.curr.Literal
-		p.proceed()
-		exp = ast.ChangeCase{
-			Name:     param,
-			Operator: operator,
-			Pattern:  p.parseExpansionOperandExpression(),
+		switch p.curr.Type {
+		case token.RIGHT_BRACE:
+			exp = ast.Var(param)
+		case token.MINUS, token.COLON_MINUS:
+			checkForNull := p.curr.Type == token.COLON_MINUS
+			p.proceed()
+			exp = ast.VarOrDefault{
+				Name:         param,
+				Default:      p.parseExpansionOperandExpression(),
+				CheckForNull: checkForNull,
+			}
+		case token.COLON_ASSIGN:
+			p.proceed()
+			exp = ast.VarOrSet{
+				Name:    param,
+				Default: p.parseExpansionOperandExpression(),
+			}
+		case token.COLON_QUESTION:
+			p.proceed()
+			exp = ast.VarOrFail{
+				Name:  param,
+				Error: p.parseExpansionOperandExpression(),
+			}
+		case token.COLON_PLUS:
+			p.proceed()
+			exp = ast.CheckAndUse{
+				Name:  param,
+				Value: p.parseExpansionOperandExpression(),
+			}
+		case token.CIRCUMFLEX, token.DOUBLE_CIRCUMFLEX, token.COMMA, token.DOUBLE_COMMA:
+			operator := p.curr.Literal
+			p.proceed()
+			exp = ast.ChangeCase{
+				Name:     param,
+				Operator: operator,
+				Pattern:  p.parseExpansionOperandExpression(),
+			}
 		}
 	}
 
