@@ -96,26 +96,26 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 			p.proceed()
 			exp = ast.VarOrDefault{
 				Name:         param,
-				Default:      p.parseExpansionOperandExpression(),
+				Default:      p.parseExpansionOperandExpression(0),
 				CheckForNull: checkForNull,
 			}
 		case token.COLON_ASSIGN:
 			p.proceed()
 			exp = ast.VarOrSet{
 				Name:    param,
-				Default: p.parseExpansionOperandExpression(),
+				Default: p.parseExpansionOperandExpression(0),
 			}
 		case token.COLON_QUESTION:
 			p.proceed()
 			exp = ast.VarOrFail{
 				Name:  param,
-				Error: p.parseExpansionOperandExpression(),
+				Error: p.parseExpansionOperandExpression(0),
 			}
 		case token.COLON_PLUS:
 			p.proceed()
 			exp = ast.CheckAndUse{
 				Name:  param,
-				Value: p.parseExpansionOperandExpression(),
+				Value: p.parseExpansionOperandExpression(0),
 			}
 		case token.CIRCUMFLEX, token.DOUBLE_CIRCUMFLEX, token.COMMA, token.DOUBLE_COMMA:
 			operator := p.curr.Literal
@@ -123,7 +123,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 			exp = ast.ChangeCase{
 				Name:     param,
 				Operator: operator,
-				Pattern:  p.parseExpansionOperandExpression(),
+				Pattern:  p.parseExpansionOperandExpression(0),
 			}
 		case token.HASH, token.PERCENT, token.DOUBLE_PERCENT:
 			operator := p.curr.Literal
@@ -136,8 +136,21 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 			exp = ast.MatchAndRemove{
 				Name:     param,
 				Operator: operator,
-				Pattern:  p.parseExpansionOperandExpression(),
+				Pattern:  p.parseExpansionOperandExpression(0),
 			}
+		case token.SLASH:
+			operator := p.curr.Literal
+			p.proceed()
+
+			mar := ast.MatchAndReplace{
+				Name:     param,
+				Operator: operator,
+				Pattern:  p.parseExpansionOperandExpression(token.SLASH),
+			}
+			p.proceed()
+
+			mar.Value = p.parseExpansionOperandExpression(0)
+			exp = mar
 		}
 	}
 
@@ -148,7 +161,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 	return exp
 }
 
-func (p *Parser) parseExpansionOperandExpression() ast.Expression {
+func (p *Parser) parseExpansionOperandExpression(stopAt token.TokenType) ast.Expression {
 	var exprs []ast.Expression
 
 loop:
@@ -169,6 +182,10 @@ loop:
 		case token.DOLLAR_BRACE:
 			exprs = append(exprs, p.parseParameterExpansion())
 		default:
+			if p.curr.Type == stopAt {
+				break loop
+			}
+
 			exprs = append(exprs, ast.Word(p.curr.Literal))
 		}
 

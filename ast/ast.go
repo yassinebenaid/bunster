@@ -146,6 +146,13 @@ type MatchAndRemove struct {
 	Pattern  Expression
 }
 
+type MatchAndReplace struct {
+	Name     string
+	Operator string
+	Pattern  Expression
+	Value    Expression
+}
+
 func (Word) node()                {}
 func (Redirection) node()         {}
 func (Var) node()                 {}
@@ -168,6 +175,7 @@ func (CheckAndUse) node()         {}
 func (ChangeCase) node()          {}
 func (VarCount) node()            {}
 func (MatchAndRemove) node()      {}
+func (MatchAndReplace) node()     {}
 
 // Expressions
 func (Word) expr()                {}
@@ -183,6 +191,7 @@ func (CheckAndUse) expr()         {}
 func (ChangeCase) expr()          {}
 func (VarCount) expr()            {}
 func (MatchAndRemove) expr()      {}
+func (MatchAndReplace) expr()     {}
 
 // Statements
 func (Command) stmt()            {}

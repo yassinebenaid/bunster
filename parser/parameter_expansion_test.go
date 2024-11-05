@@ -290,4 +290,41 @@ var parameterExpansionCases = []testCase{
 			},
 		},
 	}}},
+	{`cmd ${var/pattern/value} ${var/${pattern}/${value}} ${var/ $foo bar "baz" | & ; 2> < # / $foo bar "baz" | & ; 2> < #////}`, ast.Script{Statements: []ast.Statement{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.MatchAndReplace{
+					Name:     "var",
+					Operator: "/",
+					Pattern:  ast.Word("pattern"),
+					Value:    ast.Word("value"),
+				},
+				ast.MatchAndReplace{
+					Name:     "var",
+					Operator: "/",
+					Pattern:  ast.Var("pattern"),
+					Value:    ast.Var("value"),
+				},
+				ast.MatchAndReplace{
+					Name:     "var",
+					Operator: "/",
+					Pattern: ast.Concatination{
+						Nodes: []ast.Expression{
+							ast.Word(" "),
+							ast.Var("foo"),
+							ast.Word(" bar baz | & ; 2> < # "),
+						},
+					},
+					Value: ast.Concatination{
+						Nodes: []ast.Expression{
+							ast.Word(" "),
+							ast.Var("foo"),
+							ast.Word(" bar baz | & ; 2> < #////"),
+						},
+					},
+				},
+			},
+		},
+	}}},
 }
