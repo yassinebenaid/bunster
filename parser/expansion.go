@@ -138,7 +138,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 				Operator: operator,
 				Pattern:  p.parseExpansionOperandExpression(0),
 			}
-		case token.SLASH:
+		case token.SLASH, token.DOUBLE_SLASH:
 			operator := p.curr.Literal
 			p.proceed()
 
