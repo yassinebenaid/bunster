@@ -227,4 +227,25 @@ var parameterExpansionCases = []testCase{
 			},
 		},
 	}}},
+	{`cmd ${var##pattern} ${var##${pattern}} ${var## $foo bar "baz" | & ; 2> < # } ${var##}`, ast.Script{Statements: []ast.Statement{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.RemoveMatch{Name: "var", Operator: "##", Pattern: ast.Word("pattern")},
+				ast.RemoveMatch{Name: "var", Operator: "##", Pattern: ast.Var("pattern")},
+				ast.RemoveMatch{
+					Name:     "var",
+					Operator: "##",
+					Pattern: ast.Concatination{
+						Nodes: []ast.Expression{
+							ast.Word(" "),
+							ast.Var("foo"),
+							ast.Word(" bar baz | & ; 2> < # "),
+						},
+					},
+				},
+				ast.RemoveMatch{Name: "var", Operator: "##"},
+			},
+		},
+	}}},
 }
