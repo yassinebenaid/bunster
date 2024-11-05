@@ -125,6 +125,14 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 				Operator: operator,
 				Pattern:  p.parseExpansionOperandExpression(),
 			}
+		case token.HASH:
+			operator := p.curr.Literal
+			p.proceed()
+			exp = ast.RemoveMatch{
+				Name:     param,
+				Operator: operator,
+				Pattern:  p.parseExpansionOperandExpression(),
+			}
 		}
 	}
 
