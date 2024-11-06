@@ -282,9 +282,9 @@ switch_beginning:
 				tok.Type, tok.Literal = token.DOLLAR_PAREN, "$("
 			}
 		default:
-			if isLetter(l.next) || l.next == '_' {
+			if isLetter(l.next) {
 				tok.Type = token.SIMPLE_EXPANSION
-				for isLetter(l.next) || l.next == '_' || (l.next <= '9' && l.next >= '0') {
+				for isLetter(l.next) || (l.next <= '9' && l.next >= '0') {
 					l.proceed()
 					tok.Literal += string(l.curr)
 				}
@@ -354,7 +354,7 @@ switch_beginning:
 }
 
 func isLetter(b byte) bool {
-	return (b >= 'A' && b <= 'Z') || (b >= 'a' && b <= 'z')
+	return (b >= 'A' && b <= 'Z') || (b >= 'a' && b <= 'z') || b == '_'
 }
 
 func (l *Lexer) proceed() {

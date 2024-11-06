@@ -115,7 +115,7 @@ func TestLexer(t *testing.T) {
 		{`~`, []token.Token{{Type: token.TILDE, Literal: `~`}}},
 
 		// identifiers
-		{`foo bar foo-bar`, []token.Token{
+		{`foo bar foo-bar foo_bar`, []token.Token{
 			{Type: token.WORD, Literal: `foo`},
 			{Type: token.BLANK, Literal: ` `},
 			{Type: token.WORD, Literal: `bar`},
@@ -123,6 +123,8 @@ func TestLexer(t *testing.T) {
 			{Type: token.WORD, Literal: `foo`},
 			{Type: token.MINUS, Literal: `-`},
 			{Type: token.WORD, Literal: `bar`},
+			{Type: token.BLANK, Literal: ` `},
+			{Type: token.WORD, Literal: `foo_bar`},
 		}},
 
 		// Special Variables

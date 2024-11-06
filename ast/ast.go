@@ -34,6 +34,7 @@ type PipelineCommand struct {
 type Pipeline []PipelineCommand
 
 type Word string
+type Number string
 
 type Redirection struct {
 	Src    string
@@ -156,6 +157,7 @@ type Arithmetic struct {
 }
 
 func (Word) node()                {}
+func (Number) node()              {}
 func (Redirection) node()         {}
 func (Var) node()                 {}
 func (Concatination) node()       {}
@@ -182,6 +184,7 @@ func (Arithmetic) node()          {}
 
 // Expressions
 func (Word) expr()                {}
+func (Number) expr()              {}
 func (Redirection) expr()         {}
 func (Var) expr()                 {}
 func (Concatination) expr()       {}
