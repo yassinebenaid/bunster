@@ -23,15 +23,19 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
-	{`cmd $((1+2)))`, ast.Script{
+	{`cmd $((1+2-3)))`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					Expr: ast.InfixArithmetic{
-						Left:     ast.Number("1"),
-						Operator: "+",
-						Right:    ast.Number("2"),
+						Left: ast.InfixArithmetic{
+							Left:     ast.Number("1"),
+							Operator: "+",
+							Right:    ast.Number("2"),
+						},
+						Operator: "-",
+						Right:    ast.Number("3"),
 					},
 				},
 			},

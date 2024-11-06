@@ -14,7 +14,8 @@ const (
 )
 
 var precedences = map[token.TokenType]precedence{
-	token.PLUS: ADDITION,
+	token.PLUS:  ADDITION,
+	token.MINUS: ADDITION,
 }
 
 func (p *Parser) parseArithmetics() ast.Expression {
@@ -39,7 +40,7 @@ func (p *Parser) parseArithmetics() ast.Expression {
 func (p *Parser) parseArithmeticExpresion(prec precedence) ast.Expression {
 	exp := p.parsePrefix()
 
-	if prec < precedences[p.curr.Type] {
+	for prec < precedences[p.curr.Type] {
 		exp = p.parseInfix(exp)
 	}
 
@@ -77,7 +78,7 @@ func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
 	}
 
 	switch p.curr.Type {
-	case token.PLUS:
+	case token.PLUS, token.MINUS:
 		p.proceed()
 		inf.Right = p.parseArithmeticExpresion(ADDITION)
 	}
