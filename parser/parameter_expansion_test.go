@@ -507,3 +507,5 @@ var parameterExpansionCases = []testCase{
 		},
 	}}},
 }
+
+//TODO: test error handling

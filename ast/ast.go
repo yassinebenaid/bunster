@@ -153,6 +153,10 @@ type MatchAndReplace struct {
 	Value    Expression
 }
 
+type Arithmetic struct {
+	Expr Expression
+}
+
 func (Word) node()                {}
 func (Redirection) node()         {}
 func (Var) node()                 {}
@@ -176,6 +180,7 @@ func (ChangeCase) node()          {}
 func (VarCount) node()            {}
 func (MatchAndRemove) node()      {}
 func (MatchAndReplace) node()     {}
+func (Arithmetic) node()          {}
 
 // Expressions
 func (Word) expr()                {}
@@ -192,6 +197,7 @@ func (ChangeCase) expr()          {}
 func (VarCount) expr()            {}
 func (MatchAndRemove) expr()      {}
 func (MatchAndReplace) expr()     {}
+func (Arithmetic) expr()          {}
 
 // Statements
 func (Command) stmt()            {}
