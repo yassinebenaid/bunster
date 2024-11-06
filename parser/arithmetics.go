@@ -38,7 +38,15 @@ func (p *Parser) parseArithmetics() ast.Expression {
 }
 
 func (p *Parser) parseArithmeticExpresion(prec precedence) ast.Expression {
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
 	exp := p.parsePrefix()
+
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
 
 	for prec < precedences[p.curr.Type] {
 		exp = p.parseInfix(exp)
