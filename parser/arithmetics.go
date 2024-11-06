@@ -40,6 +40,14 @@ func (p *Parser) parsePrefix() ast.Expression {
 		exp := ast.Var(p.curr.Literal)
 		p.proceed()
 		return exp
+	case token.DOLLAR_DOUBLE_PAREN:
+		exp := p.parseArithmetics()
+		p.proceed()
+		return exp
+	case token.DOLLAR_BRACE:
+		exp := p.parseParameterExpansion()
+		p.proceed()
+		return exp
 	default:
 		return nil
 	}

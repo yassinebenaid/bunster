@@ -12,4 +12,15 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
+	{`cmd $(( $((123)) )) $(( ${var} ))`, ast.Script{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.Arithmetic{
+					Expr: ast.Arithmetic{Expr: ast.Number("123")},
+				},
+				ast.Arithmetic{Expr: ast.Var("var")},
+			},
+		},
+	}},
 }
