@@ -11,14 +11,15 @@ const (
 	_ precedence = iota
 	BASIC
 	ADDITION
-	INCREMENT
+	POST_INCREMENT
+	PRE_INCREMENT
 )
 
 var precedences = map[token.TokenType]precedence{
 	token.PLUS:      ADDITION,
 	token.MINUS:     ADDITION,
-	token.INCREMENT: INCREMENT,
-	token.DECREMENT: INCREMENT,
+	token.INCREMENT: POST_INCREMENT,
+	token.DECREMENT: POST_INCREMENT,
 }
 
 func (p *Parser) parseArithmetics() ast.Expression {
@@ -78,6 +79,14 @@ func (p *Parser) parsePrefix() ast.Expression {
 	case token.DOLLAR_BRACE:
 		exp := p.parseParameterExpansion()
 		p.proceed()
+		return exp
+	case token.INCREMENT, token.DECREMENT:
+		exp := ast.PreIncDecArithmetic{
+			Operator: p.curr.Literal,
+		}
+		p.proceed()
+
+		exp.Operand = p.parseArithmeticExpresion(PRE_INCREMENT)
 		return exp
 	default:
 		return nil
