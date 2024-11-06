@@ -162,51 +162,58 @@ type InfixArithmetic struct {
 	Right    Expression
 }
 
-func (Word) node()                {}
-func (Number) node()              {}
-func (Redirection) node()         {}
-func (Var) node()                 {}
-func (Concatination) node()       {}
-func (Command) node()             {}
-func (Pipeline) node()            {}
-func (BinaryConstruction) node()  {}
-func (Loop) node()                {}
-func (RangeLoop) node()           {}
-func (If) node()                  {}
-func (Case) node()                {}
-func (Group) node()               {}
-func (SubShell) node()            {}
-func (CommandSubstitution) node() {}
-func (ProcessSubstitution) node() {}
-func (VarOrDefault) node()        {}
-func (VarOrSet) node()            {}
-func (VarOrFail) node()           {}
-func (CheckAndUse) node()         {}
-func (ChangeCase) node()          {}
-func (VarCount) node()            {}
-func (MatchAndRemove) node()      {}
-func (MatchAndReplace) node()     {}
-func (Arithmetic) node()          {}
-func (InfixArithmetic) node()     {}
+type PostIncDecArithmetic struct {
+	Operand  Expression
+	Operator string
+}
+
+func (Word) node()                 {}
+func (Number) node()               {}
+func (Redirection) node()          {}
+func (Var) node()                  {}
+func (Concatination) node()        {}
+func (Command) node()              {}
+func (Pipeline) node()             {}
+func (BinaryConstruction) node()   {}
+func (Loop) node()                 {}
+func (RangeLoop) node()            {}
+func (If) node()                   {}
+func (Case) node()                 {}
+func (Group) node()                {}
+func (SubShell) node()             {}
+func (CommandSubstitution) node()  {}
+func (ProcessSubstitution) node()  {}
+func (VarOrDefault) node()         {}
+func (VarOrSet) node()             {}
+func (VarOrFail) node()            {}
+func (CheckAndUse) node()          {}
+func (ChangeCase) node()           {}
+func (VarCount) node()             {}
+func (MatchAndRemove) node()       {}
+func (MatchAndReplace) node()      {}
+func (Arithmetic) node()           {}
+func (InfixArithmetic) node()      {}
+func (PostIncDecArithmetic) node() {}
 
 // Expressions
-func (Word) expr()                {}
-func (Number) expr()              {}
-func (Redirection) expr()         {}
-func (Var) expr()                 {}
-func (Concatination) expr()       {}
-func (CommandSubstitution) expr() {}
-func (ProcessSubstitution) expr() {}
-func (VarOrDefault) expr()        {}
-func (VarOrSet) expr()            {}
-func (VarOrFail) expr()           {}
-func (CheckAndUse) expr()         {}
-func (ChangeCase) expr()          {}
-func (VarCount) expr()            {}
-func (MatchAndRemove) expr()      {}
-func (MatchAndReplace) expr()     {}
-func (Arithmetic) expr()          {}
-func (InfixArithmetic) expr()     {}
+func (Word) expr()                 {}
+func (Number) expr()               {}
+func (Redirection) expr()          {}
+func (Var) expr()                  {}
+func (Concatination) expr()        {}
+func (CommandSubstitution) expr()  {}
+func (ProcessSubstitution) expr()  {}
+func (VarOrDefault) expr()         {}
+func (VarOrSet) expr()             {}
+func (VarOrFail) expr()            {}
+func (CheckAndUse) expr()          {}
+func (ChangeCase) expr()           {}
+func (VarCount) expr()             {}
+func (MatchAndRemove) expr()       {}
+func (MatchAndReplace) expr()      {}
+func (Arithmetic) expr()           {}
+func (InfixArithmetic) expr()      {}
+func (PostIncDecArithmetic) expr() {}
 
 // Statements
 func (Command) stmt()            {}

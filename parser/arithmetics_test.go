@@ -49,4 +49,23 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
+	{`cmd $(( 1++ )) $(( 1-- ))`, ast.Script{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.Arithmetic{
+					Expr: ast.PostIncDecArithmetic{
+						Operand:  ast.Number("1"),
+						Operator: "++",
+					},
+				},
+				ast.Arithmetic{
+					Expr: ast.PostIncDecArithmetic{
+						Operand:  ast.Number("1"),
+						Operator: "--",
+					},
+				},
+			},
+		},
+	}},
 }
