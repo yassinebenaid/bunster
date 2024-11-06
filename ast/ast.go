@@ -14,9 +14,7 @@ type Expression interface {
 	expr()
 }
 
-type Script struct {
-	Statements []Statement
-}
+type Script []Statement
 
 type BinaryConstruction struct {
 	Left     Statement

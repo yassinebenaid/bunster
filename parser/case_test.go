@@ -4,15 +4,13 @@ import "github.com/yassinebenaid/bunny/ast"
 
 var caseTests = []testCase{
 	{`case foo in bar) cmd; esac`, ast.Script{
-		Statements: []ast.Statement{
-			ast.Case{
-				Word: ast.Word("foo"),
-				Cases: []ast.CaseItem{
-					{
-						Patterns: []ast.Expression{ast.Word("bar")},
-						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd")},
-						},
+		ast.Case{
+			Word: ast.Word("foo"),
+			Cases: []ast.CaseItem{
+				{
+					Patterns: []ast.Expression{ast.Word("bar")},
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -22,15 +20,13 @@ var caseTests = []testCase{
 	in
 		bar) cmd
 	esac`, ast.Script{
-		Statements: []ast.Statement{
-			ast.Case{
-				Word: ast.Word("foo"),
-				Cases: []ast.CaseItem{
-					{
-						Patterns: []ast.Expression{ast.Word("bar")},
-						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd")},
-						},
+		ast.Case{
+			Word: ast.Word("foo"),
+			Cases: []ast.CaseItem{
+				{
+					Patterns: []ast.Expression{ast.Word("bar")},
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -43,17 +39,15 @@ var caseTests = []testCase{
 			cmd arg 'arg'
 			cmd arg 'arg'
 	esac`, ast.Script{
-		Statements: []ast.Statement{
-			ast.Case{
-				Word: ast.Word("foo"),
-				Cases: []ast.CaseItem{
-					{
-						Patterns: []ast.Expression{ast.Word("bar")},
-						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-						},
+		ast.Case{
+			Word: ast.Word("foo"),
+			Cases: []ast.CaseItem{
+				{
+					Patterns: []ast.Expression{ast.Word("bar")},
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 					},
 				},
 			},
@@ -78,44 +72,42 @@ var caseTests = []testCase{
 			cmd arg 'arg'
 			cmd arg 'arg'
 	esac`, ast.Script{
-		Statements: []ast.Statement{
-			ast.Case{
-				Word: ast.Word("foo"),
-				Cases: []ast.CaseItem{
-					{
-						Patterns: []ast.Expression{ast.Word("bar")},
-						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-						},
-						Terminator: ";;",
+		ast.Case{
+			Word: ast.Word("foo"),
+			Cases: []ast.CaseItem{
+				{
+					Patterns: []ast.Expression{ast.Word("bar")},
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 					},
-					{
-						Patterns: []ast.Expression{ast.Word("baz")},
-						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-						},
-						Terminator: ";&",
+					Terminator: ";;",
+				},
+				{
+					Patterns: []ast.Expression{ast.Word("baz")},
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 					},
-					{
-						Patterns: []ast.Expression{ast.Word("boo")},
-						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-						},
-						Terminator: ";;&",
+					Terminator: ";&",
+				},
+				{
+					Patterns: []ast.Expression{ast.Word("boo")},
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 					},
-					{
-						Patterns: []ast.Expression{ast.Word("fab")},
-						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-						},
+					Terminator: ";;&",
+				},
+				{
+					Patterns: []ast.Expression{ast.Word("fab")},
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 					},
 				},
 			},
@@ -125,32 +117,30 @@ var caseTests = []testCase{
 		bar|'foo'|$var ) cmd "arg" arg;;
 		bar    |   'foo'   |   $var   ) cmd "arg" arg;;
 	esac`, ast.Script{
-		Statements: []ast.Statement{
-			ast.Case{
-				Word: ast.Var("foo"),
-				Cases: []ast.CaseItem{
-					{
-						Patterns: []ast.Expression{
-							ast.Word("bar"),
-							ast.Word("foo"),
-							ast.Var("var"),
-						},
-						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-						},
-						Terminator: ";;",
+		ast.Case{
+			Word: ast.Var("foo"),
+			Cases: []ast.CaseItem{
+				{
+					Patterns: []ast.Expression{
+						ast.Word("bar"),
+						ast.Word("foo"),
+						ast.Var("var"),
 					},
-					{
-						Patterns: []ast.Expression{
-							ast.Word("bar"),
-							ast.Word("foo"),
-							ast.Var("var"),
-						},
-						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-						},
-						Terminator: ";;",
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 					},
+					Terminator: ";;",
+				},
+				{
+					Patterns: []ast.Expression{
+						ast.Word("bar"),
+						ast.Word("foo"),
+						ast.Var("var"),
+					},
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+					},
+					Terminator: ";;",
 				},
 			},
 		},
@@ -159,34 +149,56 @@ var caseTests = []testCase{
 		(bar) cmd;;
 		(bar | 'foo') cmd;;
 	esac`, ast.Script{
-		Statements: []ast.Statement{
-			ast.Case{
-				Word: ast.Var("foo"),
-				Cases: []ast.CaseItem{
-					{
-						Patterns: []ast.Expression{ast.Word("bar")},
-						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd")},
-						},
-						Terminator: ";;",
+		ast.Case{
+			Word: ast.Var("foo"),
+			Cases: []ast.CaseItem{
+				{
+					Patterns: []ast.Expression{ast.Word("bar")},
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd")},
 					},
-					{
-						Patterns: []ast.Expression{
-							ast.Word("bar"),
-							ast.Word("foo"),
-						},
-						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd")},
-						},
-						Terminator: ";;",
+					Terminator: ";;",
+				},
+				{
+					Patterns: []ast.Expression{
+						ast.Word("bar"),
+						ast.Word("foo"),
 					},
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+					Terminator: ";;",
 				},
 			},
 		},
 	}},
 	{`case $foo in (bar) cmd;; (bar | 'foo') cmd;; esac`, ast.Script{
-		Statements: []ast.Statement{
-			ast.Case{
+		ast.Case{
+			Word: ast.Var("foo"),
+			Cases: []ast.CaseItem{
+				{
+					Patterns: []ast.Expression{ast.Word("bar")},
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+					Terminator: ";;",
+				},
+				{
+					Patterns: []ast.Expression{
+						ast.Word("bar"),
+						ast.Word("foo"),
+					},
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+					Terminator: ";;",
+				},
+			},
+		},
+	}},
+	{`case $foo in bar) cmd;; esac & case $foo in bar) cmd;; esac & cmd`, ast.Script{
+		ast.BackgroundConstruction{
+			Statement: ast.Case{
 				Word: ast.Var("foo"),
 				Cases: []ast.CaseItem{
 					{
@@ -196,11 +208,15 @@ var caseTests = []testCase{
 						},
 						Terminator: ";;",
 					},
+				},
+			},
+		},
+		ast.BackgroundConstruction{
+			Statement: ast.Case{
+				Word: ast.Var("foo"),
+				Cases: []ast.CaseItem{
 					{
-						Patterns: []ast.Expression{
-							ast.Word("bar"),
-							ast.Word("foo"),
-						},
+						Patterns: []ast.Expression{ast.Word("bar")},
 						Body: []ast.Statement{
 							ast.Command{Name: ast.Word("cmd")},
 						},
@@ -209,104 +225,68 @@ var caseTests = []testCase{
 				},
 			},
 		},
-	}},
-	{`case $foo in bar) cmd;; esac & case $foo in bar) cmd;; esac & cmd`, ast.Script{
-		Statements: []ast.Statement{
-			ast.BackgroundConstruction{
-				Statement: ast.Case{
-					Word: ast.Var("foo"),
-					Cases: []ast.CaseItem{
-						{
-							Patterns: []ast.Expression{ast.Word("bar")},
-							Body: []ast.Statement{
-								ast.Command{Name: ast.Word("cmd")},
-							},
-							Terminator: ";;",
-						},
-					},
-				},
-			},
-			ast.BackgroundConstruction{
-				Statement: ast.Case{
-					Word: ast.Var("foo"),
-					Cases: []ast.CaseItem{
-						{
-							Patterns: []ast.Expression{ast.Word("bar")},
-							Body: []ast.Statement{
-								ast.Command{Name: ast.Word("cmd")},
-							},
-							Terminator: ";;",
-						},
-					},
-				},
-			},
-			ast.Command{Name: ast.Word("cmd")},
-		},
+		ast.Command{Name: ast.Word("cmd")},
 	}},
 	{`case $foo in bar) cmd;; esac | case $foo in bar) cmd;; esac |& cmd`, ast.Script{
-		Statements: []ast.Statement{
-			ast.Pipeline{
-				ast.PipelineCommand{
-					Command: ast.Case{
-						Word: ast.Var("foo"),
-						Cases: []ast.CaseItem{
-							{
-								Patterns: []ast.Expression{ast.Word("bar")},
-								Body: []ast.Statement{
-									ast.Command{Name: ast.Word("cmd")},
-								},
-								Terminator: ";;",
+		ast.Pipeline{
+			ast.PipelineCommand{
+				Command: ast.Case{
+					Word: ast.Var("foo"),
+					Cases: []ast.CaseItem{
+						{
+							Patterns: []ast.Expression{ast.Word("bar")},
+							Body: []ast.Statement{
+								ast.Command{Name: ast.Word("cmd")},
 							},
+							Terminator: ";;",
 						},
 					},
 				},
-				ast.PipelineCommand{
-					Command: ast.Case{
-						Word: ast.Var("foo"),
-						Cases: []ast.CaseItem{
-							{
-								Patterns: []ast.Expression{ast.Word("bar")},
-								Body: []ast.Statement{
-									ast.Command{Name: ast.Word("cmd")},
-								},
-								Terminator: ";;",
+			},
+			ast.PipelineCommand{
+				Command: ast.Case{
+					Word: ast.Var("foo"),
+					Cases: []ast.CaseItem{
+						{
+							Patterns: []ast.Expression{ast.Word("bar")},
+							Body: []ast.Statement{
+								ast.Command{Name: ast.Word("cmd")},
 							},
+							Terminator: ";;",
 						},
 					},
 				},
-				ast.PipelineCommand{
-					Stderr:  true,
-					Command: ast.Command{Name: ast.Word("cmd")},
-				},
+			},
+			ast.PipelineCommand{
+				Stderr:  true,
+				Command: ast.Command{Name: ast.Word("cmd")},
 			},
 		},
 	}},
 	{`case $foo in bar) cmd;; esac || case $foo in bar) cmd;; esac`, ast.Script{
-		Statements: []ast.Statement{
-			ast.BinaryConstruction{
-				Left: ast.Case{
-					Word: ast.Var("foo"),
-					Cases: []ast.CaseItem{
-						{
-							Patterns: []ast.Expression{ast.Word("bar")},
-							Body: []ast.Statement{
-								ast.Command{Name: ast.Word("cmd")},
-							},
-							Terminator: ";;",
+		ast.BinaryConstruction{
+			Left: ast.Case{
+				Word: ast.Var("foo"),
+				Cases: []ast.CaseItem{
+					{
+						Patterns: []ast.Expression{ast.Word("bar")},
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
 						},
+						Terminator: ";;",
 					},
 				},
-				Operator: "||",
-				Right: ast.Case{
-					Word: ast.Var("foo"),
-					Cases: []ast.CaseItem{
-						{
-							Patterns: []ast.Expression{ast.Word("bar")},
-							Body: []ast.Statement{
-								ast.Command{Name: ast.Word("cmd")},
-							},
-							Terminator: ";;",
+			},
+			Operator: "||",
+			Right: ast.Case{
+				Word: ast.Var("foo"),
+				Cases: []ast.CaseItem{
+					{
+						Patterns: []ast.Expression{ast.Word("bar")},
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
 						},
+						Terminator: ";;",
 					},
 				},
 			},
@@ -319,28 +299,26 @@ var caseTests = []testCase{
 					cmd;;
 			esac;;
 	esac`, ast.Script{
-		Statements: []ast.Statement{
-			ast.Case{
-				Word: ast.Var("foo"),
-				Cases: []ast.CaseItem{
-					{
-						Patterns: []ast.Expression{ast.Word("bar")},
-						Body: []ast.Statement{
-							ast.Case{
-								Word: ast.Var("foo"),
-								Cases: []ast.CaseItem{
-									{
-										Patterns: []ast.Expression{ast.Word("bar")},
-										Body: []ast.Statement{
-											ast.Command{Name: ast.Word("cmd")},
-										},
-										Terminator: ";;",
+		ast.Case{
+			Word: ast.Var("foo"),
+			Cases: []ast.CaseItem{
+				{
+					Patterns: []ast.Expression{ast.Word("bar")},
+					Body: []ast.Statement{
+						ast.Case{
+							Word: ast.Var("foo"),
+							Cases: []ast.CaseItem{
+								{
+									Patterns: []ast.Expression{ast.Word("bar")},
+									Body: []ast.Statement{
+										ast.Command{Name: ast.Word("cmd")},
 									},
+									Terminator: ";;",
 								},
 							},
 						},
-						Terminator: ";;",
 					},
+					Terminator: ";;",
 				},
 			},
 		},
@@ -351,31 +329,29 @@ var caseTests = []testCase{
 			cmd;;
 	esac >output.txt <input.txt 2>error.txt >&3 \
 	 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6`, ast.Script{
-		Statements: []ast.Statement{
-			ast.Case{
-				Word: ast.Var("foo"),
-				Cases: []ast.CaseItem{
-					{
-						Patterns: []ast.Expression{ast.Word("bar")},
-						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd")},
-						},
-						Terminator: ";;",
+		ast.Case{
+			Word: ast.Var("foo"),
+			Cases: []ast.CaseItem{
+				{
+					Patterns: []ast.Expression{ast.Word("bar")},
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd")},
 					},
+					Terminator: ";;",
 				},
-				Redirections: []ast.Redirection{
-					{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
-					{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
-					{Src: "2", Method: ">", Dst: ast.Word("error.txt")},
-					{Src: "1", Method: ">&", Dst: ast.Word("3")},
-					{Src: "1", Method: ">>", Dst: ast.Word("output.txt")},
-					{Src: "0", Method: "<<<", Dst: ast.Word("input.txt")},
-					{Src: "2", Method: ">>", Dst: ast.Word("error.txt")},
-					{Method: "&>", Dst: ast.Word("all.txt")},
-					{Method: "&>>", Dst: ast.Word("all.txt")},
-					{Src: "0", Method: "<&", Dst: ast.Word("4")},
-					{Src: "5", Method: "<&", Dst: ast.Word("6")},
-				},
+			},
+			Redirections: []ast.Redirection{
+				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
+				{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+				{Src: "2", Method: ">", Dst: ast.Word("error.txt")},
+				{Src: "1", Method: ">&", Dst: ast.Word("3")},
+				{Src: "1", Method: ">>", Dst: ast.Word("output.txt")},
+				{Src: "0", Method: "<<<", Dst: ast.Word("input.txt")},
+				{Src: "2", Method: ">>", Dst: ast.Word("error.txt")},
+				{Method: "&>", Dst: ast.Word("all.txt")},
+				{Method: "&>>", Dst: ast.Word("all.txt")},
+				{Src: "0", Method: "<&", Dst: ast.Word("4")},
+				{Src: "5", Method: "<&", Dst: ast.Word("6")},
 			},
 		},
 	}},
@@ -383,75 +359,67 @@ var caseTests = []testCase{
 		case $foo in	bar) cmd;;esac
 		case $foo in	bar) cmd;;esac; case $foo in	bar) cmd;;esac
 	`, ast.Script{
-		Statements: []ast.Statement{
-			ast.Case{
-				Word: ast.Var("foo"),
-				Cases: []ast.CaseItem{
-					{
-						Patterns:   []ast.Expression{ast.Word("bar")},
-						Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
-						Terminator: ";;",
-					},
+		ast.Case{
+			Word: ast.Var("foo"),
+			Cases: []ast.CaseItem{
+				{
+					Patterns:   []ast.Expression{ast.Word("bar")},
+					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Terminator: ";;",
 				},
 			},
-			ast.Case{
-				Word: ast.Var("foo"),
-				Cases: []ast.CaseItem{
-					{
-						Patterns:   []ast.Expression{ast.Word("bar")},
-						Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
-						Terminator: ";;",
-					},
+		},
+		ast.Case{
+			Word: ast.Var("foo"),
+			Cases: []ast.CaseItem{
+				{
+					Patterns:   []ast.Expression{ast.Word("bar")},
+					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Terminator: ";;",
 				},
 			},
-			ast.Case{
-				Word: ast.Var("foo"),
-				Cases: []ast.CaseItem{
-					{
-						Patterns:   []ast.Expression{ast.Word("bar")},
-						Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
-						Terminator: ";;",
-					},
+		},
+		ast.Case{
+			Word: ast.Var("foo"),
+			Cases: []ast.CaseItem{
+				{
+					Patterns:   []ast.Expression{ast.Word("bar")},
+					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Terminator: ";;",
 				},
 			},
 		},
 	}},
 
 	{`case in in bar) cmd;; esac`, ast.Script{
-		Statements: []ast.Statement{
-			ast.Case{
-				Word: ast.Word("in"),
-				Cases: []ast.CaseItem{
-					{
-						Patterns:   []ast.Expression{ast.Word("bar")},
-						Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
-						Terminator: ";;",
-					},
+		ast.Case{
+			Word: ast.Word("in"),
+			Cases: []ast.CaseItem{
+				{
+					Patterns:   []ast.Expression{ast.Word("bar")},
+					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Terminator: ";;",
 				},
 			},
 		},
 	}},
 
 	{`case esac in bar) cmd;; esac`, ast.Script{
-		Statements: []ast.Statement{
-			ast.Case{
-				Word: ast.Word("esac"),
-				Cases: []ast.CaseItem{
-					{
-						Patterns:   []ast.Expression{ast.Word("bar")},
-						Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
-						Terminator: ";;",
-					},
+		ast.Case{
+			Word: ast.Word("esac"),
+			Cases: []ast.CaseItem{
+				{
+					Patterns:   []ast.Expression{ast.Word("bar")},
+					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Terminator: ";;",
 				},
 			},
 		},
 	}},
 
 	{`case esac in esac`, ast.Script{
-		Statements: []ast.Statement{
-			ast.Case{
-				Word: ast.Word("esac"),
-			},
+		ast.Case{
+			Word: ast.Word("esac"),
 		},
 	}},
 
@@ -460,25 +428,23 @@ var caseTests = []testCase{
    		pattern ) cmd; ;&
 	 	pattern ) cmd; ;;&
 	esac`, ast.Script{
-		Statements: []ast.Statement{
-			ast.Case{
-				Word: ast.Word("word"),
-				Cases: []ast.CaseItem{
-					{
-						Patterns:   []ast.Expression{ast.Word("pattern")},
-						Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
-						Terminator: ";;",
-					},
-					{
-						Patterns:   []ast.Expression{ast.Word("pattern")},
-						Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
-						Terminator: ";&",
-					},
-					{
-						Patterns:   []ast.Expression{ast.Word("pattern")},
-						Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
-						Terminator: ";;&",
-					},
+		ast.Case{
+			Word: ast.Word("word"),
+			Cases: []ast.CaseItem{
+				{
+					Patterns:   []ast.Expression{ast.Word("pattern")},
+					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Terminator: ";;",
+				},
+				{
+					Patterns:   []ast.Expression{ast.Word("pattern")},
+					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Terminator: ";&",
+				},
+				{
+					Patterns:   []ast.Expression{ast.Word("pattern")},
+					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Terminator: ";;&",
 				},
 			},
 		},

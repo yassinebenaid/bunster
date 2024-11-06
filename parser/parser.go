@@ -49,7 +49,7 @@ func (p *Parser) ParseScript() ast.Script {
 			}
 		default:
 			if cmdList := p.parseCommandList(); cmdList != nil {
-				script.Statements = append(script.Statements, cmdList)
+				script = append(script, cmdList)
 			} else {
 				return script
 			}

@@ -3,7 +3,7 @@ package parser_test
 import "github.com/yassinebenaid/bunny/ast"
 
 var parameterExpansionTests = []testCase{
-	{`cmd ${var} ${var} `, ast.Script{Statements: []ast.Statement{
+	{`cmd ${var} ${var} `, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -11,8 +11,8 @@ var parameterExpansionTests = []testCase{
 				ast.Var("var"),
 			},
 		},
-	}}},
-	{`cmd ${#var} ${#var}`, ast.Script{Statements: []ast.Statement{
+	}},
+	{`cmd ${#var} ${#var}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -20,8 +20,8 @@ var parameterExpansionTests = []testCase{
 				ast.VarCount("var"),
 			},
 		},
-	}}},
-	{`cmd ${var-default} ${var-${default}} ${var- $foo bar "baz" | & ; 2> < } ${var-}`, ast.Script{Statements: []ast.Statement{
+	}},
+	{`cmd ${var-default} ${var-${default}} ${var- $foo bar "baz" | & ; 2> < } ${var-}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -40,8 +40,8 @@ var parameterExpansionTests = []testCase{
 				ast.VarOrDefault{Name: "var"},
 			},
 		},
-	}}},
-	{`cmd ${var:-default} ${var:-${default}} ${var:- $foo bar "baz" | & ; 2> < } ${var:-}`, ast.Script{Statements: []ast.Statement{
+	}},
+	{`cmd ${var:-default} ${var:-${default}} ${var:- $foo bar "baz" | & ; 2> < } ${var:-}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -61,8 +61,8 @@ var parameterExpansionTests = []testCase{
 				ast.VarOrDefault{Name: "var", CheckForNull: true},
 			},
 		},
-	}}},
-	{`cmd ${var:=default} ${var:=${default}} ${var:= $foo bar "baz" | & ; 2> < } ${var:=}`, ast.Script{Statements: []ast.Statement{
+	}},
+	{`cmd ${var:=default} ${var:=${default}} ${var:= $foo bar "baz" | & ; 2> < } ${var:=}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -81,8 +81,8 @@ var parameterExpansionTests = []testCase{
 				ast.VarOrSet{Name: "var"},
 			},
 		},
-	}}},
-	{`cmd ${var:?error} ${var:?${error}} ${var:? $foo bar "baz" | & ; 2> < } ${var:?}`, ast.Script{Statements: []ast.Statement{
+	}},
+	{`cmd ${var:?error} ${var:?${error}} ${var:? $foo bar "baz" | & ; 2> < } ${var:?}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -101,8 +101,8 @@ var parameterExpansionTests = []testCase{
 				ast.VarOrFail{Name: "var"},
 			},
 		},
-	}}},
-	{`cmd ${var:+alternate} ${var:+${alternate}} ${var:+ $foo bar "baz" | & ; 2> < } ${var:+}`, ast.Script{Statements: []ast.Statement{
+	}},
+	{`cmd ${var:+alternate} ${var:+${alternate}} ${var:+ $foo bar "baz" | & ; 2> < } ${var:+}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -121,8 +121,8 @@ var parameterExpansionTests = []testCase{
 				ast.CheckAndUse{Name: "var"},
 			},
 		},
-	}}},
-	{`cmd ${var^pattern} ${var^${pattern}} ${var^ $foo bar "baz" | & ; 2> < } ${var^}`, ast.Script{Statements: []ast.Statement{
+	}},
+	{`cmd ${var^pattern} ${var^${pattern}} ${var^ $foo bar "baz" | & ; 2> < } ${var^}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -142,8 +142,8 @@ var parameterExpansionTests = []testCase{
 				ast.ChangeCase{Name: "var", Operator: "^"},
 			},
 		},
-	}}},
-	{`cmd ${var^^pattern} ${var^^${pattern}} ${var^^ $foo bar "baz" | & ; 2> < } ${var^^}`, ast.Script{Statements: []ast.Statement{
+	}},
+	{`cmd ${var^^pattern} ${var^^${pattern}} ${var^^ $foo bar "baz" | & ; 2> < } ${var^^}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -163,8 +163,8 @@ var parameterExpansionTests = []testCase{
 				ast.ChangeCase{Name: "var", Operator: "^^"},
 			},
 		},
-	}}},
-	{`cmd ${var,pattern} ${var,${pattern}} ${var, $foo bar "baz" | & ; 2> < } ${var,}`, ast.Script{Statements: []ast.Statement{
+	}},
+	{`cmd ${var,pattern} ${var,${pattern}} ${var, $foo bar "baz" | & ; 2> < } ${var,}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -184,8 +184,8 @@ var parameterExpansionTests = []testCase{
 				ast.ChangeCase{Name: "var", Operator: ","},
 			},
 		},
-	}}},
-	{`cmd ${var,,pattern} ${var,,${pattern}} ${var,, $foo bar "baz" | & ; 2> < } ${var,,}`, ast.Script{Statements: []ast.Statement{
+	}},
+	{`cmd ${var,,pattern} ${var,,${pattern}} ${var,, $foo bar "baz" | & ; 2> < } ${var,,}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -205,8 +205,8 @@ var parameterExpansionTests = []testCase{
 				ast.ChangeCase{Name: "var", Operator: ",,"},
 			},
 		},
-	}}},
-	{`cmd ${var#pattern} ${var#${pattern}} ${var# $foo bar "baz" | & ; 2> < } ${var#}`, ast.Script{Statements: []ast.Statement{
+	}},
+	{`cmd ${var#pattern} ${var#${pattern}} ${var# $foo bar "baz" | & ; 2> < } ${var#}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -226,8 +226,8 @@ var parameterExpansionTests = []testCase{
 				ast.MatchAndRemove{Name: "var", Operator: "#"},
 			},
 		},
-	}}},
-	{`cmd ${var##pattern} ${var##${pattern}} ${var## $foo bar "baz" | & ; 2> < # } ${var##}`, ast.Script{Statements: []ast.Statement{
+	}},
+	{`cmd ${var##pattern} ${var##${pattern}} ${var## $foo bar "baz" | & ; 2> < # } ${var##}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -247,8 +247,8 @@ var parameterExpansionTests = []testCase{
 				ast.MatchAndRemove{Name: "var", Operator: "##"},
 			},
 		},
-	}}},
-	{`cmd ${var%pattern} ${var%${pattern}} ${var% $foo bar "baz" | & ; 2> < # } ${var%}`, ast.Script{Statements: []ast.Statement{
+	}},
+	{`cmd ${var%pattern} ${var%${pattern}} ${var% $foo bar "baz" | & ; 2> < # } ${var%}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -268,8 +268,8 @@ var parameterExpansionTests = []testCase{
 				ast.MatchAndRemove{Name: "var", Operator: "%"},
 			},
 		},
-	}}},
-	{`cmd ${var%%pattern} ${var%%${pattern}} ${var%% $foo bar "baz" | & ; 2> < # } ${var%%}`, ast.Script{Statements: []ast.Statement{
+	}},
+	{`cmd ${var%%pattern} ${var%%${pattern}} ${var%% $foo bar "baz" | & ; 2> < # } ${var%%}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -289,11 +289,11 @@ var parameterExpansionTests = []testCase{
 				ast.MatchAndRemove{Name: "var", Operator: "%%"},
 			},
 		},
-	}}},
+	}},
 	{`
 		cmd ${var/pattern/value} ${var/${pattern}/${value}} \
 		${var/ $foo bar "baz" | & ; 2> < # / $foo bar "baz" | & ; 2> < #////} \
-		${var/pattern/} ${var/pattern} ${var/}`, ast.Script{Statements: []ast.Statement{
+		${var/pattern/} ${var/pattern} ${var/}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -343,11 +343,11 @@ var parameterExpansionTests = []testCase{
 				},
 			},
 		},
-	}}},
+	}},
 	{`
 		cmd ${var//pattern/value} ${var//${pattern}/${value}} \
 		${var// $foo bar "baz" | & ; 2> < # / $foo bar "baz" | & ; 2> < #////} \
-		${var//pattern/} ${var//pattern} ${var//}`, ast.Script{Statements: []ast.Statement{
+		${var//pattern/} ${var//pattern} ${var//}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -397,11 +397,11 @@ var parameterExpansionTests = []testCase{
 				},
 			},
 		},
-	}}},
+	}},
 	{`
 		cmd ${var/#pattern/value} ${var/#${pattern}/${value}} \
 		${var/# $foo bar "baz" | & ; 2> < # / $foo bar "baz" | & ; 2> < #////} \
-		${var/#pattern/} ${var/#pattern} ${var/#}`, ast.Script{Statements: []ast.Statement{
+		${var/#pattern/} ${var/#pattern} ${var/#}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -451,11 +451,11 @@ var parameterExpansionTests = []testCase{
 				},
 			},
 		},
-	}}},
+	}},
 	{`
 		cmd ${var/%pattern/value} ${var/%${pattern}/${value}} \
 		${var/% $foo bar "baz" | & ; 2> < # / $foo bar "baz" | & ; 2> < #////} \
-		${var/%pattern/} ${var/%pattern} ${var/%}`, ast.Script{Statements: []ast.Statement{
+		${var/%pattern/} ${var/%pattern} ${var/%}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -505,7 +505,7 @@ var parameterExpansionTests = []testCase{
 				},
 			},
 		},
-	}}},
+	}},
 }
 
 //TODO: test error handling

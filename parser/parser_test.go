@@ -28,237 +28,217 @@ var testCases = []struct {
 	cases []testCase
 }{
 	{"Simle Command calls", []testCase{
-		{``, ast.Script{}},
-		{`	 	`, ast.Script{}},
-		{"\n	\n \n ", ast.Script{}},
-		{`git`, ast.Script{Statements: []ast.Statement{ast.Command{Name: ast.Word("git")}}}},
+		{``, nil},
+		{`	 	`, nil},
+		{"\n	\n \n ", nil},
+		{`git`, ast.Script{ast.Command{Name: ast.Word("git")}}},
 		{`foo bar baz`, ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Word("foo"),
-					Args: []ast.Expression{ast.Word("bar"), ast.Word("baz")},
-				},
+
+			ast.Command{
+				Name: ast.Word("foo"),
+				Args: []ast.Expression{ast.Word("bar"), ast.Word("baz")},
 			},
 		}},
 		{`foo $bar $FOO_BAR_1234567890`, ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Word("foo"),
-					Args: []ast.Expression{
-						ast.Var("bar"),
-						ast.Var("FOO_BAR_1234567890"),
-					},
+
+			ast.Command{
+				Name: ast.Word("foo"),
+				Args: []ast.Expression{
+					ast.Var("bar"),
+					ast.Var("FOO_BAR_1234567890"),
 				},
 			},
 		}},
 		{`/usr/bin/foo bar baz`, ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Word("/usr/bin/foo"),
-					Args: []ast.Expression{
-						ast.Word("bar"),
-						ast.Word("baz"),
-					},
+
+			ast.Command{
+				Name: ast.Word("/usr/bin/foo"),
+				Args: []ast.Expression{
+					ast.Word("bar"),
+					ast.Word("baz"),
 				},
 			},
 		}},
 		{`/usr/bin/foo-bar baz`, ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Word("/usr/bin/foo-bar"),
-					Args: []ast.Expression{ast.Word("baz")},
-				},
+
+			ast.Command{
+				Name: ast.Word("/usr/bin/foo-bar"),
+				Args: []ast.Expression{ast.Word("baz")},
 			},
 		}},
 		{"cmd1 \n cmd2", ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd1")},
-				ast.Command{Name: ast.Word("cmd2")},
-			},
+
+			ast.Command{Name: ast.Word("cmd1")},
+			ast.Command{Name: ast.Word("cmd2")},
 		}},
 		{"cmd1\n cmd2\ncmd3\n cmd4 arg1 arg2\ncmd5", ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd1")},
-				ast.Command{Name: ast.Word("cmd2")},
-				ast.Command{Name: ast.Word("cmd3")},
-				ast.Command{Name: ast.Word("cmd4"), Args: []ast.Expression{ast.Word("arg1"), ast.Word("arg2")}},
-				ast.Command{Name: ast.Word("cmd5")},
-			},
+
+			ast.Command{Name: ast.Word("cmd1")},
+			ast.Command{Name: ast.Word("cmd2")},
+			ast.Command{Name: ast.Word("cmd3")},
+			ast.Command{Name: ast.Word("cmd4"), Args: []ast.Expression{ast.Word("arg1"), ast.Word("arg2")}},
+			ast.Command{Name: ast.Word("cmd5")},
 		}},
 		{"cmd1; cmd2;cmd3; cmd4 arg1 arg2;cmd5", ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd1")},
-				ast.Command{Name: ast.Word("cmd2")},
-				ast.Command{Name: ast.Word("cmd3")},
-				ast.Command{Name: ast.Word("cmd4"), Args: []ast.Expression{ast.Word("arg1"), ast.Word("arg2")}},
-				ast.Command{Name: ast.Word("cmd5")},
-			},
+
+			ast.Command{Name: ast.Word("cmd1")},
+			ast.Command{Name: ast.Word("cmd2")},
+			ast.Command{Name: ast.Word("cmd3")},
+			ast.Command{Name: ast.Word("cmd4"), Args: []ast.Expression{ast.Word("arg1"), ast.Word("arg2")}},
+			ast.Command{Name: ast.Word("cmd5")},
 		}},
 	}},
 
 	{"Strings", []testCase{
 		{`cmd 'hello world'`, ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Word("cmd"),
-					Args: []ast.Expression{
-						ast.Word("hello world"),
-					},
+
+			ast.Command{
+				Name: ast.Word("cmd"),
+				Args: []ast.Expression{
+					ast.Word("hello world"),
 				},
 			},
 		}},
 		{`cmd 'if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset'`, ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Word("cmd"),
-					Args: []ast.Expression{
-						ast.Word("if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset"),
-					},
+
+			ast.Command{
+				Name: ast.Word("cmd"),
+				Args: []ast.Expression{
+					ast.Word("if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset"),
 				},
 			},
 		}},
 		{`cmd '+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~'`, ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Word("cmd"),
-					Args: []ast.Expression{
-						ast.Word(`+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~`),
-					},
+
+			ast.Command{
+				Name: ast.Word("cmd"),
+				Args: []ast.Expression{
+					ast.Word(`+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~`),
 				},
 			},
 		}},
 		{`cmd '' '\' '$foo'`, ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Word("cmd"),
-					Args: []ast.Expression{
-						ast.Word(""),
-						ast.Word(`\`),
-						ast.Word(`$foo`),
-					},
+
+			ast.Command{
+				Name: ast.Word("cmd"),
+				Args: []ast.Expression{
+					ast.Word(""),
+					ast.Word(`\`),
+					ast.Word(`$foo`),
 				},
 			},
 		}},
 		{`cmd ""`, ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Word("cmd"),
-					Args: []ast.Expression{
-						ast.Word(""),
-					},
+
+			ast.Command{
+				Name: ast.Word("cmd"),
+				Args: []ast.Expression{
+					ast.Word(""),
 				},
 			},
 		}},
 		{`cmd "Hello World" "name is: $NAME and path is $DIR/$FILE"`, ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Word("cmd"),
-					Args: []ast.Expression{
-						ast.Word("Hello World"),
-						ast.Concatination{
-							Nodes: []ast.Expression{
-								ast.Word("name is: "),
-								ast.Var("NAME"),
-								ast.Word(" and path is "),
-								ast.Var("DIR"),
-								ast.Word("/"),
-								ast.Var("FILE"),
-							},
+
+			ast.Command{
+				Name: ast.Word("cmd"),
+				Args: []ast.Expression{
+					ast.Word("Hello World"),
+					ast.Concatination{
+						Nodes: []ast.Expression{
+							ast.Word("name is: "),
+							ast.Var("NAME"),
+							ast.Word(" and path is "),
+							ast.Var("DIR"),
+							ast.Word("/"),
+							ast.Var("FILE"),
 						},
 					},
 				},
 			},
 		}},
 		{`cmd "\"" "\$ESCAPED_VAR" "\foo\bar\\" \$var \" \foo`, ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Word("cmd"),
-					Args: []ast.Expression{
-						ast.Word(`"`),
-						ast.Word(`$ESCAPED_VAR`),
-						ast.Word(`\foo\bar\`),
-						ast.Word(`$var`),
-						ast.Word(`"`),
-						ast.Word(`foo`),
-					},
+
+			ast.Command{
+				Name: ast.Word("cmd"),
+				Args: []ast.Expression{
+					ast.Word(`"`),
+					ast.Word(`$ESCAPED_VAR`),
+					ast.Word(`\foo\bar\`),
+					ast.Word(`$var`),
+					ast.Word(`"`),
+					ast.Word(`foo`),
 				},
 			},
 		}},
 		{"cmd \"\\\nfoo\"", ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word(`foo`)}},
-			},
+
+			ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word(`foo`)}},
 		}},
 		{`/usr/bin/$BINARY_NAME --path=/home/$USER/dir --option -f --do=something $HOME$DIR_NAME$PKG_NAME/foo`, ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Concatination{
+
+			ast.Command{
+				Name: ast.Concatination{
+					Nodes: []ast.Expression{
+						ast.Word("/usr/bin/"),
+						ast.Var("BINARY_NAME"),
+					},
+				},
+				Args: []ast.Expression{
+					ast.Concatination{
 						Nodes: []ast.Expression{
-							ast.Word("/usr/bin/"),
-							ast.Var("BINARY_NAME"),
+							ast.Word("--path=/home/"),
+							ast.Var("USER"),
+							ast.Word("/dir"),
 						},
 					},
-					Args: []ast.Expression{
-						ast.Concatination{
-							Nodes: []ast.Expression{
-								ast.Word("--path=/home/"),
-								ast.Var("USER"),
-								ast.Word("/dir"),
-							},
-						},
-						ast.Word("--option"),
-						ast.Word("-f"),
-						ast.Word("--do=something"),
-						ast.Concatination{
-							Nodes: []ast.Expression{
-								ast.Var("HOME"),
-								ast.Var("DIR_NAME"),
-								ast.Var("PKG_NAME"),
-								ast.Word("/foo"),
-							},
+					ast.Word("--option"),
+					ast.Word("-f"),
+					ast.Word("--do=something"),
+					ast.Concatination{
+						Nodes: []ast.Expression{
+							ast.Var("HOME"),
+							ast.Var("DIR_NAME"),
+							ast.Var("PKG_NAME"),
+							ast.Word("/foo"),
 						},
 					},
 				},
 			},
 		}},
 		{`cmd 'foo''bar' "foo""bar" "foo"'bar' "'foo'"`, ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Word("cmd"),
-					Args: []ast.Expression{
-						ast.Word("foobar"),
-						ast.Word("foobar"),
-						ast.Word("foobar"),
-						ast.Word("'foo'"),
-					},
+
+			ast.Command{
+				Name: ast.Word("cmd"),
+				Args: []ast.Expression{
+					ast.Word("foobar"),
+					ast.Word("foobar"),
+					ast.Word("foobar"),
+					ast.Word("'foo'"),
 				},
 			},
 		}},
 		{"cmd \"\n\"", ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{
-					Name: ast.Word("cmd"),
-					Args: []ast.Expression{
-						ast.Word("\n"),
-					},
+
+			ast.Command{
+				Name: ast.Word("cmd"),
+				Args: []ast.Expression{
+					ast.Word("\n"),
 				},
 			},
 		}},
 	}},
 	{"Comments", []testCase{
-		{`#`, ast.Script{}},
-		{`# foo bar`, ast.Script{}},
-		{`	 # foo bar`, ast.Script{}},
-		{"# foo bar    \n    \t # baz", ast.Script{}},
+		{`#`, nil},
+		{`# foo bar`, nil},
+		{`	 # foo bar`, nil},
+		{"# foo bar    \n    \t # baz", nil},
 		{"cmd # comment", ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
-			},
+
+			ast.Command{Name: ast.Word("cmd")},
 		}},
 		{"cmd#not-comment arg#not-comment", ast.Script{
-			Statements: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd#not-comment"), Args: []ast.Expression{ast.Word("arg#not-comment")}},
-			},
+
+			ast.Command{Name: ast.Word("cmd#not-comment"), Args: []ast.Expression{ast.Word("arg#not-comment")}},
 		}},
 	}},
 	{"Redirections", redirectionTests},
@@ -266,49 +246,46 @@ var testCases = []struct {
 	{"Binary Constructions", logicalCommandsTests},
 	{"Background Constructions", []testCase{
 		{`cmd & cmd2`, ast.Script{
-			Statements: []ast.Statement{
-				ast.BackgroundConstruction{
-					Statement: ast.Command{Name: ast.Word("cmd")},
-				},
-				ast.Command{Name: ast.Word("cmd2")},
+
+			ast.BackgroundConstruction{
+				Statement: ast.Command{Name: ast.Word("cmd")},
 			},
+			ast.Command{Name: ast.Word("cmd2")},
 		}},
 		{`cmd && cmd2 & cmd3 && cmd4&`, ast.Script{
-			Statements: []ast.Statement{
-				ast.BackgroundConstruction{
-					Statement: ast.BinaryConstruction{
-						Left:     ast.Command{Name: ast.Word("cmd")},
-						Operator: "&&",
-						Right:    ast.Command{Name: ast.Word("cmd2")},
-					},
+
+			ast.BackgroundConstruction{
+				Statement: ast.BinaryConstruction{
+					Left:     ast.Command{Name: ast.Word("cmd")},
+					Operator: "&&",
+					Right:    ast.Command{Name: ast.Word("cmd2")},
 				},
-				ast.BackgroundConstruction{
-					Statement: ast.BinaryConstruction{
-						Left:     ast.Command{Name: ast.Word("cmd3")},
-						Operator: "&&",
-						Right:    ast.Command{Name: ast.Word("cmd4")},
-					},
+			},
+			ast.BackgroundConstruction{
+				Statement: ast.BinaryConstruction{
+					Left:     ast.Command{Name: ast.Word("cmd3")},
+					Operator: "&&",
+					Right:    ast.Command{Name: ast.Word("cmd4")},
 				},
 			},
 		}},
 		{` cmd | cmd2 |& cmd3 | cmd4 |& cmd5 foo& cmd | cmd2 |& cmd3 | cmd4 |& cmd5`, ast.Script{
-			Statements: []ast.Statement{
-				ast.BackgroundConstruction{
-					Statement: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
-						{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: false},
-						{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: true},
-						{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: false},
-						{Command: ast.Command{Name: ast.Word("cmd5"), Args: []ast.Expression{ast.Word("foo")}}, Stderr: true},
-					},
-				},
-				ast.Pipeline{
+
+			ast.BackgroundConstruction{
+				Statement: ast.Pipeline{
 					{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
 					{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: false},
 					{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: true},
 					{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: false},
-					{Command: ast.Command{Name: ast.Word("cmd5")}, Stderr: true},
+					{Command: ast.Command{Name: ast.Word("cmd5"), Args: []ast.Expression{ast.Word("foo")}}, Stderr: true},
 				},
+			},
+			ast.Pipeline{
+				{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
+				{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: false},
+				{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: true},
+				{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: false},
+				{Command: ast.Command{Name: ast.Word("cmd5")}, Stderr: true},
 			},
 		}},
 	}},
