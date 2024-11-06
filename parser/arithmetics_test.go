@@ -2,7 +2,7 @@ package parser_test
 
 import "github.com/yassinebenaid/bunny/ast"
 
-var arithmeticsCommandsTests = []testCase{
+var arithmeticsTests = []testCase{
 	{`$((1))`, ast.Script{
 		Statements: []ast.Statement{
 			ast.Command{Name: ast.Arithmetic{
