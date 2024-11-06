@@ -156,6 +156,12 @@ type Arithmetic struct {
 	Expr Expression
 }
 
+type InfixArithmetic struct {
+	Left     Expression
+	Operator string
+	Right    Expression
+}
+
 func (Word) node()                {}
 func (Number) node()              {}
 func (Redirection) node()         {}
@@ -181,6 +187,7 @@ func (VarCount) node()            {}
 func (MatchAndRemove) node()      {}
 func (MatchAndReplace) node()     {}
 func (Arithmetic) node()          {}
+func (InfixArithmetic) node()     {}
 
 // Expressions
 func (Word) expr()                {}
@@ -199,6 +206,7 @@ func (VarCount) expr()            {}
 func (MatchAndRemove) expr()      {}
 func (MatchAndReplace) expr()     {}
 func (Arithmetic) expr()          {}
+func (InfixArithmetic) expr()     {}
 
 // Statements
 func (Command) stmt()            {}

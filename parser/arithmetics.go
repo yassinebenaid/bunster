@@ -5,6 +5,18 @@ import (
 	"github.com/yassinebenaid/bunny/token"
 )
 
+type precedence uint
+
+const (
+	_ precedence = iota
+	BASIC
+	ADDITION
+)
+
+var precedences = map[token.TokenType]precedence{
+	token.PLUS: ADDITION,
+}
+
 func (p *Parser) parseArithmetics() ast.Expression {
 	p.proceed()
 
@@ -13,7 +25,7 @@ func (p *Parser) parseArithmetics() ast.Expression {
 	}
 
 	var expr ast.Arithmetic
-	expr.Expr = p.parseArithmeticExpresion()
+	expr.Expr = p.parseArithmeticExpresion(BASIC)
 
 	if p.curr.Type == token.BLANK {
 		p.proceed()
@@ -24,10 +36,14 @@ func (p *Parser) parseArithmetics() ast.Expression {
 	return expr
 }
 
-func (p *Parser) parseArithmeticExpresion() ast.Expression {
-	prefix := p.parsePrefix()
+func (p *Parser) parseArithmeticExpresion(prec precedence) ast.Expression {
+	exp := p.parsePrefix()
 
-	return prefix
+	if prec < precedences[p.curr.Type] {
+		exp = p.parseInfix(exp)
+	}
+
+	return exp
 }
 
 func (p *Parser) parsePrefix() ast.Expression {
@@ -52,4 +68,19 @@ func (p *Parser) parsePrefix() ast.Expression {
 		return nil
 	}
 
+}
+
+func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
+	var inf = ast.InfixArithmetic{
+		Left:     left,
+		Operator: p.curr.Literal,
+	}
+
+	switch p.curr.Type {
+	case token.PLUS:
+		p.proceed()
+		inf.Right = p.parseArithmeticExpresion(ADDITION)
+	}
+
+	return inf
 }
