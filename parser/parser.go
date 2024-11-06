@@ -194,6 +194,8 @@ loop:
 			exprs = append(exprs, p.parseString())
 		case token.DOLLAR_PAREN:
 			exprs = append(exprs, p.parseCommandSubstitution())
+		case token.DOLLAR_DOUBLE_PAREN:
+			exprs = append(exprs, p.parseArithmetics())
 		case token.GT_PAREN, token.LT_PAREN:
 			exprs = append(exprs, p.parseProcessSubstitution())
 		case token.DOLLAR_BRACE:
