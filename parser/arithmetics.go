@@ -31,7 +31,7 @@ func (p *Parser) parseArithmetics() ast.Expression {
 	}
 
 	var expr ast.Arithmetic
-	expr.Expr = p.parseArithmeticExpresion(BASIC)
+	expr = append(expr, p.parseArithmeticExpresion(BASIC))
 
 	if p.curr.Type == token.BLANK {
 		p.proceed()

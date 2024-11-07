@@ -152,9 +152,7 @@ type MatchAndReplace struct {
 	Value    Expression
 }
 
-type Arithmetic struct {
-	Expr Expression
-}
+type Arithmetic []Expression
 
 type InfixArithmetic struct {
 	Left     Expression

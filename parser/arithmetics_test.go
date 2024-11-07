@@ -5,10 +5,10 @@ import "github.com/yassinebenaid/bunny/ast"
 var arithmeticsTests = []testCase{
 	{`$((1)) $(( variable_name )) $(( $VARIABLE_NAME ))`, ast.Script{
 		ast.Command{
-			Name: ast.Arithmetic{Expr: ast.Number("1")},
+			Name: ast.Arithmetic{ast.Number("1")},
 			Args: []ast.Expression{
-				ast.Arithmetic{Expr: ast.Var("variable_name")},
-				ast.Arithmetic{Expr: ast.Var("VARIABLE_NAME")},
+				ast.Arithmetic{ast.Var("variable_name")},
+				ast.Arithmetic{ast.Var("VARIABLE_NAME")},
 			},
 		},
 	}},
@@ -17,9 +17,9 @@ var arithmeticsTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
-					Expr: ast.Arithmetic{Expr: ast.Number("123")},
+					ast.Arithmetic{ast.Number("123")},
 				},
-				ast.Arithmetic{Expr: ast.Var("var")},
+				ast.Arithmetic{ast.Var("var")},
 			},
 		},
 	}},
@@ -28,7 +28,7 @@ var arithmeticsTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
-					Expr: ast.InfixArithmetic{
+					ast.InfixArithmetic{
 						Left: ast.InfixArithmetic{
 							Left: ast.InfixArithmetic{
 								Left: ast.InfixArithmetic{
@@ -54,25 +54,25 @@ var arithmeticsTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
-					Expr: ast.PostIncDecArithmetic{
+					ast.PostIncDecArithmetic{
 						Operand:  ast.Var("var"),
 						Operator: "++",
 					},
 				},
 				ast.Arithmetic{
-					Expr: ast.PostIncDecArithmetic{
+					ast.PostIncDecArithmetic{
 						Operand:  ast.Var("var"),
 						Operator: "--",
 					},
 				},
 				ast.Arithmetic{
-					Expr: ast.PreIncDecArithmetic{
+					ast.PreIncDecArithmetic{
 						Operand:  ast.Var("var"),
 						Operator: "++",
 					},
 				},
 				ast.Arithmetic{
-					Expr: ast.PreIncDecArithmetic{
+					ast.PreIncDecArithmetic{
 						Operand:  ast.Var("var"),
 						Operator: "--",
 					},
@@ -85,19 +85,19 @@ var arithmeticsTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
-					Expr: ast.Unary{
+					ast.Unary{
 						Operand:  ast.Var("var"),
 						Operator: "+",
 					},
 				},
 				ast.Arithmetic{
-					Expr: ast.Unary{
+					ast.Unary{
 						Operand:  ast.Var("var"),
 						Operator: "-",
 					},
 				},
 				ast.Arithmetic{
-					Expr: ast.Unary{
+					ast.Unary{
 						Operand: ast.Unary{
 							Operand:  ast.Var("var"),
 							Operator: "-",
@@ -106,7 +106,7 @@ var arithmeticsTests = []testCase{
 					},
 				},
 				ast.Arithmetic{
-					Expr: ast.Unary{
+					ast.Unary{
 						Operand: ast.Unary{
 							Operand:  ast.Var("var"),
 							Operator: "+",
