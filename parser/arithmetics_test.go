@@ -267,7 +267,7 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
-	{`cmd $(( 1 & 2 )) $(( 1 ^ 2 ))`, ast.Script{
+	{`cmd $(( 1 & 2 )) $(( 1 ^ 2 )) $(( 1 | 2 ))`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -282,6 +282,13 @@ var arithmeticsTests = []testCase{
 					ast.InfixArithmetic{
 						Left:     ast.Number("1"),
 						Operator: "^",
+						Right:    ast.Number("2"),
+					},
+				},
+				ast.Arithmetic{
+					ast.InfixArithmetic{
+						Left:     ast.Number("1"),
+						Operator: "|",
 						Right:    ast.Number("2"),
 					},
 				},
