@@ -10,6 +10,7 @@ type precedence uint
 const (
 	_ precedence = iota
 	BASIC
+	CONDITIONAL    // expr ? expr : expr
 	LOR            // ||
 	LAND           // &&
 	BITOR          // |
@@ -161,6 +162,13 @@ func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
 			Operator: p.curr.Literal,
 		}
 		p.proceed()
+		return exp
+	case token.QUESTION:
+		p.proceed()
+		exp := ast.Conditional{Test: left}
+		exp.Body = p.parseArithmeticExpresion(CONDITIONAL)
+		p.proceed()
+		exp.Alternate = p.parseArithmeticExpresion(CONDITIONAL)
 		return exp
 	default:
 		return left

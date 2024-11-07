@@ -316,4 +316,29 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
+	{`cmd $(( 1 ? 2 : 3 )) $(( 1 ? 2 ? 3 : 4 : 5 ))`, ast.Script{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.Arithmetic{
+					ast.Conditional{
+						Test:      ast.Number("1"),
+						Body:      ast.Number("2"),
+						Alternate: ast.Number("3"),
+					},
+				},
+				ast.Arithmetic{
+					ast.Conditional{
+						Test: ast.Number("1"),
+						Body: ast.Conditional{
+							Test:      ast.Number("2"),
+							Body:      ast.Number("3"),
+							Alternate: ast.Number("4"),
+						},
+						Alternate: ast.Number("5"),
+					},
+				},
+			},
+		},
+	}},
 }
