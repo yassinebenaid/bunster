@@ -49,32 +49,64 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
-	{`cmd $(( 1++ )) $(( 1-- )) $(( ++1 )) $(( --1 ))`, ast.Script{
+	{`cmd $(( var++ )) $(( var-- )) $(( ++var )) $(( --var )) $(( --var++ )) $(( --var++ + ++var-- - 1 ))`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					Expr: ast.PostIncDecArithmetic{
-						Operand:  ast.Number("1"),
+						Operand:  ast.Var("var"),
 						Operator: "++",
 					},
 				},
 				ast.Arithmetic{
 					Expr: ast.PostIncDecArithmetic{
-						Operand:  ast.Number("1"),
+						Operand:  ast.Var("var"),
 						Operator: "--",
 					},
 				},
 				ast.Arithmetic{
 					Expr: ast.PreIncDecArithmetic{
-						Operand:  ast.Number("1"),
+						Operand:  ast.Var("var"),
 						Operator: "++",
 					},
 				},
 				ast.Arithmetic{
 					Expr: ast.PreIncDecArithmetic{
-						Operand:  ast.Number("1"),
+						Operand:  ast.Var("var"),
 						Operator: "--",
+					},
+				},
+				ast.Arithmetic{
+					Expr: ast.PreIncDecArithmetic{
+						Operand: ast.PostIncDecArithmetic{
+							Operand:  ast.Var("var"),
+							Operator: "++",
+						},
+						Operator: "--",
+					},
+				},
+				ast.Arithmetic{
+					Expr: ast.InfixArithmetic{
+						Left: ast.InfixArithmetic{
+							Left: ast.PreIncDecArithmetic{
+								Operand: ast.PostIncDecArithmetic{
+									Operand:  ast.Var("var"),
+									Operator: "++",
+								},
+								Operator: "--",
+							},
+							Operator: "+",
+							Right: ast.PreIncDecArithmetic{
+								Operand: ast.PostIncDecArithmetic{
+									Operand:  ast.Var("var"),
+									Operator: "--",
+								},
+								Operator: "++",
+							},
+						},
+						Operator: "-",
+						Right:    ast.Number("1"),
 					},
 				},
 			},

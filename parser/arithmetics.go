@@ -11,8 +11,8 @@ const (
 	_ precedence = iota
 	BASIC
 	ADDITION
-	POST_INCREMENT
 	PRE_INCREMENT
+	POST_INCREMENT
 )
 
 var precedences = map[token.TokenType]precedence{
