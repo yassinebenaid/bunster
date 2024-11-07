@@ -51,9 +51,7 @@ const (
 	EQ                   // `==`
 	NOT_EQ               // `!=`
 	LT                   // `<`
-	LE                   // `<=`
 	GT                   // `>`
-	GE                   // `>=`
 	EQ_TILDE             // `=~`
 	AND                  // `&&`
 	OR                   // `||`

@@ -94,9 +94,6 @@ switch_beginning:
 			default:
 				tok.Type, tok.Literal = token.DOUBLE_LT, "<<"
 			}
-		case '=':
-			l.proceed()
-			tok.Type, tok.Literal = token.LE, "<="
 		case '&':
 			l.proceed()
 			tok.Type, tok.Literal = token.LT_AMPERSAND, "<&"
@@ -113,8 +110,6 @@ switch_beginning:
 		switch l.next {
 		case '>':
 			tok.Type, tok.Literal = token.DOUBLE_GT, ">>"
-		case '=':
-			tok.Type, tok.Literal = token.GE, ">="
 		case '&':
 			tok.Type, tok.Literal = token.GT_AMPERSAND, ">&"
 		case '|':

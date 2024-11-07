@@ -32,8 +32,6 @@ var precedences = map[token.TokenType]precedence{
 	token.DOUBLE_LT:      BINSHIFT,
 	token.GT:             BINSHIFT,
 	token.LT:             BINSHIFT,
-	token.GE:             BINSHIFT,
-	token.LE:             BINSHIFT,
 }
 
 func (p *Parser) parseArithmetics() ast.Expression {
@@ -132,6 +130,12 @@ func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
 		Operator: p.curr.Literal,
 	}
 	p.proceed()
+
+	if p.curr.Type == token.ASSIGN {
+		exp.Operator += "="
+		p.proceed()
+	}
+
 	exp.Right = p.parseArithmeticExpresion(ADDITION)
 	return exp
 }
