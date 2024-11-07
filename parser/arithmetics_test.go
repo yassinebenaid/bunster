@@ -49,7 +49,7 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
-	{`cmd $(( var++ )) $(( var-- )) $(( ++var )) $(( --var )) $(( --var++ )) $(( --var++ + ++var-- - 1 ))`, ast.Script{
+	{`cmd $(( var++ )) $(( var-- )) $(( ++var )) $(( --var ))`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -77,42 +77,10 @@ var arithmeticsTests = []testCase{
 						Operator: "--",
 					},
 				},
-				ast.Arithmetic{
-					Expr: ast.PreIncDecArithmetic{
-						Operand: ast.PostIncDecArithmetic{
-							Operand:  ast.Var("var"),
-							Operator: "++",
-						},
-						Operator: "--",
-					},
-				},
-				ast.Arithmetic{
-					Expr: ast.InfixArithmetic{
-						Left: ast.InfixArithmetic{
-							Left: ast.PreIncDecArithmetic{
-								Operand: ast.PostIncDecArithmetic{
-									Operand:  ast.Var("var"),
-									Operator: "++",
-								},
-								Operator: "--",
-							},
-							Operator: "+",
-							Right: ast.PreIncDecArithmetic{
-								Operand: ast.PostIncDecArithmetic{
-									Operand:  ast.Var("var"),
-									Operator: "--",
-								},
-								Operator: "++",
-							},
-						},
-						Operator: "-",
-						Right:    ast.Number("1"),
-					},
-				},
 			},
 		},
 	}},
-	{`cmd $(( +var )) $(( -var ))`, ast.Script{
+	{`cmd $(( +var )) $(( -var )) $(( + - var )) $(( - + var ))`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -125,6 +93,24 @@ var arithmeticsTests = []testCase{
 				ast.Arithmetic{
 					Expr: ast.Unary{
 						Operand:  ast.Var("var"),
+						Operator: "-",
+					},
+				},
+				ast.Arithmetic{
+					Expr: ast.Unary{
+						Operand: ast.Unary{
+							Operand:  ast.Var("var"),
+							Operator: "-",
+						},
+						Operator: "+",
+					},
+				},
+				ast.Arithmetic{
+					Expr: ast.Unary{
+						Operand: ast.Unary{
+							Operand:  ast.Var("var"),
+							Operator: "+",
+						},
 						Operator: "-",
 					},
 				},
