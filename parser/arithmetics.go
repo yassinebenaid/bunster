@@ -10,6 +10,7 @@ type precedence uint
 const (
 	_ precedence = iota
 	BASIC
+	BITOR          // ^
 	BITAND         // &
 	EQUALITY       // == !=
 	COMPARISON     // <= >= < >
@@ -37,6 +38,7 @@ var precedences = map[token.TokenType]precedence{
 	token.EQ:             EQUALITY,
 	token.NOT_EQ:         EQUALITY,
 	token.AMPERSAND:      BITAND,
+	token.CIRCUMFLEX:     BITOR,
 }
 
 func (p *Parser) parseArithmetics() ast.Expression {
