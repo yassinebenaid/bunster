@@ -22,8 +22,6 @@ const (
 var precedences = map[token.TokenType]precedence{
 	token.PLUS:           ADDITION,
 	token.MINUS:          ADDITION,
-	token.INCREMENT:      POST_INCREMENT,
-	token.DECREMENT:      POST_INCREMENT,
 	token.EXPONENTIATION: EXPONENTIATION,
 	token.STAR:           MULDIVREM,
 	token.SLASH:          MULDIVREM,
@@ -66,6 +64,8 @@ func (p *Parser) parseArithmeticExpresion(prec precedence) ast.Expression {
 	for prec < precedences[p.curr.Type] {
 		exp = p.parseInfix(exp)
 	}
+
+	exp = p.parsePostfix(exp)
 
 	return exp
 }
@@ -139,4 +139,18 @@ func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
 	}
 
 	return exp
+}
+
+func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
+	switch p.curr.Type {
+	case token.INCREMENT, token.DECREMENT:
+		exp := ast.PostIncDecArithmetic{
+			Operand:  left,
+			Operator: p.curr.Literal,
+		}
+		p.proceed()
+		return exp
+	default:
+		return left
+	}
 }
