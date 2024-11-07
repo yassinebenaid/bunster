@@ -97,6 +97,13 @@ func (p *Parser) parsePrefix() ast.Expression {
 
 		exp.Operand = p.parseArithmeticExpresion(UNARY)
 		return exp
+	case token.EXCLAMATION:
+		p.proceed()
+
+		exp := ast.Negation{
+			Operand: p.parseArithmeticExpresion(UNARY),
+		}
+		return exp
 	default:
 		return nil
 	}

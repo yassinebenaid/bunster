@@ -175,6 +175,10 @@ type Unary struct {
 	Operator string
 }
 
+type Negation struct {
+	Operand Expression
+}
+
 func (Word) node()                 {}
 func (Number) node()               {}
 func (Redirection) node()          {}
@@ -204,6 +208,7 @@ func (InfixArithmetic) node()      {}
 func (PostIncDecArithmetic) node() {}
 func (PreIncDecArithmetic) node()  {}
 func (Unary) node()                {}
+func (Negation) node()             {}
 
 // Expressions
 func (Word) expr()                 {}
@@ -226,6 +231,7 @@ func (InfixArithmetic) expr()      {}
 func (PostIncDecArithmetic) expr() {}
 func (PreIncDecArithmetic) expr()  {}
 func (Unary) expr()                {}
+func (Negation) expr()             {}
 
 // Statements
 func (Command) stmt()            {}
