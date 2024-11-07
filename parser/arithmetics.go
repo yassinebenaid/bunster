@@ -11,6 +11,7 @@ const (
 	_ precedence = iota
 	BASIC
 	ADDITION
+	UNARY
 	PRE_INCREMENT
 	POST_INCREMENT
 )
@@ -87,6 +88,14 @@ func (p *Parser) parsePrefix() ast.Expression {
 		p.proceed()
 
 		exp.Operand = p.parseArithmeticExpresion(PRE_INCREMENT)
+		return exp
+	case token.PLUS, token.MINUS:
+		exp := ast.Unary{
+			Operator: p.curr.Literal,
+		}
+		p.proceed()
+
+		exp.Operand = p.parseArithmeticExpresion(UNARY)
 		return exp
 	default:
 		return nil

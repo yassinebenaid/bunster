@@ -172,6 +172,11 @@ type PreIncDecArithmetic struct {
 	Operator string
 }
 
+type Unary struct {
+	Operand  Expression
+	Operator string
+}
+
 func (Word) node()                 {}
 func (Number) node()               {}
 func (Redirection) node()          {}
@@ -200,6 +205,7 @@ func (Arithmetic) node()           {}
 func (InfixArithmetic) node()      {}
 func (PostIncDecArithmetic) node() {}
 func (PreIncDecArithmetic) node()  {}
+func (Unary) node()                {}
 
 // Expressions
 func (Word) expr()                 {}
@@ -221,6 +227,7 @@ func (Arithmetic) expr()           {}
 func (InfixArithmetic) expr()      {}
 func (PostIncDecArithmetic) expr() {}
 func (PreIncDecArithmetic) expr()  {}
+func (Unary) expr()                {}
 
 // Statements
 func (Command) stmt()            {}

@@ -112,4 +112,23 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
+	{`cmd $(( +var )) $(( -var ))`, ast.Script{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.Arithmetic{
+					Expr: ast.Unary{
+						Operand:  ast.Var("var"),
+						Operator: "+",
+					},
+				},
+				ast.Arithmetic{
+					Expr: ast.Unary{
+						Operand:  ast.Var("var"),
+						Operator: "-",
+					},
+				},
+			},
+		},
+	}},
 }
