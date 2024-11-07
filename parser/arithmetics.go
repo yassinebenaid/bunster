@@ -10,6 +10,7 @@ type precedence uint
 const (
 	_ precedence = iota
 	BASIC
+	ASSIGNMENT     //  = *= /= %= += -= <<= >>= &= ^= |=
 	CONDITIONAL    // expr ? expr : expr
 	LOR            // ||
 	LAND           // &&
@@ -46,6 +47,9 @@ var precedences = map[token.TokenType]precedence{
 	token.PIPE:           BITOR,
 	token.AND:            LAND,
 	token.OR:             LOR,
+	token.ASSIGN:         ASSIGNMENT,
+	token.STAR_ASSIGN:    ASSIGNMENT,
+	token.SLASH_ASSIGN:   ASSIGNMENT,
 }
 
 func (p *Parser) parseArithmetics() ast.Expression {
