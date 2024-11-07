@@ -178,6 +178,9 @@ type Unary struct {
 type Negation struct {
 	Operand Expression
 }
+type BitFlip struct {
+	Operand Expression
+}
 
 func (Word) node()                 {}
 func (Number) node()               {}
@@ -209,6 +212,7 @@ func (PostIncDecArithmetic) node() {}
 func (PreIncDecArithmetic) node()  {}
 func (Unary) node()                {}
 func (Negation) node()             {}
+func (BitFlip) node()              {}
 
 // Expressions
 func (Word) expr()                 {}
@@ -232,6 +236,7 @@ func (PostIncDecArithmetic) expr() {}
 func (PreIncDecArithmetic) expr()  {}
 func (Unary) expr()                {}
 func (Negation) expr()             {}
+func (BitFlip) expr()              {}
 
 // Statements
 func (Command) stmt()            {}

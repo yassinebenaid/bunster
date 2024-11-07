@@ -126,4 +126,13 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
+	{`cmd $(( ~var )) $(( ~$var ))`, ast.Script{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.Arithmetic{ast.BitFlip{Operand: ast.Var("var")}},
+				ast.Arithmetic{ast.BitFlip{Operand: ast.Var("var")}},
+			},
+		},
+	}},
 }

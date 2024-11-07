@@ -11,6 +11,7 @@ const (
 	_ precedence = iota
 	BASIC
 	ADDITION
+	NEGATION
 	UNARY
 	PRE_INCREMENT
 	POST_INCREMENT
@@ -99,10 +100,11 @@ func (p *Parser) parsePrefix() ast.Expression {
 		return exp
 	case token.EXCLAMATION:
 		p.proceed()
-
-		exp := ast.Negation{
-			Operand: p.parseArithmeticExpresion(UNARY),
-		}
+		exp := ast.Negation{Operand: p.parseArithmeticExpresion(NEGATION)}
+		return exp
+	case token.TILDE:
+		p.proceed()
+		exp := ast.BitFlip{Operand: p.parseArithmeticExpresion(NEGATION)}
 		return exp
 	default:
 		return nil
