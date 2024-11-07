@@ -135,4 +135,25 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
+	{`cmd $(( 1 ** 2 )) $(( $var ** var ))`, ast.Script{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.Arithmetic{
+					ast.InfixArithmetic{
+						Left:     ast.Number("1"),
+						Operator: "**",
+						Right:    ast.Number("2"),
+					},
+				},
+				ast.Arithmetic{
+					ast.InfixArithmetic{
+						Left:     ast.Var("var"),
+						Operator: "**",
+						Right:    ast.Var("var"),
+					},
+				},
+			},
+		},
+	}},
 }

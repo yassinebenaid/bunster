@@ -53,6 +53,9 @@ switch_beginning:
 		if l.next == '=' {
 			l.proceed()
 			tok.Type, tok.Literal = token.STAR_ASSIGN, "*="
+		} else if l.next == '*' {
+			l.proceed()
+			tok.Type, tok.Literal = token.EXPONENTIATION, "**"
 		} else {
 			tok.Type, tok.Literal = token.STAR, string(l.curr)
 		}

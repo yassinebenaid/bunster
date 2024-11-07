@@ -10,18 +10,20 @@ type precedence uint
 const (
 	_ precedence = iota
 	BASIC
-	ADDITION
-	NEGATION
-	UNARY
-	PRE_INCREMENT
-	POST_INCREMENT
+	ADDITION       // + -
+	EXPONENTIATION // **
+	NEGATION       // ! ~
+	UNARY          // - +
+	PRE_INCREMENT  // ++id --id
+	POST_INCREMENT // id++ id--
 )
 
 var precedences = map[token.TokenType]precedence{
-	token.PLUS:      ADDITION,
-	token.MINUS:     ADDITION,
-	token.INCREMENT: POST_INCREMENT,
-	token.DECREMENT: POST_INCREMENT,
+	token.PLUS:           ADDITION,
+	token.MINUS:          ADDITION,
+	token.INCREMENT:      POST_INCREMENT,
+	token.DECREMENT:      POST_INCREMENT,
+	token.EXPONENTIATION: EXPONENTIATION,
 }
 
 func (p *Parser) parseArithmetics() ast.Expression {
@@ -123,6 +125,14 @@ func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
 		}
 		p.proceed()
 		inf.Right = p.parseArithmeticExpresion(ADDITION)
+		exp = inf
+	case token.EXPONENTIATION:
+		var inf = ast.InfixArithmetic{
+			Left:     left,
+			Operator: p.curr.Literal,
+		}
+		p.proceed()
+		inf.Right = p.parseArithmeticExpresion(EXPONENTIATION)
 		exp = inf
 	case token.INCREMENT, token.DECREMENT:
 		exp = ast.PostIncDecArithmetic{

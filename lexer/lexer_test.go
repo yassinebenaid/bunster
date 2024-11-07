@@ -50,6 +50,7 @@ func TestLexer(t *testing.T) {
 		{`+`, []token.Token{{Type: token.PLUS, Literal: `+`}}},
 		{`-`, []token.Token{{Type: token.MINUS, Literal: `-`}}},
 		{`*`, []token.Token{{Type: token.STAR, Literal: `*`}}},
+		{`**`, []token.Token{{Type: token.EXPONENTIATION, Literal: `**`}}},
 		{`/`, []token.Token{{Type: token.SLASH, Literal: `/`}}},
 		{`%`, []token.Token{{Type: token.PERCENT, Literal: `%`}}},
 		{`%%`, []token.Token{{Type: token.DOUBLE_PERCENT, Literal: `%%`}}},

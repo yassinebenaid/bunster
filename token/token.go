@@ -39,6 +39,7 @@ const (
 	PLUS                 // `+`
 	MINUS                // `-`
 	STAR                 // `*`
+	EXPONENTIATION       // `**`
 	SLASH                // `/`
 	PERCENT              // `%`
 	DOUBLE_PERCENT       // `%%`
