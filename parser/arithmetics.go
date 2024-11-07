@@ -32,6 +32,8 @@ var precedences = map[token.TokenType]precedence{
 	token.DOUBLE_LT:      BINSHIFT,
 	token.GT:             BINSHIFT,
 	token.LT:             BINSHIFT,
+	token.GE:             BINSHIFT,
+	token.LE:             BINSHIFT,
 }
 
 func (p *Parser) parseArithmetics() ast.Expression {
