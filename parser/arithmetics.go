@@ -10,6 +10,7 @@ type precedence uint
 const (
 	_ precedence = iota
 	BASIC
+	EQUALITY       // == !=
 	COMPARISON     // <= >= < >
 	BINSHIFT       // << >>
 	ADDITION       // + -
@@ -30,8 +31,10 @@ var precedences = map[token.TokenType]precedence{
 	token.PERCENT:        MULDIVREM,
 	token.DOUBLE_GT:      BINSHIFT,
 	token.DOUBLE_LT:      BINSHIFT,
-	token.GT:             BINSHIFT,
-	token.LT:             BINSHIFT,
+	token.GT:             COMPARISON,
+	token.LT:             COMPARISON,
+	token.EQ:             EQUALITY,
+	token.NOT_EQ:         EQUALITY,
 }
 
 func (p *Parser) parseArithmetics() ast.Expression {
