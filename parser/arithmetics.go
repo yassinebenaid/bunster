@@ -10,6 +10,8 @@ type precedence uint
 const (
 	_ precedence = iota
 	BASIC
+	LOR            // ||
+	LAND           // &&
 	BITOR          // |
 	BITXOR         // ^
 	BITAND         // &
@@ -41,6 +43,8 @@ var precedences = map[token.TokenType]precedence{
 	token.AMPERSAND:      BITAND,
 	token.CIRCUMFLEX:     BITXOR,
 	token.PIPE:           BITOR,
+	token.AND:            LAND,
+	token.OR:             LOR,
 }
 
 func (p *Parser) parseArithmetics() ast.Expression {
