@@ -10,6 +10,7 @@ type precedence uint
 const (
 	_ precedence = iota
 	BASIC
+	BINSHIFT       // << >>
 	ADDITION       // + -
 	MULDIVREM      // * / %
 	EXPONENTIATION // **
@@ -26,6 +27,8 @@ var precedences = map[token.TokenType]precedence{
 	token.STAR:           MULDIVREM,
 	token.SLASH:          MULDIVREM,
 	token.PERCENT:        MULDIVREM,
+	token.DOUBLE_GT:      BINSHIFT,
+	token.DOUBLE_LT:      BINSHIFT,
 }
 
 func (p *Parser) parseArithmetics() ast.Expression {
@@ -119,25 +122,12 @@ func (p *Parser) parsePrefix() ast.Expression {
 }
 
 func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
-	var exp ast.Expression
-
-	switch p.curr.Type {
-	case token.PLUS, token.MINUS, token.EXPONENTIATION, token.STAR, token.SLASH, token.PERCENT:
-		var inf = ast.InfixArithmetic{
-			Left:     left,
-			Operator: p.curr.Literal,
-		}
-		p.proceed()
-		inf.Right = p.parseArithmeticExpresion(ADDITION)
-		exp = inf
-	case token.INCREMENT, token.DECREMENT:
-		exp = ast.PostIncDecArithmetic{
-			Operand:  left,
-			Operator: p.curr.Literal,
-		}
-		p.proceed()
+	exp := ast.InfixArithmetic{
+		Left:     left,
+		Operator: p.curr.Literal,
 	}
-
+	p.proceed()
+	exp.Right = p.parseArithmeticExpresion(ADDITION)
 	return exp
 }
 
