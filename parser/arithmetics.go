@@ -134,10 +134,15 @@ func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
 
 	prec := p.getArithmeticPrecedence()
 
-	p.proceed()
-
-	if p.curr.Type == token.ASSIGN {
-		exp.Operator += "="
+	switch p.curr.Type {
+	case token.LT, token.GT, token.DOUBLE_GT, token.DOUBLE_LT, token.AMPERSAND, token.CIRCUMFLEX,
+		token.PIPE, token.PERCENT:
+		p.proceed()
+		if p.curr.Type == token.ASSIGN {
+			exp.Operator += "="
+			p.proceed()
+		}
+	default:
 		p.proceed()
 	}
 
@@ -161,7 +166,7 @@ func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
 		p.proceed()
 		exp.Alternate = p.parseArithmeticExpresion(CONDITIONAL)
 		return exp
-	case token.DOUBLE_GT, token.DOUBLE_LT, token.AMPERSAND, token.CIRCUMFLEX, token.PIPE:
+	case token.DOUBLE_GT, token.DOUBLE_LT, token.AMPERSAND, token.CIRCUMFLEX, token.PIPE, token.PERCENT:
 		exp := ast.InfixArithmetic{
 			Left:     left,
 			Operator: p.curr.Literal + "=",
@@ -210,6 +215,9 @@ func (p *Parser) getArithmeticPrecedence() precedence {
 		}
 		return BINSHIFT
 	case token.STAR, token.SLASH, token.PERCENT:
+		if p.next.Type == token.ASSIGN {
+			return ASSIGNMENT
+		}
 		return MULDIVREM
 	case token.EXPONENTIATION:
 		return EXPONENTIATION
