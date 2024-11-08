@@ -70,11 +70,12 @@ func (n Number) string() string {
 func (in InfixArithmetic) string() string {
 	return "(" + in.Left.string() + " " + in.Operator + " " + in.Right.string() + ")"
 }
-func (PostIncDecArithmetic) string() string {
-	return ""
+func (p PostIncDecArithmetic) string() string {
+	return p.Operand.string() + p.Operator
 }
-func (PreIncDecArithmetic) string() string {
-	return ""
+func (p PreIncDecArithmetic) string() string {
+	return p.Operator + p.Operand.string()
+
 }
 func (u Unary) string() string {
 	return u.Operator + u.Operand.string()
