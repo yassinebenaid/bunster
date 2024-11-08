@@ -12,6 +12,7 @@ type Statement interface {
 type Expression interface {
 	Node
 	expr()
+	string() string
 }
 
 type Script []Statement
@@ -128,6 +129,12 @@ func (Redirection) expr()         {}
 func (Concatination) expr()       {}
 func (CommandSubstitution) expr() {}
 func (ProcessSubstitution) expr() {}
+
+func (Word) string() string                { return "" }
+func (Redirection) string() string         { return "" }
+func (Concatination) string() string       { return "" }
+func (CommandSubstitution) string() string { return "" }
+func (ProcessSubstitution) string() string { return "" }
 
 // Statements
 func (Command) stmt()            {}

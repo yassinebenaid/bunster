@@ -1,5 +1,7 @@
 package ast
 
+import "strings"
+
 type Number string
 
 type Arithmetic []Expression
@@ -59,38 +61,44 @@ func (Negation) expr()             {}
 func (BitFlip) expr()              {}
 func (Conditional) expr()          {}
 
-func (Var) String() string {
+func (n Number) string() string {
+	return string(n)
+}
+
+func (in InfixArithmetic) string() string {
+	return "(" + in.Left.string() + " " + in.Operator + " " + in.Right.string() + ")"
+}
+func (PostIncDecArithmetic) string() string {
+	return ""
+}
+func (PreIncDecArithmetic) string() string {
+	return ""
+}
+func (Unary) string() string {
+	return ""
+}
+func (Negation) string() string {
+	return ""
+}
+func (BitFlip) string() string {
+	return ""
+}
+func (Conditional) string() string {
 	return ""
 }
 
-func (Number) String() string {
-	return ""
-}
-
-func (InfixArithmetic) String() string {
-	return ""
-}
-func (PostIncDecArithmetic) String() string {
-	return ""
-}
-func (PreIncDecArithmetic) String() string {
-	return ""
-}
-func (Unary) String() string {
-	return ""
-}
-func (Negation) String() string {
-	return ""
-}
-func (BitFlip) String() string {
-	return ""
-}
-func (Conditional) String() string {
-	return ""
-}
-
-func (Arithmetic) String() string {
+func (Arithmetic) string() string {
 	var str string
 
 	return str
+}
+
+func (ar Arithmetic) String() string {
+	var strs []string
+
+	for _, expr := range ar {
+		strs = append(strs, expr.string())
+	}
+
+	return strings.Join(strs, ", ")
 }

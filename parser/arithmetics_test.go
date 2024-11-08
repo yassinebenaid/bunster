@@ -407,6 +407,8 @@ var arithmeticsPrecedenceTests = []struct {
 	expected string
 }{
 	{`$((1))`, `1`},
+	{`$((1, 2, 3))`, `1, 2, 3`},
+	{`$((a = b *= c))`, `(a = (b *= c))`},
 }
 
 func TestArithmeticsPrecedence(t *testing.T) {

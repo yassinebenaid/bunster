@@ -64,3 +64,13 @@ func (ChangeCase) expr()      {}
 func (VarCount) expr()        {}
 func (MatchAndRemove) expr()  {}
 func (MatchAndReplace) expr() {}
+
+func (v Var) string() string           { return string(v) }
+func (VarOrDefault) string() string    { return "" }
+func (VarOrSet) string() string        { return "" }
+func (VarOrFail) string() string       { return "" }
+func (CheckAndUse) string() string     { return "" }
+func (ChangeCase) string() string      { return "" }
+func (VarCount) string() string        { return "" }
+func (MatchAndRemove) string() string  { return "" }
+func (MatchAndReplace) string() string { return "" }
