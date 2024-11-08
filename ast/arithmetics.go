@@ -1,6 +1,8 @@
 package ast
 
-import "strings"
+import (
+	"strings"
+)
 
 type Number string
 
