@@ -416,6 +416,7 @@ var arithmeticsPrecedenceTests = []struct {
 	{`$((a & b & c & d ))`, `(((a & b) & c) & d)`},
 	{`$((a ^ b ^ c ^ d ))`, `(((a ^ b) ^ c) ^ d)`},
 	{`$((a == b == c != d != e == f ))`, `(((((a == b) == c) != d) != e) == f)`},
+	{`$((a <= b >= c < d > e))`, `((((a <= b) >= c) < d) > e)`},
 }
 
 func TestArithmeticsPrecedence(t *testing.T) {
