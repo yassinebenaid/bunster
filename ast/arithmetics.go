@@ -85,8 +85,8 @@ func (Negation) string() string {
 func (BitFlip) string() string {
 	return ""
 }
-func (Conditional) string() string {
-	return ""
+func (c Conditional) string() string {
+	return "(" + c.Test.string() + " ? " + c.Body.string() + " : " + c.Alternate.string() + ")"
 }
 
 func (Arithmetic) string() string {
