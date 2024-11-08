@@ -62,7 +62,7 @@ func (p *Parser) parseArithmeticExpresion(prec precedence) ast.Expression {
 		p.proceed()
 	}
 
-	for prec < p.getPrecedence() {
+	for prec < p.getArithmeticPrecedence() {
 		exp = p.parseInfix(exp)
 	}
 
@@ -156,7 +156,7 @@ func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
 	}
 }
 
-func (p *Parser) getPrecedence() precedence {
+func (p *Parser) getArithmeticPrecedence() precedence {
 	switch p.curr.Type {
 	case token.OR:
 		return LOR
@@ -178,6 +178,8 @@ func (p *Parser) getPrecedence() precedence {
 		return EXPONENTIATION
 	case token.PLUS, token.MINUS:
 		return ADDITION
+	case token.STAR_ASSIGN, token.SLASH_ASSIGN, token.ASSIGN, token.PLUS_ASSIGN, token.MINUS_ASSIGN:
+		return ASSIGNMENT
 	default:
 		return BASIC
 	}
