@@ -133,7 +133,6 @@ func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
 	}
 
 	prec := p.getArithmeticPrecedence()
-
 	switch p.curr.Type {
 	case token.LT, token.GT, token.DOUBLE_GT, token.DOUBLE_LT, token.AMPERSAND, token.CIRCUMFLEX,
 		token.PIPE, token.PERCENT:
@@ -166,7 +165,11 @@ func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
 		p.proceed()
 		exp.Alternate = p.parseArithmeticExpresion(CONDITIONAL)
 		return exp
-	case token.DOUBLE_GT, token.DOUBLE_LT, token.AMPERSAND, token.CIRCUMFLEX, token.PIPE, token.PERCENT:
+	case token.DOUBLE_GT, token.DOUBLE_LT, token.AMPERSAND, token.PIPE, token.PERCENT:
+		if p.next.Type != token.ASSIGN {
+			return left
+		}
+
 		exp := ast.InfixArithmetic{
 			Left:     left,
 			Operator: p.curr.Literal + "=",
@@ -176,7 +179,7 @@ func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
 		p.proceed()
 		exp.Right = p.parseArithmeticExpresion(ASSIGNMENT)
 		return exp
-	case token.STAR_ASSIGN, token.SLASH_ASSIGN, token.ASSIGN, token.PLUS_ASSIGN, token.MINUS_ASSIGN:
+	case token.STAR_ASSIGN, token.SLASH_ASSIGN, token.ASSIGN, token.PLUS_ASSIGN, token.MINUS_ASSIGN, token.CIRCUMFLEX_ASSIGN:
 		exp := ast.InfixArithmetic{
 			Left:     left,
 			Operator: p.curr.Literal,
@@ -200,11 +203,13 @@ func (p *Parser) getArithmeticPrecedence() precedence {
 			return ASSIGNMENT
 		}
 		return BITOR
-	case token.AMPERSAND, token.CIRCUMFLEX:
+	case token.CIRCUMFLEX:
+		return BITXOR
+	case token.AMPERSAND:
 		if p.next.Type == token.ASSIGN {
 			return ASSIGNMENT
 		}
-		return BITXOR
+		return BITAND
 	case token.EQ, token.NOT_EQ:
 		return EQUALITY
 	case token.GT, token.LT:

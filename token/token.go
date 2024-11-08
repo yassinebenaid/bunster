@@ -94,6 +94,7 @@ const (
 	LT_PAREN             // `<(`
 	CIRCUMFLEX           // `^`
 	DOUBLE_CIRCUMFLEX    // `^^`
+	CIRCUMFLEX_ASSIGN    // `^=`
 	COLON_ASSIGN         // `:=`
 	COLON_MINUS          // `:-`
 	COLON_PLUS           // `:+`

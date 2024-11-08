@@ -63,6 +63,9 @@ switch_beginning:
 		if l.next == '^' {
 			l.proceed()
 			tok.Type, tok.Literal = token.DOUBLE_CIRCUMFLEX, "^^"
+		} else if l.next == '=' {
+			l.proceed()
+			tok.Type, tok.Literal = token.CIRCUMFLEX_ASSIGN, "^="
 		} else {
 			tok.Type, tok.Literal = token.CIRCUMFLEX, string(l.curr)
 		}

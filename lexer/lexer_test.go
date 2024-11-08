@@ -104,6 +104,7 @@ func TestLexer(t *testing.T) {
 		{`<(`, []token.Token{{Type: token.LT_PAREN, Literal: `<(`}}},
 		{`^`, []token.Token{{Type: token.CIRCUMFLEX, Literal: `^`}}},
 		{`^^`, []token.Token{{Type: token.DOUBLE_CIRCUMFLEX, Literal: `^^`}}},
+		{`^=`, []token.Token{{Type: token.CIRCUMFLEX_ASSIGN, Literal: `^=`}}},
 		{`:=`, []token.Token{{Type: token.COLON_ASSIGN, Literal: `:=`}}},
 		{`:-`, []token.Token{{Type: token.COLON_MINUS, Literal: `:-`}}},
 		{`:+`, []token.Token{{Type: token.COLON_PLUS, Literal: `:+`}}},
