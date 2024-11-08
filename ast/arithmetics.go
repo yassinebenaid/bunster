@@ -39,6 +39,7 @@ type Conditional struct {
 	Alternate Expression
 }
 
+func (Number) node()               {}
 func (Arithmetic) node()           {}
 func (InfixArithmetic) node()      {}
 func (PostIncDecArithmetic) node() {}
@@ -48,7 +49,7 @@ func (Negation) node()             {}
 func (BitFlip) node()              {}
 func (Conditional) node()          {}
 
-// Expressions
+func (Number) expr()               {}
 func (Arithmetic) expr()           {}
 func (InfixArithmetic) expr()      {}
 func (PostIncDecArithmetic) expr() {}
@@ -57,3 +58,39 @@ func (Unary) expr()                {}
 func (Negation) expr()             {}
 func (BitFlip) expr()              {}
 func (Conditional) expr()          {}
+
+func (Var) String() string {
+	return ""
+}
+
+func (Number) String() string {
+	return ""
+}
+
+func (InfixArithmetic) String() string {
+	return ""
+}
+func (PostIncDecArithmetic) String() string {
+	return ""
+}
+func (PreIncDecArithmetic) String() string {
+	return ""
+}
+func (Unary) String() string {
+	return ""
+}
+func (Negation) String() string {
+	return ""
+}
+func (BitFlip) String() string {
+	return ""
+}
+func (Conditional) String() string {
+	return ""
+}
+
+func (Arithmetic) String() string {
+	var str string
+
+	return str
+}

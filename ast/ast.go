@@ -108,7 +108,6 @@ type ProcessSubstitution struct {
 }
 
 func (Word) node()                {}
-func (Number) node()              {}
 func (Redirection) node()         {}
 func (Concatination) node()       {}
 func (Command) node()             {}
@@ -125,7 +124,6 @@ func (ProcessSubstitution) node() {}
 
 // Expressions
 func (Word) expr()                {}
-func (Number) expr()              {}
 func (Redirection) expr()         {}
 func (Concatination) expr()       {}
 func (CommandSubstitution) expr() {}

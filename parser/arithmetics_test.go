@@ -1,6 +1,12 @@
 package parser_test
 
-import "github.com/yassinebenaid/bunny/ast"
+import (
+	"testing"
+
+	"github.com/yassinebenaid/bunny/ast"
+	"github.com/yassinebenaid/bunny/lexer"
+	"github.com/yassinebenaid/bunny/parser"
+)
 
 var arithmeticsTests = []testCase{
 	{`$((1)) $(( variable_name )) $(( $VARIABLE_NAME ))`, ast.Script{
@@ -394,4 +400,44 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
+}
+
+var arithmeticsPrecedenceTests = []struct {
+	input    string
+	expected string
+}{
+	{`$((1))`, `1`},
+}
+
+func TestArithmeticsPrecedence(t *testing.T) {
+	for i, tc := range arithmeticsPrecedenceTests {
+		p := parser.New(
+			lexer.New([]byte(tc.input)),
+		)
+
+		script := p.ParseScript()
+
+		if p.Error != nil {
+			t.Fatalf("\nCase: %s\nInput: %s\nUnexpected Error: %s\n", dump(i), dump(tc.input), dump(p.Error.Error()))
+		}
+
+		if len(script) != 1 {
+			t.Fatalf("\nCase: %s\nInput: %s\nExpected a script of one statement, got %s\n", dump(i), dump(tc.input), dump(len(script)))
+		}
+
+		cmd, ok := script[0].(ast.Command)
+		if !ok {
+			t.Fatalf("\nCase: %s\nInput: %s\nExpected a command, got %s\n", dump(i), dump(tc.input), dump(script[0]))
+		}
+
+		name, ok := cmd.Name.(ast.Arithmetic)
+		if !ok {
+			t.Fatalf("\nCase: %s\nInput: %s\nExpected command name to be an arithmetic, got %s\n", dump(i), dump(tc.input), dump(cmd.Name))
+		}
+
+		nameStr := name.String()
+		if nameStr != tc.expected {
+			t.Fatalf("\n Case: %s Input: %s Expected: %s Got %s\n", dump(i), dump(tc.input), dump(tc.expected), dump(nameStr))
+		}
+	}
 }
