@@ -34,7 +34,6 @@ type PipelineCommand struct {
 type Pipeline []PipelineCommand
 
 type Word string
-type Number string
 
 type Redirection struct {
 	Src    string
@@ -47,8 +46,6 @@ type Command struct {
 	Args         []Expression
 	Redirections []Redirection
 }
-
-type Var string
 
 type Concatination struct {
 	Nodes []Expression
@@ -110,142 +107,29 @@ type ProcessSubstitution struct {
 	Body      []Statement
 }
 
-type VarOrDefault struct {
-	Name         string
-	Default      Expression
-	CheckForNull bool
-}
-
-type VarOrSet struct {
-	Name    string
-	Default Expression
-}
-
-type VarOrFail struct {
-	Name  string
-	Error Expression
-}
-
-type CheckAndUse struct {
-	Name  string
-	Value Expression
-}
-
-type ChangeCase struct {
-	Name     string
-	Operator string
-	Pattern  Expression
-}
-
-type VarCount string
-
-type MatchAndRemove struct {
-	Name     string
-	Operator string
-	Pattern  Expression
-}
-
-type MatchAndReplace struct {
-	Name     string
-	Operator string
-	Pattern  Expression
-	Value    Expression
-}
-
-type Arithmetic []Expression
-
-type InfixArithmetic struct {
-	Left     Expression
-	Operator string
-	Right    Expression
-}
-
-type PostIncDecArithmetic struct {
-	Operand  Expression
-	Operator string
-}
-
-type PreIncDecArithmetic struct {
-	Operand  Expression
-	Operator string
-}
-
-type Unary struct {
-	Operand  Expression
-	Operator string
-}
-
-type Negation struct {
-	Operand Expression
-}
-
-type BitFlip struct {
-	Operand Expression
-}
-
-type Conditional struct {
-	Test      Expression
-	Body      Expression
-	Alternate Expression
-}
-
-func (Word) node()                 {}
-func (Number) node()               {}
-func (Redirection) node()          {}
-func (Var) node()                  {}
-func (Concatination) node()        {}
-func (Command) node()              {}
-func (Pipeline) node()             {}
-func (BinaryConstruction) node()   {}
-func (Loop) node()                 {}
-func (RangeLoop) node()            {}
-func (If) node()                   {}
-func (Case) node()                 {}
-func (Group) node()                {}
-func (SubShell) node()             {}
-func (CommandSubstitution) node()  {}
-func (ProcessSubstitution) node()  {}
-func (VarOrDefault) node()         {}
-func (VarOrSet) node()             {}
-func (VarOrFail) node()            {}
-func (CheckAndUse) node()          {}
-func (ChangeCase) node()           {}
-func (VarCount) node()             {}
-func (MatchAndRemove) node()       {}
-func (MatchAndReplace) node()      {}
-func (Arithmetic) node()           {}
-func (InfixArithmetic) node()      {}
-func (PostIncDecArithmetic) node() {}
-func (PreIncDecArithmetic) node()  {}
-func (Unary) node()                {}
-func (Negation) node()             {}
-func (BitFlip) node()              {}
-func (Conditional) node()          {}
+func (Word) node()                {}
+func (Number) node()              {}
+func (Redirection) node()         {}
+func (Concatination) node()       {}
+func (Command) node()             {}
+func (Pipeline) node()            {}
+func (BinaryConstruction) node()  {}
+func (Loop) node()                {}
+func (RangeLoop) node()           {}
+func (If) node()                  {}
+func (Case) node()                {}
+func (Group) node()               {}
+func (SubShell) node()            {}
+func (CommandSubstitution) node() {}
+func (ProcessSubstitution) node() {}
 
 // Expressions
-func (Word) expr()                 {}
-func (Number) expr()               {}
-func (Redirection) expr()          {}
-func (Var) expr()                  {}
-func (Concatination) expr()        {}
-func (CommandSubstitution) expr()  {}
-func (ProcessSubstitution) expr()  {}
-func (VarOrDefault) expr()         {}
-func (VarOrSet) expr()             {}
-func (VarOrFail) expr()            {}
-func (CheckAndUse) expr()          {}
-func (ChangeCase) expr()           {}
-func (VarCount) expr()             {}
-func (MatchAndRemove) expr()       {}
-func (MatchAndReplace) expr()      {}
-func (Arithmetic) expr()           {}
-func (InfixArithmetic) expr()      {}
-func (PostIncDecArithmetic) expr() {}
-func (PreIncDecArithmetic) expr()  {}
-func (Unary) expr()                {}
-func (Negation) expr()             {}
-func (BitFlip) expr()              {}
-func (Conditional) expr()          {}
+func (Word) expr()                {}
+func (Number) expr()              {}
+func (Redirection) expr()         {}
+func (Concatination) expr()       {}
+func (CommandSubstitution) expr() {}
+func (ProcessSubstitution) expr() {}
 
 // Statements
 func (Command) stmt()            {}
