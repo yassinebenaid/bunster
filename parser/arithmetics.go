@@ -29,29 +29,6 @@ const (
 	POST_INCREMENT // id++ id--
 )
 
-var precedences = map[token.TokenType]precedence{
-	token.PLUS:           ADDITION,
-	token.MINUS:          ADDITION,
-	token.EXPONENTIATION: EXPONENTIATION,
-	token.STAR:           MULDIVREM,
-	token.SLASH:          MULDIVREM,
-	token.PERCENT:        MULDIVREM,
-	token.DOUBLE_GT:      BINSHIFT,
-	token.DOUBLE_LT:      BINSHIFT,
-	token.GT:             COMPARISON,
-	token.LT:             COMPARISON,
-	token.EQ:             EQUALITY,
-	token.NOT_EQ:         EQUALITY,
-	token.AMPERSAND:      BITAND,
-	token.CIRCUMFLEX:     BITXOR,
-	token.PIPE:           BITOR,
-	token.AND:            LAND,
-	token.OR:             LOR,
-	token.ASSIGN:         ASSIGNMENT,
-	token.STAR_ASSIGN:    ASSIGNMENT,
-	token.SLASH_ASSIGN:   ASSIGNMENT,
-}
-
 func (p *Parser) parseArithmetics() ast.Expression {
 	p.proceed()
 
@@ -85,7 +62,7 @@ func (p *Parser) parseArithmeticExpresion(prec precedence) ast.Expression {
 		p.proceed()
 	}
 
-	for prec < precedences[p.curr.Type] {
+	for prec < p.getPrecedence() {
 		exp = p.parseInfix(exp)
 	}
 
@@ -176,5 +153,32 @@ func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
 		return exp
 	default:
 		return left
+	}
+}
+
+func (p *Parser) getPrecedence() precedence {
+	switch p.curr.Type {
+	case token.OR:
+		return LOR
+	case token.AND:
+		return LAND
+	case token.PIPE:
+		return BITOR
+	case token.AMPERSAND, token.CIRCUMFLEX:
+		return BITXOR
+	case token.EQ, token.NOT_EQ:
+		return EQUALITY
+	case token.GT, token.LT:
+		return COMPARISON
+	case token.DOUBLE_GT, token.DOUBLE_LT:
+		return BINSHIFT
+	case token.STAR, token.SLASH, token.PERCENT:
+		return MULDIVREM
+	case token.EXPONENTIATION:
+		return EXPONENTIATION
+	case token.PLUS, token.MINUS:
+		return ADDITION
+	default:
+		return BASIC
 	}
 }

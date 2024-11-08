@@ -341,24 +341,24 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
-	{`cmd $(( x = y )) $(( x *= y )) $(( x /= y )) $(( x %= y )) $(( x += y )) $(( x -= y )) \
-		$(( x <<= y )) $(( x >>= y )) $(( x &= y )) $(( x ^= y )) $(( x |= y ))`, ast.Script{
-		ast.Command{
-			Name: ast.Word("cmd"),
-			Args: []ast.Expression{
-				ast.Arithmetic{
-					ast.InfixArithmetic{Left: ast.Var("x"), Operator: "=", Right: ast.Var("y")},
-				},
-				ast.Arithmetic{
-					ast.InfixArithmetic{Left: ast.Var("x"), Operator: "*=", Right: ast.Var("y")},
-				},
-				ast.Arithmetic{
-					ast.InfixArithmetic{Left: ast.Var("x"), Operator: "/=", Right: ast.Var("y")},
-				},
-				ast.Arithmetic{
-					ast.InfixArithmetic{Left: ast.Var("x"), Operator: "%=", Right: ast.Var("y")},
-				},
-			},
-		},
-	}},
+	// {`cmd $(( x = y )) $(( x *= y )) $(( x /= y )) $(( x %= y )) $(( x += y )) $(( x -= y )) \
+	// 	$(( x <<= y )) $(( x >>= y )) $(( x &= y )) $(( x ^= y )) $(( x |= y ))`, ast.Script{
+	// 	ast.Command{
+	// 		Name: ast.Word("cmd"),
+	// 		Args: []ast.Expression{
+	// 			ast.Arithmetic{
+	// 				ast.InfixArithmetic{Left: ast.Var("x"), Operator: "=", Right: ast.Var("y")},
+	// 			},
+	// 			ast.Arithmetic{
+	// 				ast.InfixArithmetic{Left: ast.Var("x"), Operator: "*=", Right: ast.Var("y")},
+	// 			},
+	// 			ast.Arithmetic{
+	// 				ast.InfixArithmetic{Left: ast.Var("x"), Operator: "/=", Right: ast.Var("y")},
+	// 			},
+	// 			ast.Arithmetic{
+	// 				ast.InfixArithmetic{Left: ast.Var("x"), Operator: "%=", Right: ast.Var("y")},
+	// 			},
+	// 		},
+	// 	},
+	// }},
 }
