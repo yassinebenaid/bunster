@@ -76,8 +76,8 @@ func (PostIncDecArithmetic) string() string {
 func (PreIncDecArithmetic) string() string {
 	return ""
 }
-func (Unary) string() string {
-	return ""
+func (u Unary) string() string {
+	return u.Operator + u.Operand.string()
 }
 func (n Negation) string() string {
 	return "!" + n.Operand.string()
