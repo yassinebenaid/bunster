@@ -79,11 +79,11 @@ func (PreIncDecArithmetic) string() string {
 func (Unary) string() string {
 	return ""
 }
-func (Negation) string() string {
-	return ""
+func (n Negation) string() string {
+	return "!" + n.Operand.string()
 }
-func (BitFlip) string() string {
-	return ""
+func (bf BitFlip) string() string {
+	return "~" + bf.Operand.string()
 }
 func (c Conditional) string() string {
 	return "(" + c.Test.string() + " ? " + c.Body.string() + " : " + c.Alternate.string() + ")"
