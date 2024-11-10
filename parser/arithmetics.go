@@ -47,7 +47,6 @@ var infixPrecedences = map[token.TokenType]precedence{
 	token.EXPONENTIATION: EXPONENTIATION,
 	token.PLUS:           ADDITION,
 	token.MINUS:          ADDITION,
-	token.QUESTION:       CONDITIONAL,
 }
 
 func (p *Parser) parseArithmetics() ast.Expression {
