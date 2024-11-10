@@ -54,6 +54,7 @@ const (
 	LT                   // `<`
 	GT                   // `>`
 	GT_EQ                // `>=`
+	LT_EQ                // `<=`
 	EQ_TILDE             // `=~`
 	AND                  // `&&`
 	OR                   // `||`

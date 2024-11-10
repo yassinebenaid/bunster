@@ -106,6 +106,9 @@ switch_beginning:
 		case '>':
 			l.proceed()
 			tok.Type, tok.Literal = token.LT_GT, "<>"
+		case '=':
+			l.proceed()
+			tok.Type, tok.Literal = token.LT_EQ, "<="
 		case '(':
 			l.proceed()
 			tok.Type, tok.Literal = token.LT_PAREN, "<("

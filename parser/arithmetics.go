@@ -38,6 +38,7 @@ var infixPrecedences = map[token.TokenType]precedence{
 	token.GT:             COMPARISON,
 	token.LT:             COMPARISON,
 	token.GT_EQ:          COMPARISON,
+	token.LT_EQ:          COMPARISON,
 	token.DOUBLE_GT:      BINSHIFT,
 	token.DOUBLE_LT:      BINSHIFT,
 	token.STAR:           MULDIVREM,
