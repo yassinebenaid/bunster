@@ -495,3 +495,7 @@ func TestArithmeticsPrecedence(t *testing.T) {
 		}
 	}
 }
+
+var arithmeticsErrorHandlingCases = []errorHandlingTestCase{
+	{`$((`, "syntax error: unexpected end of file."},
+}

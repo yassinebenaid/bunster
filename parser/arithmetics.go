@@ -152,11 +152,13 @@ func (p *Parser) parsePrefix() ast.Expression {
 		exp := p.parseArithmeticExpresion(BASIC)
 		p.proceed()
 		return exp
+	case token.EOF:
+		p.error("unexpected end of file")
 	default:
 		p.error("unexpected token `%s`", p.curr.Literal)
-		return nil
 	}
 
+	return nil
 }
 
 func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
