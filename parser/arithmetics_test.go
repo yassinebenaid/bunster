@@ -451,6 +451,8 @@ var arithmeticsPrecedenceTests = []struct {
 		`((a + b) << c), ((a - b) << c), ((a + b) >> c), ((a - b) >> c)`},
 	28: {`$(( a << b  <= c, a << b  >= c, a << b  < c, a << b  > c, a >> b  <= c, a >> b  >= c, a >> b  < c, a >> b  > c ))`,
 		`((a << b) <= c), ((a << b) >= c), ((a << b) < c), ((a << b) > c), ((a >> b) <= c), ((a >> b) >= c), ((a >> b) < c), ((a >> b) > c)`},
+	29: {`$(( a <= b == c,  a >= b == c, a < b == c,  a > b == c, a <= b != c,  a >= b != c, a < b != c,  a > b != c  ))`,
+		`((a <= b) == c), ((a >= b) == c), ((a < b) == c), ((a > b) == c), ((a <= b) != c), ((a >= b) != c), ((a < b) != c), ((a > b) != c)`},
 }
 
 func TestArithmeticsPrecedence(t *testing.T) {
