@@ -3,6 +3,7 @@ package parser
 import (
 	"github.com/yassinebenaid/bunny/ast"
 	"github.com/yassinebenaid/bunny/token"
+	"github.com/yassinebenaid/godump"
 )
 
 type precedence uint
@@ -85,8 +86,18 @@ func (p *Parser) parsePrefix() ast.Expression {
 		p.proceed()
 		return exp
 	case token.SIMPLE_EXPANSION, token.WORD:
-		exp := ast.Var(p.curr.Literal)
+		var exp ast.Expression = ast.Var(p.curr.Literal)
 		p.proceed()
+
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+		switch p.curr.Type {
+		case token.INCREMENT, token.DECREMENT:
+			exp = ast.PostIncDecArithmetic{Operand: exp, Operator: p.curr.Literal}
+			p.proceed()
+			godump.Dump(exp)
+		}
 		return exp
 	case token.DOLLAR_DOUBLE_PAREN:
 		exp := p.parseArithmetics()
@@ -121,6 +132,7 @@ func (p *Parser) parsePrefix() ast.Expression {
 		exp := ast.BitFlip{Operand: p.parseArithmeticExpresion(NEGATION)}
 		return exp
 	default:
+		p.error("unexpected token `%s`", p.curr.Literal)
 		return nil
 	}
 
@@ -151,13 +163,6 @@ func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
 
 func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
 	switch p.curr.Type {
-	case token.INCREMENT, token.DECREMENT:
-		exp := ast.PostIncDecArithmetic{
-			Operand:  left,
-			Operator: p.curr.Literal,
-		}
-		p.proceed()
-		return exp
 	case token.QUESTION:
 		p.proceed()
 		exp := ast.Conditional{Test: left}
