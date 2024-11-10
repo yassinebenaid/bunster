@@ -59,7 +59,9 @@ const (
 	AND                  // `&&`
 	OR                   // `||`
 	PIPE                 // `|`
+	PIPE_ASSIGN          // `|=`
 	AMPERSAND            // `&`
+	AMPERSAND_ASSIGN     // `&=`
 	DOUBLE_GT            // `>>`
 	DOUBLE_GT_ASSIGN     // `>>=`
 	DOUBLE_LT            // `<<`

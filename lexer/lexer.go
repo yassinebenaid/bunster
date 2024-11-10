@@ -149,6 +149,9 @@ switch_beginning:
 		case '&':
 			l.proceed()
 			tok.Type, tok.Literal = token.AND, "&&"
+		case '=':
+			l.proceed()
+			tok.Type, tok.Literal = token.AMPERSAND_ASSIGN, "&="
 		case '>':
 			l.proceed()
 			switch l.next {
@@ -169,6 +172,9 @@ switch_beginning:
 		case '&':
 			l.proceed()
 			tok.Type, tok.Literal = token.PIPE_AMPERSAND, "|&"
+		case '=':
+			l.proceed()
+			tok.Type, tok.Literal = token.PIPE_ASSIGN, "|="
 		default:
 			tok.Type, tok.Literal = token.PIPE, string(l.curr)
 		}
