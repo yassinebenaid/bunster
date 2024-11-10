@@ -184,6 +184,11 @@ func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
 		p.proceed()
 		exp := ast.Conditional{Test: left}
 		exp.Body = p.parseArithmeticExpresion(BASIC)
+
+		if p.curr.Type != token.COLON {
+			p.error("expected a colon `:`, found `%s`", p.curr.Literal)
+		}
+
 		p.proceed()
 		exp.Alternate = p.parseArithmeticExpresion(BASIC)
 		return exp
