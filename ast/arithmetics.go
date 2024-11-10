@@ -81,10 +81,10 @@ func (u Unary) string() string {
 	return "(" + u.Operator + u.Operand.string() + ")"
 }
 func (n Negation) string() string {
-	return "!" + n.Operand.string()
+	return "(!" + n.Operand.string() + ")"
 }
 func (bf BitFlip) string() string {
-	return "~" + bf.Operand.string()
+	return "(~" + bf.Operand.string() + ")"
 }
 func (c Conditional) string() string {
 	return "(" + c.Test.string() + " ? " + c.Body.string() + " : " + c.Alternate.string() + ")"
