@@ -460,6 +460,7 @@ var arithmeticsPrecedenceTests = []struct {
 	35: {`$(( a ? b : c || a ? b : c))`, `(a ? b : (c || (a ? b : c)))`},
 	36: {`$(( a = b?c:d, a *= b?c:d, a /= b?c:d, a %= b?c:d, a += b?c:d, a -= b?c:d, a <<= b?c:d, a >>= b?c:d, a &= b?c:d, a ^= b?c:d, a |= b?c:d ))`,
 		`(a = (b ? c : d)), (a *= (b ? c : d)), (a /= (b ? c : d)), (a %= (b ? c : d)), (a += (b ? c : d)), (a -= (b ? c : d)), (a <<= (b ? c : d)), (a >>= (b ? c : d)), (a &= (b ? c : d)), (a ^= (b ? c : d)), (a |= (b ? c : d))`},
+	{`$((x ? v=2: y))`, `(x ? (v = 2) : y)`},
 }
 
 func TestArithmeticsPrecedence(t *testing.T) {
