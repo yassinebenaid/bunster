@@ -450,9 +450,9 @@ var arithmeticsPrecedenceTests = []struct {
 	27: {`$(( a << b + c, a << b - c, a >> b + c, a >> b - c ))`, `(a << (b + c)), (a << (b - c)), (a >> (b + c)), (a >> (b - c))`},
 	28: {`$(( a <= b << c, a >= b << c, a < b  << c, a > b  << c, a <= b >> c, a >= b >> c, a < b >> c, a > b >> c))`,
 		`(a <= (b << c)), (a >= (b << c)), (a < (b << c)), (a > (b << c)), (a <= (b >> c)), (a >= (b >> c)), (a < (b >> c)), (a > (b >> c))`},
-	29: {`$(( a <= b == c,  a >= b == c, a < b == c,  a > b == c, a <= b != c,  a >= b != c, a < b != c,  a > b != c  ))`,
-		`((a <= b) == c), ((a >= b) == c), ((a < b) == c), ((a > b) == c), ((a <= b) != c), ((a >= b) != c), ((a < b) != c), ((a > b) != c)`},
-	30: {`$(( a == b & c, a != b & c))`, `((a == b) & c), ((a != b) & c)`},
+	29: {`$(( a == b <= c, a == b >= c, a == b < c, a == b > c, a != b <= c, a != b >= c, a != b < c, a != b > c ))`,
+		`(a == (b <= c)), (a == (b >= c)), (a == (b < c)), (a == (b > c)), (a != (b <= c)), (a != (b >= c)), (a != (b < c)), (a != (b > c))`},
+	30: {`$(( a & b == c, a & b != c))`, `(a & (b == c)), (a & (b != c))`},
 }
 
 func TestArithmeticsPrecedence(t *testing.T) {
