@@ -498,4 +498,7 @@ func TestArithmeticsPrecedence(t *testing.T) {
 
 var arithmeticsErrorHandlingCases = []errorHandlingTestCase{
 	{`$((`, "syntax error: unexpected end of file."},
+	{`$(())`, "syntax error: unexpected token `)`."},
+	{`$(( ))`, "syntax error: unexpected token `)`."},
+	{`$((,))`, "syntax error: unexpected token `,`."},
 }
