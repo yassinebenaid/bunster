@@ -129,6 +129,11 @@ func (p *Parser) parsePrefix() ast.Expression {
 		p.proceed()
 		exp := ast.BitFlip{Operand: p.parseArithmeticExpresion(NEGATION)}
 		return exp
+	case token.LEFT_PAREN:
+		p.proceed()
+		exp := p.parseArithmeticExpresion(BASIC)
+		p.proceed()
+		return exp
 	default:
 		p.error("unexpected token `%s`", p.curr.Literal)
 		return nil

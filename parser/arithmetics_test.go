@@ -400,6 +400,17 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
+	{`cmd $(( (x), (x+y) ))`, ast.Script{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.Arithmetic{
+					ast.Var("x"),
+					ast.InfixArithmetic{Left: ast.Var("x"), Operator: "+", Right: ast.Var("y")},
+				},
+			},
+		},
+	}},
 }
 
 var arithmeticsPrecedenceTests = []struct {
@@ -426,6 +437,8 @@ var arithmeticsPrecedenceTests = []struct {
 	{`$((+a ** -b))`, `(+a ** -b)`},
 	{`$((++a + ++b - --c))`, `((++a + ++b) - --c)`},
 	{`$((a++ + b-- - c++))`, `((a++ + b--) - c++)`},
+	{`$((a + b * c + d))`, `((a + (b * c)) + d)`},
+	{`$(((a + b) * (c + d)))`, `((a + b) * (c + d))`},
 }
 
 func TestArithmeticsPrecedence(t *testing.T) {
