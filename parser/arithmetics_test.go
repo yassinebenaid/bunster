@@ -445,6 +445,8 @@ var arithmeticsPrecedenceTests = []struct {
 	23: {`$(( !-id, !+id, ~-id, ~+id ))`, `(!(-id)), (!(+id)), (~(-id)), (~(+id))`},
 	24: {`$(( !x ** !y, ~x ** ~y ))`, `((!x) ** (!y)), ((~x) ** (~y))`},
 	25: {`$(( a ** b * c, a ** b / c, a ** b % c ))`, `((a ** b) * c), ((a ** b) / c), ((a ** b) % c)`},
+	26: {`$(( a + b * c, a + b / c, a + b % c, a - b * c, a - b / c, a - b % c ))`,
+		`(a + (b * c)), (a + (b / c)), (a + (b % c)), (a - (b * c)), (a - (b / c)), (a - (b % c))`},
 }
 
 func TestArithmeticsPrecedence(t *testing.T) {
