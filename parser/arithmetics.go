@@ -167,7 +167,7 @@ func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
 
 	prec := infixPrecedences[p.curr.Type]
 	switch p.curr.Type {
-	case token.LT, token.GT, token.DOUBLE_GT, token.DOUBLE_LT, token.AMPERSAND, token.CIRCUMFLEX, token.PIPE:
+	case token.LT, token.GT, token.DOUBLE_GT, token.DOUBLE_LT, token.AMPERSAND, token.PIPE:
 		p.proceed()
 		if p.curr.Type == token.ASSIGN {
 			exp.Operator += "="
