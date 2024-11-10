@@ -53,6 +53,7 @@ const (
 	NOT_EQ               // `!=`
 	LT                   // `<`
 	GT                   // `>`
+	GT_EQ                // `>=`
 	EQ_TILDE             // `=~`
 	AND                  // `&&`
 	OR                   // `||`

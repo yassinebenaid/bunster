@@ -116,6 +116,8 @@ switch_beginning:
 		switch l.next {
 		case '>':
 			tok.Type, tok.Literal = token.DOUBLE_GT, ">>"
+		case '=':
+			tok.Type, tok.Literal = token.GT_EQ, ">="
 		case '&':
 			tok.Type, tok.Literal = token.GT_AMPERSAND, ">&"
 		case '|':

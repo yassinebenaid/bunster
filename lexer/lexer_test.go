@@ -65,6 +65,7 @@ func TestLexer(t *testing.T) {
 		{`=~`, []token.Token{{Type: token.EQ_TILDE, Literal: `=~`}}},
 		{`<`, []token.Token{{Type: token.LT, Literal: `<`}}},
 		{`>`, []token.Token{{Type: token.GT, Literal: `>`}}},
+		{`>=`, []token.Token{{Type: token.GT_EQ, Literal: `>=`}}},
 		{`&&`, []token.Token{{Type: token.AND, Literal: `&&`}}},
 		{`||`, []token.Token{{Type: token.OR, Literal: `||`}}},
 		{`|`, []token.Token{{Type: token.PIPE, Literal: `|`}}},

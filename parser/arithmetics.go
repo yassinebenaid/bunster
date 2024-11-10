@@ -37,6 +37,7 @@ var infixPrecedences = map[token.TokenType]precedence{
 	token.NOT_EQ:         EQUALITY,
 	token.GT:             COMPARISON,
 	token.LT:             COMPARISON,
+	token.GT_EQ:          COMPARISON,
 	token.DOUBLE_GT:      BINSHIFT,
 	token.DOUBLE_LT:      BINSHIFT,
 	token.STAR:           MULDIVREM,
@@ -204,7 +205,8 @@ func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
 		p.proceed()
 		exp.Right = p.parseArithmeticExpresion(ASSIGNMENT)
 		return exp
-	case token.STAR_ASSIGN, token.SLASH_ASSIGN, token.ASSIGN, token.PLUS_ASSIGN, token.MINUS_ASSIGN, token.CIRCUMFLEX_ASSIGN, token.PERCENT_ASSIGN:
+	case token.STAR_ASSIGN, token.SLASH_ASSIGN, token.ASSIGN, token.PLUS_ASSIGN, token.MINUS_ASSIGN,
+		token.CIRCUMFLEX_ASSIGN, token.PERCENT_ASSIGN:
 		exp := ast.InfixArithmetic{
 			Left:     left,
 			Operator: p.curr.Literal,
