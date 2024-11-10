@@ -97,6 +97,9 @@ switch_beginning:
 			case '<':
 				l.proceed()
 				tok.Type, tok.Literal = token.TRIPLE_LT, "<<<"
+			case '=':
+				l.proceed()
+				tok.Type, tok.Literal = token.DOUBLE_LT_ASSIGN, "<<="
 			default:
 				tok.Type, tok.Literal = token.DOUBLE_LT, "<<"
 			}
@@ -118,21 +121,28 @@ switch_beginning:
 	case l.curr == '>':
 		switch l.next {
 		case '>':
-			tok.Type, tok.Literal = token.DOUBLE_GT, ">>"
+			l.proceed()
+			switch l.next {
+			case '=':
+				l.proceed()
+				tok.Type, tok.Literal = token.DOUBLE_GT_ASSIGN, ">>="
+			default:
+				tok.Type, tok.Literal = token.DOUBLE_GT, ">>"
+			}
 		case '=':
+			l.proceed()
 			tok.Type, tok.Literal = token.GT_EQ, ">="
 		case '&':
+			l.proceed()
 			tok.Type, tok.Literal = token.GT_AMPERSAND, ">&"
 		case '|':
+			l.proceed()
 			tok.Type, tok.Literal = token.GT_PIPE, ">|"
 		case '(':
+			l.proceed()
 			tok.Type, tok.Literal = token.GT_PAREN, ">("
 		default:
 			tok.Type, tok.Literal = token.GT, ">"
-		}
-
-		if tok.Type != token.GT {
-			l.proceed()
 		}
 	case l.curr == '&':
 		switch l.next {

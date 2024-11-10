@@ -169,7 +169,7 @@ func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
 
 	prec := infixPrecedences[p.curr.Type]
 	switch p.curr.Type {
-	case token.DOUBLE_GT, token.DOUBLE_LT, token.AMPERSAND, token.PIPE:
+	case token.AMPERSAND, token.PIPE:
 		p.proceed()
 		if p.curr.Type == token.ASSIGN {
 			exp.Operator += "="
@@ -207,7 +207,7 @@ func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
 		exp.Right = p.parseArithmeticExpresion(ASSIGNMENT)
 		return exp
 	case token.STAR_ASSIGN, token.SLASH_ASSIGN, token.ASSIGN, token.PLUS_ASSIGN, token.MINUS_ASSIGN,
-		token.CIRCUMFLEX_ASSIGN, token.PERCENT_ASSIGN:
+		token.CIRCUMFLEX_ASSIGN, token.PERCENT_ASSIGN, token.DOUBLE_GT_ASSIGN, token.DOUBLE_LT_ASSIGN:
 		exp := ast.InfixArithmetic{
 			Left:     left,
 			Operator: p.curr.Literal,

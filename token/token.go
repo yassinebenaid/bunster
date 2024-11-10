@@ -61,7 +61,9 @@ const (
 	PIPE                 // `|`
 	AMPERSAND            // `&`
 	DOUBLE_GT            // `>>`
+	DOUBLE_GT_ASSIGN     // `>>=`
 	DOUBLE_LT            // `<<`
+	DOUBLE_LT_ASSIGN     // `<<=`
 	DOUBLE_LT_MINUS      // `<<-`
 	TRIPLE_LT            // `<<<`
 	GT_AMPERSAND         // `>&`
