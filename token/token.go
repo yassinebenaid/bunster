@@ -42,6 +42,7 @@ const (
 	EXPONENTIATION       // `**`
 	SLASH                // `/`
 	PERCENT              // `%`
+	PERCENT_ASSIGN       // `%=`
 	DOUBLE_PERCENT       // `%%`
 	ASSIGN               // `=`
 	PLUS_ASSIGN          // `+=`

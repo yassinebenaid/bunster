@@ -73,6 +73,9 @@ switch_beginning:
 		if l.next == '%' {
 			l.proceed()
 			tok.Type, tok.Literal = token.DOUBLE_PERCENT, "%%"
+		} else if l.next == '=' {
+			l.proceed()
+			tok.Type, tok.Literal = token.PERCENT_ASSIGN, "%="
 		} else {
 			tok.Type, tok.Literal = token.PERCENT, string(l.curr)
 		}
