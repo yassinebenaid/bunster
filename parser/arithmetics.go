@@ -25,7 +25,6 @@ const (
 	NEGATION                  // ! ~
 	UNARY                     // - +
 	PRE_INCREMENT             // ++id --id
-	POST_INCREMENT            // id++ id--
 )
 
 func (p *Parser) parseArithmetics() ast.Expression {
