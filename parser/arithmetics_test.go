@@ -457,6 +457,7 @@ var arithmeticsPrecedenceTests = []struct {
 	32: {`$(( a | b ^ c))`, `(a | (b ^ c))`},
 	33: {`$(( a && b | c))`, `(a && (b | c))`},
 	34: {`$(( a || b && c))`, `(a || (b && c))`},
+	35: {`$(( a ? b : c || a ? b : c))`, `(a ? b : (c || (a ? b : c)))`},
 }
 
 func TestArithmeticsPrecedence(t *testing.T) {
