@@ -27,6 +27,26 @@ const (
 	PRE_INCREMENT             // ++id --id
 )
 
+var infixPrecedences = map[token.TokenType]precedence{
+	token.OR:             LOR,
+	token.AND:            LAND,
+	token.PIPE:           BITOR,
+	token.CIRCUMFLEX:     BITXOR,
+	token.AMPERSAND:      BITAND,
+	token.EQ:             EQUALITY,
+	token.NOT_EQ:         EQUALITY,
+	token.GT:             COMPARISON,
+	token.LT:             COMPARISON,
+	token.DOUBLE_GT:      BINSHIFT,
+	token.DOUBLE_LT:      BINSHIFT,
+	token.STAR:           MULDIVREM,
+	token.SLASH:          MULDIVREM,
+	token.PERCENT:        MULDIVREM,
+	token.EXPONENTIATION: EXPONENTIATION,
+	token.PLUS:           ADDITION,
+	token.MINUS:          ADDITION,
+}
+
 func (p *Parser) parseArithmetics() ast.Expression {
 	p.proceed()
 
@@ -67,7 +87,7 @@ func (p *Parser) parseArithmeticExpresion(prec precedence) ast.Expression {
 		p.proceed()
 	}
 
-	for prec < p.getArithmeticPrecedence() {
+	for prec < infixPrecedences[p.curr.Type] {
 		exp = p.parseInfix(exp)
 	}
 
@@ -145,7 +165,7 @@ func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
 		Operator: p.curr.Literal,
 	}
 
-	prec := p.getArithmeticPrecedence()
+	prec := infixPrecedences[p.curr.Type]
 	switch p.curr.Type {
 	case token.LT, token.GT, token.DOUBLE_GT, token.DOUBLE_LT, token.AMPERSAND, token.CIRCUMFLEX,
 		token.PIPE, token.PERCENT:
@@ -195,48 +215,5 @@ func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
 		return exp
 	default:
 		return left
-	}
-}
-
-func (p *Parser) getArithmeticPrecedence() precedence {
-	switch p.curr.Type {
-	case token.OR:
-		return LOR
-	case token.AND:
-		return LAND
-	case token.PIPE:
-		if p.next.Type == token.ASSIGN {
-			return ASSIGNMENT
-		}
-		return BITOR
-	case token.CIRCUMFLEX:
-		return BITXOR
-	case token.AMPERSAND:
-		if p.next.Type == token.ASSIGN {
-			return ASSIGNMENT
-		}
-		return BITAND
-	case token.EQ, token.NOT_EQ:
-		return EQUALITY
-	case token.GT, token.LT:
-		return COMPARISON
-	case token.DOUBLE_GT, token.DOUBLE_LT:
-		if p.next.Type == token.ASSIGN {
-			return ASSIGNMENT
-		}
-		return BINSHIFT
-	case token.STAR, token.SLASH, token.PERCENT:
-		if p.next.Type == token.ASSIGN {
-			return ASSIGNMENT
-		}
-		return MULDIVREM
-	case token.EXPONENTIATION:
-		return EXPONENTIATION
-	case token.PLUS, token.MINUS:
-		return ADDITION
-	case token.PERCENT_ASSIGN:
-		return ASSIGNMENT
-	default:
-		return BASIC
 	}
 }
