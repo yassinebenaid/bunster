@@ -8,25 +8,24 @@ import (
 type precedence uint
 
 const (
-	_ precedence = iota
-	BASIC
-	ASSIGNMENT     //  = *= /= %= += -= <<= >>= &= ^= |=
-	CONDITIONAL    // expr ? expr : expr
-	LOR            // ||
-	LAND           // &&
-	BITOR          // |
-	BITXOR         // ^
-	BITAND         // &
-	EQUALITY       // == !=
-	COMPARISON     // <= >= < >
-	BINSHIFT       // << >>
-	ADDITION       // + -
-	MULDIVREM      // * / %
-	EXPONENTIATION // **
-	NEGATION       // ! ~
-	UNARY          // - +
-	PRE_INCREMENT  // ++id --id
-	POST_INCREMENT // id++ id--
+	BASIC          precedence = iota
+	ASSIGNMENT                //  = *= /= %= += -= <<= >>= &= ^= |=
+	CONDITIONAL               // expr ? expr : expr
+	LOR                       // ||
+	LAND                      // &&
+	BITOR                     // |
+	BITXOR                    // ^
+	BITAND                    // &
+	EQUALITY                  // == !=
+	COMPARISON                // <= >= < >
+	BINSHIFT                  // << >>
+	ADDITION                  // + -
+	MULDIVREM                 // * / %
+	EXPONENTIATION            // **
+	NEGATION                  // ! ~
+	UNARY                     // - +
+	PRE_INCREMENT             // ++id --id
+	POST_INCREMENT            // id++ id--
 )
 
 func (p *Parser) parseArithmetics() ast.Expression {
