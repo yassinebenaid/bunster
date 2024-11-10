@@ -71,14 +71,14 @@ func (in InfixArithmetic) string() string {
 	return "(" + in.Left.string() + " " + in.Operator + " " + in.Right.string() + ")"
 }
 func (p PostIncDecArithmetic) string() string {
-	return p.Operand.string() + p.Operator
+	return "(" + p.Operand.string() + p.Operator + ")"
 }
 func (p PreIncDecArithmetic) string() string {
-	return p.Operator + p.Operand.string()
+	return "(" + p.Operator + p.Operand.string() + ")"
 
 }
 func (u Unary) string() string {
-	return u.Operator + u.Operand.string()
+	return "(" + u.Operator + u.Operand.string() + ")"
 }
 func (n Negation) string() string {
 	return "!" + n.Operand.string()
