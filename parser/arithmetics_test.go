@@ -417,28 +417,28 @@ var arithmeticsPrecedenceTests = []struct {
 	input    string
 	expected string
 }{
-	{`$((1))`, `1`},
-	{`$((1, 2, 3))`, `1, 2, 3`},
-	{`$((a = b *= c /= d %= e += f -= g <<= h >>= i &= j ^= k |= l + 2))`,
+	0: {`$((1))`, `1`},
+	1: {`$((1, 2, 3))`, `1, 2, 3`},
+	2: {`$((a = b *= c /= d %= e += f -= g <<= h >>= i &= j ^= k |= l + 2))`,
 		`(a = (b *= (c /= (d %= (e += (f -= (g <<= (h >>= (i &= (j ^= (k |= (l + 2))))))))))))`},
-	{`$((a ? b : c ? d : e))`, `(a ? b : (c ? d : e))`},
-	{`$((a || b || c || d ))`, `(((a || b) || c) || d)`},
-	{`$((a && b && c && d ))`, `(((a && b) && c) && d)`},
-	{`$((a | b | c | d ))`, `(((a | b) | c) | d)`},
-	{`$((a & b & c & d ))`, `(((a & b) & c) & d)`},
-	{`$((a ^ b ^ c ^ d ))`, `(((a ^ b) ^ c) ^ d)`},
-	{`$((a == b == c != d != e == f ))`, `(((((a == b) == c) != d) != e) == f)`},
-	{`$((a <= b >= c < d > e))`, `((((a <= b) >= c) < d) > e)`},
-	{`$((a << b >> c))`, `((a << b) >> c)`},
-	{`$((a + b - c))`, `((a + b) - c)`},
-	{`$((a * b / c % d))`, `(((a * b) / c) % d)`},
-	{`$((a ** b ** c))`, `((a ** b) ** c)`},
-	{`$((!a ** ~b))`, `(!a ** ~b)`},
-	{`$((+a ** -b))`, `(+a ** -b)`},
-	{`$((++a + ++b - --c))`, `((++a + ++b) - --c)`},
-	{`$((a++ + b-- - c++))`, `((a++ + b--) - c++)`},
-	{`$((a + b * c + d))`, `((a + (b * c)) + d)`},
-	{`$(((a + b) * (c + d)))`, `((a + b) * (c + d))`},
+	3:  {`$((a ? b : c ? d : e))`, `(a ? b : (c ? d : e))`},
+	4:  {`$((a || b || c || d ))`, `(((a || b) || c) || d)`},
+	5:  {`$((a && b && c && d ))`, `(((a && b) && c) && d)`},
+	6:  {`$((a | b | c | d ))`, `(((a | b) | c) | d)`},
+	7:  {`$((a & b & c & d ))`, `(((a & b) & c) & d)`},
+	8:  {`$((a ^ b ^ c ^ d ))`, `(((a ^ b) ^ c) ^ d)`},
+	9:  {`$((a == b == c != d != e == f ))`, `(((((a == b) == c) != d) != e) == f)`},
+	10: {`$((a <= b >= c < d > e))`, `((((a <= b) >= c) < d) > e)`},
+	11: {`$((a << b >> c))`, `((a << b) >> c)`},
+	12: {`$((a + b - c))`, `((a + b) - c)`},
+	13: {`$((a * b / c % d))`, `(((a * b) / c) % d)`},
+	14: {`$((a ** b ** c))`, `((a ** b) ** c)`},
+	15: {`$((!a ** ~b))`, `(!a ** ~b)`},
+	16: {`$((+a ** -b))`, `(+a ** -b)`},
+	17: {`$((++a + ++b - --c))`, `((++a + ++b) - --c)`},
+	18: {`$((a++ + b-- - c++))`, `((a++ + b--) - c++)`},
+	19: {`$((a + b * c + d))`, `((a + (b * c)) + d)`},
+	20: {`$(((a + b) * (c + d)))`, `((a + b) * (c + d))`},
 }
 
 func TestArithmeticsPrecedence(t *testing.T) {
@@ -469,7 +469,7 @@ func TestArithmeticsPrecedence(t *testing.T) {
 
 		nameStr := name.String()
 		if nameStr != tc.expected {
-			t.Fatalf("\n Case: %s Input: %s Expected: %s Got %s\n", dump(i), dump(tc.input), dump(tc.expected), dump(nameStr))
+			t.Fatalf("\n Case: %s Input: %s Expected: %s Got:      %s\n", dump(i), dump(tc.input), dump(tc.expected), dump(nameStr))
 		}
 	}
 }
