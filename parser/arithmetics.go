@@ -150,6 +150,10 @@ func (p *Parser) parsePrefix() ast.Expression {
 	case token.LEFT_PAREN:
 		p.proceed()
 		exp := p.parseArithmeticExpresion(BASIC)
+
+		if p.curr.Type != token.RIGHT_PAREN {
+			p.error("expected a closing `)`, found `%s`", p.curr.Literal)
+		}
 		p.proceed()
 		return exp
 	case token.EOF:

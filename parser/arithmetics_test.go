@@ -505,4 +505,5 @@ var arithmeticsErrorHandlingCases = []errorHandlingTestCase{
 	{`$((1++))`, "syntax error: expected `))` to close arithmetic expression, found `++`."},
 	{`$((--))`, "syntax error: unexpected token `)`."},
 	{`$((-))`, "syntax error: unexpected token `)`."},
+	{`$(( (1 x))`, "syntax error: expected a closing `)`, found `x`."},
 }
