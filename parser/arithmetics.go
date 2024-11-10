@@ -3,7 +3,6 @@ package parser
 import (
 	"github.com/yassinebenaid/bunny/ast"
 	"github.com/yassinebenaid/bunny/token"
-	"github.com/yassinebenaid/godump"
 )
 
 type precedence uint
@@ -96,7 +95,6 @@ func (p *Parser) parsePrefix() ast.Expression {
 		case token.INCREMENT, token.DECREMENT:
 			exp = ast.PostIncDecArithmetic{Operand: exp, Operator: p.curr.Literal}
 			p.proceed()
-			godump.Dump(exp)
 		}
 		return exp
 	case token.DOLLAR_DOUBLE_PAREN:
