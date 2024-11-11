@@ -895,7 +895,7 @@ var loopsTests = []testCase{
 	}},
 
 	// ALternative For
-	{`for ((a; b; c)) do cmd;done`, ast.Script{
+	{`for (( a ; b ; c )) do cmd;done`, ast.Script{
 		ast.For{
 			Head: ast.ForHead{
 				Init:   ast.Arithmetic{ast.Var("a")},
@@ -907,28 +907,44 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
-	{`for ((a; b; c)); do cmd;done`, ast.Script{
+	{`for ((a;b;c)); do cmd;done`, ast.Script{
 		ast.For{
 			Head: ast.ForHead{
 				Init:   ast.Arithmetic{ast.Var("a")},
 				Test:   ast.Arithmetic{ast.Var("b")},
 				Update: ast.Arithmetic{ast.Var("c")},
 			},
-			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
-			},
+			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
 		},
 	}},
-	{`for ((; b; c)) do cmd;done`, ast.Script{
+	{`for (( ; b ; c )) do cmd;done`, ast.Script{
 		ast.For{
 			Head: ast.ForHead{
 				Init:   nil,
 				Test:   ast.Arithmetic{ast.Var("b")},
 				Update: ast.Arithmetic{ast.Var("c")},
 			},
-			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+		},
+	}},
+	{`for (( a ; ; c )) do cmd;done`, ast.Script{
+		ast.For{
+			Head: ast.ForHead{
+				Init:   ast.Arithmetic{ast.Var("a")},
+				Test:   nil,
+				Update: ast.Arithmetic{ast.Var("c")},
 			},
+			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+		},
+	}},
+	{`for (( a ; b ; )) do cmd;done`, ast.Script{
+		ast.For{
+			Head: ast.ForHead{
+				Init:   ast.Arithmetic{ast.Var("a")},
+				Test:   ast.Arithmetic{ast.Var("b")},
+				Update: nil,
+			},
+			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
 		},
 	}},
 }

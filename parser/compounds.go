@@ -115,16 +115,29 @@ func (p *Parser) parseForLoop() ast.Statement {
 	}
 	if p.curr.Type == token.DOUBLE_LEFT_PAREN {
 		p.proceed()
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
 		if p.curr.Type != token.SEMICOLON {
 			loopHead.Init = p.parseArithmetics()
 		}
 		p.proceed()
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
 		if p.curr.Type != token.SEMICOLON {
 			loopHead.Test = p.parseArithmetics()
 		}
 		p.proceed()
-		if p.curr.Type != token.SEMICOLON {
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+		if p.curr.Type != token.RIGHT_PAREN {
 			loopHead.Update = p.parseArithmetics()
+		}
+
+		if !(p.curr.Type == token.RIGHT_PAREN && p.next.Type == token.RIGHT_PAREN) {
+			p.error("expected `))` to close loop head, found `%s`", p.curr.Literal)
 		}
 		p.proceed()
 		p.proceed()
