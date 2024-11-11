@@ -919,6 +919,18 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
+	{`for ((; b; c)) do cmd;done`, ast.Script{
+		ast.For{
+			Head: ast.ForHead{
+				Init:   nil,
+				Test:   ast.Arithmetic{ast.Var("b")},
+				Update: ast.Arithmetic{ast.Var("c")},
+			},
+			Body: []ast.Statement{
+				ast.Command{Name: ast.Word("cmd")},
+			},
+		},
+	}},
 }
 
 var loopsErrorHandlingCases = []errorHandlingTestCase{
