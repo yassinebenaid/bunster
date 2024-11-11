@@ -1020,6 +1020,7 @@ var loopsErrorHandlingCases = []errorHandlingTestCase{
 	// C like for loops
 	{`for (()) do cmd;done`, "syntax error: unexpected token `)`."},
 	{`for ((x)) do cmd;done`, "syntax error: expected a semicolon `;`, found `)`."},
+	{`for ((x;y)) do cmd;done`, "syntax error: expected a semicolon `;`, found `)`."},
 
 	{`do`, "syntax error: `do` is a reserved keyword, cannot be used a command name."},
 	{`done`, "syntax error: `done` is a reserved keyword, cannot be used a command name."},
