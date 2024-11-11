@@ -949,11 +949,7 @@ var loopsTests = []testCase{
 	}},
 	{`for ((  ;  ; )) do cmd;done`, ast.Script{
 		ast.For{
-			Head: ast.ForHead{
-				Init:   nil,
-				Test:   nil,
-				Update: nil,
-			},
+			Head: ast.ForHead{},
 			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
 		},
 	}},
