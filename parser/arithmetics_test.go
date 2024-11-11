@@ -411,6 +411,16 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
+
+	// Arithmetic command
+	{`(( (x), (x+y) ))`, ast.Script{
+		ast.ArithmeticCommand{
+			Arithmetic: ast.Arithmetic{
+				ast.Var("x"),
+				ast.InfixArithmetic{Left: ast.Var("x"), Operator: "+", Right: ast.Var("y")},
+			},
+		},
+	}},
 }
 
 var arithmeticsPrecedenceTests = []struct {

@@ -19,6 +19,8 @@ func (p *Parser) getCompoundParser() func() ast.Statement {
 		return p.parseGroup
 	case token.LEFT_PAREN:
 		return p.parseSubShell
+	case token.DOUBLE_LEFT_PAREN:
+		return p.parseArithmeticCommand
 	case token.THEN, token.ELIF, token.ELSE, token.FI, token.DO, token.DONE, token.ESAC:
 		p.error("`%s` is a reserved keyword, cannot be used a command name", p.curr.Literal)
 		fallthrough
@@ -631,4 +633,37 @@ loop:
 	}
 
 	return shell
+}
+
+func (p *Parser) parseArithmeticCommand() ast.Statement {
+	p.proceed()
+	for p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
+	var arth ast.ArithmeticCommand
+	arth.Arithmetic = p.parseArithmetics()
+
+	if !(p.curr.Type == token.RIGHT_PAREN && p.next.Type == token.RIGHT_PAREN) {
+		p.error("expected `))` to close arithmetic expression, found `%s`", p.curr.Literal)
+	}
+	p.proceed()
+
+loop:
+	for {
+		switch {
+		case p.curr.Type == token.BLANK:
+			p.proceed()
+		case p.isRedirectionToken():
+			p.HandleRedirection(&arth.Redirections)
+		default:
+			break loop
+		}
+	}
+
+	if !p.isControlToken() && p.curr.Type != token.EOF {
+		p.error("unexpected token `%s`", p.curr.Literal)
+	}
+
+	return arth
 }

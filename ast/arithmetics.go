@@ -8,6 +8,11 @@ type Number string
 
 type Arithmetic []Expression
 
+type ArithmeticCommand struct {
+	Arithmetic
+	Redirections []Redirection
+}
+
 type InfixArithmetic struct {
 	Left     Expression
 	Operator string
@@ -45,6 +50,7 @@ type Conditional struct {
 
 func (Number) node()               {}
 func (Arithmetic) node()           {}
+func (ArithmeticCommand) node()    {}
 func (InfixArithmetic) node()      {}
 func (PostIncDecArithmetic) node() {}
 func (PreIncDecArithmetic) node()  {}
@@ -62,6 +68,8 @@ func (Unary) expr()                {}
 func (Negation) expr()             {}
 func (BitFlip) expr()              {}
 func (Conditional) expr()          {}
+
+func (ArithmeticCommand) stmt() {}
 
 func (n Number) string() string {
 	return string(n)
