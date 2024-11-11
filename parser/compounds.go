@@ -103,7 +103,11 @@ loop:
 }
 
 func (p *Parser) parseForLoop() ast.Statement {
-	var loop ast.RangeLoop
+	var loopVar string
+	var loopOperands []ast.Expression
+	var loopBody []ast.Statement
+	var loopRedirections []ast.Redirection
+
 	p.proceed()
 	for p.curr.Type == token.BLANK {
 		p.proceed()
@@ -111,7 +115,7 @@ func (p *Parser) parseForLoop() ast.Statement {
 	if p.curr.Type != token.WORD {
 		p.error("expected identifier after `for`")
 	}
-	loop.Var = p.curr.Literal
+	loopVar = p.curr.Literal
 	p.proceed()
 	if p.curr.Type == token.BLANK {
 		p.proceed()
@@ -128,12 +132,12 @@ func (p *Parser) parseForLoop() ast.Statement {
 				p.error("unexpected token `%s`", p.curr.Literal)
 				break
 			}
-			loop.Operands = append(loop.Operands, member)
+			loopOperands = append(loopOperands, member)
 			if p.curr.Type == token.BLANK {
 				p.proceed()
 			}
 		}
-		if loop.Operands == nil {
+		if loopOperands == nil {
 			p.error("missing operand after `in`")
 		}
 	}
@@ -158,7 +162,7 @@ func (p *Parser) parseForLoop() ast.Statement {
 		if cmdList == nil {
 			return nil
 		}
-		loop.Body = append(loop.Body, cmdList)
+		loopBody = append(loopBody, cmdList)
 		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
 			p.proceed()
 		}
@@ -167,7 +171,7 @@ func (p *Parser) parseForLoop() ast.Statement {
 		}
 	}
 
-	if loop.Body == nil {
+	if loopBody == nil {
 		p.error("expected command list after `do`")
 	} else if p.curr.Type != token.DONE {
 		p.error("expected `done` to close `for` loop")
@@ -181,7 +185,7 @@ loop:
 		case p.curr.Type == token.BLANK:
 			p.proceed()
 		case p.isRedirectionToken():
-			p.HandleRedirection(&loop.Redirections)
+			p.HandleRedirection(&loopRedirections)
 		default:
 			break loop
 		}
@@ -191,7 +195,12 @@ loop:
 		p.error("unexpected token `%s`", p.curr.Literal)
 	}
 
-	return loop
+	return ast.RangeLoop{
+		Var:          loopVar,
+		Operands:     loopOperands,
+		Body:         loopBody,
+		Redirections: loopRedirections,
+	}
 }
 
 func (p *Parser) parseIf() ast.Statement {
