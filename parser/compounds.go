@@ -121,12 +121,18 @@ func (p *Parser) parseForLoop() ast.Statement {
 		if p.curr.Type != token.SEMICOLON {
 			loopHead.Init = p.parseArithmetics()
 		}
+		if p.curr.Type != token.SEMICOLON {
+			p.error("expected a semicolon `;`, found `%s`", p.curr.Literal)
+		}
 		p.proceed()
 		if p.curr.Type == token.BLANK {
 			p.proceed()
 		}
 		if p.curr.Type != token.SEMICOLON {
 			loopHead.Test = p.parseArithmetics()
+		}
+		if p.curr.Type != token.SEMICOLON {
+			p.error("expected a semicolon `;`, found `%s`", p.curr.Literal)
 		}
 		p.proceed()
 		if p.curr.Type == token.BLANK {
