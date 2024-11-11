@@ -953,6 +953,12 @@ var loopsTests = []testCase{
 			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
 		},
 	}},
+	{`for ((;;)) do cmd;done`, ast.Script{
+		ast.For{
+			Head: ast.ForHead{},
+			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+		},
+	}},
 }
 
 var loopsErrorHandlingCases = []errorHandlingTestCase{
