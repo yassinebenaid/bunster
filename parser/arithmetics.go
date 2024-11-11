@@ -47,13 +47,24 @@ var infixPrecedences = map[token.TokenType]precedence{
 	token.MINUS:          ADDITION,
 }
 
-func (p *Parser) parseArithmetics() ast.Expression {
+func (p *Parser) parseArithmeticSubstitution() ast.Expression {
 	p.proceed()
 
 	if p.curr.Type == token.BLANK {
 		p.proceed()
 	}
 
+	expr := p.parseArithmetics()
+
+	if !(p.curr.Type == token.RIGHT_PAREN && p.next.Type == token.RIGHT_PAREN) {
+		p.error("expected `))` to close arithmetic expression, found `%s`", p.curr.Literal)
+	}
+	p.proceed()
+
+	return expr
+}
+
+func (p *Parser) parseArithmetics() ast.Expression {
 	var expr ast.Arithmetic
 
 	for {
@@ -67,11 +78,6 @@ func (p *Parser) parseArithmetics() ast.Expression {
 		}
 		p.proceed()
 	}
-
-	if !(p.curr.Type == token.RIGHT_PAREN && p.next.Type == token.RIGHT_PAREN) {
-		p.error("expected `))` to close arithmetic expression, found `%s`", p.curr.Literal)
-	}
-	p.proceed()
 
 	return expr
 }
@@ -116,7 +122,7 @@ func (p *Parser) parsePrefix() ast.Expression {
 		}
 		return exp
 	case token.DOLLAR_DOUBLE_PAREN:
-		exp := p.parseArithmetics()
+		exp := p.parseArithmeticSubstitution()
 		p.proceed()
 		return exp
 	case token.DOLLAR_BRACE:

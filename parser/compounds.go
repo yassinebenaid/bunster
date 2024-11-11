@@ -103,6 +103,7 @@ loop:
 }
 
 func (p *Parser) parseForLoop() ast.Statement {
+	// var loopHead ast.ForHead
 	var loopVar string
 	var loopOperands []ast.Expression
 	var loopBody []ast.Statement
@@ -112,6 +113,10 @@ func (p *Parser) parseForLoop() ast.Statement {
 	for p.curr.Type == token.BLANK {
 		p.proceed()
 	}
+	// if p.curr.Type == token.DOUBLE_LEFT_PAREN {
+	// 	p.proceed()
+	// 	loopHead.Init = p.parseArithmeticExpresion(prec precedence)
+	// }
 	if p.curr.Type != token.WORD {
 		p.error("expected identifier after `for`")
 	}
