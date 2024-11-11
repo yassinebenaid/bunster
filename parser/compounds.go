@@ -103,7 +103,7 @@ loop:
 }
 
 func (p *Parser) parseForLoop() ast.Statement {
-	// var loopHead ast.ForHead
+	var loopHead ast.ForHead
 	var loopVar string
 	var loopOperands []ast.Expression
 	var loopBody []ast.Statement
@@ -113,37 +113,45 @@ func (p *Parser) parseForLoop() ast.Statement {
 	for p.curr.Type == token.BLANK {
 		p.proceed()
 	}
-	// if p.curr.Type == token.DOUBLE_LEFT_PAREN {
-	// 	p.proceed()
-	// 	loopHead.Init = p.parseArithmeticExpresion(prec precedence)
-	// }
-	if p.curr.Type != token.WORD {
-		p.error("expected identifier after `for`")
-	}
-	loopVar = p.curr.Literal
-	p.proceed()
-	if p.curr.Type == token.BLANK {
+	if p.curr.Type == token.DOUBLE_LEFT_PAREN {
 		p.proceed()
-	}
+		loopHead.Init = p.parseArithmetics()
+		p.proceed()
+		loopHead.Test = p.parseArithmetics()
+		p.proceed()
+		loopHead.Update = p.parseArithmetics()
+		p.proceed()
+		p.proceed()
+	} else {
 
-	if p.curr.Type == token.IN {
+		if p.curr.Type != token.WORD {
+			p.error("expected identifier after `for`")
+		}
+		loopVar = p.curr.Literal
 		p.proceed()
 		if p.curr.Type == token.BLANK {
 			p.proceed()
 		}
-		for p.curr.Type != token.NEWLINE && p.curr.Type != token.SEMICOLON && p.curr.Type != token.EOF {
-			member := p.parseExpression()
-			if member == nil {
-				p.error("unexpected token `%s`", p.curr.Literal)
-				break
-			}
-			loopOperands = append(loopOperands, member)
+
+		if p.curr.Type == token.IN {
+			p.proceed()
 			if p.curr.Type == token.BLANK {
 				p.proceed()
 			}
-		}
-		if loopOperands == nil {
-			p.error("missing operand after `in`")
+			for p.curr.Type != token.NEWLINE && p.curr.Type != token.SEMICOLON && p.curr.Type != token.EOF {
+				member := p.parseExpression()
+				if member == nil {
+					p.error("unexpected token `%s`", p.curr.Literal)
+					break
+				}
+				loopOperands = append(loopOperands, member)
+				if p.curr.Type == token.BLANK {
+					p.proceed()
+				}
+			}
+			if loopOperands == nil {
+				p.error("missing operand after `in`")
+			}
 		}
 	}
 
@@ -198,6 +206,14 @@ loop:
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr.Literal)
+	}
+
+	if loopVar == "" {
+		return ast.For{
+			Head:         loopHead,
+			Body:         loopBody,
+			Redirections: loopRedirections,
+		}
 	}
 
 	return ast.RangeLoop{

@@ -895,18 +895,18 @@ var loopsTests = []testCase{
 	}},
 
 	// ALternative For
-	// {`for ((a; b; c)) do;cmd;done`, ast.Script{
-	// 	ast.For{
-	// 		Head: ast.ForHead{
-	// 			Init:   ast.Arithmetic{ast.Var("a")},
-	// 			Test:   ast.Arithmetic{ast.Var("b")},
-	// 			Update: ast.Arithmetic{ast.Var("c")},
-	// 		},
-	// 		Body: []ast.Statement{
-	// 			ast.Command{Name: ast.Word("cmd")},
-	// 		},
-	// 	},
-	// }},
+	{`for ((a; b; c)) do cmd;done`, ast.Script{
+		ast.For{
+			Head: ast.ForHead{
+				Init:   ast.Arithmetic{ast.Var("a")},
+				Test:   ast.Arithmetic{ast.Var("b")},
+				Update: ast.Arithmetic{ast.Var("c")},
+			},
+			Body: []ast.Statement{
+				ast.Command{Name: ast.Word("cmd")},
+			},
+		},
+	}},
 }
 
 var loopsErrorHandlingCases = []errorHandlingTestCase{

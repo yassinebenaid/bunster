@@ -64,7 +64,7 @@ func (p *Parser) parseArithmeticSubstitution() ast.Expression {
 	return expr
 }
 
-func (p *Parser) parseArithmetics() ast.Expression {
+func (p *Parser) parseArithmetics() ast.Arithmetic {
 	var expr ast.Arithmetic
 
 	for {
