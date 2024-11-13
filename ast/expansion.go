@@ -49,6 +49,12 @@ type Transform struct {
 	Operator string
 }
 
+type Slice struct {
+	Name   string
+	Offset Arithmetic
+	Length Arithmetic
+}
+
 func (Var) node()             {}
 func (VarOrDefault) node()    {}
 func (VarOrSet) node()        {}
@@ -59,6 +65,7 @@ func (VarCount) node()        {}
 func (MatchAndRemove) node()  {}
 func (MatchAndReplace) node() {}
 func (Transform) node()       {}
+func (Slice) node()           {}
 
 // Expressions
 func (Var) expr()             {}
@@ -71,6 +78,7 @@ func (VarCount) expr()        {}
 func (MatchAndRemove) expr()  {}
 func (MatchAndReplace) expr() {}
 func (Transform) expr()       {}
+func (Slice) expr()           {}
 
 func (v Var) string() string           { return string(v) }
 func (VarOrDefault) string() string    { return "" }
@@ -82,3 +90,4 @@ func (VarCount) string() string        { return "" }
 func (MatchAndRemove) string() string  { return "" }
 func (MatchAndReplace) string() string { return "" }
 func (Transform) string() string       { return "" }
+func (Slice) string() string           { return "" }

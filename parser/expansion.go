@@ -158,6 +158,19 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 			}
 
 			exp = mar
+		case token.COLON:
+			p.proceed()
+			slice := ast.Slice{
+				Name:   param,
+				Offset: p.parseArithmetics(),
+			}
+
+			if p.curr.Type == token.COLON {
+				p.proceed()
+				slice.Length = p.parseArithmetics()
+			}
+
+			exp = slice
 		case token.AT:
 			p.proceed()
 			exp = ast.Transform{

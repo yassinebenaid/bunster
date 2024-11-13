@@ -523,6 +523,22 @@ var parameterExpansionTests = []testCase{
 			},
 		},
 	}},
+	{`cmd ${var:x:y} ${var:x} `, ast.Script{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.Slice{
+					Name:   "var",
+					Offset: ast.Arithmetic{ast.Var("x")},
+					Length: ast.Arithmetic{ast.Var("y")},
+				},
+				ast.Slice{
+					Name:   "var",
+					Offset: ast.Arithmetic{ast.Var("x")},
+				},
+			},
+		},
+	}},
 }
 
 //TODO: test error handling
