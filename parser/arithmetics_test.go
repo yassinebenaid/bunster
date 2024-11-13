@@ -421,6 +421,17 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
+	{`(( x ))||(( y ))`, ast.Script{
+		ast.BinaryConstruction{
+			Left: ast.ArithmeticCommand{
+				Arithmetic: ast.Arithmetic{ast.Var("x")},
+			},
+			Operator: "||",
+			Right: ast.ArithmeticCommand{
+				Arithmetic: ast.Arithmetic{ast.Var("y")},
+			},
+		},
+	}},
 }
 
 var arithmeticsPrecedenceTests = []struct {

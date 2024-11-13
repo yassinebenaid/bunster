@@ -648,6 +648,7 @@ func (p *Parser) parseArithmeticCommand() ast.Statement {
 		p.error("expected `))` to close arithmetic expression, found `%s`", p.curr.Literal)
 	}
 	p.proceed()
+	p.proceed()
 
 loop:
 	for {
