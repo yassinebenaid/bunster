@@ -44,6 +44,11 @@ type MatchAndReplace struct {
 	Value    Expression
 }
 
+type Transform struct {
+	Name     string
+	Operator string
+}
+
 func (Var) node()             {}
 func (VarOrDefault) node()    {}
 func (VarOrSet) node()        {}
@@ -53,6 +58,7 @@ func (ChangeCase) node()      {}
 func (VarCount) node()        {}
 func (MatchAndRemove) node()  {}
 func (MatchAndReplace) node() {}
+func (Transform) node()       {}
 
 // Expressions
 func (Var) expr()             {}
@@ -64,6 +70,7 @@ func (ChangeCase) expr()      {}
 func (VarCount) expr()        {}
 func (MatchAndRemove) expr()  {}
 func (MatchAndReplace) expr() {}
+func (Transform) expr()       {}
 
 func (v Var) string() string           { return string(v) }
 func (VarOrDefault) string() string    { return "" }
@@ -74,3 +81,4 @@ func (ChangeCase) string() string      { return "" }
 func (VarCount) string() string        { return "" }
 func (MatchAndRemove) string() string  { return "" }
 func (MatchAndReplace) string() string { return "" }
+func (Transform) string() string       { return "" }

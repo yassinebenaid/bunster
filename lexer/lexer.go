@@ -269,6 +269,8 @@ switch_beginning:
 		tok.Type, tok.Literal = token.QUESTION, string(l.curr)
 	case l.curr == '~':
 		tok.Type, tok.Literal = token.TILDE, string(l.curr)
+	case l.curr == '@':
+		tok.Type, tok.Literal = token.AT, string(l.curr)
 	case l.curr == '.' && l.next == '.':
 		l.proceed()
 		tok.Type, tok.Literal = token.DOUBLE_DOT, ".."

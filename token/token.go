@@ -110,6 +110,7 @@ const (
 	INCREMENT            // `++`
 	DECREMENT            // `--`
 	TILDE                // `~`
+	AT                   // `@`
 
 	SIMPLE_EXPANSION // Simple variable expansion. eg. $variable_name.
 	ESCAPED_CHAR     // characters preceded by '\'. ...

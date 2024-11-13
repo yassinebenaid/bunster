@@ -120,6 +120,7 @@ func TestLexer(t *testing.T) {
 		{`++`, []token.Token{{Type: token.INCREMENT, Literal: `++`}}},
 		{`--`, []token.Token{{Type: token.DECREMENT, Literal: `--`}}},
 		{`~`, []token.Token{{Type: token.TILDE, Literal: `~`}}},
+		{`@`, []token.Token{{Type: token.AT, Literal: `@`}}},
 
 		// identifiers
 		{`foo bar foo-bar foo_bar`, []token.Token{
@@ -308,7 +309,7 @@ func TestLexer(t *testing.T) {
 		{`$ @`, []token.Token{
 			{Type: token.OTHER, Literal: "$"},
 			{Type: token.BLANK, Literal: " "},
-			{Type: token.OTHER, Literal: "@"},
+			{Type: token.AT, Literal: "@"},
 		}},
 		{"\n", []token.Token{{Type: token.NEWLINE, Literal: "\n"}}},
 		{``, []token.Token{{Type: token.EOF, Literal: "end of file"}}},

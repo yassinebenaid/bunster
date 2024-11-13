@@ -158,11 +158,18 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 			}
 
 			exp = mar
+		case token.AT:
+			p.proceed()
+			exp = ast.Transform{
+				Name:     param,
+				Operator: p.curr.Literal,
+			}
+			p.proceed()
 		}
 	}
 
 	if p.curr.Type != token.RIGHT_BRACE {
-		panic("Not }, it is: " + p.curr.Literal)
+		p.error("expected closing brace `}`, found `%s`", p.curr.Literal)
 	}
 
 	return exp
