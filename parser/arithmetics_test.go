@@ -564,4 +564,19 @@ var arithmeticsErrorHandlingCases = []errorHandlingTestCase{
 	{`$((1+))`, "syntax error: unexpected token `)`."},
 	{`$(( (1 x))`, "syntax error: expected a closing `)`, found `x`."},
 	{`$(( 1 ? 2 x))`, "syntax error: expected a colon `:`, found `x`."},
+
+	{`((`, "syntax error: unexpected end of file."},
+	{`(())`, "syntax error: unexpected token `)`."},
+	{`(( ))`, "syntax error: unexpected token `)`."},
+	{`((,))`, "syntax error: unexpected token `,`."},
+	{`((1 `, "syntax error: expected `))` to close arithmetic expression, found `end of file`."},
+	{`((1++))`, "syntax error: expected `))` to close arithmetic expression, found `++`."},
+	{`((--))`, "syntax error: unexpected token `)`."},
+	{`((-))`, "syntax error: unexpected token `)`."},
+	{`((1+))`, "syntax error: unexpected token `)`."},
+	{`(( (1 x))`, "syntax error: expected a closing `)`, found `x`."},
+	{`(( 1 ? 2 x))`, "syntax error: expected a colon `:`, found `x`."},
+
+	{`(( x )) arg`, "syntax error: unexpected token `arg`."},
+	{`(( x )) <in >out <<<etc arg`, "syntax error: unexpected token `arg`."},
 }
