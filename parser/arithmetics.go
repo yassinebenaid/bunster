@@ -163,9 +163,9 @@ func (p *Parser) parsePrefix() ast.Expression {
 		p.proceed()
 		return exp
 	case token.EOF:
-		p.error("unexpected end of file")
+		p.error("bad arithmetic expression, unexpected end of file")
 	default:
-		p.error("unexpected token `%s`", p.curr.Literal)
+		p.error("bad arithmetic expression, unexpected token `%s`", p.curr.Literal)
 	}
 
 	return nil

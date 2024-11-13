@@ -1018,7 +1018,7 @@ var loopsErrorHandlingCases = []errorHandlingTestCase{
 	{`for n do cmd | |; done`, "syntax error: `|` has a special meaning here and cannot be used as a command name."},
 
 	// C like for loops
-	{`for (()) do cmd;done`, "syntax error: unexpected token `)`."},
+	{`for (()) do cmd;done`, "syntax error: bad arithmetic expression, unexpected token `)`."},
 	{`for ((x)) do cmd;done`, "syntax error: expected a semicolon `;`, found `)`."},
 	{`for ((x;y)) do cmd;done`, "syntax error: expected a semicolon `;`, found `)`."},
 	{`for ((x;y; w z)) do cmd;done`, "syntax error: expected `))` to close loop head, found `z`."},
