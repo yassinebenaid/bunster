@@ -506,7 +506,7 @@ var parameterExpansionTests = []testCase{
 			},
 		},
 	}},
-	{`cmd ${var@U} ${var@u} ${var@L} ${var@Q} ${var@E} ${var@P}`, ast.Script{
+	{`cmd ${var@U} ${var@u} ${var@L} ${var@Q} ${var@E} ${var@P} ${var@A}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -516,6 +516,7 @@ var parameterExpansionTests = []testCase{
 				ast.Transform{Name: "var", Operator: "Q"},
 				ast.Transform{Name: "var", Operator: "E"},
 				ast.Transform{Name: "var", Operator: "P"},
+				ast.Transform{Name: "var", Operator: "A"},
 			},
 		},
 	}},
