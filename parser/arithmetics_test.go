@@ -432,6 +432,22 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
+	{`(( x )) | (( x ))&& (( x ))`, ast.Script{
+		ast.BinaryConstruction{
+			Left: ast.Pipeline{
+				{Command: ast.ArithmeticCommand{
+					Arithmetic: ast.Arithmetic{ast.Var("x")},
+				}},
+				{Command: ast.ArithmeticCommand{
+					Arithmetic: ast.Arithmetic{ast.Var("x")},
+				}},
+			},
+			Operator: "&&",
+			Right: ast.ArithmeticCommand{
+				Arithmetic: ast.Arithmetic{ast.Var("x")},
+			},
+		},
+	}},
 }
 
 var arithmeticsPrecedenceTests = []struct {
