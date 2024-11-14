@@ -227,7 +227,7 @@ loop:
 
 func (p *Parser) parseParameter() string {
 	if p.curr.Type != token.WORD {
-		p.error("couldn't found a valid parameter name, found `%s`", p.curr.Literal)
+		p.error("couldn't find a valid parameter name, found `%s`", p.curr.Literal)
 	}
 
 	v := p.curr.Literal
