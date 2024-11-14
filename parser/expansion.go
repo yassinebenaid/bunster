@@ -131,11 +131,11 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 		}
 	case token.HASH, token.PERCENT, token.DOUBLE_PERCENT:
 		operator := p.curr.Literal
-		p.proceed()
-		if p.curr.Type == token.HASH {
-			operator += p.curr.Literal
+		if p.curr.Type == token.HASH && p.next.Type == token.HASH {
 			p.proceed()
+			operator += p.curr.Literal
 		}
+		p.proceed()
 
 		exp = ast.MatchAndRemove{
 			Name:     param,
@@ -150,10 +150,17 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 			p.proceed()
 		}
 
+		var pattern ast.Expression
+		if p.curr.Type == token.SLASH {
+			pattern = ast.Word(p.curr.Literal)
+		} else {
+			pattern = p.parseExpansionOperandExpression(token.SLASH)
+		}
+
 		mar := ast.MatchAndReplace{
 			Name:     param,
 			Operator: operator,
-			Pattern:  p.parseExpansionOperandExpression(token.SLASH),
+			Pattern:  pattern,
 		}
 
 		if p.curr.Type == token.SLASH {

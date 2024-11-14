@@ -347,7 +347,7 @@ var parameterExpansionTests = []testCase{
 	{`
 		cmd ${var//pattern/value} ${var//${pattern}/${value}} \
 		${var// $foo bar "baz" | & ; 2> < # / $foo bar "baz" | & ; 2> < #////} \
-		${var//pattern/} ${var//pattern} ${var//}`, ast.Script{
+		${var//pattern/} ${var//pattern} ${var//} ${var///} ${var//////}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -394,6 +394,17 @@ var parameterExpansionTests = []testCase{
 				ast.MatchAndReplace{
 					Name:     "var",
 					Operator: "//",
+				},
+				ast.MatchAndReplace{
+					Name:     "var",
+					Operator: "//",
+					Pattern:  ast.Word("/"),
+				},
+				ast.MatchAndReplace{
+					Name:     "var",
+					Operator: "//",
+					Pattern:  ast.Word("/"),
+					Value:    ast.Word("///"),
 				},
 			},
 		},
