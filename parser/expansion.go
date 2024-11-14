@@ -82,12 +82,11 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 
 	if p.curr.Type == token.HASH {
 		p.proceed()
-		exp = ast.VarCount(p.curr.Literal)
-		p.proceed()
+		exp = ast.VarCount(p.parseParameter())
+
 		if p.curr.Type != token.RIGHT_BRACE {
 			p.error("expected closing brace `}`, found `%s`", p.curr.Literal)
 		}
-
 		return exp
 	}
 
@@ -225,4 +224,16 @@ loop:
 	}
 
 	return concat(exprs)
+}
+
+func (p *Parser) parseParameter() string {
+	if p.curr.Type != token.WORD {
+		p.error("couldn't found a valid parameter name, found `%s`", p.curr.Literal)
+	}
+
+	v := p.curr.Literal
+	p.proceed()
+	// TODO: handle arrays
+
+	return v
 }
