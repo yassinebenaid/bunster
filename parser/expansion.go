@@ -84,101 +84,105 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 		p.proceed()
 		exp = ast.VarCount(p.curr.Literal)
 		p.proceed()
-	} else {
-		param := p.curr.Literal
+		if p.curr.Type != token.RIGHT_BRACE {
+			p.error("expected closing brace `}`, found `%s`", p.curr.Literal)
+		}
+
+		return exp
+	}
+	param := p.curr.Literal
+	p.proceed()
+
+	switch p.curr.Type {
+	case token.RIGHT_BRACE:
+		exp = ast.Var(param)
+	case token.MINUS, token.COLON_MINUS:
+		checkForNull := p.curr.Type == token.COLON_MINUS
 		p.proceed()
-
-		switch p.curr.Type {
-		case token.RIGHT_BRACE:
-			exp = ast.Var(param)
-		case token.MINUS, token.COLON_MINUS:
-			checkForNull := p.curr.Type == token.COLON_MINUS
-			p.proceed()
-			exp = ast.VarOrDefault{
-				Name:         param,
-				Default:      p.parseExpansionOperandExpression(0),
-				CheckForNull: checkForNull,
-			}
-		case token.COLON_ASSIGN:
-			p.proceed()
-			exp = ast.VarOrSet{
-				Name:    param,
-				Default: p.parseExpansionOperandExpression(0),
-			}
-		case token.COLON_QUESTION:
-			p.proceed()
-			exp = ast.VarOrFail{
-				Name:  param,
-				Error: p.parseExpansionOperandExpression(0),
-			}
-		case token.COLON_PLUS:
-			p.proceed()
-			exp = ast.CheckAndUse{
-				Name:  param,
-				Value: p.parseExpansionOperandExpression(0),
-			}
-		case token.CIRCUMFLEX, token.DOUBLE_CIRCUMFLEX, token.COMMA, token.DOUBLE_COMMA:
-			operator := p.curr.Literal
-			p.proceed()
-			exp = ast.ChangeCase{
-				Name:     param,
-				Operator: operator,
-				Pattern:  p.parseExpansionOperandExpression(0),
-			}
-		case token.HASH, token.PERCENT, token.DOUBLE_PERCENT:
-			operator := p.curr.Literal
-			p.proceed()
-			if p.curr.Type == token.HASH {
-				operator += p.curr.Literal
-				p.proceed()
-			}
-
-			exp = ast.MatchAndRemove{
-				Name:     param,
-				Operator: operator,
-				Pattern:  p.parseExpansionOperandExpression(0),
-			}
-		case token.SLASH:
-			operator := p.curr.Literal
-			p.proceed()
-			if p.curr.Type == token.SLASH || p.curr.Type == token.HASH || p.curr.Type == token.PERCENT {
-				operator += p.curr.Literal
-				p.proceed()
-			}
-
-			mar := ast.MatchAndReplace{
-				Name:     param,
-				Operator: operator,
-				Pattern:  p.parseExpansionOperandExpression(token.SLASH),
-			}
-
-			if p.curr.Type == token.SLASH {
-				p.proceed()
-				mar.Value = p.parseExpansionOperandExpression(0)
-			}
-
-			exp = mar
-		case token.COLON:
-			p.proceed()
-			slice := ast.Slice{
-				Name:   param,
-				Offset: p.parseArithmetics(),
-			}
-
-			if p.curr.Type == token.COLON {
-				p.proceed()
-				slice.Length = p.parseArithmetics()
-			}
-
-			exp = slice
-		case token.AT:
-			p.proceed()
-			exp = ast.Transform{
-				Name:     param,
-				Operator: p.curr.Literal,
-			}
+		exp = ast.VarOrDefault{
+			Name:         param,
+			Default:      p.parseExpansionOperandExpression(0),
+			CheckForNull: checkForNull,
+		}
+	case token.COLON_ASSIGN:
+		p.proceed()
+		exp = ast.VarOrSet{
+			Name:    param,
+			Default: p.parseExpansionOperandExpression(0),
+		}
+	case token.COLON_QUESTION:
+		p.proceed()
+		exp = ast.VarOrFail{
+			Name:  param,
+			Error: p.parseExpansionOperandExpression(0),
+		}
+	case token.COLON_PLUS:
+		p.proceed()
+		exp = ast.CheckAndUse{
+			Name:  param,
+			Value: p.parseExpansionOperandExpression(0),
+		}
+	case token.CIRCUMFLEX, token.DOUBLE_CIRCUMFLEX, token.COMMA, token.DOUBLE_COMMA:
+		operator := p.curr.Literal
+		p.proceed()
+		exp = ast.ChangeCase{
+			Name:     param,
+			Operator: operator,
+			Pattern:  p.parseExpansionOperandExpression(0),
+		}
+	case token.HASH, token.PERCENT, token.DOUBLE_PERCENT:
+		operator := p.curr.Literal
+		p.proceed()
+		if p.curr.Type == token.HASH {
+			operator += p.curr.Literal
 			p.proceed()
 		}
+
+		exp = ast.MatchAndRemove{
+			Name:     param,
+			Operator: operator,
+			Pattern:  p.parseExpansionOperandExpression(0),
+		}
+	case token.SLASH:
+		operator := p.curr.Literal
+		p.proceed()
+		if p.curr.Type == token.SLASH || p.curr.Type == token.HASH || p.curr.Type == token.PERCENT {
+			operator += p.curr.Literal
+			p.proceed()
+		}
+
+		mar := ast.MatchAndReplace{
+			Name:     param,
+			Operator: operator,
+			Pattern:  p.parseExpansionOperandExpression(token.SLASH),
+		}
+
+		if p.curr.Type == token.SLASH {
+			p.proceed()
+			mar.Value = p.parseExpansionOperandExpression(0)
+		}
+
+		exp = mar
+	case token.COLON:
+		p.proceed()
+		slice := ast.Slice{
+			Name:   param,
+			Offset: p.parseArithmetics(),
+		}
+
+		if p.curr.Type == token.COLON {
+			p.proceed()
+			slice.Length = p.parseArithmetics()
+		}
+
+		exp = slice
+	case token.AT:
+		p.proceed()
+		exp = ast.Transform{
+			Name:     param,
+			Operator: p.curr.Literal,
+		}
+		p.proceed()
 	}
 
 	if p.curr.Type != token.RIGHT_BRACE {
