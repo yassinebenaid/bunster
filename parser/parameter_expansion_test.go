@@ -547,4 +547,5 @@ var parameterExpansionErrorHandlingCases = []errorHandlingTestCase{
 	{"${!", "syntax error: couldn't find a valid parameter name, found `!`."},
 	{"${var", "syntax error: expected closing brace `}`, found `end of file`."},
 	{"${#var", "syntax error: expected closing brace `}`, found `end of file`."},
+	{"${#var:-default}", "syntax error: expected closing brace `}`, found `:-`."},
 }
