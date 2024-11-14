@@ -559,4 +559,6 @@ var parameterExpansionErrorHandlingCases = []errorHandlingTestCase{
 	{"${var", "syntax error: expected closing brace `}`, found `end of file`."},
 	{"${#var", "syntax error: expected closing brace `}`, found `end of file`."},
 	{"${#var:-default}", "syntax error: expected closing brace `}`, found `:-`."},
+	{"${var:}", "syntax error: bad arithmetic expression, unexpected token `}`."},
+	{"${var:x:}", "syntax error: bad arithmetic expression, unexpected token `}`."},
 }
