@@ -21,10 +21,11 @@ var parameterExpansionTests = []testCase{
 			},
 		},
 	}},
-	{`cmd ${var-default} ${var-${default}} ${var- $foo bar "baz" | & ; 2> < } ${var-}`, ast.Script{
+	{`cmd ${var-default} ${var-'default'} ${var-${default}} ${var- $foo bar "baz" | & ; 2> < } ${var-}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
+				ast.VarOrDefault{Name: "var", Default: ast.Word("default")},
 				ast.VarOrDefault{Name: "var", Default: ast.Word("default")},
 				ast.VarOrDefault{Name: "var", Default: ast.Var("default")},
 				ast.VarOrDefault{
