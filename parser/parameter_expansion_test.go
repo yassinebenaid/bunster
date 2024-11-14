@@ -7,8 +7,8 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.Var("var"),
-				ast.Var("var"),
+				ast.Var(ast.Var("var")),
+				ast.Var(ast.Var("var")),
 			},
 		},
 	}},
@@ -16,8 +16,8 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.VarCount("var"),
-				ast.VarCount("var"),
+				ast.VarCount{Parameter: ast.Var("var")},
+				ast.VarCount{Parameter: ast.Var("var")},
 			},
 		},
 	}},
@@ -25,11 +25,11 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.VarOrDefault{Name: "var", Default: ast.Word("default")},
-				ast.VarOrDefault{Name: "var", Default: ast.Word("default")},
-				ast.VarOrDefault{Name: "var", Default: ast.Var("default")},
+				ast.VarOrDefault{Name: ast.Var("var"), Default: ast.Word("default")},
+				ast.VarOrDefault{Name: ast.Var("var"), Default: ast.Word("default")},
+				ast.VarOrDefault{Name: ast.Var("var"), Default: ast.Var("default")},
 				ast.VarOrDefault{
-					Name: "var",
+					Name: ast.Var("var"),
 					Default: ast.Concatination{
 						Nodes: []ast.Expression{
 							ast.Word(" "),
@@ -38,7 +38,7 @@ var parameterExpansionTests = []testCase{
 						},
 					},
 				},
-				ast.VarOrDefault{Name: "var"},
+				ast.VarOrDefault{Name: ast.Var("var")},
 			},
 		},
 	}},
@@ -46,10 +46,10 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.VarOrDefault{Name: "var", Default: ast.Word("default"), CheckForNull: true},
-				ast.VarOrDefault{Name: "var", Default: ast.Var("default"), CheckForNull: true},
+				ast.VarOrDefault{Name: ast.Var("var"), Default: ast.Word("default"), CheckForNull: true},
+				ast.VarOrDefault{Name: ast.Var("var"), Default: ast.Var("default"), CheckForNull: true},
 				ast.VarOrDefault{
-					Name: "var",
+					Name: ast.Var("var"),
 					Default: ast.Concatination{
 						Nodes: []ast.Expression{
 							ast.Word(" "),
@@ -59,7 +59,7 @@ var parameterExpansionTests = []testCase{
 					},
 					CheckForNull: true,
 				},
-				ast.VarOrDefault{Name: "var", CheckForNull: true},
+				ast.VarOrDefault{Name: ast.Var("var"), CheckForNull: true},
 			},
 		},
 	}},
@@ -67,10 +67,10 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.VarOrSet{Name: "var", Default: ast.Word("default")},
-				ast.VarOrSet{Name: "var", Default: ast.Var("default")},
+				ast.VarOrSet{Name: ast.Var("var"), Default: ast.Word("default")},
+				ast.VarOrSet{Name: ast.Var("var"), Default: ast.Var("default")},
 				ast.VarOrSet{
-					Name: "var",
+					Name: ast.Var("var"),
 					Default: ast.Concatination{
 						Nodes: []ast.Expression{
 							ast.Word(" "),
@@ -79,7 +79,7 @@ var parameterExpansionTests = []testCase{
 						},
 					},
 				},
-				ast.VarOrSet{Name: "var"},
+				ast.VarOrSet{Name: ast.Var("var")},
 			},
 		},
 	}},
@@ -87,10 +87,10 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.VarOrFail{Name: "var", Error: ast.Word("error")},
-				ast.VarOrFail{Name: "var", Error: ast.Var("error")},
+				ast.VarOrFail{Name: ast.Var("var"), Error: ast.Word("error")},
+				ast.VarOrFail{Name: ast.Var("var"), Error: ast.Var("error")},
 				ast.VarOrFail{
-					Name: "var",
+					Name: ast.Var("var"),
 					Error: ast.Concatination{
 						Nodes: []ast.Expression{
 							ast.Word(" "),
@@ -99,7 +99,7 @@ var parameterExpansionTests = []testCase{
 						},
 					},
 				},
-				ast.VarOrFail{Name: "var"},
+				ast.VarOrFail{Name: ast.Var("var")},
 			},
 		},
 	}},
@@ -107,10 +107,10 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.CheckAndUse{Name: "var", Value: ast.Word("alternate")},
-				ast.CheckAndUse{Name: "var", Value: ast.Var("alternate")},
+				ast.CheckAndUse{Name: ast.Var("var"), Value: ast.Word("alternate")},
+				ast.CheckAndUse{Name: ast.Var("var"), Value: ast.Var("alternate")},
 				ast.CheckAndUse{
-					Name: "var",
+					Name: ast.Var("var"),
 					Value: ast.Concatination{
 						Nodes: []ast.Expression{
 							ast.Word(" "),
@@ -119,7 +119,7 @@ var parameterExpansionTests = []testCase{
 						},
 					},
 				},
-				ast.CheckAndUse{Name: "var"},
+				ast.CheckAndUse{Name: ast.Var("var")},
 			},
 		},
 	}},
@@ -127,10 +127,10 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.ChangeCase{Name: "var", Operator: "^", Pattern: ast.Word("pattern")},
-				ast.ChangeCase{Name: "var", Operator: "^", Pattern: ast.Var("pattern")},
+				ast.ChangeCase{Name: ast.Var("var"), Operator: "^", Pattern: ast.Word("pattern")},
+				ast.ChangeCase{Name: ast.Var("var"), Operator: "^", Pattern: ast.Var("pattern")},
 				ast.ChangeCase{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "^",
 					Pattern: ast.Concatination{
 						Nodes: []ast.Expression{
@@ -140,7 +140,7 @@ var parameterExpansionTests = []testCase{
 						},
 					},
 				},
-				ast.ChangeCase{Name: "var", Operator: "^"},
+				ast.ChangeCase{Name: ast.Var("var"), Operator: "^"},
 			},
 		},
 	}},
@@ -148,10 +148,10 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.ChangeCase{Name: "var", Operator: "^^", Pattern: ast.Word("pattern")},
-				ast.ChangeCase{Name: "var", Operator: "^^", Pattern: ast.Var("pattern")},
+				ast.ChangeCase{Name: ast.Var("var"), Operator: "^^", Pattern: ast.Word("pattern")},
+				ast.ChangeCase{Name: ast.Var("var"), Operator: "^^", Pattern: ast.Var("pattern")},
 				ast.ChangeCase{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "^^",
 					Pattern: ast.Concatination{
 						Nodes: []ast.Expression{
@@ -161,7 +161,7 @@ var parameterExpansionTests = []testCase{
 						},
 					},
 				},
-				ast.ChangeCase{Name: "var", Operator: "^^"},
+				ast.ChangeCase{Name: ast.Var("var"), Operator: "^^"},
 			},
 		},
 	}},
@@ -169,10 +169,10 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.ChangeCase{Name: "var", Operator: ",", Pattern: ast.Word("pattern")},
-				ast.ChangeCase{Name: "var", Operator: ",", Pattern: ast.Var("pattern")},
+				ast.ChangeCase{Name: ast.Var("var"), Operator: ",", Pattern: ast.Word("pattern")},
+				ast.ChangeCase{Name: ast.Var("var"), Operator: ",", Pattern: ast.Var("pattern")},
 				ast.ChangeCase{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: ",",
 					Pattern: ast.Concatination{
 						Nodes: []ast.Expression{
@@ -182,7 +182,7 @@ var parameterExpansionTests = []testCase{
 						},
 					},
 				},
-				ast.ChangeCase{Name: "var", Operator: ","},
+				ast.ChangeCase{Name: ast.Var("var"), Operator: ","},
 			},
 		},
 	}},
@@ -190,10 +190,10 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.ChangeCase{Name: "var", Operator: ",,", Pattern: ast.Word("pattern")},
-				ast.ChangeCase{Name: "var", Operator: ",,", Pattern: ast.Var("pattern")},
+				ast.ChangeCase{Name: ast.Var("var"), Operator: ",,", Pattern: ast.Word("pattern")},
+				ast.ChangeCase{Name: ast.Var("var"), Operator: ",,", Pattern: ast.Var("pattern")},
 				ast.ChangeCase{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: ",,",
 					Pattern: ast.Concatination{
 						Nodes: []ast.Expression{
@@ -203,7 +203,7 @@ var parameterExpansionTests = []testCase{
 						},
 					},
 				},
-				ast.ChangeCase{Name: "var", Operator: ",,"},
+				ast.ChangeCase{Name: ast.Var("var"), Operator: ",,"},
 			},
 		},
 	}},
@@ -211,10 +211,10 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.MatchAndRemove{Name: "var", Operator: "#", Pattern: ast.Word("pattern")},
-				ast.MatchAndRemove{Name: "var", Operator: "#", Pattern: ast.Var("pattern")},
+				ast.MatchAndRemove{Name: ast.Var("var"), Operator: "#", Pattern: ast.Word("pattern")},
+				ast.MatchAndRemove{Name: ast.Var("var"), Operator: "#", Pattern: ast.Var("pattern")},
 				ast.MatchAndRemove{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "#",
 					Pattern: ast.Concatination{
 						Nodes: []ast.Expression{
@@ -224,7 +224,7 @@ var parameterExpansionTests = []testCase{
 						},
 					},
 				},
-				ast.MatchAndRemove{Name: "var", Operator: "#"},
+				ast.MatchAndRemove{Name: ast.Var("var"), Operator: "#"},
 			},
 		},
 	}},
@@ -232,10 +232,10 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.MatchAndRemove{Name: "var", Operator: "##", Pattern: ast.Word("pattern")},
-				ast.MatchAndRemove{Name: "var", Operator: "##", Pattern: ast.Var("pattern")},
+				ast.MatchAndRemove{Name: ast.Var("var"), Operator: "##", Pattern: ast.Word("pattern")},
+				ast.MatchAndRemove{Name: ast.Var("var"), Operator: "##", Pattern: ast.Var("pattern")},
 				ast.MatchAndRemove{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "##",
 					Pattern: ast.Concatination{
 						Nodes: []ast.Expression{
@@ -245,7 +245,7 @@ var parameterExpansionTests = []testCase{
 						},
 					},
 				},
-				ast.MatchAndRemove{Name: "var", Operator: "##"},
+				ast.MatchAndRemove{Name: ast.Var("var"), Operator: "##"},
 			},
 		},
 	}},
@@ -253,10 +253,10 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.MatchAndRemove{Name: "var", Operator: "%", Pattern: ast.Word("pattern")},
-				ast.MatchAndRemove{Name: "var", Operator: "%", Pattern: ast.Var("pattern")},
+				ast.MatchAndRemove{Name: ast.Var("var"), Operator: "%", Pattern: ast.Word("pattern")},
+				ast.MatchAndRemove{Name: ast.Var("var"), Operator: "%", Pattern: ast.Var("pattern")},
 				ast.MatchAndRemove{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "%",
 					Pattern: ast.Concatination{
 						Nodes: []ast.Expression{
@@ -266,7 +266,7 @@ var parameterExpansionTests = []testCase{
 						},
 					},
 				},
-				ast.MatchAndRemove{Name: "var", Operator: "%"},
+				ast.MatchAndRemove{Name: ast.Var("var"), Operator: "%"},
 			},
 		},
 	}},
@@ -274,10 +274,10 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.MatchAndRemove{Name: "var", Operator: "%%", Pattern: ast.Word("pattern")},
-				ast.MatchAndRemove{Name: "var", Operator: "%%", Pattern: ast.Var("pattern")},
+				ast.MatchAndRemove{Name: ast.Var("var"), Operator: "%%", Pattern: ast.Word("pattern")},
+				ast.MatchAndRemove{Name: ast.Var("var"), Operator: "%%", Pattern: ast.Var("pattern")},
 				ast.MatchAndRemove{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "%%",
 					Pattern: ast.Concatination{
 						Nodes: []ast.Expression{
@@ -287,7 +287,7 @@ var parameterExpansionTests = []testCase{
 						},
 					},
 				},
-				ast.MatchAndRemove{Name: "var", Operator: "%%"},
+				ast.MatchAndRemove{Name: ast.Var("var"), Operator: "%%"},
 			},
 		},
 	}},
@@ -299,19 +299,19 @@ var parameterExpansionTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/",
 					Pattern:  ast.Word("pattern"),
 					Value:    ast.Word("value"),
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/",
 					Pattern:  ast.Var("pattern"),
 					Value:    ast.Var("value"),
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/",
 					Pattern: ast.Concatination{
 						Nodes: []ast.Expression{
@@ -329,17 +329,17 @@ var parameterExpansionTests = []testCase{
 					},
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/",
 					Pattern:  ast.Word("pattern"),
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/",
 					Pattern:  ast.Word("pattern"),
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/",
 				},
 			},
@@ -353,19 +353,19 @@ var parameterExpansionTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "//",
 					Pattern:  ast.Word("pattern"),
 					Value:    ast.Word("value"),
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "//",
 					Pattern:  ast.Var("pattern"),
 					Value:    ast.Var("value"),
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "//",
 					Pattern: ast.Concatination{
 						Nodes: []ast.Expression{
@@ -383,26 +383,26 @@ var parameterExpansionTests = []testCase{
 					},
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "//",
 					Pattern:  ast.Word("pattern"),
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "//",
 					Pattern:  ast.Word("pattern"),
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "//",
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "//",
 					Pattern:  ast.Word("/"),
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "//",
 					Pattern:  ast.Word("/"),
 					Value:    ast.Word("///"),
@@ -418,19 +418,19 @@ var parameterExpansionTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/#",
 					Pattern:  ast.Word("pattern"),
 					Value:    ast.Word("value"),
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/#",
 					Pattern:  ast.Var("pattern"),
 					Value:    ast.Var("value"),
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/#",
 					Pattern: ast.Concatination{
 						Nodes: []ast.Expression{
@@ -448,17 +448,17 @@ var parameterExpansionTests = []testCase{
 					},
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/#",
 					Pattern:  ast.Word("pattern"),
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/#",
 					Pattern:  ast.Word("pattern"),
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/#",
 				},
 			},
@@ -472,19 +472,19 @@ var parameterExpansionTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/%",
 					Pattern:  ast.Word("pattern"),
 					Value:    ast.Word("value"),
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/%",
 					Pattern:  ast.Var("pattern"),
 					Value:    ast.Var("value"),
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/%",
 					Pattern: ast.Concatination{
 						Nodes: []ast.Expression{
@@ -502,17 +502,17 @@ var parameterExpansionTests = []testCase{
 					},
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/%",
 					Pattern:  ast.Word("pattern"),
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/%",
 					Pattern:  ast.Word("pattern"),
 				},
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/%",
 				},
 			},
@@ -522,16 +522,16 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.Transform{Name: "var", Operator: "U"},
-				ast.Transform{Name: "var", Operator: "u"},
-				ast.Transform{Name: "var", Operator: "L"},
-				ast.Transform{Name: "var", Operator: "Q"},
-				ast.Transform{Name: "var", Operator: "E"},
-				ast.Transform{Name: "var", Operator: "P"},
-				ast.Transform{Name: "var", Operator: "A"},
-				ast.Transform{Name: "var", Operator: "K"},
-				ast.Transform{Name: "var", Operator: "a"},
-				ast.Transform{Name: "var", Operator: "k"},
+				ast.Transform{Name: ast.Var("var"), Operator: "U"},
+				ast.Transform{Name: ast.Var("var"), Operator: "u"},
+				ast.Transform{Name: ast.Var("var"), Operator: "L"},
+				ast.Transform{Name: ast.Var("var"), Operator: "Q"},
+				ast.Transform{Name: ast.Var("var"), Operator: "E"},
+				ast.Transform{Name: ast.Var("var"), Operator: "P"},
+				ast.Transform{Name: ast.Var("var"), Operator: "A"},
+				ast.Transform{Name: ast.Var("var"), Operator: "K"},
+				ast.Transform{Name: ast.Var("var"), Operator: "a"},
+				ast.Transform{Name: ast.Var("var"), Operator: "k"},
 			},
 		},
 	}},
@@ -540,12 +540,12 @@ var parameterExpansionTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Slice{
-					Name:   "var",
+					Name:   ast.Var("var"),
 					Offset: ast.Arithmetic{ast.Var("x")},
 					Length: ast.Arithmetic{ast.Var("y")},
 				},
 				ast.Slice{
-					Name:   "var",
+					Name:   ast.Var("var"),
 					Offset: ast.Arithmetic{ast.Var("x")},
 				},
 			},
@@ -556,7 +556,7 @@ var parameterExpansionTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.MatchAndReplace{
-					Name:     "var",
+					Name:     ast.Var("var"),
 					Operator: "/",
 					Pattern: ast.ProcessSubstitution{
 						Direction: 60,

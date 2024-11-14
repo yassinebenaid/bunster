@@ -1,56 +1,63 @@
 package ast
 
+type Parameter interface {
+	Expression
+	param()
+}
+
 type Var string
 
 type VarOrDefault struct {
-	Name         string
+	Name         Parameter
 	Default      Expression
 	CheckForNull bool
 }
 
 type VarOrSet struct {
-	Name    string
+	Name    Parameter
 	Default Expression
 }
 
 type VarOrFail struct {
-	Name  string
+	Name  Parameter
 	Error Expression
 }
 
 type CheckAndUse struct {
-	Name  string
+	Name  Parameter
 	Value Expression
 }
 
 type ChangeCase struct {
-	Name     string
+	Name     Parameter
 	Operator string
 	Pattern  Expression
 }
 
-type VarCount string
+type VarCount struct {
+	Parameter
+}
 
 type MatchAndRemove struct {
-	Name     string
+	Name     Parameter
 	Operator string
 	Pattern  Expression
 }
 
 type MatchAndReplace struct {
-	Name     string
+	Name     Parameter
 	Operator string
 	Pattern  Expression
 	Value    Expression
 }
 
 type Transform struct {
-	Name     string
+	Name     Parameter
 	Operator string
 }
 
 type Slice struct {
-	Name   string
+	Name   Parameter
 	Offset Arithmetic
 	Length Arithmetic
 }
@@ -91,3 +98,5 @@ func (MatchAndRemove) string() string  { return "" }
 func (MatchAndReplace) string() string { return "" }
 func (Transform) string() string       { return "" }
 func (Slice) string() string           { return "" }
+
+func (v Var) param() {}
