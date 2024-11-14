@@ -70,9 +70,6 @@ func (p *Parser) parseArithmetics() ast.Arithmetic {
 	for {
 		expr = append(expr, p.parseArithmeticExpresion(BASIC))
 
-		if p.curr.Type == token.BLANK {
-			p.proceed()
-		}
 		if p.curr.Type != token.COMMA {
 			break
 		}

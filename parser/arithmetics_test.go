@@ -18,6 +18,22 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
+	{`cmd $(( 1 + 2	, 	2 ,	 3 ))`, ast.Script{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.Arithmetic{
+					ast.InfixArithmetic{
+						Left:     ast.Number("1"),
+						Operator: "+",
+						Right:    ast.Number("2"),
+					},
+					ast.Number("2"),
+					ast.Number("3"),
+				},
+			},
+		},
+	}},
 	{`cmd $(( $((123)) )) $(( ${var} ))`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
