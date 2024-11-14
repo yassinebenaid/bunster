@@ -543,4 +543,5 @@ var parameterExpansionTests = []testCase{
 
 var parameterExpansionErrorHandlingCases = []errorHandlingTestCase{
 	{"${", "syntax error: couldn't find a valid parameter name, found `end of file`."},
+	{"${}", "syntax error: couldn't find a valid parameter name, found `}`."},
 }
