@@ -90,6 +90,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 
 		return exp
 	}
+
 	param := p.curr.Literal
 	p.proceed()
 
