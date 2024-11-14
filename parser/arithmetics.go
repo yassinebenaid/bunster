@@ -57,7 +57,7 @@ func (p *Parser) parseArithmeticSubstitution() ast.Expression {
 	expr := p.parseArithmetics()
 
 	if !(p.curr.Type == token.RIGHT_PAREN && p.next.Type == token.RIGHT_PAREN) {
-		p.error("expected `))` to close arithmetic expression, found `%s`", p.curr.Literal)
+		p.error("expected `))` to close arithmetic expression, found `%s`", p.curr)
 	}
 	p.proceed()
 
@@ -155,14 +155,14 @@ func (p *Parser) parsePrefix() ast.Expression {
 		exp := p.parseArithmeticExpresion(BASIC)
 
 		if p.curr.Type != token.RIGHT_PAREN {
-			p.error("expected a closing `)`, found `%s`", p.curr.Literal)
+			p.error("expected a closing `)`, found `%s`", p.curr)
 		}
 		p.proceed()
 		return exp
 	case token.EOF:
 		p.error("bad arithmetic expression, unexpected end of file")
 	default:
-		p.error("bad arithmetic expression, unexpected token `%s`", p.curr.Literal)
+		p.error("bad arithmetic expression, unexpected token `%s`", p.curr)
 	}
 
 	return nil
@@ -189,7 +189,7 @@ func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
 		exp.Body = p.parseArithmeticExpresion(BASIC)
 
 		if p.curr.Type != token.COLON {
-			p.error("expected a colon `:`, found `%s`", p.curr.Literal)
+			p.error("expected a colon `:`, found `%s`", p.curr)
 		}
 
 		p.proceed()

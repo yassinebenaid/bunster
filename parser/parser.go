@@ -146,7 +146,7 @@ func (p *Parser) parseCommand() ast.Statement {
 	var cmd ast.Command
 	cmd.Name = p.parseExpression()
 	if cmd.Name == nil {
-		p.error("`%s` has a special meaning here and cannot be used as a command name", p.curr.Literal)
+		p.error("`%s` has a special meaning here and cannot be used as a command name", p.curr)
 		return nil
 	}
 

@@ -85,7 +85,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 		exp = ast.VarCount(p.parseParameter())
 
 		if p.curr.Type != token.RIGHT_BRACE {
-			p.error("expected closing brace `}`, found `%s`", p.curr.Literal)
+			p.error("expected closing brace `}`, found `%s`", p.curr)
 		}
 		return exp
 	}
@@ -180,14 +180,14 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 		switch p.curr.Literal {
 		case "U", "u", "L", "Q", "E", "P", "A", "K", "a", "k":
 		default:
-			p.error("bad substitution operator `%s`, possible operators are (U, u, L, Q, E, P, A, K, a, k)", p.curr.Literal)
+			p.error("bad substitution operator `%s`, possible operators are (U, u, L, Q, E, P, A, K, a, k)", p.curr)
 		}
 		exp = ast.Transform{Name: param, Operator: p.curr.Literal}
 		p.proceed()
 	}
 
 	if p.curr.Type != token.RIGHT_BRACE {
-		p.error("expected closing brace `}`, found `%s`", p.curr.Literal)
+		p.error("expected closing brace `}`, found `%s`", p.curr)
 	}
 
 	return exp
@@ -229,7 +229,7 @@ loop:
 
 func (p *Parser) parseParameter() string {
 	if p.curr.Type != token.WORD {
-		p.error("couldn't find a valid parameter name, found `%s`", p.curr.Literal)
+		p.error("couldn't find a valid parameter name, found `%s`", p.curr)
 	}
 
 	v := p.curr.Literal

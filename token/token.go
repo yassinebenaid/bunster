@@ -151,3 +151,20 @@ var Keywords = map[string]TokenType{
 	"readonly": READONLY,
 	"unset":    UNSET,
 }
+
+func (t Token) String() string {
+	switch t.Type {
+	case NEWLINE:
+		return "newline"
+	case EOF:
+		return "end of file"
+	case BLANK:
+		return "blank"
+	case ESCAPED_CHAR:
+		return `\` + t.Literal
+	case SIMPLE_EXPANSION, SPECIAL_VAR:
+		return "$" + t.Literal
+	default:
+		return t.Literal
+	}
+}
