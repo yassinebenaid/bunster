@@ -8,28 +8,28 @@ type Parameter interface {
 type Var string
 
 type VarOrDefault struct {
-	Name         Parameter
+	Parameter
 	Default      Expression
 	CheckForNull bool
 }
 
 type VarOrSet struct {
-	Name    Parameter
+	Parameter
 	Default Expression
 }
 
 type VarOrFail struct {
-	Name  Parameter
+	Parameter
 	Error Expression
 }
 
 type CheckAndUse struct {
-	Name  Parameter
+	Parameter
 	Value Expression
 }
 
 type ChangeCase struct {
-	Name     Parameter
+	Parameter
 	Operator string
 	Pattern  Expression
 }
@@ -39,25 +39,25 @@ type VarCount struct {
 }
 
 type MatchAndRemove struct {
-	Name     Parameter
+	Parameter
 	Operator string
 	Pattern  Expression
 }
 
 type MatchAndReplace struct {
-	Name     Parameter
+	Parameter
 	Operator string
 	Pattern  Expression
 	Value    Expression
 }
 
 type Transform struct {
-	Name     Parameter
+	Parameter
 	Operator string
 }
 
 type Slice struct {
-	Name   Parameter
+	Parameter
 	Offset Arithmetic
 	Length Arithmetic
 }

@@ -99,35 +99,35 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 		checkForNull := p.curr.Type == token.COLON_MINUS
 		p.proceed()
 		exp = ast.VarOrDefault{
-			Name:         param,
+			Parameter:    param,
 			Default:      p.parseExpansionOperandExpression(0),
 			CheckForNull: checkForNull,
 		}
 	case token.COLON_ASSIGN:
 		p.proceed()
 		exp = ast.VarOrSet{
-			Name:    param,
-			Default: p.parseExpansionOperandExpression(0),
+			Parameter: param,
+			Default:   p.parseExpansionOperandExpression(0),
 		}
 	case token.COLON_QUESTION:
 		p.proceed()
 		exp = ast.VarOrFail{
-			Name:  param,
-			Error: p.parseExpansionOperandExpression(0),
+			Parameter: param,
+			Error:     p.parseExpansionOperandExpression(0),
 		}
 	case token.COLON_PLUS:
 		p.proceed()
 		exp = ast.CheckAndUse{
-			Name:  param,
-			Value: p.parseExpansionOperandExpression(0),
+			Parameter: param,
+			Value:     p.parseExpansionOperandExpression(0),
 		}
 	case token.CIRCUMFLEX, token.DOUBLE_CIRCUMFLEX, token.COMMA, token.DOUBLE_COMMA:
 		operator := p.curr.Literal
 		p.proceed()
 		exp = ast.ChangeCase{
-			Name:     param,
-			Operator: operator,
-			Pattern:  p.parseExpansionOperandExpression(0),
+			Parameter: param,
+			Operator:  operator,
+			Pattern:   p.parseExpansionOperandExpression(0),
 		}
 	case token.HASH, token.PERCENT, token.DOUBLE_PERCENT:
 		operator := p.curr.Literal
@@ -138,9 +138,9 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 		p.proceed()
 
 		exp = ast.MatchAndRemove{
-			Name:     param,
-			Operator: operator,
-			Pattern:  p.parseExpansionOperandExpression(0),
+			Parameter: param,
+			Operator:  operator,
+			Pattern:   p.parseExpansionOperandExpression(0),
 		}
 	case token.SLASH:
 		operator := p.curr.Literal
@@ -157,7 +157,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 			pattern = p.parseExpansionOperandExpression(token.SLASH)
 		}
 
-		mar := ast.MatchAndReplace{Name: param, Operator: operator, Pattern: pattern}
+		mar := ast.MatchAndReplace{Parameter: param, Operator: operator, Pattern: pattern}
 
 		if p.curr.Type == token.SLASH {
 			p.proceed()
@@ -167,7 +167,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 		exp = mar
 	case token.COLON:
 		p.proceed()
-		slice := ast.Slice{Name: param, Offset: p.parseArithmetics()}
+		slice := ast.Slice{Parameter: param, Offset: p.parseArithmetics()}
 
 		if p.curr.Type == token.COLON {
 			p.proceed()
@@ -182,7 +182,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 		default:
 			p.error("bad substitution operator `%s`, possible operators are (U, u, L, Q, E, P, A, K, a, k)", p.curr)
 		}
-		exp = ast.Transform{Name: param, Operator: p.curr.Literal}
+		exp = ast.Transform{Parameter: param, Operator: p.curr.Literal}
 		p.proceed()
 	}
 
