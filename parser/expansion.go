@@ -177,10 +177,12 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 		exp = slice
 	case token.AT:
 		p.proceed()
-		exp = ast.Transform{
-			Name:     param,
-			Operator: p.curr.Literal,
+		switch p.curr.Literal {
+		case "U", "u", "L", "Q", "E", "P", "A", "K", "a", "k":
+		default:
+			p.error("bad substitution operator `%s`, possible operators are (U, u, L, Q, E, P, A, K, a, k)", p.curr.Literal)
 		}
+		exp = ast.Transform{Name: param, Operator: p.curr.Literal}
 		p.proceed()
 	}
 
