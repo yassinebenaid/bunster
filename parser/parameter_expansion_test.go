@@ -551,6 +551,34 @@ var parameterExpansionTests = []testCase{
 			},
 		},
 	}},
+	{`cmd ${var/<(ls)/$(ls)}`, ast.Script{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.MatchAndReplace{
+					Name:     "var",
+					Operator: "/",
+					Pattern: ast.ProcessSubstitution{
+						Direction: 60,
+						Body: []ast.Statement{
+							ast.Command{
+								Name:         ast.Word("ls"),
+								Args:         []ast.Expression(nil),
+								Redirections: []ast.Redirection(nil),
+							},
+						},
+					},
+					Value: ast.CommandSubstitution{
+						ast.Command{
+							Name:         ast.Word("ls"),
+							Args:         []ast.Expression(nil),
+							Redirections: []ast.Redirection(nil),
+						},
+					},
+				},
+			},
+		},
+	}},
 }
 
 var parameterExpansionErrorHandlingCases = []errorHandlingTestCase{
