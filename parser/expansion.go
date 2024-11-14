@@ -157,11 +157,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 			pattern = p.parseExpansionOperandExpression(token.SLASH)
 		}
 
-		mar := ast.MatchAndReplace{
-			Name:     param,
-			Operator: operator,
-			Pattern:  pattern,
-		}
+		mar := ast.MatchAndReplace{Name: param, Operator: operator, Pattern: pattern}
 
 		if p.curr.Type == token.SLASH {
 			p.proceed()
