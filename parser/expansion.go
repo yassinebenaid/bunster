@@ -90,8 +90,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 		return exp
 	}
 
-	param := p.curr.Literal
-	p.proceed()
+	param := p.parseParameter()
 
 	switch p.curr.Type {
 	case token.RIGHT_BRACE:
