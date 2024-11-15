@@ -32,13 +32,13 @@ type ParserError struct {
 }
 
 func (err ParserError) Error() string {
-	return fmt.Sprintf("syntax error: %s.", err.Message)
+	return fmt.Sprintf("syntax error: %s. (line: %d, column: %d)", err.Message, err.Line, err.Position)
 }
 
 func (p *Parser) error(msg string, args ...any) {
 	if p.Error == nil {
 		p.Error = &ParserError{
-			Line:     uint(p.l.Line),
+			Line:     uint(p.l.Line + 1),
 			Position: uint(p.l.Position),
 			Message:  fmt.Sprintf(msg, args...),
 		}

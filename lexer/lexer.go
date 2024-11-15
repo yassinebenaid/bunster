@@ -393,9 +393,9 @@ func (l *Lexer) proceed() {
 		l.next = 0
 	} else {
 		l.next = l.input[l.pos]
+		l.Position++
 	}
 	l.pos++
-	l.Position++
 	if l.curr == '\n' {
 		l.Line++
 		l.Position = 0
