@@ -22,12 +22,26 @@ type Parser struct {
 	l     lexer.Lexer
 	curr  token.Token
 	next  token.Token
-	Error error
+	Error *ParserError
+}
+
+type ParserError struct {
+	Position uint
+	Line     uint
+	Message  string
+}
+
+func (err ParserError) Error() string {
+	return fmt.Sprintf("syntax error: %s.", err.Message)
 }
 
 func (p *Parser) error(msg string, args ...any) {
 	if p.Error == nil {
-		p.Error = fmt.Errorf("syntax error: "+msg+".", args...)
+		p.Error = &ParserError{
+			Line:     uint(p.l.Line),
+			Position: uint(p.l.Position),
+			Message:  fmt.Sprintf(msg, args...),
+		}
 	}
 }
 

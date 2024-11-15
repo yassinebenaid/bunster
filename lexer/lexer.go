@@ -12,6 +12,9 @@ const (
 )
 
 type Lexer struct {
+	Position int
+	Line     int
+
 	input []byte
 	pos   int
 	curr  byte
@@ -392,4 +395,9 @@ func (l *Lexer) proceed() {
 		l.next = l.input[l.pos]
 	}
 	l.pos++
+	l.Position++
+	if l.curr == '\n' {
+		l.Line++
+		l.Position = 0
+	}
 }
