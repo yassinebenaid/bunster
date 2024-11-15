@@ -12,8 +12,7 @@ const (
 )
 
 type Lexer struct {
-	Position int
-	Line     int
+	Line int
 
 	input []byte
 	pos   int
@@ -22,12 +21,14 @@ type Lexer struct {
 	ctx   context
 }
 
-func New(in []byte) Lexer {
-	l := Lexer{input: in}
+func New(in []byte) *Lexer {
+	l := &Lexer{input: in}
 
 	// read twice so that 'curr' and 'next' get initialized
 	l.proceed()
 	l.proceed()
+
+	l.Line = 1
 
 	return l
 }
@@ -393,11 +394,9 @@ func (l *Lexer) proceed() {
 		l.next = 0
 	} else {
 		l.next = l.input[l.pos]
-		l.Position++
 	}
 	l.pos++
 	if l.curr == '\n' {
 		l.Line++
-		l.Position = 0
 	}
 }

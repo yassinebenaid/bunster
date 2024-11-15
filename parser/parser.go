@@ -8,7 +8,7 @@ import (
 	"github.com/yassinebenaid/bunny/token"
 )
 
-func New(l lexer.Lexer) Parser {
+func New(l *lexer.Lexer) Parser {
 	var p = Parser{l: l}
 
 	// So that both curr and next tokens get initialized.
@@ -19,28 +19,26 @@ func New(l lexer.Lexer) Parser {
 }
 
 type Parser struct {
-	l     lexer.Lexer
+	l     *lexer.Lexer
 	curr  token.Token
 	next  token.Token
 	Error *ParserError
 }
 
 type ParserError struct {
-	Position uint
-	Line     uint
-	Message  string
+	Line    int
+	Message string
 }
 
 func (err ParserError) Error() string {
-	return fmt.Sprintf("syntax error: %s. (line: %d, column: %d)", err.Message, err.Line, err.Position)
+	return fmt.Sprintf("syntax error: %s. (line: %d)", err.Message, err.Line)
 }
 
 func (p *Parser) error(msg string, args ...any) {
 	if p.Error == nil {
 		p.Error = &ParserError{
-			Line:     uint(p.l.Line + 1),
-			Position: uint(p.l.Position),
-			Message:  fmt.Sprintf(msg, args...),
+			Line:    p.l.Line,
+			Message: fmt.Sprintf(msg, args...),
 		}
 	}
 }
