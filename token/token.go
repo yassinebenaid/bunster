@@ -3,8 +3,10 @@ package token
 type TokenType byte
 
 type Token struct {
-	Type    TokenType
-	Literal string
+	Type     TokenType
+	Line     int
+	Position int
+	Literal  string
 }
 
 const (
