@@ -70,8 +70,8 @@ var pipesTests = []testCase{
 }
 
 var pipesErrorHandlingCases = []errorHandlingTestCase{
-	{`cmd |`, "syntax error: unexpected end of file, expected command name."},
-	{`cmd | foo |&`, "syntax error: unexpected end of file, expected command name."},
-	{`cmd foo | cmd >foo| |&`, "syntax error: `|&` has a special meaning here and cannot be used as a command name."},
-	{"cmd |\n\n\t <foo", "syntax error: `<` has a special meaning here and cannot be used as a command name."},
+	{`cmd |`, "syntax error: unexpected end of file, expected command name. (line: 1)"},
+	{`cmd | foo |&`, "syntax error: unexpected end of file, expected command name. (line: 1)"},
+	{`cmd foo | cmd >foo| |&`, "syntax error: `|&` has a special meaning here and cannot be used as a command name. (line: 1)"},
+	{"cmd |\n\n\t <foo", "syntax error: `<` has a special meaning here and cannot be used as a command name. (line: 3)"},
 }
