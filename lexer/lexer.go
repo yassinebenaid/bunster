@@ -12,9 +12,8 @@ const (
 )
 
 type Lexer struct {
-	Line int
-
 	input []byte
+	line  int
 	pos   int
 	curr  byte
 	next  byte
@@ -22,20 +21,18 @@ type Lexer struct {
 }
 
 func New(in []byte) Lexer {
-	l := Lexer{input: in}
+	l := Lexer{input: in, line: 1}
 
 	// read twice so that 'curr' and 'next' get initialized
 	l.proceed()
 	l.proceed()
-
-	l.Line = 1
 
 	return l
 }
 
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
-	tok.Line = l.Line
+	tok.Line = l.line
 
 switch_beginning:
 	switch {
@@ -398,6 +395,6 @@ func (l *Lexer) proceed() {
 	}
 	l.pos++
 	if l.curr == '\n' {
-		l.Line++
+		l.line++
 	}
 }

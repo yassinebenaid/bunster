@@ -37,7 +37,7 @@ func (err ParserError) Error() string {
 func (p *Parser) error(msg string, args ...any) {
 	if p.Error == nil {
 		p.Error = &ParserError{
-			Line:    p.l.Line,
+			Line:    p.curr.Line,
 			Message: fmt.Sprintf(msg, args...),
 		}
 	}
