@@ -289,8 +289,8 @@ var logicalCommandsTests = []testCase{
 }
 
 var logicalCommandsErrorHandlingCases = []errorHandlingTestCase{
-	{`cmd &&`, "syntax error: unexpected end of file, expected command name."},
-	{`cmd ||`, "syntax error: unexpected end of file, expected command name."},
-	{`cmd || cmd && cmd ||`, "syntax error: unexpected end of file, expected command name."},
-	{`cmd && cmd || cmd &&`, "syntax error: unexpected end of file, expected command name."},
+	{`cmd &&`, "syntax error: unexpected end of file, expected command name. (line: 1)"},
+	{`cmd ||`, "syntax error: unexpected end of file, expected command name. (line: 1)"},
+	{`cmd || cmd && cmd ||`, "syntax error: unexpected end of file, expected command name. (line: 1)"},
+	{`cmd && cmd || cmd &&`, "syntax error: unexpected end of file, expected command name. (line: 1)"},
 }
