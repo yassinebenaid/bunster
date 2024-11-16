@@ -354,12 +354,12 @@ var errorHandlingTestCases = []struct {
 		12: {`|| cmd2`, "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
 
 		13: {`& cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
-		14: {`cmd & || cmd2`, "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
-		15: {`cmd & && cmd2`, "syntax error: `&&` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
-		16: {`cmd & | cmd2`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
-		17: {`cmd || & cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
-		18: {`cmd && & cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
-		19: {`cmd | & cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		14: {`cmd & || cmd2`, "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 1, column: 7)"},
+		15: {`cmd & && cmd2`, "syntax error: `&&` has a special meaning here and cannot be used as a command name. (line: 1, column: 7)"},
+		16: {`cmd & | cmd2`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1, column: 7)"},
+		17: {`cmd || & cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1, column: 8)"},
+		18: {`cmd && & cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1, column: 8)"},
+		19: {`cmd | & cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1, column: 7)"},
 
 		20: {"cmd \n || cmd2", "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 2, column: 1)"},
 		21: {"cmd \n && cmd2", "syntax error: `&&` has a special meaning here and cannot be used as a command name. (line: 2, column: 1)"},
