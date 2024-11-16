@@ -33,6 +33,7 @@ func New(in []byte) Lexer {
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 	tok.Line = l.line
+	tok.Position = l.pos - 1
 
 switch_beginning:
 	switch {
