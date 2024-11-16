@@ -138,24 +138,24 @@ func TestLexer(t *testing.T) {
 		// Special Variables
 		{`$0$1$2 $3$4 $5 $6 $7 $8 $9 $10`, []token.Token{
 			{Type: token.SPECIAL_VAR, Literal: "0", Line: 1, Position: 1},
-			{Type: token.SPECIAL_VAR, Literal: "1", Line: 1, Position: 1},
-			{Type: token.SPECIAL_VAR, Literal: "2", Line: 1, Position: 1},
-			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 1},
-			{Type: token.SPECIAL_VAR, Literal: "3", Line: 1, Position: 1},
-			{Type: token.SPECIAL_VAR, Literal: "4", Line: 1, Position: 1},
-			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 1},
-			{Type: token.SPECIAL_VAR, Literal: "5", Line: 1, Position: 1},
-			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 1},
-			{Type: token.SPECIAL_VAR, Literal: "6", Line: 1, Position: 1},
-			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 1},
-			{Type: token.SPECIAL_VAR, Literal: "7", Line: 1, Position: 1},
-			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 1},
-			{Type: token.SPECIAL_VAR, Literal: "8", Line: 1, Position: 1},
-			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 1},
-			{Type: token.SPECIAL_VAR, Literal: "9", Line: 1, Position: 1},
-			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 1},
-			{Type: token.SPECIAL_VAR, Literal: "1", Line: 1, Position: 1}, // just to emphasize that only first digit is considered
-			{Type: token.INT, Literal: "0", Line: 1, Position: 1},         // just to emphasize that only first digit is considered
+			{Type: token.SPECIAL_VAR, Literal: "1", Line: 1, Position: 3},
+			{Type: token.SPECIAL_VAR, Literal: "2", Line: 1, Position: 5},
+			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 7},
+			{Type: token.SPECIAL_VAR, Literal: "3", Line: 1, Position: 8},
+			{Type: token.SPECIAL_VAR, Literal: "4", Line: 1, Position: 10},
+			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 12},
+			{Type: token.SPECIAL_VAR, Literal: "5", Line: 1, Position: 13},
+			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 15},
+			{Type: token.SPECIAL_VAR, Literal: "6", Line: 1, Position: 16},
+			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 18},
+			{Type: token.SPECIAL_VAR, Literal: "7", Line: 1, Position: 19},
+			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 21},
+			{Type: token.SPECIAL_VAR, Literal: "8", Line: 1, Position: 22},
+			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 24},
+			{Type: token.SPECIAL_VAR, Literal: "9", Line: 1, Position: 25},
+			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 27},
+			{Type: token.SPECIAL_VAR, Literal: "1", Line: 1, Position: 28}, // just to emphasize that only first digit is considered
+			{Type: token.INT, Literal: "0", Line: 1, Position: 30},         // just to emphasize that only first digit is considered
 		}},
 		{`$1something`, []token.Token{
 			{Type: token.SPECIAL_VAR, Literal: "1", Line: 1, Position: 1},
