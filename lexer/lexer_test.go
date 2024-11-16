@@ -159,7 +159,7 @@ func TestLexer(t *testing.T) {
 		}},
 		{`$1something`, []token.Token{
 			{Type: token.SPECIAL_VAR, Literal: "1", Line: 1, Position: 1},
-			{Type: token.WORD, Literal: "something", Line: 1, Position: 1},
+			{Type: token.WORD, Literal: "something", Line: 1, Position: 3},
 		}},
 		{`$$ $@ $? $# $! $_ $*`, []token.Token{
 			{Type: token.SPECIAL_VAR, Literal: "$", Line: 1, Position: 1},
