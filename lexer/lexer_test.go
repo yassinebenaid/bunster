@@ -244,17 +244,17 @@ func TestLexer(t *testing.T) {
 		// Literal strings
 		{`'hello world'`, []token.Token{
 			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
-			{Type: token.OTHER, Literal: `hello world`, Line: 1, Position: 1},
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
+			{Type: token.OTHER, Literal: `hello world`, Line: 1, Position: 2},
+			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 13},
 		}},
 		{`''`, []token.Token{
 			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
+			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 2},
 		}},
 		{`'\'`, []token.Token{
 			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
-			{Type: token.OTHER, Literal: `\`, Line: 1, Position: 1},
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
+			{Type: token.OTHER, Literal: `\`, Line: 1, Position: 2},
+			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 3},
 		}},
 		{`'''''x' '  '`, []token.Token{
 			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
