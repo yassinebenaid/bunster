@@ -382,7 +382,7 @@ var errorHandlingTestCases = []struct {
 	{"Pipes", pipesErrorHandlingCases},
 	{"Logical Constructions", logicalCommandsErrorHandlingCases},
 	{"Loops", loopsErrorHandlingCases},
-	{"Conditionals", ifErrorHandlingCases},
+	{"If constructs", ifErrorHandlingCases},
 	{"Case", caseErrorHandlingCases},
 	{"Command Group", groupingErrorHandlingCases},
 	{"Substitution", substitutionErrorHandlingCases},
