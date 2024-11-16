@@ -21,8 +21,8 @@ type Lexer struct {
 	ctx   context
 }
 
-func New(in []byte) *Lexer {
-	l := &Lexer{input: in}
+func New(in []byte) Lexer {
+	l := Lexer{input: in}
 
 	// read twice so that 'curr' and 'next' get initialized
 	l.proceed()

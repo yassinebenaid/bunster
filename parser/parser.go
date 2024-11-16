@@ -8,7 +8,7 @@ import (
 	"github.com/yassinebenaid/bunny/token"
 )
 
-func New(l *lexer.Lexer) Parser {
+func New(l lexer.Lexer) Parser {
 	var p = Parser{l: l}
 
 	// So that both curr and next tokens get initialized.
@@ -19,7 +19,7 @@ func New(l *lexer.Lexer) Parser {
 }
 
 type Parser struct {
-	l     *lexer.Lexer
+	l     lexer.Lexer
 	curr  token.Token
 	next  token.Token
 	Error *ParserError
