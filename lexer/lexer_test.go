@@ -222,7 +222,10 @@ func TestLexer(t *testing.T) {
 		{`\`, []token.Token{{Type: token.EOF, Literal: "end of file", Line: 1, Position: 1}}},
 		{`\\`, []token.Token{{Type: token.OTHER, Literal: `\`, Line: 1, Position: 1}}},
 		{`\"`, []token.Token{{Type: token.OTHER, Literal: `"`, Line: 1, Position: 1}}},
-		{`\$foo`, []token.Token{{Type: token.OTHER, Literal: `$`, Line: 1, Position: 1}, {Type: token.WORD, Literal: `foo`, Line: 1, Position: 1}}},
+		{`\$foo`, []token.Token{
+			{Type: token.OTHER, Literal: `$`, Line: 1, Position: 1},
+			{Type: token.WORD, Literal: `foo`, Line: 1, Position: 3},
+		}},
 		{`\ `, []token.Token{{Type: token.ESCAPED_CHAR, Literal: ` `, Line: 1, Position: 1}}},
 		{`\	`, []token.Token{{Type: token.ESCAPED_CHAR, Literal: `	`, Line: 1, Position: 1}}}, // this is a tab
 		{`\|`, []token.Token{{Type: token.ESCAPED_CHAR, Literal: `|`, Line: 1, Position: 1}}},
@@ -232,8 +235,11 @@ func TestLexer(t *testing.T) {
 		{`\;`, []token.Token{{Type: token.ESCAPED_CHAR, Literal: `;`, Line: 1, Position: 1}}},
 		{`\(`, []token.Token{{Type: token.ESCAPED_CHAR, Literal: `(`, Line: 1, Position: 1}}},
 		{`\)`, []token.Token{{Type: token.ESCAPED_CHAR, Literal: `)`, Line: 1, Position: 1}}},
-		{`\foo`, []token.Token{{Type: token.ESCAPED_CHAR, Literal: `f`, Line: 1, Position: 1}, {Type: token.WORD, Literal: `oo`, Line: 1, Position: 1}}},
-		{"\\\nfoo", []token.Token{{Type: token.WORD, Literal: "foo", Line: 1, Position: 1}}},
+		{`\foo`, []token.Token{
+			{Type: token.ESCAPED_CHAR, Literal: `f`, Line: 1, Position: 1},
+			{Type: token.WORD, Literal: `oo`, Line: 1, Position: 3},
+		}},
+		{"\\\nfoo", []token.Token{{Type: token.WORD, Literal: "foo", Line: 2, Position: 1}}},
 
 		// Literal strings
 		{`'hello world'`, []token.Token{

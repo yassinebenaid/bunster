@@ -12,12 +12,13 @@ const (
 )
 
 type Lexer struct {
-	input []byte
-	line  int
-	pos   int
-	curr  byte
-	next  byte
-	ctx   context
+	input    []byte
+	pos      int
+	curr     byte
+	next     byte
+	ctx      context
+	line     int
+	position int
 }
 
 func New(in []byte) Lexer {
@@ -33,7 +34,7 @@ func New(in []byte) Lexer {
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 	tok.Line = l.line
-	tok.Position = l.pos - 1
+	tok.Position = l.position - 1
 
 switch_beginning:
 	switch {
@@ -368,6 +369,7 @@ switch_beginning:
 			tok.Type, tok.Literal = token.OTHER, string(l.curr)
 		case '\n':
 			l.proceed()
+			tok.Line, tok.Position = l.line, l.position-1
 			goto switch_beginning
 		default:
 			tok.Type, tok.Literal = token.ESCAPED_CHAR, string(l.curr)
@@ -395,7 +397,9 @@ func (l *Lexer) proceed() {
 		l.next = l.input[l.pos]
 	}
 	l.pos++
+	l.position++
 	if l.curr == '\n' {
 		l.line++
+		l.position = 1
 	}
 }
