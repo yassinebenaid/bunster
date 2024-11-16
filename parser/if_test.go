@@ -458,8 +458,8 @@ var ifErrorHandlingCases = []errorHandlingTestCase{
 	{`if cmd; then cmd; else cmd|; fi`, "syntax error: `;` has a special meaning here and cannot be used as a command name. (line: 1, column: 28)"},
 	{`if cmd; then cmd; else cmd| |; fi`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1, column: 29)"},
 
-	{`then`, "syntax error: `then` is a reserved keyword, cannot be used a command name. (line: 1, column: x)"},
-	{`elif`, "syntax error: `elif` is a reserved keyword, cannot be used a command name. (line: 1, column: x)"},
-	{`else`, "syntax error: `else` is a reserved keyword, cannot be used a command name. (line: 1, column: x)"},
-	{`fi`, "syntax error: `fi` is a reserved keyword, cannot be used a command name. (line: 1, column: x)"},
+	{`then`, "syntax error: `then` is a reserved keyword, cannot be used a command name. (line: 1, column: 1)"},
+	{`elif`, "syntax error: `elif` is a reserved keyword, cannot be used a command name. (line: 1, column: 1)"},
+	{`else`, "syntax error: `else` is a reserved keyword, cannot be used a command name. (line: 1, column: 1)"},
+	{`fi`, "syntax error: `fi` is a reserved keyword, cannot be used a command name. (line: 1, column: 1)"},
 }
