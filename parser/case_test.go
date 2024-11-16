@@ -455,18 +455,18 @@ var caseTests = []testCase{
 }
 
 var caseErrorHandlingCases = []errorHandlingTestCase{
-	{`case`, "syntax error: incomplete `case` statement, an operand is required after `case`."},
-	{`case;`, "syntax error: incomplete `case` statement, an operand is required after `case`."},
-	{`case foo;`, "syntax error: expected `in`, found `;`."},
-	{`case foo`, "syntax error: expected `in`, found `end of file`."},
-	{`case foo in`, "syntax error: expected `esac` to close `case` command."},
-	{`case foo in ) esac`, "syntax error: invalid pattern provided, unexpected token `)`."},
-	{`case foo in pattern foo esac`, "syntax error: expected `)`, found `foo`."},
-	{`case foo in pattern) foo esac`, "syntax error: expected `esac` to close `case` command."},
-	{`case foo in pattern) foo;;; esac`, "syntax error: invalid pattern provided, unexpected token `;`."},
-	{`case foo in pattern) foo;;;& esac`, "syntax error: invalid pattern provided, unexpected token `;`."},
-	{`case foo in esac arg`, "syntax error: unexpected token `arg`."},
-	{`case foo in esac <in >out <<<etc arg`, "syntax error: unexpected token `arg`."},
+	{`case`, "syntax error: incomplete `case` statement, an operand is required after `case`. (line: 1)"},
+	{`case;`, "syntax error: incomplete `case` statement, an operand is required after `case`. (line: 1)"},
+	{`case foo;`, "syntax error: expected `in`, found `;`. (line: 1)"},
+	{`case foo`, "syntax error: expected `in`, found `end of file`. (line: 1)"},
+	{`case foo in`, "syntax error: expected `esac` to close `case` command. (line: 1)"},
+	{`case foo in ) esac`, "syntax error: invalid pattern provided, unexpected token `)`. (line: 1)"},
+	{`case foo in pattern foo esac`, "syntax error: expected `)`, found `foo`. (line: 1)"},
+	{`case foo in pattern) foo esac`, "syntax error: expected `esac` to close `case` command. (line: 1)"},
+	{`case foo in pattern) foo;;; esac`, "syntax error: invalid pattern provided, unexpected token `;`. (line: 1)"},
+	{`case foo in pattern) foo;;;& esac`, "syntax error: invalid pattern provided, unexpected token `;`. (line: 1)"},
+	{`case foo in esac arg`, "syntax error: unexpected token `arg`. (line: 1)"},
+	{`case foo in esac <in >out <<<etc arg`, "syntax error: unexpected token `arg`. (line: 1)"},
 
-	{`esac`, "syntax error: `esac` is a reserved keyword, cannot be used a command name."},
+	{`esac`, "syntax error: `esac` is a reserved keyword, cannot be used a command name. (line: 1)"},
 }
