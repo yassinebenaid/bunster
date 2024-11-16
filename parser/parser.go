@@ -26,19 +26,21 @@ type Parser struct {
 }
 
 type ParserError struct {
-	Line    int
-	Message string
+	Line     int
+	Position int
+	Message  string
 }
 
 func (err ParserError) Error() string {
-	return fmt.Sprintf("syntax error: %s. (line: %d)", err.Message, err.Line)
+	return fmt.Sprintf("syntax error: %s. (line: %d, column: %d)", err.Message, err.Line, err.Position)
 }
 
 func (p *Parser) error(msg string, args ...any) {
 	if p.Error == nil {
 		p.Error = &ParserError{
-			Line:    p.curr.Line,
-			Message: fmt.Sprintf(msg, args...),
+			Line:     p.curr.Line,
+			Position: p.curr.Position,
+			Message:  fmt.Sprintf(msg, args...),
 		}
 	}
 }
