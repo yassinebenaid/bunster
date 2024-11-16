@@ -179,14 +179,14 @@ func TestLexer(t *testing.T) {
 		// Simple expansion
 		{`$variable_name $variable-name $concatinated$VAIABLE$VAR_0987654321`, []token.Token{
 			{Type: token.SIMPLE_EXPANSION, Literal: `variable_name`, Line: 1, Position: 1},
-			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 1},
-			{Type: token.SIMPLE_EXPANSION, Literal: `variable`, Line: 1, Position: 1},
-			{Type: token.MINUS, Literal: `-`, Line: 1, Position: 1},
-			{Type: token.WORD, Literal: `name`, Line: 1, Position: 1},
-			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 1},
-			{Type: token.SIMPLE_EXPANSION, Literal: `concatinated`, Line: 1, Position: 1},
-			{Type: token.SIMPLE_EXPANSION, Literal: `VAIABLE`, Line: 1, Position: 1},
-			{Type: token.SIMPLE_EXPANSION, Literal: `VAR_0987654321`, Line: 1, Position: 1},
+			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 15},
+			{Type: token.SIMPLE_EXPANSION, Literal: `variable`, Line: 1, Position: 16},
+			{Type: token.MINUS, Literal: `-`, Line: 1, Position: 25},
+			{Type: token.WORD, Literal: `name`, Line: 1, Position: 26},
+			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 30},
+			{Type: token.SIMPLE_EXPANSION, Literal: `concatinated`, Line: 1, Position: 31},
+			{Type: token.SIMPLE_EXPANSION, Literal: `VAIABLE`, Line: 1, Position: 44},
+			{Type: token.SIMPLE_EXPANSION, Literal: `VAR_0987654321`, Line: 1, Position: 52},
 		}},
 		// Numbers
 		{`0123456789 abc1234 123.456 .123 123. 1.2.3 .abc 1.c 12.34abc`, []token.Token{
