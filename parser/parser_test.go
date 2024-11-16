@@ -361,9 +361,9 @@ var errorHandlingTestCases = []struct {
 		18: {`cmd && & cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1, column: 8)"},
 		19: {`cmd | & cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1, column: 7)"},
 
-		20: {"cmd \n || cmd2", "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 2, column: 1)"},
-		21: {"cmd \n && cmd2", "syntax error: `&&` has a special meaning here and cannot be used as a command name. (line: 2, column: 1)"},
-		22: {"cmd \n | cmd2", "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 2, column: 1)"},
+		20: {"cmd \n || cmd2", "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 2, column: 2)"},
+		21: {"cmd \n && cmd2", "syntax error: `&&` has a special meaning here and cannot be used as a command name. (line: 2, column: 2)"},
+		22: {"cmd \n | cmd2", "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 2, column: 2)"},
 
 		23: {`; cmd2`, "syntax error: `;` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
 		24: {`cmd ; || cmd2`, "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
