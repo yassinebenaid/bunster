@@ -582,13 +582,13 @@ var parameterExpansionTests = []testCase{
 }
 
 var parameterExpansionErrorHandlingCases = []errorHandlingTestCase{
-	{"${", "syntax error: couldn't find a valid parameter name, found `end of file`."},
-	{"${}", "syntax error: couldn't find a valid parameter name, found `}`."},
-	{"${!", "syntax error: couldn't find a valid parameter name, found `!`."},
-	{"${var", "syntax error: expected closing brace `}`, found `end of file`."},
-	{"${#var", "syntax error: expected closing brace `}`, found `end of file`."},
-	{"${#var:-default}", "syntax error: expected closing brace `}`, found `:-`."},
-	{"${var:}", "syntax error: bad arithmetic expression, unexpected token `}`."},
-	{"${var:x:}", "syntax error: bad arithmetic expression, unexpected token `}`."},
-	{"${var@}", "syntax error: bad substitution operator `}`, possible operators are (U, u, L, Q, E, P, A, K, a, k)."},
+	{"${", "syntax error: couldn't find a valid parameter name, found `end of file`. (line: 1)"},
+	{"${}", "syntax error: couldn't find a valid parameter name, found `}`. (line: 1)"},
+	{"${!", "syntax error: couldn't find a valid parameter name, found `!`. (line: 1)"},
+	{"${var", "syntax error: expected closing brace `}`, found `end of file`. (line: 1)"},
+	{"${#var", "syntax error: expected closing brace `}`, found `end of file`. (line: 1)"},
+	{"${#var:-default}", "syntax error: expected closing brace `}`, found `:-`. (line: 1)"},
+	{"${var:}", "syntax error: bad arithmetic expression, unexpected token `}`. (line: 1)"},
+	{"${var:x:}", "syntax error: bad arithmetic expression, unexpected token `}`. (line: 1)"},
+	{"${var@}", "syntax error: bad substitution operator `}`, possible operators are (U, u, L, Q, E, P, A, K, a, k). (line: 1)"},
 }
