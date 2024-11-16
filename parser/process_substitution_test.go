@@ -440,21 +440,21 @@ var substitutionTests = []testCase{
 }
 
 var substitutionErrorHandlingCases = []errorHandlingTestCase{
-	{`$(`, "syntax error: expeceted a command list after `$(`. (line: 1)"},
-	{`$()`, "syntax error: expeceted a command list after `$(`. (line: 1)"},
-	{`$(cmd`, "syntax error: unexpected end of file, expeceted `)`. (line: 1)"},
-	{`$(cmd |)`, "syntax error: `)` has a special meaning here and cannot be used as a command name. (line: 1)"},
-	{`$(cmd | |)`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1)"},
+	{`$(`, "syntax error: expeceted a command list after `$(`. (line: 1, column: x)"},
+	{`$()`, "syntax error: expeceted a command list after `$(`. (line: 1, column: x)"},
+	{`$(cmd`, "syntax error: unexpected end of file, expeceted `)`. (line: 1, column: x)"},
+	{`$(cmd |)`, "syntax error: `)` has a special meaning here and cannot be used as a command name. (line: 1, column: x)"},
+	{`$(cmd | |)`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1, column: x)"},
 
-	{`<(`, "syntax error: expeceted a command list after `<(`. (line: 1)"},
-	{`<()`, "syntax error: expeceted a command list after `<(`. (line: 1)"},
-	{`<(cmd`, "syntax error: unexpected end of file, expeceted `)`. (line: 1)"},
-	{`<(cmd |)`, "syntax error: `)` has a special meaning here and cannot be used as a command name. (line: 1)"},
-	{`<(cmd | |)`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1)"},
+	{`<(`, "syntax error: expeceted a command list after `<(`. (line: 1, column: x)"},
+	{`<()`, "syntax error: expeceted a command list after `<(`. (line: 1, column: x)"},
+	{`<(cmd`, "syntax error: unexpected end of file, expeceted `)`. (line: 1, column: x)"},
+	{`<(cmd |)`, "syntax error: `)` has a special meaning here and cannot be used as a command name. (line: 1, column: x)"},
+	{`<(cmd | |)`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1, column: x)"},
 
-	{`>(`, "syntax error: expeceted a command list after `>(`. (line: 1)"},
-	{`>()`, "syntax error: expeceted a command list after `>(`. (line: 1)"},
-	{`>(cmd`, "syntax error: unexpected end of file, expeceted `)`. (line: 1)"},
-	{`>(cmd |)`, "syntax error: `)` has a special meaning here and cannot be used as a command name. (line: 1)"},
-	{`>(cmd | |)`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1)"},
+	{`>(`, "syntax error: expeceted a command list after `>(`. (line: 1, column: x)"},
+	{`>()`, "syntax error: expeceted a command list after `>(`. (line: 1, column: x)"},
+	{`>(cmd`, "syntax error: unexpected end of file, expeceted `)`. (line: 1, column: x)"},
+	{`>(cmd |)`, "syntax error: `)` has a special meaning here and cannot be used as a command name. (line: 1, column: x)"},
+	{`>(cmd | |)`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1, column: x)"},
 }
