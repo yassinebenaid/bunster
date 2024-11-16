@@ -314,16 +314,16 @@ func TestLexer(t *testing.T) {
 		},
 		{"'\\\n'", []token.Token{
 			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
-			{Type: token.OTHER, Literal: "\\\n", Line: 1, Position: 1},
+			{Type: token.OTHER, Literal: "\\\n", Line: 1, Position: 2},
 			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 2, Position: 1},
 		}},
 		// Others
 		{`$ @`, []token.Token{
 			{Type: token.OTHER, Literal: "$", Line: 1, Position: 1},
-			{Type: token.BLANK, Literal: " ", Line: 1, Position: 1},
-			{Type: token.AT, Literal: "@", Line: 1, Position: 1},
+			{Type: token.BLANK, Literal: " ", Line: 1, Position: 2},
+			{Type: token.AT, Literal: "@", Line: 1, Position: 3},
 		}},
-		{"\n", []token.Token{{Type: token.NEWLINE, Literal: "\n", Line: 2, Position: 1}}},
+		{"\n", []token.Token{{Type: token.NEWLINE, Literal: "\n", Line: 2, Position: 0}}},
 		{``, []token.Token{{Type: token.EOF, Literal: "end of file", Line: 1, Position: 1}}},
 	}
 
