@@ -1018,10 +1018,10 @@ var loopsErrorHandlingCases = []errorHandlingTestCase{
 	{`for n do cmd | |; done`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1, column: 16)"},
 
 	// C like for loops
-	{`for (()) do cmd;done`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 1)"},
-	{`for ((x)) do cmd;done`, "syntax error: expected a semicolon `;`, found `)`. (line: 1, column: 1)"},
-	{`for ((x;y)) do cmd;done`, "syntax error: expected a semicolon `;`, found `)`. (line: 1, column: 1)"},
-	{`for ((x;y; w z)) do cmd;done`, "syntax error: expected `))` to close loop head, found `z`. (line: 1, column: 1)"},
+	{`for (()) do cmd;done`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 7)"},
+	{`for ((x)) do cmd;done`, "syntax error: expected a semicolon `;`, found `)`. (line: 1, column: 8)"},
+	{`for ((x;y)) do cmd;done`, "syntax error: expected a semicolon `;`, found `)`. (line: 1, column: 10)"},
+	{`for ((x;y; w z)) do cmd;done`, "syntax error: expected `))` to close loop head, found `z`. (line: 1, column: 14)"},
 
 	{`do`, "syntax error: `do` is a reserved keyword, cannot be used a command name. (line: 1, column: 1)"},
 	{`done`, "syntax error: `done` is a reserved keyword, cannot be used a command name. (line: 1, column: 1)"},
