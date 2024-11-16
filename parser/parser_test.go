@@ -339,44 +339,44 @@ var errorHandlingTestCases = []struct {
 	cases []errorHandlingTestCase
 }{
 	{"Simple Commands", []errorHandlingTestCase{
-		0:  {`)`, "syntax error: `)` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		1:  {`|`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		2:  {`>`, "syntax error: `>` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		3:  {`>>`, "syntax error: `>>` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		4:  {`1>>`, "syntax error: `1` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		5:  {`<<<`, "syntax error: `<<<` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		6:  {`1<<<`, "syntax error: `1` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		7:  {`1>`, "syntax error: `1` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		8:  {`1<`, "syntax error: `1` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		9:  {`1>&`, "syntax error: `1` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		10: {`1<&`, "syntax error: `1` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		11: {`&& cmd2`, "syntax error: `&&` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		12: {`|| cmd2`, "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 1)"},
+		0:  {`)`, "syntax error: `)` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		1:  {`|`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		2:  {`>`, "syntax error: `>` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		3:  {`>>`, "syntax error: `>>` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		4:  {`1>>`, "syntax error: `1` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		5:  {`<<<`, "syntax error: `<<<` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		6:  {`1<<<`, "syntax error: `1` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		7:  {`1>`, "syntax error: `1` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		8:  {`1<`, "syntax error: `1` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		9:  {`1>&`, "syntax error: `1` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		10: {`1<&`, "syntax error: `1` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		11: {`&& cmd2`, "syntax error: `&&` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		12: {`|| cmd2`, "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
 
-		13: {`& cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		14: {`cmd & || cmd2`, "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		15: {`cmd & && cmd2`, "syntax error: `&&` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		16: {`cmd & | cmd2`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		17: {`cmd || & cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		18: {`cmd && & cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		19: {`cmd | & cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1)"},
+		13: {`& cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		14: {`cmd & || cmd2`, "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		15: {`cmd & && cmd2`, "syntax error: `&&` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		16: {`cmd & | cmd2`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		17: {`cmd || & cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		18: {`cmd && & cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		19: {`cmd | & cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
 
-		20: {"cmd \n || cmd2", "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 2)"},
-		21: {"cmd \n && cmd2", "syntax error: `&&` has a special meaning here and cannot be used as a command name. (line: 2)"},
-		22: {"cmd \n | cmd2", "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 2)"},
+		20: {"cmd \n || cmd2", "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 2, column: 1)"},
+		21: {"cmd \n && cmd2", "syntax error: `&&` has a special meaning here and cannot be used as a command name. (line: 2, column: 1)"},
+		22: {"cmd \n | cmd2", "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 2, column: 1)"},
 
-		23: {`; cmd2`, "syntax error: `;` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		24: {`cmd ; || cmd2`, "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		25: {`cmd ; && cmd2`, "syntax error: `&&` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		26: {`cmd ; | cmd2`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		27: {`cmd || ; cmd2`, "syntax error: `;` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		28: {`cmd && ; cmd2`, "syntax error: `;` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		29: {`cmd | ; cmd2`, "syntax error: `;` has a special meaning here and cannot be used as a command name. (line: 1)"},
-		30: {`cmd ;;`, "syntax error: `;` has a special meaning here and cannot be used as a command name. (line: 1)"},
+		23: {`; cmd2`, "syntax error: `;` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		24: {`cmd ; || cmd2`, "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		25: {`cmd ; && cmd2`, "syntax error: `&&` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		26: {`cmd ; | cmd2`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		27: {`cmd || ; cmd2`, "syntax error: `;` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		28: {`cmd && ; cmd2`, "syntax error: `;` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		29: {`cmd | ; cmd2`, "syntax error: `;` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		30: {`cmd ;;`, "syntax error: `;` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
 	}},
 	{"Quotes", []errorHandlingTestCase{
-		0: {`cmd 'foo bar`, `syntax error: a closing single quote is missing. (line: 1)`},
-		1: {`cmd "foo bar'`, `syntax error: a closing double quote is missing. (line: 1)`},
+		0: {`cmd 'foo bar`, `syntax error: a closing single quote is missing. (line: 1, column: 1)`},
+		1: {`cmd "foo bar'`, `syntax error: a closing double quote is missing. (line: 1, column: 1)`},
 	}},
 	{"Redirections", redirectionErrorHandlingCases},
 	{"Pipes", pipesErrorHandlingCases},
@@ -414,7 +414,7 @@ func TestParserErrorHandling(t *testing.T) {
 			}
 
 			if p.Error.Error() != tc.err {
-				t.Fatalf("\nGroup: %s\nCase: %s\nwant:\n%s\ngot:\n%s", dump(group.label), dump(i), dump(tc.err), dump(p.Error.Error()))
+				t.Fatalf("\nGroup: %sCase: %s\nwant:\n%s\ngot:\n%s", dump(group.label), dump(i), dump(tc.err), dump(p.Error.Error()))
 			}
 		}
 	}
