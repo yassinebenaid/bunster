@@ -375,8 +375,8 @@ var errorHandlingTestCases = []struct {
 		30: {`cmd ;;`, "syntax error: `;` has a special meaning here and cannot be used as a command name. (line: 1, column: 6)"},
 	}},
 	{"Quotes", []errorHandlingTestCase{
-		0: {`cmd 'foo bar`, `syntax error: a closing single quote is missing. (line: 1, column: 1)`},
-		1: {`cmd "foo bar'`, `syntax error: a closing double quote is missing. (line: 1, column: 1)`},
+		0: {`cmd 'foo bar`, `syntax error: a closing single quote is missing. (line: 1, column: 13)`},
+		1: {`cmd "foo bar'`, `syntax error: a closing double quote is missing. (line: 1, column: 14)`},
 	}},
 	{"Redirections", redirectionErrorHandlingCases},
 	{"Pipes", pipesErrorHandlingCases},
