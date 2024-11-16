@@ -277,9 +277,9 @@ func TestLexer(t *testing.T) {
 					Type:     token.OTHER,
 					Literal:  `if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset`,
 					Line:     1,
-					Position: 1,
+					Position: 2,
 				},
-				{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
+				{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 143},
 			},
 		},
 		{
@@ -290,9 +290,9 @@ func TestLexer(t *testing.T) {
 					Type:     token.OTHER,
 					Literal:  `+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : \ " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~`,
 					Line:     1,
-					Position: 1,
+					Position: 2,
 				},
-				{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
+				{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 182},
 			},
 		},
 		{
@@ -307,9 +307,9 @@ func TestLexer(t *testing.T) {
 					$concatinated$VAIABLE$VAR_0987654321 0123456789 123.456 .123 123. 1.2.3 .abc 1.c 12.34abc 123< <&45 33<&45 5<< 6<<- 1> 1>&2 7>> 81>| 19<>
 					   	\t`,
 					Line:     1,
-					Position: 1,
+					Position: 2,
 				},
-				{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 3, Position: 1},
+				{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 3, Position: 12},
 			},
 		},
 		{"'\\\n'", []token.Token{
