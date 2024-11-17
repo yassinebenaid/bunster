@@ -152,12 +152,10 @@ func (CommandSubstitution) expr() {}
 func (ProcessSubstitution) expr() {}
 
 func (Word) string() string                { return "" }
-func (Redirection) string() string         { return "" }
 func (UnquotedString) string() string      { return "" }
 func (QuotedString) string() string        { return "" }
 func (CommandSubstitution) string() string { return "" }
 func (ProcessSubstitution) string() string { return "" }
-func (For) string() string                 { return "" }
 
 // Statements
 func (Command) stmt()            {}
