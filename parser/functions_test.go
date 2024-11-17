@@ -35,7 +35,7 @@ var functionsTests = []testCase{
 			},
 		},
 	}},
-	{`"foo"-"bar"-"baz" () { cmd; }`, ast.Script{
+	{`"foo"-"bar"-'baz' () { cmd; }`, ast.Script{
 		ast.Function{
 			Name: "foo-bar-baz",
 			Command: ast.Group{
