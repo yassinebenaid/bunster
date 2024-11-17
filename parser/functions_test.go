@@ -15,4 +15,14 @@ var functionsTests = []testCase{
 			},
 		},
 	}},
+	{`foo-bar-baz () { cmd; }`, ast.Script{
+		ast.Function{
+			Name: "foo-bar-baz",
+			Command: ast.Group{
+				Body: []ast.Statement{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+			},
+		},
+	}},
 }
