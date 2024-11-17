@@ -64,7 +64,7 @@ var functionsErrorHandlingCases = []errorHandlingTestCase{
 	{`foo ()`, "syntax error: bad function definition, invalid token `end of file`. (line: 1, column: 7)"},
 	{`foo () simple_command`, "syntax error: bad function definition, invalid token `simple_command`. (line: 1, column: 8)"},
 	{`$foo () {cmd;}`, "syntax error: invalid function name was supplied. (line: 1, column: 6)"},
-	{`cmd (`, "syntax error: token `(` cannot be placed here. (line: 1, column: 9)"},
+	{`cmd (`, "syntax error: token `(` cannot be placed here. (line: 1, column: 5)"},
 	{`cmd arg (`, "syntax error: token `(` cannot be placed here. (line: 1, column: 9)"},
 	{`cmd arg )`, "syntax error: token `)` cannot be placed here. (line: 1, column: 9)"},
 }
