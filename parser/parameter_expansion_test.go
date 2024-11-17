@@ -600,4 +600,5 @@ var parameterExpansionErrorHandlingCases = []errorHandlingTestCase{
 	{"${var@}", "syntax error: bad substitution operator `}`, possible operators are (U, u, L, Q, E, P, A, K, a, k). (line: 1, column: 7)"},
 	{"${var[]}", "syntax error: bad arithmetic expression, unexpected token `]`. (line: 1, column: 7)"},
 	{"${var[}", "syntax error: bad arithmetic expression, unexpected token `}`. (line: 1, column: 7)"},
+	{"${var[1}", "syntax error: expected a closing bracket `]`, found `}`. (line: 1, column: 8)"},
 }
