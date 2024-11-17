@@ -2,6 +2,11 @@ package ast
 
 type Var string
 
+type ParameterExpansion struct {
+	Name  string
+	Index Expression
+}
+
 type VarOrDefault struct {
 	Parameter    string
 	Index        Expression
@@ -67,39 +72,42 @@ type Slice struct {
 	Length    Arithmetic
 }
 
-func (Var) node()             {}
-func (VarOrDefault) node()    {}
-func (VarOrSet) node()        {}
-func (VarOrFail) node()       {}
-func (CheckAndUse) node()     {}
-func (ChangeCase) node()      {}
-func (VarCount) node()        {}
-func (MatchAndRemove) node()  {}
-func (MatchAndReplace) node() {}
-func (Transform) node()       {}
-func (Slice) node()           {}
+func (Var) node()                {}
+func (ParameterExpansion) node() {}
+func (VarOrDefault) node()       {}
+func (VarOrSet) node()           {}
+func (VarOrFail) node()          {}
+func (CheckAndUse) node()        {}
+func (ChangeCase) node()         {}
+func (VarCount) node()           {}
+func (MatchAndRemove) node()     {}
+func (MatchAndReplace) node()    {}
+func (Transform) node()          {}
+func (Slice) node()              {}
 
 // Expressions
-func (Var) expr()             {}
-func (VarOrDefault) expr()    {}
-func (VarOrSet) expr()        {}
-func (VarOrFail) expr()       {}
-func (CheckAndUse) expr()     {}
-func (ChangeCase) expr()      {}
-func (VarCount) expr()        {}
-func (MatchAndRemove) expr()  {}
-func (MatchAndReplace) expr() {}
-func (Transform) expr()       {}
-func (Slice) expr()           {}
+func (Var) expr()                {}
+func (ParameterExpansion) expr() {}
+func (VarOrDefault) expr()       {}
+func (VarOrSet) expr()           {}
+func (VarOrFail) expr()          {}
+func (CheckAndUse) expr()        {}
+func (ChangeCase) expr()         {}
+func (VarCount) expr()           {}
+func (MatchAndRemove) expr()     {}
+func (MatchAndReplace) expr()    {}
+func (Transform) expr()          {}
+func (Slice) expr()              {}
 
-func (v Var) string() string           { return string(v) }
-func (VarOrDefault) string() string    { return "" }
-func (VarOrSet) string() string        { return "" }
-func (VarOrFail) string() string       { return "" }
-func (CheckAndUse) string() string     { return "" }
-func (ChangeCase) string() string      { return "" }
-func (VarCount) string() string        { return "" }
-func (MatchAndRemove) string() string  { return "" }
-func (MatchAndReplace) string() string { return "" }
-func (Transform) string() string       { return "" }
-func (Slice) string() string           { return "" }
+func (v Var) string() string                { return string(v) }
+func (v ParameterExpansion) string() string { return string(v.Name) }
+func (VarOrDefault) string() string         { return "" }
+func (VarOrSet) string() string             { return "" }
+func (VarOrFail) string() string            { return "" }
+func (CheckAndUse) string() string          { return "" }
+func (ChangeCase) string() string           { return "" }
+func (VarCount) string() string             { return "" }
+func (MatchAndRemove) string() string       { return "" }
+func (MatchAndReplace) string() string      { return "" }
+func (Transform) string() string            { return "" }
+func (Slice) string() string                { return "" }
