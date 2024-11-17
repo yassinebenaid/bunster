@@ -164,6 +164,16 @@ func (p *Parser) parseCommand() ast.Statement {
 		return nil
 	}
 
+	if p.curr.Type == token.LEFT_PAREN && p.next.Type == token.RIGHT_PAREN {
+		p.proceed()
+		p.proceed()
+		if compound := p.getCompoundParser(); compound == nil {
+			p.error("bad function definition, invalid token `%s`", p.curr)
+		} else {
+			return ast.Function{Name: string(cmd.Name.(ast.Word)), Command: compound()}
+		}
+	}
+
 loop:
 	for {
 		switch {

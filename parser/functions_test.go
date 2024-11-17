@@ -7,8 +7,12 @@ import (
 var functionsTests = []testCase{
 	{`foo(){ cmd; }`, ast.Script{
 		ast.Function{
-			Name:    "foo",
-			Command: ast.Command{Name: ast.Word("cmd")},
+			Name: "foo",
+			Command: ast.Group{
+				Body: []ast.Statement{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+			},
 		},
 	}},
 }
