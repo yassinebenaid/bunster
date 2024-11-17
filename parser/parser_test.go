@@ -340,6 +340,7 @@ var errorHandlingTestCases = []struct {
 }{
 	{"Simple Commands", []errorHandlingTestCase{
 		{`)`, "syntax error: `)` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		{`cmd arg (`, "syntax error: `(` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
 		{`|`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
 		{`>`, "syntax error: `>` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
 		{`>>`, "syntax error: `>>` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
@@ -361,9 +362,9 @@ var errorHandlingTestCases = []struct {
 		{`cmd && & cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1, column: 8)"},
 		{`cmd | & cmd2`, "syntax error: `&` has a special meaning here and cannot be used as a command name. (line: 1, column: 7)"},
 
-		20: {"cmd \n || cmd2", "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 2, column: 2)"},
-		21: {"cmd \n && cmd2", "syntax error: `&&` has a special meaning here and cannot be used as a command name. (line: 2, column: 2)"},
-		22: {"cmd \n | cmd2", "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 2, column: 2)"},
+		{"cmd \n || cmd2", "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 2, column: 2)"},
+		{"cmd \n && cmd2", "syntax error: `&&` has a special meaning here and cannot be used as a command name. (line: 2, column: 2)"},
+		{"cmd \n | cmd2", "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 2, column: 2)"},
 
 		{`; cmd2`, "syntax error: `;` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
 		{`cmd ; || cmd2`, "syntax error: `||` has a special meaning here and cannot be used as a command name. (line: 1, column: 7)"},
