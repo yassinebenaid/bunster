@@ -94,7 +94,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 
 	switch p.curr.Type {
 	case token.RIGHT_BRACE:
-		exp = param
+		exp = ast.Var(param)
 	case token.MINUS, token.COLON_MINUS:
 		checkForNull := p.curr.Type == token.COLON_MINUS
 		p.proceed()
@@ -227,7 +227,7 @@ loop:
 	return concat(exprs)
 }
 
-func (p *Parser) parseParameter() ast.Parameter {
+func (p *Parser) parseParameter() string {
 	if p.curr.Type != token.WORD {
 		p.error("couldn't find a valid parameter name, found `%s`", p.curr)
 	}
@@ -236,5 +236,5 @@ func (p *Parser) parseParameter() ast.Parameter {
 	p.proceed()
 	// TODO: handle arrays
 
-	return ast.Var(v)
+	return v
 }
