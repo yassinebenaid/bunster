@@ -168,6 +168,10 @@ func (p *Parser) parseCommand() ast.Statement {
 		p.proceed()
 	}
 	if p.curr.Type == token.LEFT_PAREN && p.next.Type == token.RIGHT_PAREN {
+		name, ok := cmd.Name.(ast.Word)
+		if !ok {
+			p.error("invalid function name was supplied")
+		}
 		p.proceed()
 		p.proceed()
 		if p.curr.Type == token.BLANK {
@@ -176,7 +180,7 @@ func (p *Parser) parseCommand() ast.Statement {
 		if compound := p.getCompoundParser(); compound == nil {
 			p.error("bad function definition, invalid token `%s`", p.curr)
 		} else {
-			return ast.Function{Name: string(cmd.Name.(ast.Word)), Command: compound()}
+			return ast.Function{Name: string(name), Command: compound()}
 		}
 	}
 
