@@ -283,7 +283,7 @@ loop:
 }
 
 func concat(n []ast.Expression, quoted bool) ast.Expression {
-	var conc ast.Concatination
+	var conc ast.UnquotedString
 	var mergedWords ast.Word
 	var hasWords bool
 
@@ -315,7 +315,7 @@ func concat(n []ast.Expression, quoted bool) ast.Expression {
 				return w
 			}
 		}
-		return ast.String(conc)
+		return ast.QuotedString(conc)
 	}
 
 	if len(conc) == 1 {

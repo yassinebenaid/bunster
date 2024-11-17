@@ -37,7 +37,7 @@ var parameterExpansionTests = []testCase{
 				ast.VarOrDefault{Parameter: ast.Param{Name: "var"}, Default: ast.Var("default")},
 				ast.VarOrDefault{
 					Parameter: ast.Param{Name: "var"},
-					Default: ast.Concatination{
+					Default: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < "),
@@ -55,7 +55,7 @@ var parameterExpansionTests = []testCase{
 				ast.VarOrDefault{Parameter: ast.Param{Name: "var"}, Default: ast.Var("default"), CheckForNull: true},
 				ast.VarOrDefault{
 					Parameter: ast.Param{Name: "var"},
-					Default: ast.Concatination{
+					Default: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < "),
@@ -74,7 +74,7 @@ var parameterExpansionTests = []testCase{
 				ast.VarOrSet{Parameter: ast.Param{Name: "var"}, Default: ast.Var("default")},
 				ast.VarOrSet{
 					Parameter: ast.Param{Name: "var"},
-					Default: ast.Concatination{
+					Default: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < "),
@@ -92,7 +92,7 @@ var parameterExpansionTests = []testCase{
 				ast.VarOrFail{Parameter: ast.Param{Name: "var"}, Error: ast.Var("error")},
 				ast.VarOrFail{
 					Parameter: ast.Param{Name: "var"},
-					Error: ast.Concatination{
+					Error: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < "),
@@ -110,7 +110,7 @@ var parameterExpansionTests = []testCase{
 				ast.CheckAndUse{Parameter: ast.Param{Name: "var"}, Value: ast.Var("alternate")},
 				ast.CheckAndUse{
 					Parameter: ast.Param{Name: "var"},
-					Value: ast.Concatination{
+					Value: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < "),
@@ -129,7 +129,7 @@ var parameterExpansionTests = []testCase{
 				ast.ChangeCase{
 					Parameter: ast.Param{Name: "var"},
 					Operator:  "^",
-					Pattern: ast.Concatination{
+					Pattern: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < "),
@@ -148,7 +148,7 @@ var parameterExpansionTests = []testCase{
 				ast.ChangeCase{
 					Parameter: ast.Param{Name: "var"},
 					Operator:  "^^",
-					Pattern: ast.Concatination{
+					Pattern: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < "),
@@ -167,7 +167,7 @@ var parameterExpansionTests = []testCase{
 				ast.ChangeCase{
 					Parameter: ast.Param{Name: "var"},
 					Operator:  ",",
-					Pattern: ast.Concatination{
+					Pattern: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < "),
@@ -186,7 +186,7 @@ var parameterExpansionTests = []testCase{
 				ast.ChangeCase{
 					Parameter: ast.Param{Name: "var"},
 					Operator:  ",,",
-					Pattern: ast.Concatination{
+					Pattern: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < "),
@@ -205,7 +205,7 @@ var parameterExpansionTests = []testCase{
 				ast.MatchAndRemove{
 					Parameter: ast.Param{Name: "var"},
 					Operator:  "#",
-					Pattern: ast.Concatination{
+					Pattern: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < "),
@@ -224,7 +224,7 @@ var parameterExpansionTests = []testCase{
 				ast.MatchAndRemove{
 					Parameter: ast.Param{Name: "var"},
 					Operator:  "##",
-					Pattern: ast.Concatination{
+					Pattern: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < # "),
@@ -243,7 +243,7 @@ var parameterExpansionTests = []testCase{
 				ast.MatchAndRemove{
 					Parameter: ast.Param{Name: "var"},
 					Operator:  "%",
-					Pattern: ast.Concatination{
+					Pattern: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < # "),
@@ -262,7 +262,7 @@ var parameterExpansionTests = []testCase{
 				ast.MatchAndRemove{
 					Parameter: ast.Param{Name: "var"},
 					Operator:  "%%",
-					Pattern: ast.Concatination{
+					Pattern: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < # "),
@@ -294,12 +294,12 @@ var parameterExpansionTests = []testCase{
 				ast.MatchAndReplace{
 					Parameter: ast.Param{Name: "var"},
 					Operator:  "/",
-					Pattern: ast.Concatination{
+					Pattern: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < # "),
 					},
-					Value: ast.Concatination{
+					Value: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < #////"),
@@ -344,12 +344,12 @@ var parameterExpansionTests = []testCase{
 				ast.MatchAndReplace{
 					Parameter: ast.Param{Name: "var"},
 					Operator:  "//",
-					Pattern: ast.Concatination{
+					Pattern: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < # "),
 					},
-					Value: ast.Concatination{
+					Value: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < #////"),
@@ -405,12 +405,12 @@ var parameterExpansionTests = []testCase{
 				ast.MatchAndReplace{
 					Parameter: ast.Param{Name: "var"},
 					Operator:  "/#",
-					Pattern: ast.Concatination{
+					Pattern: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < # "),
 					},
-					Value: ast.Concatination{
+					Value: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < #////"),
@@ -455,12 +455,12 @@ var parameterExpansionTests = []testCase{
 				ast.MatchAndReplace{
 					Parameter: ast.Param{Name: "var"},
 					Operator:  "/%",
-					Pattern: ast.Concatination{
+					Pattern: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < # "),
 					},
-					Value: ast.Concatination{
+					Value: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < #////"),

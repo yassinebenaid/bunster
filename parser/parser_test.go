@@ -142,7 +142,7 @@ var testCases = []struct {
 				Name: ast.Word("cmd"),
 				Args: []ast.Expression{
 					ast.Word("Hello World"),
-					ast.String{
+					ast.QuotedString{
 						ast.Word("name is: "),
 						ast.Var("NAME"),
 						ast.Word(" and path is "),
@@ -174,12 +174,12 @@ var testCases = []struct {
 		{`/usr/bin/$BINARY_NAME --path=/home/$USER/dir --option -f --do=something $HOME$DIR_NAME$PKG_NAME/foo`, ast.Script{
 
 			ast.Command{
-				Name: ast.Concatination{
+				Name: ast.UnquotedString{
 					ast.Word("/usr/bin/"),
 					ast.Var("BINARY_NAME"),
 				},
 				Args: []ast.Expression{
-					ast.Concatination{
+					ast.UnquotedString{
 						ast.Word("--path=/home/"),
 						ast.Var("USER"),
 						ast.Word("/dir"),
@@ -187,7 +187,7 @@ var testCases = []struct {
 					ast.Word("--option"),
 					ast.Word("-f"),
 					ast.Word("--do=something"),
-					ast.Concatination{
+					ast.UnquotedString{
 						ast.Var("HOME"),
 						ast.Var("DIR_NAME"),
 						ast.Var("PKG_NAME"),
