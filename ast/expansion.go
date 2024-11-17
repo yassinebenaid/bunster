@@ -2,57 +2,62 @@ package ast
 
 type Var string
 
+type Param struct {
+	Name  string
+	Index Expression
+}
+
 type ParameterExpansion struct {
 	Name  string
 	Index Expression
 }
 
 type VarOrDefault struct {
-	Parameter    string
+	Parameter    Param
 	Index        Expression
 	Default      Expression
 	CheckForNull bool
 }
 
 type VarOrSet struct {
-	Parameter string
+	Parameter Param
 	Index     Expression
 	Default   Expression
 }
 
 type VarOrFail struct {
-	Parameter string
+	Parameter Param
 	Index     Expression
 	Error     Expression
 }
 
 type CheckAndUse struct {
-	Parameter string
+	Parameter Param
 	Index     Expression
 	Value     Expression
 }
 
 type ChangeCase struct {
-	Parameter string
+	Parameter Param
 	Index     Expression
 	Operator  string
 	Pattern   Expression
 }
 
 type VarCount struct {
-	Parameter string
+	Parameter Param
 	Index     Expression
 }
 
 type MatchAndRemove struct {
-	Parameter string
+	Parameter Param
 	Index     Expression
 	Operator  string
 	Pattern   Expression
 }
 
 type MatchAndReplace struct {
-	Parameter string
+	Parameter Param
 	Index     Expression
 	Operator  string
 	Pattern   Expression
@@ -60,13 +65,13 @@ type MatchAndReplace struct {
 }
 
 type Transform struct {
-	Parameter string
+	Parameter Param
 	Index     Expression
 	Operator  string
 }
 
 type Slice struct {
-	Parameter string
+	Parameter Param
 	Index     Expression
 	Offset    Arithmetic
 	Length    Arithmetic
