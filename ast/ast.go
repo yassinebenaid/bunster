@@ -120,6 +120,11 @@ type ProcessSubstitution struct {
 	Body      []Statement
 }
 
+type Function struct {
+	Name    string
+	Command Statement
+}
+
 func (Word) node()                {}
 func (Redirection) node()         {}
 func (UnquotedString) node()      {}
@@ -136,6 +141,7 @@ func (SubShell) node()            {}
 func (CommandSubstitution) node() {}
 func (ProcessSubstitution) node() {}
 func (For) node()                 {}
+func (Function) node()            {}
 
 // Expressions
 func (Word) expr()                {}
@@ -164,3 +170,4 @@ func (Case) stmt()               {}
 func (Group) stmt()              {}
 func (SubShell) stmt()           {}
 func (For) stmt()                {}
+func (Function) stmt()           {}
