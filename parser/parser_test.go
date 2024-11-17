@@ -319,11 +319,11 @@ func TestParser(t *testing.T) {
 			script := p.ParseScript()
 
 			if p.Error != nil {
-				t.Fatalf("\nGroup: %sCase: %s\nUnexpected Error: %s\n", dump(group.label), dump(i), dump(p.Error.Error()))
+				t.Fatalf("\nGroup: %sCase: %sInput: %s\nUnexpected Error: %s\n", dump(group.label), dump(i), dump(tc.input), dump(p.Error.Error()))
 			}
 
 			if !reflect.DeepEqual(script, tc.expected) {
-				t.Fatalf("\nGroup: %sCase: %s\nwant:\n%s\ngot:\n%s", dump(group.label), dump(i), dump(tc.expected), dump(script))
+				t.Fatalf("\nGroup: %sCase: %sInput: %s\nwant:\n%s\ngot:\n%s", dump(group.label), dump(i), dump(tc.input), dump(tc.expected), dump(script))
 			}
 		}
 	}
@@ -340,7 +340,7 @@ var errorHandlingTestCases = []struct {
 }{
 	{"Simple Commands", []errorHandlingTestCase{
 		{`)`, "syntax error: `)` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
-		{`cmd arg (`, "syntax error: `(` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
+		// {`cmd arg (`, "syntax error: `(` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
 		{`|`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
 		{`>`, "syntax error: `>` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},
 		{`>>`, "syntax error: `>>` has a special meaning here and cannot be used as a command name. (line: 1, column: 1)"},

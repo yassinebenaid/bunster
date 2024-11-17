@@ -561,7 +561,7 @@ func (p *Parser) parseGroup() ast.Statement {
 	}
 
 	if p.curr.Type != token.RIGHT_BRACE {
-		p.error("unexpected end of file, expeceted `}`")
+		p.error("expected `}`, found `%s`", p.curr)
 	}
 
 	p.proceed()
@@ -611,7 +611,7 @@ func (p *Parser) parseSubShell() ast.Statement {
 	}
 
 	if p.curr.Type != token.RIGHT_PAREN {
-		p.error("unexpected end of file, expeceted `)`")
+		p.error("expected `)`, found `%s`", p.curr)
 	}
 
 	p.proceed()

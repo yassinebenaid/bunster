@@ -272,8 +272,8 @@ var groupingTests = []testCase{
 var groupingErrorHandlingCases = []errorHandlingTestCase{
 	{`{`, "syntax error: expeceted a command list after `{`. (line: 1, column: 2)"},
 	{`{}`, "syntax error: expeceted a command list after `{`. (line: 1, column: 2)"},
-	{`{cmd`, "syntax error: unexpected end of file, expeceted `}`. (line: 1, column: 5)"},
-	{`{cmd}`, "syntax error: unexpected end of file, expeceted `}`. (line: 1, column: 6)"},
+	{`{cmd`, "syntax error: expected `}`, found `end of file`. (line: 1, column: 5)"},
+	{`{cmd}`, "syntax error: expected `}`, found `end of file`. (line: 1, column: 6)"},
 	{`{cmd |;}`, "syntax error: `;` has a special meaning here and cannot be used as a command name. (line: 1, column: 7)"},
 	{`{cmd | |}`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1, column: 8)"},
 
@@ -282,7 +282,7 @@ var groupingErrorHandlingCases = []errorHandlingTestCase{
 
 	{`(`, "syntax error: expeceted a command list after `(`. (line: 1, column: 2)"},
 	{`()`, "syntax error: expeceted a command list after `(`. (line: 1, column: 2)"},
-	{`(cmd`, "syntax error: unexpected end of file, expeceted `)`. (line: 1, column: 5)"},
+	{`(cmd`, "syntax error: expected `)`, found `end of file`. (line: 1, column: 5)"},
 	{`(cmd |)`, "syntax error: `)` has a special meaning here and cannot be used as a command name. (line: 1, column: 7)"},
 	{`(cmd | |)`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1, column: 8)"},
 
