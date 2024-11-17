@@ -170,16 +170,24 @@ func (p *Parser) parseCommand() ast.Statement {
 	if p.curr.Type == token.BLANK {
 		p.proceed()
 	}
-	if p.curr.Type == token.LEFT_PAREN && p.next.Type == token.RIGHT_PAREN {
+	if p.curr.Type == token.LEFT_PAREN {
 		name, ok := cmd.Name.(ast.Word)
 		if !ok {
 			p.error("invalid function name was supplied")
 		}
-		p.proceed()
+
 		p.proceed()
 		if p.curr.Type == token.BLANK {
 			p.proceed()
 		}
+		if p.curr.Type != token.RIGHT_PAREN {
+			p.error("expected `)`, found `%s`", p.curr)
+		}
+		p.proceed()
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+
 		if compound := p.getCompoundParser(); compound == nil {
 			p.error("bad function definition, invalid token `%s`", p.curr)
 		} else {
