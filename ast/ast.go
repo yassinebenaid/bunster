@@ -48,9 +48,7 @@ type Command struct {
 	Redirections []Redirection
 }
 
-type Concatination struct {
-	Nodes []Expression
-}
+type Concatination []Expression
 
 type Loop struct {
 	Negate       bool

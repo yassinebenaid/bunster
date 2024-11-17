@@ -294,23 +294,23 @@ func concat(n []ast.Expression) ast.Expression {
 			hasWords = true
 		} else {
 			if hasWords {
-				conc.Nodes = append(conc.Nodes, mergedWords)
+				conc = append(conc, mergedWords)
 				mergedWords, hasWords = "", false
 			}
-			conc.Nodes = append(conc.Nodes, node)
+			conc = append(conc, node)
 		}
 
 		if i == len(n)-1 && hasWords {
-			conc.Nodes = append(conc.Nodes, mergedWords)
+			conc = append(conc, mergedWords)
 		}
 	}
 
-	if len(conc.Nodes) == 0 {
+	if len(conc) == 0 {
 		return nil
 	}
 
-	if len(conc.Nodes) == 1 {
-		return conc.Nodes[0]
+	if len(conc) == 1 {
+		return conc[0]
 	}
 
 	return conc

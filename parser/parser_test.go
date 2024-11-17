@@ -144,14 +144,12 @@ var testCases = []struct {
 				Args: []ast.Expression{
 					ast.Word("Hello World"),
 					ast.Concatination{
-						Nodes: []ast.Expression{
-							ast.Word("name is: "),
-							ast.Var("NAME"),
-							ast.Word(" and path is "),
-							ast.Var("DIR"),
-							ast.Word("/"),
-							ast.Var("FILE"),
-						},
+						ast.Word("name is: "),
+						ast.Var("NAME"),
+						ast.Word(" and path is "),
+						ast.Var("DIR"),
+						ast.Word("/"),
+						ast.Var("FILE"),
 					},
 				},
 			},
@@ -178,29 +176,23 @@ var testCases = []struct {
 
 			ast.Command{
 				Name: ast.Concatination{
-					Nodes: []ast.Expression{
-						ast.Word("/usr/bin/"),
-						ast.Var("BINARY_NAME"),
-					},
+					ast.Word("/usr/bin/"),
+					ast.Var("BINARY_NAME"),
 				},
 				Args: []ast.Expression{
 					ast.Concatination{
-						Nodes: []ast.Expression{
-							ast.Word("--path=/home/"),
-							ast.Var("USER"),
-							ast.Word("/dir"),
-						},
+						ast.Word("--path=/home/"),
+						ast.Var("USER"),
+						ast.Word("/dir"),
 					},
 					ast.Word("--option"),
 					ast.Word("-f"),
 					ast.Word("--do=something"),
 					ast.Concatination{
-						Nodes: []ast.Expression{
-							ast.Var("HOME"),
-							ast.Var("DIR_NAME"),
-							ast.Var("PKG_NAME"),
-							ast.Word("/foo"),
-						},
+						ast.Var("HOME"),
+						ast.Var("DIR_NAME"),
+						ast.Var("PKG_NAME"),
+						ast.Word("/foo"),
 					},
 				},
 			},
