@@ -138,12 +138,11 @@ var testCases = []struct {
 			},
 		}},
 		{`cmd "Hello World" "name is: $NAME and path is $DIR/$FILE"`, ast.Script{
-
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Expression{
 					ast.Word("Hello World"),
-					ast.Concatination{
+					ast.String{
 						ast.Word("name is: "),
 						ast.Var("NAME"),
 						ast.Word(" and path is "),

@@ -50,6 +50,8 @@ type Command struct {
 
 type Concatination []Expression
 
+type String []Expression
+
 type Loop struct {
 	Negate       bool
 	Head         []Statement
@@ -121,6 +123,7 @@ type ProcessSubstitution struct {
 func (Word) node()                {}
 func (Redirection) node()         {}
 func (Concatination) node()       {}
+func (String) node()              {}
 func (Command) node()             {}
 func (Pipeline) node()            {}
 func (BinaryConstruction) node()  {}
@@ -138,12 +141,14 @@ func (For) node()                 {}
 func (Word) expr()                {}
 func (Redirection) expr()         {}
 func (Concatination) expr()       {}
+func (String) expr()              {}
 func (CommandSubstitution) expr() {}
 func (ProcessSubstitution) expr() {}
 
 func (Word) string() string                { return "" }
 func (Redirection) string() string         { return "" }
 func (Concatination) string() string       { return "" }
+func (String) string() string              { return "" }
 func (CommandSubstitution) string() string { return "" }
 func (ProcessSubstitution) string() string { return "" }
 func (For) string() string                 { return "" }

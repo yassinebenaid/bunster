@@ -4,7 +4,6 @@ import "github.com/yassinebenaid/bunny/ast"
 
 var redirectionTests = []testCase{
 	{`cmd>'file.ext' arg > file>/foo/bar arg2 >"$var" arg345>xyz 645 >file 3>foo.bar 45> /foo/bar 12.34>baz`, ast.Script{
-
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -17,7 +16,7 @@ var redirectionTests = []testCase{
 				{Src: "1", Method: ">", Dst: ast.Word("file.ext")},
 				{Src: "1", Method: ">", Dst: ast.Word("file")},
 				{Src: "1", Method: ">", Dst: ast.Word("/foo/bar")},
-				{Src: "1", Method: ">", Dst: ast.Var("var")},
+				{Src: "1", Method: ">", Dst: ast.String{ast.Var("var")}},
 				{Src: "1", Method: ">", Dst: ast.Word("xyz")},
 				{Src: "1", Method: ">", Dst: ast.Word("file")},
 				{Src: "3", Method: ">", Dst: ast.Word("foo.bar")},
@@ -40,7 +39,7 @@ var redirectionTests = []testCase{
 				{Src: "1", Method: ">|", Dst: ast.Word("file.ext")},
 				{Src: "1", Method: ">|", Dst: ast.Word("file")},
 				{Src: "1", Method: ">|", Dst: ast.Word("/foo/bar")},
-				{Src: "1", Method: ">|", Dst: ast.Var("var")},
+				{Src: "1", Method: ">|", Dst: ast.String{ast.Var("var")}},
 				{Src: "1", Method: ">|", Dst: ast.Word("xyz")},
 				{Src: "1", Method: ">|", Dst: ast.Word("file")},
 				{Src: "3", Method: ">|", Dst: ast.Word("foo.bar")},
@@ -63,7 +62,7 @@ var redirectionTests = []testCase{
 				{Src: "1", Method: ">>", Dst: ast.Word("file.ext")},
 				{Src: "1", Method: ">>", Dst: ast.Word("file")},
 				{Src: "1", Method: ">>", Dst: ast.Word("/foo/bar")},
-				{Src: "1", Method: ">>", Dst: ast.Var("var")},
+				{Src: "1", Method: ">>", Dst: ast.String{ast.Var("var")}},
 				{Src: "1", Method: ">>", Dst: ast.Word("xyz")},
 				{Src: "1", Method: ">>", Dst: ast.Word("file")},
 				{Src: "3", Method: ">>", Dst: ast.Word("foo.bar")},
@@ -83,7 +82,7 @@ var redirectionTests = []testCase{
 				{Method: "&>", Dst: ast.Word("file.ext")},
 				{Method: "&>", Dst: ast.Word("file")},
 				{Method: "&>", Dst: ast.Word("/foo/bar")},
-				{Method: "&>", Dst: ast.Var("var")},
+				{Method: "&>", Dst: ast.String{ast.Var("var")}},
 				{Method: "&>", Dst: ast.Word("xyz")},
 			},
 		},
@@ -100,7 +99,7 @@ var redirectionTests = []testCase{
 				{Method: "&>>", Dst: ast.Word("file.ext")},
 				{Method: "&>>", Dst: ast.Word("file")},
 				{Method: "&>>", Dst: ast.Word("/foo/bar")},
-				{Method: "&>>", Dst: ast.Var("var")},
+				{Method: "&>>", Dst: ast.String{ast.Var("var")}},
 				{Method: "&>>", Dst: ast.Word("xyz")},
 			},
 		},
@@ -129,7 +128,7 @@ var redirectionTests = []testCase{
 			},
 		},
 	}},
-	{`cmd<'file.ext' arg < file</foo/bar arg123<foo 3<bar 928 <bar 282 <&123 <&3 4<&5 6<& 7 <& "$FD" <&'9'`, ast.Script{
+	{`cmd<'file.ext' arg < file</foo/bar arg123<foo 3<bar 928 <bar 282 <&123 <&3 4<&5 6<& 7 <& "$var" <&'9'`, ast.Script{
 
 		ast.Command{
 			Name: ast.Word("cmd"),
@@ -149,7 +148,7 @@ var redirectionTests = []testCase{
 				{Src: "0", Method: "<&", Dst: ast.Word("3")},
 				{Src: "4", Method: "<&", Dst: ast.Word("5")},
 				{Src: "6", Method: "<&", Dst: ast.Word("7")},
-				{Src: "0", Method: "<&", Dst: ast.Var("FD")},
+				{Src: "0", Method: "<&", Dst: ast.String{ast.Var("var")}},
 				{Src: "0", Method: "<&", Dst: ast.Word("9")},
 			},
 		},
@@ -165,7 +164,7 @@ var redirectionTests = []testCase{
 				{Src: "0", Method: "<<<", Dst: ast.Word("foo bar")},
 				{Src: "0", Method: "<<<", Dst: ast.Word("foo")},
 				{Src: "0", Method: "<<<", Dst: ast.Word("foo-bar")},
-				{Src: "0", Method: "<<<", Dst: ast.Var("var")},
+				{Src: "0", Method: "<<<", Dst: ast.String{ast.Var("var")}},
 				{Src: "3", Method: "<<<", Dst: ast.Word("foobar")},
 				{Src: "0", Method: "<<<", Dst: ast.Word("123")},
 				{Src: "4", Method: "<<<", Dst: ast.Word("123")},

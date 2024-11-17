@@ -228,7 +228,7 @@ loop:
 		p.proceed()
 	}
 
-	return concat(exprs)
+	return concat(exprs, false)
 }
 
 func (p *Parser) parseParameter() ast.Param {

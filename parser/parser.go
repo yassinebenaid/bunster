@@ -230,7 +230,7 @@ loop:
 		p.proceed()
 	}
 
-	return concat(exprs)
+	return concat(exprs, false)
 }
 
 func (p *Parser) parseLiteralString() ast.Word {
@@ -279,10 +279,10 @@ loop:
 		p.error("a closing double quote is missing")
 	}
 
-	return concat(exprs)
+	return concat(exprs, true)
 }
 
-func concat(n []ast.Expression) ast.Expression {
+func concat(n []ast.Expression, quoted bool) ast.Expression {
 	var conc ast.Concatination
 	var mergedWords ast.Word
 	var hasWords bool
@@ -307,6 +307,15 @@ func concat(n []ast.Expression) ast.Expression {
 
 	if len(conc) == 0 {
 		return nil
+	}
+
+	if quoted {
+		if len(conc) == 1 {
+			if w, ok := conc[0].(ast.Word); ok {
+				return w
+			}
+		}
+		return ast.String(conc)
 	}
 
 	if len(conc) == 1 {
