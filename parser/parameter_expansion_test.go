@@ -3,12 +3,15 @@ package parser_test
 import "github.com/yassinebenaid/bunny/ast"
 
 var parameterExpansionTests = []testCase{
-	{`cmd ${var} ${var} `, ast.Script{
+	{`cmd ${var} ${var[123]} `, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Var("var"),
-				ast.Var("var"),
+				ast.ParameterExpansion{
+					Name:  "var",
+					Index: ast.Arithmetic{ast.Number("123")},
+				},
 			},
 		},
 	}},
@@ -579,34 +582,6 @@ var parameterExpansionTests = []testCase{
 			},
 		},
 	}},
-	// {`cmd ${var[1]}`, ast.Script{
-	// 	ast.Command{
-	// 		Name: ast.Word("cmd"),
-	// 		Args: []ast.Expression{
-	// 			ast.MatchAndReplace{
-	// 				Parameter: "var",
-	// 				Operator:  "/",
-	// 				Pattern: ast.ProcessSubstitution{
-	// 					Direction: 60,
-	// 					Body: []ast.Statement{
-	// 						ast.Command{
-	// 							Name:         ast.Word("ls"),
-	// 							Args:         []ast.Expression(nil),
-	// 							Redirections: []ast.Redirection(nil),
-	// 						},
-	// 					},
-	// 				},
-	// 				Value: ast.CommandSubstitution{
-	// 					ast.Command{
-	// 						Name:         ast.Word("ls"),
-	// 						Args:         []ast.Expression(nil),
-	// 						Redirections: []ast.Redirection(nil),
-	// 					},
-	// 				},
-	// 			},
-	// 		},
-	// 	},
-	// }},
 }
 
 var parameterExpansionErrorHandlingCases = []errorHandlingTestCase{

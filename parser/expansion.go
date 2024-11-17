@@ -82,7 +82,8 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 
 	if p.curr.Type == token.HASH {
 		p.proceed()
-		exp = ast.VarCount{Parameter: p.parseParameter()}
+		param, index := p.parseParameter()
+		exp = ast.VarCount{Parameter: param, Index: index}
 
 		if p.curr.Type != token.RIGHT_BRACE {
 			p.error("expected closing brace `}`, found `%s`", p.curr)
@@ -90,11 +91,15 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 		return exp
 	}
 
-	param := p.parseParameter()
+	param, index := p.parseParameter()
 
 	switch p.curr.Type {
 	case token.RIGHT_BRACE:
-		exp = ast.Var(param)
+		if index != nil {
+			exp = ast.ParameterExpansion{Name: param, Index: index}
+		} else {
+			exp = ast.Var(param)
+		}
 	case token.MINUS, token.COLON_MINUS:
 		checkForNull := p.curr.Type == token.COLON_MINUS
 		p.proceed()
@@ -227,14 +232,24 @@ loop:
 	return concat(exprs)
 }
 
-func (p *Parser) parseParameter() string {
+func (p *Parser) parseParameter() (string, ast.Expression) {
 	if p.curr.Type != token.WORD {
 		p.error("couldn't find a valid parameter name, found `%s`", p.curr)
 	}
 
-	v := p.curr.Literal
-	p.proceed()
-	// TODO: handle arrays
+	var name = p.curr.Literal
+	var index ast.Expression
 
-	return v
+	p.proceed()
+
+	if p.curr.Type == token.LEFT_BRACKET {
+		p.proceed()
+		index = p.parseArithmetics()
+		if p.curr.Type != token.RIGHT_BRACKET {
+			p.error("expected a closing bracket `]`, found `%s`", p.curr)
+		}
+		p.proceed()
+	}
+
+	return name, index
 }
