@@ -45,7 +45,7 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
-	{`cmd $(( 1+2 - 3 + 4-5)))`, ast.Script{
+	{`cmd $(( 1+2 - 3 + 4-5))`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{

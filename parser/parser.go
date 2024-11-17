@@ -67,6 +67,9 @@ func (p *Parser) ParseScript() ast.Script {
 			} else {
 				return script
 			}
+			if p.curr.Type == token.LEFT_PAREN || p.curr.Type == token.RIGHT_PAREN {
+				p.error("token `%s` cannot be placed here", p.curr)
+			}
 		}
 	}
 
