@@ -17,6 +17,10 @@ func (p *Parser) parseAssignement() ast.ParameterAssignement {
 		p.proceed()
 		assignment.Value = p.parseExpression()
 		assigns = append(assigns, assignment)
+
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
 	}
 
 	return assigns
