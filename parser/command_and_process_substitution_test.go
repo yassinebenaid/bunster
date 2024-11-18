@@ -2,7 +2,7 @@ package parser_test
 
 import "github.com/yassinebenaid/bunny/ast"
 
-var substitutionTests = []testCase{
+var commandAndProcessSubstitutionTests = []testCase{
 	{`$( cmd )`, ast.Script{
 		ast.Command{
 			Name: ast.CommandSubstitution{
