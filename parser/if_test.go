@@ -34,7 +34,7 @@ var conditionalsTests = []testCase{
 	fi`, ast.Script{
 		ast.If{
 			Head: []ast.Statement{
-				ast.BinaryConstruction{
+				ast.ConditionalCommand{
 					Left: ast.Pipeline{
 						{Command: ast.Command{Name: ast.Word("cmd1")}},
 						{Command: ast.Command{Name: ast.Word("cmd2")}},
@@ -61,7 +61,7 @@ var conditionalsTests = []testCase{
 	fi;`, ast.Script{
 		ast.If{
 			Head: []ast.Statement{
-				ast.BinaryConstruction{
+				ast.ConditionalCommand{
 					Left: ast.Pipeline{
 						{
 							Command: ast.Command{
@@ -113,7 +113,7 @@ var conditionalsTests = []testCase{
 			},
 			Body: []ast.Statement{
 				ast.BackgroundConstruction{
-					Statement: ast.BinaryConstruction{
+					Statement: ast.ConditionalCommand{
 						Left: ast.Pipeline{
 							{
 								Command: ast.Command{
@@ -225,7 +225,7 @@ var conditionalsTests = []testCase{
 		},
 	}},
 	{`if cmd; then echo "foo"; fi && if cmd; then echo "foo"; fi;`, ast.Script{
-		ast.BinaryConstruction{
+		ast.ConditionalCommand{
 			Left: ast.If{
 				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},

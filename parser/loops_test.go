@@ -49,7 +49,7 @@ var loopsTests = []testCase{
 	done;`, ast.Script{
 		ast.Loop{
 			Head: []ast.Statement{
-				ast.BinaryConstruction{
+				ast.ConditionalCommand{
 					Left: ast.Pipeline{
 						{Command: ast.Command{Name: ast.Word("cmd1")}},
 						{Command: ast.Command{Name: ast.Word("cmd2")}},
@@ -76,7 +76,7 @@ var loopsTests = []testCase{
 	done;`, ast.Script{
 		ast.Loop{
 			Head: []ast.Statement{
-				ast.BinaryConstruction{
+				ast.ConditionalCommand{
 					Left: ast.Pipeline{
 						{
 							Command: ast.Command{
@@ -128,7 +128,7 @@ var loopsTests = []testCase{
 			},
 			Body: []ast.Statement{
 				ast.BackgroundConstruction{
-					Statement: ast.BinaryConstruction{
+					Statement: ast.ConditionalCommand{
 						Left: ast.Pipeline{
 							{
 								Command: ast.Command{
@@ -240,7 +240,7 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`while cmd; do echo "foo"; done && while cmd; do echo "foo"; done`, ast.Script{
-		ast.BinaryConstruction{
+		ast.ConditionalCommand{
 			Left: ast.Loop{
 				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
@@ -402,7 +402,7 @@ var loopsTests = []testCase{
 		ast.Loop{
 			Negate: true,
 			Head: []ast.Statement{
-				ast.BinaryConstruction{
+				ast.ConditionalCommand{
 					Left: ast.Pipeline{
 						{Command: ast.Command{Name: ast.Word("cmd1")}},
 						{Command: ast.Command{Name: ast.Word("cmd2")}},
@@ -430,7 +430,7 @@ var loopsTests = []testCase{
 		ast.Loop{
 			Negate: true,
 			Head: []ast.Statement{
-				ast.BinaryConstruction{
+				ast.ConditionalCommand{
 					Left: ast.Pipeline{
 						{
 							Command: ast.Command{
@@ -482,7 +482,7 @@ var loopsTests = []testCase{
 			},
 			Body: []ast.Statement{
 				ast.BackgroundConstruction{
-					Statement: ast.BinaryConstruction{
+					Statement: ast.ConditionalCommand{
 						Left: ast.Pipeline{
 							{
 								Command: ast.Command{
@@ -599,7 +599,7 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`until cmd; do echo "foo"; done && until cmd; do echo "foo"; done`, ast.Script{
-		ast.BinaryConstruction{
+		ast.ConditionalCommand{
 			Left: ast.Loop{
 				Negate: true,
 				Head: []ast.Statement{
@@ -793,8 +793,8 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`for varname do cmd; done && cmd || for varname do cmd; done`, ast.Script{
-		ast.BinaryConstruction{
-			Left: ast.BinaryConstruction{
+		ast.ConditionalCommand{
+			Left: ast.ConditionalCommand{
 				Left: ast.RangeLoop{
 					Var: "varname",
 					Body: []ast.Statement{

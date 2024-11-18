@@ -17,7 +17,7 @@ type Expression interface {
 
 type Script []Statement
 
-type BinaryConstruction struct {
+type ConditionalCommand struct {
 	Left     Statement
 	Operator string // || or &&
 	Right    Statement
@@ -134,7 +134,7 @@ func (UnquotedString) node()      {}
 func (QuotedString) node()        {}
 func (Command) node()             {}
 func (Pipeline) node()            {}
-func (BinaryConstruction) node()  {}
+func (ConditionalCommand) node()  {}
 func (Loop) node()                {}
 func (RangeLoop) node()           {}
 func (If) node()                  {}
@@ -165,7 +165,7 @@ func (ProcessSubstitution) string() string { return "" }
 // Statements
 func (Command) stmt()            {}
 func (Pipeline) stmt()           {}
-func (BinaryConstruction) stmt() {}
+func (ConditionalCommand) stmt() {}
 func (Loop) stmt()               {}
 func (RangeLoop) stmt()          {}
 func (If) stmt()                 {}

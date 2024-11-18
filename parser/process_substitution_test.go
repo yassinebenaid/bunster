@@ -48,7 +48,7 @@ var substitutionTests = []testCase{
 	{`$(cmd1 | cmd2 && cmd3; cmd1 | cmd2 && cmd3)`, ast.Script{
 		ast.Command{
 			Name: ast.CommandSubstitution{
-				ast.BinaryConstruction{
+				ast.ConditionalCommand{
 					Left: ast.Pipeline{
 						{Command: ast.Command{Name: ast.Word("cmd1")}},
 						{Command: ast.Command{Name: ast.Word("cmd2")}},
@@ -56,7 +56,7 @@ var substitutionTests = []testCase{
 					Operator: "&&",
 					Right:    ast.Command{Name: ast.Word("cmd3")},
 				},
-				ast.BinaryConstruction{
+				ast.ConditionalCommand{
 					Left: ast.Pipeline{
 						{Command: ast.Command{Name: ast.Word("cmd1")}},
 						{Command: ast.Command{Name: ast.Word("cmd2")}},
@@ -68,7 +68,7 @@ var substitutionTests = []testCase{
 		},
 	}},
 	{`$(cmd; cmd) arg | $(cmd; cmd)&& $(cmd; cmd)`, ast.Script{
-		ast.BinaryConstruction{
+		ast.ConditionalCommand{
 			Left: ast.Pipeline{
 				{
 					Command: ast.Command{
@@ -183,7 +183,7 @@ var substitutionTests = []testCase{
 		ast.Command{
 			Name: ast.ProcessSubstitution{
 				Body: []ast.Statement{
-					ast.BinaryConstruction{
+					ast.ConditionalCommand{
 						Left: ast.Pipeline{
 							{Command: ast.Command{Name: ast.Word("cmd1")}},
 							{Command: ast.Command{Name: ast.Word("cmd2")}},
@@ -191,7 +191,7 @@ var substitutionTests = []testCase{
 						Operator: "&&",
 						Right:    ast.Command{Name: ast.Word("cmd3")},
 					},
-					ast.BinaryConstruction{
+					ast.ConditionalCommand{
 						Left: ast.Pipeline{
 							{Command: ast.Command{Name: ast.Word("cmd1")}},
 							{Command: ast.Command{Name: ast.Word("cmd2")}},
@@ -205,7 +205,7 @@ var substitutionTests = []testCase{
 		},
 	}},
 	{`<(cmd; cmd) arg | <(cmd; cmd)&& <(cmd; cmd)`, ast.Script{
-		ast.BinaryConstruction{
+		ast.ConditionalCommand{
 			Left: ast.Pipeline{
 				{
 					Command: ast.Command{
@@ -341,7 +341,7 @@ var substitutionTests = []testCase{
 		ast.Command{
 			Name: ast.ProcessSubstitution{
 				Body: []ast.Statement{
-					ast.BinaryConstruction{
+					ast.ConditionalCommand{
 						Left: ast.Pipeline{
 							{Command: ast.Command{Name: ast.Word("cmd1")}},
 							{Command: ast.Command{Name: ast.Word("cmd2")}},
@@ -349,7 +349,7 @@ var substitutionTests = []testCase{
 						Operator: "&&",
 						Right:    ast.Command{Name: ast.Word("cmd3")},
 					},
-					ast.BinaryConstruction{
+					ast.ConditionalCommand{
 						Left: ast.Pipeline{
 							{Command: ast.Command{Name: ast.Word("cmd1")}},
 							{Command: ast.Command{Name: ast.Word("cmd2")}},
@@ -363,7 +363,7 @@ var substitutionTests = []testCase{
 		},
 	}},
 	{`>(cmd; cmd) arg | >(cmd; cmd)&& >(cmd; cmd)`, ast.Script{
-		ast.BinaryConstruction{
+		ast.ConditionalCommand{
 			Left: ast.Pipeline{
 				{
 					Command: ast.Command{

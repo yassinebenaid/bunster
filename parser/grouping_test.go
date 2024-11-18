@@ -50,7 +50,7 @@ var groupingTests = []testCase{
 	{`{cmd1 | cmd2 && cmd3; cmd1 | cmd2 && cmd3;}`, ast.Script{
 		ast.Group{
 			Body: []ast.Statement{
-				ast.BinaryConstruction{
+				ast.ConditionalCommand{
 					Left: ast.Pipeline{
 						{Command: ast.Command{Name: ast.Word("cmd1")}},
 						{Command: ast.Command{Name: ast.Word("cmd2")}},
@@ -58,7 +58,7 @@ var groupingTests = []testCase{
 					Operator: "&&",
 					Right:    ast.Command{Name: ast.Word("cmd3")},
 				},
-				ast.BinaryConstruction{
+				ast.ConditionalCommand{
 					Left: ast.Pipeline{
 						{Command: ast.Command{Name: ast.Word("cmd1")}},
 						{Command: ast.Command{Name: ast.Word("cmd2")}},
@@ -71,7 +71,7 @@ var groupingTests = []testCase{
 	}},
 
 	{`{cmd; cmd;} | {cmd; cmd;}&& {cmd; cmd;}`, ast.Script{
-		ast.BinaryConstruction{
+		ast.ConditionalCommand{
 			Left: ast.Pipeline{
 				{Command: ast.Group{
 					Body: []ast.Statement{
@@ -190,7 +190,7 @@ var groupingTests = []testCase{
 	{`(cmd1 | cmd2 && cmd3; cmd1 | cmd2 && cmd3)`, ast.Script{
 		ast.SubShell{
 			Body: []ast.Statement{
-				ast.BinaryConstruction{
+				ast.ConditionalCommand{
 					Left: ast.Pipeline{
 						{Command: ast.Command{Name: ast.Word("cmd1")}},
 						{Command: ast.Command{Name: ast.Word("cmd2")}},
@@ -198,7 +198,7 @@ var groupingTests = []testCase{
 					Operator: "&&",
 					Right:    ast.Command{Name: ast.Word("cmd3")},
 				},
-				ast.BinaryConstruction{
+				ast.ConditionalCommand{
 					Left: ast.Pipeline{
 						{Command: ast.Command{Name: ast.Word("cmd1")}},
 						{Command: ast.Command{Name: ast.Word("cmd2")}},
@@ -211,7 +211,7 @@ var groupingTests = []testCase{
 	}},
 
 	{`(cmd; cmd) | (cmd; cmd)&& (cmd; cmd)`, ast.Script{
-		ast.BinaryConstruction{
+		ast.ConditionalCommand{
 			Left: ast.Pipeline{
 				{Command: ast.SubShell{
 					Body: []ast.Statement{
