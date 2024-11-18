@@ -9,8 +9,9 @@ var parameterAssignmentTests = []testCase{
 			ast.Assignement{Name: "var2", Value: ast.Word("value2")},
 		},
 	}},
-	{`var=$var`, ast.Script{
+	{`var=$var var=${var}`, ast.Script{
 		ast.ParameterAssignement{
+			ast.Assignement{Name: "var", Value: ast.Var("var")},
 			ast.Assignement{Name: "var", Value: ast.Var("var")},
 		},
 	}},
