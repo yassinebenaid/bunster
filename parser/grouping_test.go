@@ -274,8 +274,8 @@ var groupingErrorHandlingCases = []errorHandlingTestCase{
 	{`{}`, "syntax error: expeceted a command list after `{`. (line: 1, column: 2)"},
 	{`{cmd`, "syntax error: expected `}`, found `end of file`. (line: 1, column: 5)"},
 	{`{cmd}`, "syntax error: expected `}`, found `end of file`. (line: 1, column: 6)"},
-	{`{cmd |;}`, "syntax error: `;` has a special meaning here and cannot be used as a command name. (line: 1, column: 7)"},
-	{`{cmd | |}`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1, column: 8)"},
+	{`{cmd |;}`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 7)"},
+	{`{cmd | |}`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 8)"},
 
 	{`{cmd;} arg`, "syntax error: unexpected token `arg`. (line: 1, column: 8)"},
 	{`{cmd;} <in >out <<<etc arg`, "syntax error: unexpected token `arg`. (line: 1, column: 24)"},
@@ -283,8 +283,8 @@ var groupingErrorHandlingCases = []errorHandlingTestCase{
 	{`(`, "syntax error: expeceted a command list after `(`. (line: 1, column: 2)"},
 	{`()`, "syntax error: expeceted a command list after `(`. (line: 1, column: 2)"},
 	{`(cmd`, "syntax error: expected `)`, found `end of file`. (line: 1, column: 5)"},
-	{`(cmd |)`, "syntax error: `)` has a special meaning here and cannot be used as a command name. (line: 1, column: 7)"},
-	{`(cmd | |)`, "syntax error: `|` has a special meaning here and cannot be used as a command name. (line: 1, column: 8)"},
+	{`(cmd |)`, "syntax error: expected a valid command name, found `)`. (line: 1, column: 7)"},
+	{`(cmd | |)`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 8)"},
 
 	{`(cmd) arg`, "syntax error: unexpected token `arg`. (line: 1, column: 7)"},
 	{`(cmd) <in >out <<<etc arg`, "syntax error: unexpected token `arg`. (line: 1, column: 23)"},
