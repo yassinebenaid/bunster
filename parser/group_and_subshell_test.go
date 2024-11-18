@@ -269,7 +269,7 @@ var groupAndSubshellTests = []testCase{
 	}},
 }
 
-var groupingErrorHandlingCases = []errorHandlingTestCase{
+var groupAndSubshellErrorHandlingCases = []errorHandlingTestCase{
 	{`{`, "syntax error: expeceted a command list after `{`. (line: 1, column: 2)"},
 	{`{}`, "syntax error: expeceted a command list after `{`. (line: 1, column: 2)"},
 	{`{cmd`, "syntax error: expected `}`, found `end of file`. (line: 1, column: 5)"},
