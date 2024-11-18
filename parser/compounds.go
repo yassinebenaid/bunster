@@ -21,6 +21,8 @@ func (p *Parser) getCompoundParser() func() ast.Statement {
 		return p.parseSubShell
 	case token.DOUBLE_LEFT_PAREN:
 		return p.parseArithmeticCommand
+	case token.FUNCTION:
+		return p.parseFunction
 	case token.THEN, token.ELIF, token.ELSE, token.FI, token.DO, token.DONE, token.ESAC:
 		p.error("`%s` is a reserved keyword, cannot be used a command name", p.curr)
 		fallthrough
@@ -667,4 +669,47 @@ loop:
 	}
 
 	return arth
+}
+
+func (p *Parser) parseFunction() ast.Statement {
+	p.proceed()
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
+	nameExpr := p.parseExpression()
+	if nameExpr == nil {
+		p.error("function name is required")
+	}
+
+	name, ok := nameExpr.(ast.Word)
+	if !ok {
+		p.error("invalid function name was supplied")
+	}
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
+	if p.curr.Type == token.LEFT_PAREN {
+		p.proceed()
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+		if p.curr.Type != token.RIGHT_PAREN {
+			p.error("expected `)`, found `%s`", p.curr)
+		}
+		p.proceed()
+	}
+
+	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+		p.proceed()
+	}
+
+	compound := p.getCompoundParser()
+	if compound == nil {
+		p.error("bad function definition, invalid token `%s`", p.curr)
+		return nil
+	}
+
+	return ast.Function{Name: string(name), Command: compound()}
 }
