@@ -151,11 +151,6 @@ func (p *Parser) parsePipline() ast.Pipeline {
 }
 
 func (p *Parser) parseCommand() ast.Statement {
-	if p.curr.Type == token.EOF {
-		p.error("unexpected end of file, expected command name")
-		return nil
-	}
-
 	if compound := p.getCompoundParser(); compound != nil {
 		return compound()
 	}
@@ -163,7 +158,7 @@ func (p *Parser) parseCommand() ast.Statement {
 	var cmd ast.Command
 	cmd.Name = p.parseExpression()
 	if cmd.Name == nil {
-		p.error("`%s` has a special meaning here and cannot be used as a command name", p.curr)
+		p.error("expected a valid command name, found `%s`", p.curr)
 		return nil
 	}
 
