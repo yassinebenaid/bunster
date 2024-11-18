@@ -151,6 +151,10 @@ func (p *Parser) parsePipline() ast.Pipeline {
 }
 
 func (p *Parser) parseCommand() ast.Statement {
+	if p.curr.Type == token.FUNCTION {
+		return p.parseFunction()
+	}
+
 	if compound := p.getCompoundParser(); compound != nil {
 		return compound()
 	}

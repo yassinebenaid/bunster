@@ -166,4 +166,5 @@ var functionsErrorHandlingCases = []errorHandlingTestCase{
 	{`function $foo () {cmd;}`, "syntax error: invalid function name was supplied. (line: 1, column: 14)"},
 	{`function cmd (`, "syntax error: expected `)`, found `end of file`. (line: 1, column: 15)"},
 	{`function cmd )`, "syntax error: function body is expected to be a compound command, found `)`. (line: 1, column: 14)"},
+	{`function cmd () function foo() {cmd;}`, "syntax error: function body is expected to be a compound command, found `function`. (line: 1, column: 17)"},
 }
