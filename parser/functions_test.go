@@ -137,6 +137,18 @@ var functionsTests = []testCase{
 			},
 		},
 	}},
+	{`function foo {
+		cmd
+	}`, ast.Script{
+		ast.Function{
+			Name: "foo",
+			Command: ast.Group{
+				Body: []ast.Statement{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+			},
+		},
+	}},
 }
 
 var functionsErrorHandlingCases = []errorHandlingTestCase{
