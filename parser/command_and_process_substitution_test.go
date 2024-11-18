@@ -439,7 +439,7 @@ var commandAndProcessSubstitutionTests = []testCase{
 	}},
 }
 
-var substitutionErrorHandlingCases = []errorHandlingTestCase{
+var CommandAndProcessSubstitutionErrorHandlingCases = []errorHandlingTestCase{
 	{`$(`, "syntax error: expeceted a command list after `$(`. (line: 1, column: 3)"},
 	{`$()`, "syntax error: expeceted a command list after `$(`. (line: 1, column: 3)"},
 	{`$(cmd`, "syntax error: unexpected end of file, expeceted `)`. (line: 1, column: 6)"},

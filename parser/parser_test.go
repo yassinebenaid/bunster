@@ -378,7 +378,7 @@ var errorHandlingTestCases = []struct {
 	{"If Command", ifCommandErrorHandlingCases},
 	{"Case", caseErrorHandlingCases},
 	{"Group & Subshell", groupAndSubshellErrorHandlingCases},
-	{"Substitution", substitutionErrorHandlingCases},
+	{"Comand & Process Substitution", CommandAndProcessSubstitutionErrorHandlingCases},
 	{"Parameter Expansion", parameterExpansionErrorHandlingCases},
 	{"Arithmetics", arithmeticsErrorHandlingCases},
 	{"Functions", functionsErrorHandlingCases},
