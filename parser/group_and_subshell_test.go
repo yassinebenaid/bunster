@@ -2,7 +2,7 @@ package parser_test
 
 import "github.com/yassinebenaid/bunny/ast"
 
-var groupingTests = []testCase{
+var groupAndSubshellTests = []testCase{
 	{`{ cmd; }`, ast.Script{
 		ast.Group{
 			Body: []ast.Statement{

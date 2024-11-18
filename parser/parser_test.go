@@ -284,7 +284,7 @@ var testCases = []struct {
 	{"If Command", ifCommandTests},
 	{"Case", caseTests},
 
-	{"Command Group", groupingTests},
+	{"Group & Subshell", groupAndSubshellTests},
 	{"Subsitutions", substitutionTests},
 	{"Parameter Expansion", parameterExpansionTests},
 	{"Arithmetics", arithmeticsTests},
