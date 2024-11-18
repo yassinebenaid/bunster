@@ -184,7 +184,7 @@ func (p *Parser) parseCommand() ast.Statement {
 			p.error("expected `)`, found `%s`", p.curr)
 		}
 		p.proceed()
-		if p.curr.Type == token.BLANK {
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
 		}
 
