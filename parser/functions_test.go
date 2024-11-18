@@ -181,6 +181,38 @@ var functionsTests = []testCase{
 			},
 		},
 	}},
+	{`function foo(){cmd;}&&function foo {cmd;} || function foo(){cmd;}`, ast.Script{
+		ast.ConditionalCommand{
+			Left: ast.ConditionalCommand{
+				Left: ast.Function{
+					Name: "foo",
+					Command: ast.Group{
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+					},
+				},
+				Operator: "&&",
+				Right: ast.Function{
+					Name: "foo",
+					Command: ast.Group{
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+					},
+				},
+			},
+			Operator: "||",
+			Right: ast.Function{
+				Name: "foo",
+				Command: ast.Group{
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+				},
+			},
+		},
+	}},
 }
 
 var functionsErrorHandlingCases = []errorHandlingTestCase{
