@@ -1,7 +1,5 @@
 package ast
 
-type Var string
-
 type Param struct {
 	Name  string
 	Index Expression
@@ -77,7 +75,6 @@ type Slice struct {
 	Length    Arithmetic
 }
 
-func (Var) node()                {}
 func (ParameterExpansion) node() {}
 func (VarOrDefault) node()       {}
 func (VarOrSet) node()           {}
@@ -91,7 +88,6 @@ func (Transform) node()          {}
 func (Slice) node()              {}
 
 // Expressions
-func (Var) expr()                {}
 func (ParameterExpansion) expr() {}
 func (VarOrDefault) expr()       {}
 func (VarOrSet) expr()           {}
@@ -104,7 +100,6 @@ func (MatchAndReplace) expr()    {}
 func (Transform) expr()          {}
 func (Slice) expr()              {}
 
-func (v Var) string() string                { return string(v) }
 func (v ParameterExpansion) string() string { return string(v.Name) }
 func (VarOrDefault) string() string         { return "" }
 func (VarOrSet) string() string             { return "" }
