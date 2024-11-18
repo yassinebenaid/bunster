@@ -373,7 +373,7 @@ var errorHandlingTestCases = []struct {
 	}},
 	{"Redirections", redirectionErrorHandlingCases},
 	{"Pipes", pipesErrorHandlingCases},
-	{"Logical Constructions", logicalCommandsErrorHandlingCases},
+	{"Conditional Commands", conditionalCommandsErrorHandlingCases},
 	{"Loops", loopsErrorHandlingCases},
 	{"If constructs", ifErrorHandlingCases},
 	{"Case", caseErrorHandlingCases},

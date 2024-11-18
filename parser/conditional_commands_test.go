@@ -288,7 +288,7 @@ var conditionalCommandsTests = []testCase{
 	}},
 }
 
-var logicalCommandsErrorHandlingCases = []errorHandlingTestCase{
+var conditionalCommandsErrorHandlingCases = []errorHandlingTestCase{
 	{`cmd &&`, "syntax error: expected a valid command name, found `end of file`. (line: 1, column: 7)"},
 	{`cmd ||`, "syntax error: expected a valid command name, found `end of file`. (line: 1, column: 7)"},
 	{`cmd || cmd && cmd ||`, "syntax error: expected a valid command name, found `end of file`. (line: 1, column: 21)"},
