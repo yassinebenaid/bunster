@@ -2,7 +2,7 @@ package parser_test
 
 import "github.com/yassinebenaid/bunny/ast"
 
-var conditionalsTests = []testCase{
+var ifCommandTests = []testCase{
 	{`if cmd; then cmd2; fi`, ast.Script{
 		ast.If{
 			Head: []ast.Statement{

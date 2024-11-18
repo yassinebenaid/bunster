@@ -2,7 +2,7 @@ package parser_test
 
 import "github.com/yassinebenaid/bunny/ast"
 
-var logicalCommandsTests = []testCase{
+var conditionalCommandsTests = []testCase{
 	{` cmd && cmd2 `, ast.Script{
 		ast.ConditionalCommand{
 			Left:     ast.Command{Name: ast.Word("cmd")},
