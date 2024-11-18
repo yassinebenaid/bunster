@@ -71,6 +71,38 @@ var functionsTests = []testCase{
 			},
 		},
 	}},
+	{`foo(){cmd;}&&foo(){cmd;} || foo(){cmd;}`, ast.Script{
+		ast.ConditionalCommand{
+			Left: ast.ConditionalCommand{
+				Left: ast.Function{
+					Name: "foo",
+					Command: ast.Group{
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+					},
+				},
+				Operator: "&&",
+				Right: ast.Function{
+					Name: "foo",
+					Command: ast.Group{
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+					},
+				},
+			},
+			Operator: "||",
+			Right: ast.Function{
+				Name: "foo",
+				Command: ast.Group{
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+				},
+			},
+		},
+	}},
 	{`function foo(){ cmd; }`, ast.Script{
 		ast.Function{
 			Name: "foo",
