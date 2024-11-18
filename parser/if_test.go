@@ -428,7 +428,7 @@ var ifCommandTests = []testCase{
 	}},
 }
 
-var ifErrorHandlingCases = []errorHandlingTestCase{
+var ifCommandErrorHandlingCases = []errorHandlingTestCase{
 	{`if`, "syntax error: expected command list after `if`. (line: 1, column: 3)"},
 	{`if then`, "syntax error: expected command list after `if`. (line: 1, column: 4)"},
 	{`if; then`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 3)"},
