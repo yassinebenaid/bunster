@@ -159,6 +159,11 @@ func (p *Parser) parseCommand() ast.Statement {
 		return compound()
 	}
 
+	env := p.parseAssignement()
+	if env != nil {
+		return env
+	}
+
 	var cmd ast.Command
 	cmd.Name = p.parseExpression()
 	if cmd.Name == nil {
