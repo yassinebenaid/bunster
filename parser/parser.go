@@ -166,28 +166,7 @@ func (p *Parser) parseCommand() ast.Statement {
 		p.proceed()
 	}
 	if p.curr.Type == token.LEFT_PAREN {
-		name, ok := cmd.Name.(ast.Word)
-		if !ok {
-			p.error("invalid function name was supplied")
-		}
-
-		p.proceed()
-		if p.curr.Type == token.BLANK {
-			p.proceed()
-		}
-		if p.curr.Type != token.RIGHT_PAREN {
-			p.error("expected `)`, found `%s`", p.curr)
-		}
-		p.proceed()
-		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
-			p.proceed()
-		}
-
-		if compound := p.getCompoundParser(); compound == nil {
-			p.error("function body is expected to be a compound command, found `%s`", p.curr)
-		} else {
-			return ast.Function{Name: string(name), Command: compound()}
-		}
+		return p.parseNakedFunction(cmd.Name)
 	}
 
 loop:

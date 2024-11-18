@@ -713,3 +713,30 @@ func (p *Parser) parseFunction() ast.Statement {
 
 	return ast.Function{Name: string(name), Command: compound()}
 }
+
+func (p *Parser) parseNakedFunction(nameExpr ast.Expression) ast.Statement {
+	name, ok := nameExpr.(ast.Word)
+	if !ok {
+		p.error("invalid function name was supplied")
+	}
+
+	p.proceed()
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+	if p.curr.Type != token.RIGHT_PAREN {
+		p.error("expected `)`, found `%s`", p.curr)
+	}
+	p.proceed()
+	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+		p.proceed()
+	}
+
+	compound := p.getCompoundParser()
+	if compound == nil {
+		p.error("function body is expected to be a compound command, found `%s`", p.curr)
+		return nil
+	}
+
+	return ast.Function{Name: string(name), Command: compound()}
+}
