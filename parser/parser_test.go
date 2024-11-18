@@ -289,6 +289,7 @@ var testCases = []struct {
 	{"Parameter Expansion", parameterExpansionTests},
 	{"Arithmetics", arithmeticsTests},
 	{"Functions", functionsTests},
+	{"Parameter Assignment", parameterAssignmentTests},
 }
 
 func TestParser(t *testing.T) {
