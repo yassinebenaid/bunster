@@ -707,7 +707,7 @@ func (p *Parser) parseFunction() ast.Statement {
 
 	compound := p.getCompoundParser()
 	if compound == nil {
-		p.error("bad function definition, invalid token `%s`", p.curr)
+		p.error("function body is expected to be a compound command, found `%s`", p.curr)
 		return nil
 	}
 

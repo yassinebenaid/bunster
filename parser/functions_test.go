@@ -152,8 +152,8 @@ var functionsTests = []testCase{
 }
 
 var functionsErrorHandlingCases = []errorHandlingTestCase{
-	{`foo ()`, "syntax error: bad function definition, invalid token `end of file`. (line: 1, column: 7)"},
-	{`foo () simple_command`, "syntax error: bad function definition, invalid token `simple_command`. (line: 1, column: 8)"},
+	{`foo ()`, "syntax error: function body is expected to be a compound command, found `end of file`. (line: 1, column: 7)"},
+	{`foo () simple_command`, "syntax error: function body is expected to be a compound command, found `simple_command`. (line: 1, column: 8)"},
 	{`$foo () {cmd;}`, "syntax error: invalid function name was supplied. (line: 1, column: 6)"},
 	{`cmd (`, "syntax error: expected `)`, found `end of file`. (line: 1, column: 6)"},
 	{`cmd )`, "syntax error: token `)` cannot be placed here. (line: 1, column: 5)"},
@@ -161,9 +161,9 @@ var functionsErrorHandlingCases = []errorHandlingTestCase{
 	{`cmd arg )`, "syntax error: token `)` cannot be placed here. (line: 1, column: 9)"},
 
 	{`function`, "syntax error: function name is required. (line: 1, column: 9)"},
-	{`function foo ()`, "syntax error: bad function definition, invalid token `end of file`. (line: 1, column: 16)"},
-	{`function foo () simple_command`, "syntax error: bad function definition, invalid token `simple_command`. (line: 1, column: 17)"},
+	{`function foo ()`, "syntax error: function body is expected to be a compound command, found `end of file`. (line: 1, column: 16)"},
+	{`function foo () simple_command`, "syntax error: function body is expected to be a compound command, found `simple_command`. (line: 1, column: 17)"},
 	{`function $foo () {cmd;}`, "syntax error: invalid function name was supplied. (line: 1, column: 14)"},
 	{`function cmd (`, "syntax error: expected `)`, found `end of file`. (line: 1, column: 15)"},
-	{`function cmd )`, "syntax error: bad function definition, invalid token `)`. (line: 1, column: 14)"},
+	{`function cmd )`, "syntax error: function body is expected to be a compound command, found `)`. (line: 1, column: 14)"},
 }
