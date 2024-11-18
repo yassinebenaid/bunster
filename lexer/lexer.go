@@ -325,7 +325,7 @@ switch_beginning:
 		}
 	case isLetter(l.curr):
 		tok.Literal = string(l.curr)
-		for isLetter(l.next) {
+		for isLetter(l.next) || (l.next <= '9' && l.next >= '0') {
 			l.proceed()
 			tok.Literal += string(l.curr)
 		}

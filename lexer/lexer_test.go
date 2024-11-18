@@ -123,7 +123,7 @@ func TestLexer(t *testing.T) {
 		{`@`, []token.Token{{Type: token.AT, Literal: `@`, Line: 1, Position: 1}}},
 
 		// identifiers
-		{`foo bar foo-bar foo_bar`, []token.Token{
+		{`foo bar foo-bar foo_bar foo123 _123`, []token.Token{
 			{Type: token.WORD, Literal: `foo`, Line: 1, Position: 1},
 			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 4},
 			{Type: token.WORD, Literal: `bar`, Line: 1, Position: 5},
@@ -133,6 +133,10 @@ func TestLexer(t *testing.T) {
 			{Type: token.WORD, Literal: `bar`, Line: 1, Position: 13},
 			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 16},
 			{Type: token.WORD, Literal: `foo_bar`, Line: 1, Position: 17},
+			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 24},
+			{Type: token.WORD, Literal: `foo123`, Line: 1, Position: 25},
+			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 31},
+			{Type: token.WORD, Literal: `_123`, Line: 1, Position: 32},
 		}},
 
 		// Special Variables
@@ -192,8 +196,7 @@ func TestLexer(t *testing.T) {
 		{`0123456789 abc1234 123.456 .123 123. 1.2.3 .abc 1.c 12.34abc`, []token.Token{
 			{Type: token.INT, Literal: `0123456789`, Line: 1, Position: 1},
 			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 11},
-			{Type: token.WORD, Literal: `abc`, Line: 1, Position: 12},
-			{Type: token.INT, Literal: `1234`, Line: 1, Position: 15},
+			{Type: token.WORD, Literal: `abc1234`, Line: 1, Position: 12},
 			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 19},
 			{Type: token.FLOAT, Literal: `123.456`, Line: 1, Position: 20},
 			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 27},
