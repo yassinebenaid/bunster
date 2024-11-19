@@ -160,7 +160,7 @@ func (p *Parser) parseCommand() ast.Statement {
 	}
 
 	env := p.parseAssignement()
-	if env != nil {
+	if env != nil && (p.isControlToken() || p.curr.Type == token.EOF) {
 		return env
 	}
 
@@ -170,6 +170,7 @@ func (p *Parser) parseCommand() ast.Statement {
 		p.error("expected a valid command name, found `%s`", p.curr)
 		return nil
 	}
+	cmd.Env = env
 
 	if p.curr.Type == token.BLANK {
 		p.proceed()
