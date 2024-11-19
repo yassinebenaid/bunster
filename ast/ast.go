@@ -46,6 +46,7 @@ type Command struct {
 	Name         Expression
 	Args         []Expression
 	Redirections []Redirection
+	Env          []Assignement
 }
 
 type UnquotedString []Expression
