@@ -223,6 +223,8 @@ var functionsErrorHandlingCases = []errorHandlingTestCase{
 	{`cmd )`, "syntax error: token `)` cannot be placed here. (line: 1, column: 5)"},
 	{`cmd arg (`, "syntax error: token `(` cannot be placed here. (line: 1, column: 9)"},
 	{`cmd arg )`, "syntax error: token `)` cannot be placed here. (line: 1, column: 9)"},
+	{`cmd arg(arg`, "syntax error: token `(` cannot be placed here. (line: 1, column: 8)"},
+	{`cmd arg)arg`, "syntax error: token `)` cannot be placed here. (line: 1, column: 8)"},
 
 	{`function`, "syntax error: function name is required. (line: 1, column: 9)"},
 	{`function foo ()`, "syntax error: function body is expected to be a compound command, found `end of file`. (line: 1, column: 16)"},
