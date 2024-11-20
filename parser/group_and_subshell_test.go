@@ -134,6 +134,17 @@ var groupAndSubshellTests = []testCase{
 			},
 		},
 	}},
+	{`{# comment
+		#comment
+		cmd # comment
+		#comment
+		}`, ast.Script{
+		ast.Group{
+			Body: []ast.Statement{
+				ast.Command{Name: ast.Word("cmd")},
+			},
+		},
+	}},
 
 	{`( cmd )`, ast.Script{
 		ast.SubShell{
