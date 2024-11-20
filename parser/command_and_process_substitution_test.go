@@ -121,6 +121,24 @@ var commandAndProcessSubstitutionTests = []testCase{
 			},
 		},
 	}},
+	{`$(# comment
+		#comment
+
+		#comment
+		cmd # comment
+		#comment
+
+		cmd2
+
+		#comment
+		)`, ast.Script{
+		ast.Command{
+			Name: ast.CommandSubstitution{
+				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Name: ast.Word("cmd2")},
+			},
+		},
+	}},
 
 	{`<( cmd )`, ast.Script{
 		ast.Command{
