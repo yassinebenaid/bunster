@@ -13,7 +13,7 @@ type ArithmeticCommand struct {
 	Redirections []Redirection
 }
 
-type InfixArithmetic struct {
+type BinaryArithmetic struct {
 	Left     Expression
 	Operator string
 	Right    Expression
@@ -51,7 +51,7 @@ type Conditional struct {
 func (Number) node()               {}
 func (Arithmetic) node()           {}
 func (ArithmeticCommand) node()    {}
-func (InfixArithmetic) node()      {}
+func (BinaryArithmetic) node()     {}
 func (PostIncDecArithmetic) node() {}
 func (PreIncDecArithmetic) node()  {}
 func (Unary) node()                {}
@@ -61,7 +61,7 @@ func (Conditional) node()          {}
 
 func (Number) expr()               {}
 func (Arithmetic) expr()           {}
-func (InfixArithmetic) expr()      {}
+func (BinaryArithmetic) expr()     {}
 func (PostIncDecArithmetic) expr() {}
 func (PreIncDecArithmetic) expr()  {}
 func (Unary) expr()                {}
@@ -75,7 +75,7 @@ func (n Number) string() string {
 	return string(n)
 }
 
-func (in InfixArithmetic) string() string {
+func (in BinaryArithmetic) string() string {
 	return "(" + in.Left.string() + " " + in.Operator + " " + in.Right.string() + ")"
 }
 func (p PostIncDecArithmetic) string() string {
