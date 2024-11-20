@@ -13,13 +13,19 @@ func (p *Parser) parseCommandSubstitution() ast.Expression {
 	}
 
 	for p.curr.Type != token.RIGHT_PAREN && p.curr.Type != token.EOF {
-		cmdList := p.parseCommandList()
-		if cmdList == nil {
-			return nil
-		}
-		cmds = append(cmds, cmdList)
-		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
-			p.proceed()
+		if p.curr.Type == token.HASH {
+			for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+				p.proceed()
+			}
+		} else {
+			cmdList := p.parseCommandList()
+			if cmdList == nil {
+				return nil
+			}
+			cmds = append(cmds, cmdList)
+			if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
+				p.proceed()
+			}
 		}
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
