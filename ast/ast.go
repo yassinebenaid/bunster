@@ -17,7 +17,7 @@ type Expression interface {
 
 type Script []Statement
 
-type ConditionalCommand struct {
+type List struct {
 	Left     Statement
 	Operator string // || or &&
 	Right    Statement
@@ -135,7 +135,7 @@ func (UnquotedString) node()      {}
 func (QuotedString) node()        {}
 func (Command) node()             {}
 func (Pipeline) node()            {}
-func (ConditionalCommand) node()  {}
+func (List) node()                {}
 func (Loop) node()                {}
 func (RangeLoop) node()           {}
 func (If) node()                  {}
@@ -164,14 +164,14 @@ func (CommandSubstitution) string() string { return "" }
 func (ProcessSubstitution) string() string { return "" }
 
 // Statements
-func (Command) stmt()            {}
-func (Pipeline) stmt()           {}
-func (ConditionalCommand) stmt() {}
-func (Loop) stmt()               {}
-func (RangeLoop) stmt()          {}
-func (If) stmt()                 {}
-func (Case) stmt()               {}
-func (Group) stmt()              {}
-func (SubShell) stmt()           {}
-func (For) stmt()                {}
-func (Function) stmt()           {}
+func (Command) stmt()   {}
+func (Pipeline) stmt()  {}
+func (List) stmt()      {}
+func (Loop) stmt()      {}
+func (RangeLoop) stmt() {}
+func (If) stmt()        {}
+func (Case) stmt()      {}
+func (Group) stmt()     {}
+func (SubShell) stmt()  {}
+func (For) stmt()       {}
+func (Function) stmt()  {}

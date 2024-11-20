@@ -72,8 +72,8 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`foo(){cmd;}&&foo(){cmd;} || foo(){cmd;}`, ast.Script{
-		ast.ConditionalCommand{
-			Left: ast.ConditionalCommand{
+		ast.List{
+			Left: ast.List{
 				Left: ast.Function{
 					Name: "foo",
 					Command: ast.Group{
@@ -182,8 +182,8 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`function foo(){cmd;}&&function foo {cmd;} || function foo(){cmd;}`, ast.Script{
-		ast.ConditionalCommand{
-			Left: ast.ConditionalCommand{
+		ast.List{
+			Left: ast.List{
 				Left: ast.Function{
 					Name: "foo",
 					Command: ast.Group{

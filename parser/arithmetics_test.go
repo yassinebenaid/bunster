@@ -438,7 +438,7 @@ var arithmeticsTests = []testCase{
 		},
 	}},
 	{`(( x ))||(( y ))`, ast.Script{
-		ast.ConditionalCommand{
+		ast.List{
 			Left: ast.ArithmeticCommand{
 				Arithmetic: ast.Arithmetic{ast.Var("x")},
 			},
@@ -449,7 +449,7 @@ var arithmeticsTests = []testCase{
 		},
 	}},
 	{`(( x )) | (( x ))&& (( x ))`, ast.Script{
-		ast.ConditionalCommand{
+		ast.List{
 			Left: ast.Pipeline{
 				{Command: ast.ArithmeticCommand{
 					Arithmetic: ast.Arithmetic{ast.Var("x")},

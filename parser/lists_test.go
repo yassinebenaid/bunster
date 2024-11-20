@@ -4,21 +4,21 @@ import "github.com/yassinebenaid/bunny/ast"
 
 var commandListTests = []testCase{
 	{` cmd && cmd2 `, ast.Script{
-		ast.ConditionalCommand{
+		ast.List{
 			Left:     ast.Command{Name: ast.Word("cmd")},
 			Operator: "&&",
 			Right:    ast.Command{Name: ast.Word("cmd2")},
 		},
 	}},
 	{`cmd&&cmd2`, ast.Script{
-		ast.ConditionalCommand{
+		ast.List{
 			Left:     ast.Command{Name: ast.Word("cmd")},
 			Operator: "&&",
 			Right:    ast.Command{Name: ast.Word("cmd2")},
 		},
 	}},
 	{` cmd1 | cmd2 && cmd3 `, ast.Script{
-		ast.ConditionalCommand{
+		ast.List{
 			Left: ast.Pipeline{
 				{Command: ast.Command{Name: ast.Word("cmd1")}},
 				{Command: ast.Command{Name: ast.Word("cmd2")}},
@@ -28,7 +28,7 @@ var commandListTests = []testCase{
 		},
 	}},
 	{`cmd >foo arg <<<"foo bar" | cmd2 <input.txt 'foo bar baz' && cmd >foo $var 3<<<"foo bar" |& cmd2 "foo bar baz" <input.txt `, ast.Script{
-		ast.ConditionalCommand{
+		ast.List{
 			Left: ast.Pipeline{
 				{
 					Command: ast.Command{
@@ -79,9 +79,9 @@ var commandListTests = []testCase{
 		},
 	}},
 	{` cmd && cmd2 && cmd3 && cmd4`, ast.Script{
-		ast.ConditionalCommand{
-			Left: ast.ConditionalCommand{
-				Left: ast.ConditionalCommand{
+		ast.List{
+			Left: ast.List{
+				Left: ast.List{
 					Left:     ast.Command{Name: ast.Word("cmd")},
 					Operator: "&&",
 					Right:    ast.Command{Name: ast.Word("cmd2")},
@@ -94,9 +94,9 @@ var commandListTests = []testCase{
 		},
 	}},
 	{` cmd&&cmd2&&cmd3&&cmd4`, ast.Script{
-		ast.ConditionalCommand{
-			Left: ast.ConditionalCommand{
-				Left: ast.ConditionalCommand{
+		ast.List{
+			Left: ast.List{
+				Left: ast.List{
 					Left:     ast.Command{Name: ast.Word("cmd")},
 					Operator: "&&",
 					Right:    ast.Command{Name: ast.Word("cmd2")},
@@ -110,12 +110,12 @@ var commandListTests = []testCase{
 	}},
 
 	{" cmd && cmd2; cmd3 && cmd4\n", ast.Script{
-		ast.ConditionalCommand{
+		ast.List{
 			Left:     ast.Command{Name: ast.Word("cmd")},
 			Operator: "&&",
 			Right:    ast.Command{Name: ast.Word("cmd2")},
 		},
-		ast.ConditionalCommand{
+		ast.List{
 			Left:     ast.Command{Name: ast.Word("cmd3")},
 			Operator: "&&",
 			Right:    ast.Command{Name: ast.Word("cmd4")},
@@ -124,8 +124,8 @@ var commandListTests = []testCase{
 
 	{" cmd && cmd2 && cmd3 & cmd", ast.Script{
 		ast.BackgroundConstruction{
-			Statement: ast.ConditionalCommand{
-				Left: ast.ConditionalCommand{
+			Statement: ast.List{
+				Left: ast.List{
 					Left:     ast.Command{Name: ast.Word("cmd")},
 					Operator: "&&",
 					Right:    ast.Command{Name: ast.Word("cmd2")},
@@ -138,21 +138,21 @@ var commandListTests = []testCase{
 	}},
 
 	{` cmd || cmd2 `, ast.Script{
-		ast.ConditionalCommand{
+		ast.List{
 			Left:     ast.Command{Name: ast.Word("cmd")},
 			Operator: "||",
 			Right:    ast.Command{Name: ast.Word("cmd2")},
 		},
 	}},
 	{`cmd||cmd2`, ast.Script{
-		ast.ConditionalCommand{
+		ast.List{
 			Left:     ast.Command{Name: ast.Word("cmd")},
 			Operator: "||",
 			Right:    ast.Command{Name: ast.Word("cmd2")},
 		},
 	}},
 	{`cmd >foo arg <<<"foo bar" | cmd2 <input.txt 'foo bar baz' || cmd >foo $var 3<<<"foo bar" |& cmd2 "foo bar baz" <input.txt `, ast.Script{
-		ast.ConditionalCommand{
+		ast.List{
 			Left: ast.Pipeline{
 				{
 					Command: ast.Command{
@@ -203,9 +203,9 @@ var commandListTests = []testCase{
 		},
 	}},
 	{` cmd || cmd2 || cmd3 || cmd4`, ast.Script{
-		ast.ConditionalCommand{
-			Left: ast.ConditionalCommand{
-				Left: ast.ConditionalCommand{
+		ast.List{
+			Left: ast.List{
+				Left: ast.List{
 					Left:     ast.Command{Name: ast.Word("cmd")},
 					Operator: "||",
 					Right:    ast.Command{Name: ast.Word("cmd2")},
@@ -218,9 +218,9 @@ var commandListTests = []testCase{
 		},
 	}},
 	{` cmd||cmd2||cmd3||cmd4`, ast.Script{
-		ast.ConditionalCommand{
-			Left: ast.ConditionalCommand{
-				Left: ast.ConditionalCommand{
+		ast.List{
+			Left: ast.List{
+				Left: ast.List{
 					Left:     ast.Command{Name: ast.Word("cmd")},
 					Operator: "||",
 					Right:    ast.Command{Name: ast.Word("cmd2")},
@@ -233,10 +233,10 @@ var commandListTests = []testCase{
 		},
 	}},
 	{` cmd || cmd2 && cmd3 || cmd4 && cmd5`, ast.Script{
-		ast.ConditionalCommand{
-			Left: ast.ConditionalCommand{
-				Left: ast.ConditionalCommand{
-					Left: ast.ConditionalCommand{
+		ast.List{
+			Left: ast.List{
+				Left: ast.List{
+					Left: ast.List{
 						Left:     ast.Command{Name: ast.Word("cmd")},
 						Operator: "||",
 						Right:    ast.Command{Name: ast.Word("cmd2")},
@@ -252,7 +252,7 @@ var commandListTests = []testCase{
 		},
 	}},
 	{"cmd || \n\t\n cmd2 ", ast.Script{
-		ast.ConditionalCommand{
+		ast.List{
 			Left:     ast.Command{Name: ast.Word("cmd")},
 			Operator: "||",
 			Right:    ast.Command{Name: ast.Word("cmd2")},
@@ -260,12 +260,12 @@ var commandListTests = []testCase{
 	}},
 
 	{" cmd || cmd2; cmd3 || cmd4\n", ast.Script{
-		ast.ConditionalCommand{
+		ast.List{
 			Left:     ast.Command{Name: ast.Word("cmd")},
 			Operator: "||",
 			Right:    ast.Command{Name: ast.Word("cmd2")},
 		},
-		ast.ConditionalCommand{
+		ast.List{
 			Left:     ast.Command{Name: ast.Word("cmd3")},
 			Operator: "||",
 			Right:    ast.Command{Name: ast.Word("cmd4")},
@@ -274,8 +274,8 @@ var commandListTests = []testCase{
 
 	{" cmd || cmd2 || cmd3 & cmd", ast.Script{
 		ast.BackgroundConstruction{
-			Statement: ast.ConditionalCommand{
-				Left: ast.ConditionalCommand{
+			Statement: ast.List{
+				Left: ast.List{
 					Left:     ast.Command{Name: ast.Word("cmd")},
 					Operator: "||",
 					Right:    ast.Command{Name: ast.Word("cmd2")},

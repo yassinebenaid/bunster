@@ -105,7 +105,7 @@ func (p *Parser) parseCommandList() ast.Statement {
 			right = rightPipe
 		}
 
-		left = ast.ConditionalCommand{
+		left = ast.List{
 			Left:     left,
 			Operator: operator,
 			Right:    right,

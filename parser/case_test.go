@@ -264,7 +264,7 @@ var caseTests = []testCase{
 		},
 	}},
 	{`case $foo in bar) cmd;; esac || case $foo in bar) cmd;; esac`, ast.Script{
-		ast.ConditionalCommand{
+		ast.List{
 			Left: ast.Case{
 				Word: ast.Var("foo"),
 				Cases: []ast.CaseItem{

@@ -246,14 +246,14 @@ var testCases = []struct {
 		{`cmd && cmd2 & cmd3 && cmd4&`, ast.Script{
 
 			ast.BackgroundConstruction{
-				Statement: ast.ConditionalCommand{
+				Statement: ast.List{
 					Left:     ast.Command{Name: ast.Word("cmd")},
 					Operator: "&&",
 					Right:    ast.Command{Name: ast.Word("cmd2")},
 				},
 			},
 			ast.BackgroundConstruction{
-				Statement: ast.ConditionalCommand{
+				Statement: ast.List{
 					Left:     ast.Command{Name: ast.Word("cmd3")},
 					Operator: "&&",
 					Right:    ast.Command{Name: ast.Word("cmd4")},
