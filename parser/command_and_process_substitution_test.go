@@ -455,6 +455,27 @@ var commandAndProcessSubstitutionTests = []testCase{
 			},
 		},
 	}},
+	{`<(# comment
+		#comment
+
+		#comment
+		cmd # comment
+		#comment
+
+		cmd2
+
+		#comment
+		)`, ast.Script{
+		ast.Command{
+			Name: ast.ProcessSubstitution{
+				Direction: '<',
+				Body: []ast.Statement{
+					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Name: ast.Word("cmd2")},
+				},
+			},
+		},
+	}},
 }
 
 var CommandAndProcessSubstitutionErrorHandlingCases = []errorHandlingTestCase{
