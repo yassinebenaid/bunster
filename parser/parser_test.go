@@ -234,7 +234,7 @@ var testCases = []struct {
 	}},
 	{"Redirections", redirectionTests},
 	{"Piplines", pipesTests},
-	{"Conditional Commands", conditionalCommandsTests},
+	{"Conditional Commands", commandListTests},
 	{"Background Constructions", []testCase{
 		{`cmd & cmd2`, ast.Script{
 
@@ -374,7 +374,7 @@ var errorHandlingTestCases = []struct {
 	}},
 	{"Redirections", redirectionErrorHandlingCases},
 	{"Pipes", pipesErrorHandlingCases},
-	{"Conditional Commands", conditionalCommandsErrorHandlingCases},
+	{"Conditional Commands", commandListErrorHandlingCases},
 	{"Loops", loopsErrorHandlingCases},
 	{"If Command", ifCommandErrorHandlingCases},
 	{"Case", caseErrorHandlingCases},

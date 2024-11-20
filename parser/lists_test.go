@@ -2,7 +2,7 @@ package parser_test
 
 import "github.com/yassinebenaid/bunny/ast"
 
-var conditionalCommandsTests = []testCase{
+var commandListTests = []testCase{
 	{` cmd && cmd2 `, ast.Script{
 		ast.ConditionalCommand{
 			Left:     ast.Command{Name: ast.Word("cmd")},
@@ -288,7 +288,7 @@ var conditionalCommandsTests = []testCase{
 	}},
 }
 
-var conditionalCommandsErrorHandlingCases = []errorHandlingTestCase{
+var commandListErrorHandlingCases = []errorHandlingTestCase{
 	{`cmd &&`, "syntax error: expected a valid command name, found `end of file`. (line: 1, column: 7)"},
 	{`cmd ||`, "syntax error: expected a valid command name, found `end of file`. (line: 1, column: 7)"},
 	{`cmd || cmd && cmd ||`, "syntax error: expected a valid command name, found `end of file`. (line: 1, column: 21)"},
