@@ -543,14 +543,22 @@ func (p *Parser) parseGroup() ast.Statement {
 	}
 
 	for p.curr.Type != token.RIGHT_BRACE && p.curr.Type != token.EOF {
-		cmdList := p.parseCommandList()
-		if cmdList == nil {
-			return nil
+		if p.curr.Type == token.HASH {
+			for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+				p.proceed()
+			}
+		} else {
+			cmdList := p.parseCommandList()
+			if cmdList == nil {
+				return nil
+			}
+			group.Body = append(group.Body, cmdList)
+
+			if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
+				p.proceed()
+			}
 		}
-		group.Body = append(group.Body, cmdList)
-		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
-			p.proceed()
-		}
+
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
 		}

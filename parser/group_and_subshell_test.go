@@ -30,6 +30,7 @@ var groupAndSubshellTests = []testCase{
 
 	{`{
 		cmd
+
 	 	cmd
 	}`, ast.Script{
 		ast.Group{
