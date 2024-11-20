@@ -128,6 +128,10 @@ type Function struct {
 
 type Var string
 
+type Test struct {
+	Expression
+}
+
 func (Word) node()                {}
 func (Var) node()                 {}
 func (Redirection) node()         {}
@@ -146,6 +150,7 @@ func (CommandSubstitution) node() {}
 func (ProcessSubstitution) node() {}
 func (For) node()                 {}
 func (Function) node()            {}
+func (Test) node()                {}
 
 // Expressions
 func (Word) expr()                {}
@@ -175,3 +180,4 @@ func (Group) stmt()     {}
 func (SubShell) stmt()  {}
 func (For) stmt()       {}
 func (Function) stmt()  {}
+func (Test) stmt()      {}

@@ -7,7 +7,7 @@ import (
 var conditionalsTests = []testCase{
 	{`[[ -a file ]]`, ast.Script{
 		ast.Test{
-			Expressions: ast.Unary{
+			Expression: ast.Unary{
 				Operator: "-a",
 				Operand:  ast.Word("file"),
 			},
