@@ -61,10 +61,8 @@ func (p *Parser) parsePrefixConditional() ast.Expression {
 			return exp
 		}
 
-	case token.EOF:
-		p.error("bad conditonal expression, unexpected end of file")
 	default:
-		p.error("bad conditonal expression, unexpected token `%s`", p.curr)
+		return p.parseExpression()
 	}
 
 	return nil

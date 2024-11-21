@@ -5,6 +5,11 @@ import (
 )
 
 var conditionalsTests = []testCase{
+	{`[[ foo-bar_baz ]]`, ast.Script{
+		ast.Test{
+			Expr: ast.Word("foo-bar_baz"),
+		},
+	}},
 	{`[[ -a file ]]`, ast.Script{
 		ast.Test{
 			Expr: ast.UnaryConditional{
