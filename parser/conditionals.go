@@ -52,7 +52,10 @@ func (p *Parser) parsePrefixConditional() ast.Expression {
 			}
 			p.proceed()
 			p.proceed()
-			p.proceed()
+
+			if p.curr.Type == token.BLANK {
+				p.proceed()
+			}
 
 			exp.Operand = p.parseExpression()
 			return exp
