@@ -46,7 +46,7 @@ func (p *Parser) parsePrefixConditional() ast.Expression {
 	switch p.curr.Type {
 	case token.MINUS:
 		switch p.next.Literal {
-		case "a":
+		case "a", "b":
 			exp := ast.UnaryConditional{
 				Operator: p.curr.Literal + p.next.Literal,
 			}
