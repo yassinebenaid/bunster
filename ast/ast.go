@@ -129,7 +129,7 @@ type Function struct {
 type Var string
 
 type Test struct {
-	Expr ConditionalExpression
+	Expr Expression
 }
 
 func (Word) node()                {}
