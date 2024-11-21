@@ -10,6 +10,11 @@ var conditionalsTests = []testCase{
 			Expr: ast.Word("foo-bar_baz"),
 		},
 	}},
+	{`[[ -a-file ]]`, ast.Script{
+		ast.Test{
+			Expr: ast.Word("-a-file"),
+		},
+	}},
 	{`[[ -a file ]]`, ast.Script{
 		ast.Test{
 			Expr: ast.UnaryConditional{

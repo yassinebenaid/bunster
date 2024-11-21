@@ -43,27 +43,24 @@ func (p *Parser) parseConditionals() ast.Expression {
 }
 
 func (p *Parser) parsePrefixConditional() ast.Expression {
-	switch p.curr.Type {
-	case token.MINUS:
-		switch p.next.Literal {
-		case "a", "b", "c", "d", "e", "f", "g", "h", "k", "p", "r", "s", "t", "u", "w", "x", "G", "L", "N", "O", "S", "z", "n", "v":
-			exp := ast.UnaryConditional{
-				Operator: p.curr.Literal + p.next.Literal,
+
+	exp := p.parseExpression()
+
+	if v, ok := exp.(ast.Word); ok {
+		switch v {
+		case "-a", "-b", "-c", "-d", "-e", "-f", "-g", "-h", "-k", "-p", "-r", "-s",
+			"-t", "-u", "-w", "-x", "-G", "-L", "-N", "-O", "-S", "-z", "-n", "-v":
+			u := ast.UnaryConditional{
+				Operator: string(v),
 			}
-			p.proceed()
-			p.proceed()
 
 			if p.curr.Type == token.BLANK {
 				p.proceed()
 			}
-
-			exp.Operand = p.parseExpression()
-			return exp
+			u.Operand = p.parseExpression()
+			return u
 		}
-
-	default:
-		return p.parseExpression()
 	}
 
-	return nil
+	return exp
 }
