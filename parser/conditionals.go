@@ -27,7 +27,14 @@ func (p *Parser) parseConditionals() ast.Expression {
 		p.proceed()
 	}
 
-	exp := p.parsePrefixConditional()
+	if exp := p.parseUnaryConditional(); exp != nil {
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+		return exp
+	}
+
+	exp := p.parseExpression()
 
 	if p.curr.Type == token.BLANK {
 		p.proceed()
@@ -38,7 +45,7 @@ func (p *Parser) parseConditionals() ast.Expression {
 	return exp
 }
 
-func (p *Parser) parsePrefixConditional() ast.Expression {
+func (p *Parser) parseUnaryConditional() ast.Expression {
 	if p.curr.Type == token.MINUS {
 		switch p.next.Literal {
 		case "a", "b", "c", "d", "e", "f", "g", "h", "k", "p", "r", "s",
@@ -64,7 +71,7 @@ func (p *Parser) parsePrefixConditional() ast.Expression {
 		}
 	}
 
-	return p.parseExpression()
+	return nil
 }
 
 func (p *Parser) parseConditionalBinaryOperator() string {
