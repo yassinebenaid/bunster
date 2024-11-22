@@ -74,9 +74,9 @@ var conditionalsTests = []testCase{
 	{`[[ file1 -ef file2 ]]`, ast.Script{
 		ast.Test{
 			Expr: ast.BinaryConditional{
-				Left:     ast.Word("file"),
+				Left:     ast.Word("file1"),
 				Operator: "-ef",
-				Right:    ast.Word("file"),
+				Right:    ast.Word("file2"),
 			},
 		},
 	}},
