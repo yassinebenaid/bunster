@@ -80,6 +80,7 @@ var conditionalsTests = []testCase{
 		[[ file1 != file2 ]]
 		[[ file1 < file2 ]]
 		[[ file1 > file2 ]]
+		[[ file1 =~ ^(.*)/([[:alnum:]]+)-[$v](.*)$ ]]
 	`, ast.Script{
 		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
 		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-nt", Right: ast.Word("file2")}},
@@ -89,5 +90,6 @@ var conditionalsTests = []testCase{
 		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "!=", Right: ast.Word("file2")}},
 		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "<", Right: ast.Word("file2")}},
 		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: ">", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "=~", Right: ast.Word("^(.*)/([[:alnum:]]+)-[$v](.*)$")}},
 	}},
 }
