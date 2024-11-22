@@ -48,7 +48,7 @@ func (p *Parser) parseConditionals() ast.Expression {
 	bin := ast.BinaryConditional{Left: exp, Operator: operator}
 
 	if operator == "=~" {
-		bin.Right = p.parseLiteralWord()
+		bin.Right = p.parsePatternExpression()
 	} else {
 		bin.Right = p.parseExpression()
 	}
@@ -120,18 +120,32 @@ func (p *Parser) parseConditionalBinaryOperator() string {
 	return ""
 }
 
-func (p *Parser) parseLiteralWord() ast.Word {
-	var word string
+func (p *Parser) parsePatternExpression() ast.Expression {
+	var exprs []ast.Expression
 
-	for p.curr.Type != token.BLANK && p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+loop:
+	for {
 		switch p.curr.Type {
-		case token.SIMPLE_EXPANSION, token.SPECIAL_VAR:
-			word += "$" + p.curr.Literal
+		case token.BLANK, token.NEWLINE, token.EOF:
+			break loop
+		case token.SIMPLE_EXPANSION:
+			exprs = append(exprs, ast.Var(p.curr.Literal))
+		case token.SINGLE_QUOTE:
+			exprs = append(exprs, p.parseLiteralString())
+		case token.DOUBLE_QUOTE:
+			exprs = append(exprs, p.parseString())
+		case token.DOLLAR_PAREN:
+			exprs = append(exprs, p.parseCommandSubstitution())
+		case token.GT_PAREN, token.LT_PAREN:
+			exprs = append(exprs, p.parseProcessSubstitution())
+		case token.DOLLAR_BRACE:
+			exprs = append(exprs, p.parseParameterExpansion())
 		default:
-			word += p.curr.Literal
+			exprs = append(exprs, ast.Word(p.curr.Literal))
 		}
+
 		p.proceed()
 	}
 
-	return ast.Word(word)
+	return concat(exprs, false)
 }
