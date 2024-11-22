@@ -20,12 +20,55 @@ var conditionalsTests = []testCase{
 			Expr: ast.Word("-a"),
 		},
 	}},
-	{`[[ -a file ]]`, ast.Script{
-		ast.Test{
-			Expr: ast.UnaryConditional{
-				Operator: "-a",
-				Operand:  ast.Word("file"),
-			},
-		},
+	{`
+		[[  -a  file ]]
+		[[  -b  file ]]
+		[[  -c  file ]]
+		[[  -d  file ]]
+		[[  -e  file ]]
+		[[  -f  file ]]
+		[[  -g  file ]]
+		[[  -h  file ]]
+		[[  -k  file ]]
+		[[  -p  file ]]
+		[[  -r  file ]]
+		[[  -s  file ]]
+		[[  -t  file ]]
+		[[  -u  file ]]
+		[[  -w  file ]]
+		[[  -x  file ]]
+		[[  -G  file ]]
+		[[  -L  file ]]
+		[[  -N  file ]]
+		[[  -O  file ]]
+		[[  -S  file ]]
+		[[  -z  file ]]
+		[[  -n  file ]]
+		[[  -v  file ]]
+	`, ast.Script{
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-c", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-d", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-e", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-f", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-g", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-h", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-k", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-p", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-r", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-s", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-t", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-u", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-w", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-x", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-G", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-L", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-N", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-O", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-S", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-z", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-n", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-v", Operand: ast.Word("file")}},
 	}},
 }

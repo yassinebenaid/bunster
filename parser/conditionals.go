@@ -33,10 +33,6 @@ func (p *Parser) parseConditionals() ast.Expression {
 		p.proceed()
 	}
 
-	// for prec < infixPrecedences[p.curr.Type] {
-	// 	exp = p.parseInfix(exp)
-	// }
-
 	// exp = p.parsePostfix(exp)
 
 	return exp
@@ -69,4 +65,32 @@ func (p *Parser) parsePrefixConditional() ast.Expression {
 	}
 
 	return p.parseExpression()
+}
+
+func (p *Parser) parseConditionalBinaryOperator() string {
+	if p.curr.Type == token.MINUS {
+		switch p.next.Literal {
+		// case "a":
+		// 	if p.next2.Type != token.BLANK {
+		// 		break
+		// 	}
+
+		// 	u := ast.UnaryConditional{
+		// 		Operator: "-" + p.next.Literal,
+		// 	}
+		// 	p.proceed()
+		// 	p.proceed()
+		// 	p.proceed()
+
+		// 	if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
+		// 		u.Operand = p.parseExpression()
+		// 	}
+		// 	if u.Operand == nil {
+		// 		p.error("bad conditional expression, expected an operand after %s, found `%s`", u.Operator, p.curr)
+		// 	}
+		// 	return u
+		}
+	}
+
+	return ""
 }
