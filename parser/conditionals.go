@@ -45,15 +45,19 @@ func (p *Parser) parseConditionals() ast.Expression {
 		return exp
 	}
 
-	exp = ast.BinaryConditional{
-		Left:     exp,
-		Operator: operator,
-		Right:    p.parseExpression(),
+	bin := ast.BinaryConditional{Left: exp, Operator: operator}
+
+	if operator == "=~" {
+		bin.Right = p.parseLiteralWord()
+	} else {
+		bin.Right = p.parseExpression()
 	}
+
 	if p.curr.Type == token.BLANK {
 		p.proceed()
 	}
-	return exp
+
+	return bin
 }
 
 func (p *Parser) parseUnaryConditional() ast.Expression {
@@ -114,4 +118,20 @@ func (p *Parser) parseConditionalBinaryOperator() string {
 	}
 
 	return ""
+}
+
+func (p *Parser) parseLiteralWord() ast.Word {
+	var word string
+
+	for p.curr.Type != token.BLANK && p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+		switch p.curr.Type {
+		case token.SIMPLE_EXPANSION, token.SPECIAL_VAR:
+			word += "$" + p.curr.Literal
+		default:
+			word += p.curr.Literal
+		}
+		p.proceed()
+	}
+
+	return ast.Word(word)
 }
