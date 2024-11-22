@@ -11,7 +11,9 @@ import (
 func New(l lexer.Lexer) Parser {
 	var p = Parser{l: l}
 
-	// So that both curr and next tokens get initialized.
+	// So that all of curr and next, next2 and next3 tokens get initialized.
+	p.proceed()
+	p.proceed()
 	p.proceed()
 	p.proceed()
 
@@ -22,6 +24,8 @@ type Parser struct {
 	l     lexer.Lexer
 	curr  token.Token
 	next  token.Token
+	next2 token.Token
+	next3 token.Token
 	Error *ParserError
 }
 
@@ -47,7 +51,9 @@ func (p *Parser) error(msg string, args ...any) {
 
 func (p *Parser) proceed() {
 	p.curr = p.next
-	p.next = p.l.NextToken()
+	p.next = p.next2
+	p.next2 = p.next3
+	p.next3 = p.l.NextToken()
 }
 
 func (p *Parser) ParseScript() ast.Script {
