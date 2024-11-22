@@ -87,7 +87,7 @@ func (p *Parser) parseUnaryConditional() ast.Expression {
 
 func (p *Parser) parseConditionalBinaryOperator() string {
 	switch p.curr.Type {
-	case token.ASSIGN, token.EQ:
+	case token.ASSIGN, token.EQ, token.NOT_EQ:
 		if p.next.Type != token.BLANK {
 			break
 		}
