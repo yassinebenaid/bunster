@@ -53,11 +53,15 @@ func (p *Parser) parsePrefixConditional() ast.Expression {
 			u := ast.UnaryConditional{
 				Operator: string(v),
 			}
-
 			if p.curr.Type == token.BLANK {
 				p.proceed()
 			}
-			u.Operand = p.parseExpression()
+			if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
+				u.Operand = p.parseExpression()
+			}
+			if u.Operand == nil {
+				p.error("bad conditional expression, expected an operand after %s, found `%s`", u.Operator, p.curr)
+			}
 			return u
 		}
 	}

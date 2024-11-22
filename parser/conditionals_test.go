@@ -15,6 +15,11 @@ var conditionalsTests = []testCase{
 			Expr: ast.Word("-a-file"),
 		},
 	}},
+	{`[[ "-a" ]]`, ast.Script{
+		ast.Test{
+			Expr: ast.Word("-a"),
+		},
+	}},
 	{`[[ -a file ]]`, ast.Script{
 		ast.Test{
 			Expr: ast.UnaryConditional{
