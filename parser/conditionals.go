@@ -8,10 +8,6 @@ import (
 func (p *Parser) parseTestCommand() ast.Statement {
 	p.proceed()
 
-	if p.curr.Type == token.BLANK {
-		p.proceed()
-	}
-
 	expr := p.parseConditionals()
 
 	if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
