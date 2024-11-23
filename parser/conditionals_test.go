@@ -117,4 +117,39 @@ var conditionalsTests = []testCase{
 			Right:    ast.Word("file3"),
 		}},
 	}},
+	{`
+		[[ -a file1 && -b file2 ]]
+		[[ -a file1 || -b file2 ]]
+		[[ -a file1 && -b file2 || -c file3 ]]
+		[[ -a file1 || -b file2 && -c file3 ]]
+	`, ast.Script{
+		ast.Test{Expr: ast.BinaryConditional{
+			Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+			Operator: "&&",
+			Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+		}},
+		ast.Test{Expr: ast.BinaryConditional{
+			Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+			Operator: "||",
+			Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+		}},
+		ast.Test{Expr: ast.BinaryConditional{
+			Left: ast.BinaryConditional{
+				Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+				Operator: "&&",
+				Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+			},
+			Operator: "||",
+			Right:    ast.UnaryConditional{Operator: "-c", Operand: ast.Word("file3")},
+		}},
+		ast.Test{Expr: ast.BinaryConditional{
+			Left: ast.BinaryConditional{
+				Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+				Operator: "||",
+				Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+			},
+			Operator: "&&",
+			Right:    ast.UnaryConditional{Operator: "-c", Operand: ast.Word("file3")},
+		}},
+	}},
 }
