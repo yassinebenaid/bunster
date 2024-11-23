@@ -7,8 +7,10 @@ import (
 
 func (p *Parser) parseTestCommand() ast.Statement {
 	p.proceed()
-
-	expr := p.parseTestExpression()
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+	expr := p.parseTestExpression(false)
 
 	if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
 		p.error("expected `]]` to close conditional expression, found `%s`", p.curr)
@@ -18,10 +20,16 @@ func (p *Parser) parseTestCommand() ast.Statement {
 	return ast.Test{Expr: expr}
 }
 
-func (p *Parser) parseTestExpression() ast.Expression {
-	expr := p.parseConditionals()
+func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
+	var expr ast.Expression
+	if p.curr.Type == token.EXCLAMATION {
+		p.proceed()
+		expr = ast.Negation{Operand: p.parseTestExpression(true)}
+	} else {
+		expr = p.parseConditionals()
+	}
 
-	for p.curr.Type == token.AND || p.curr.Type == token.OR {
+	for !prefix && (p.curr.Type == token.AND || p.curr.Type == token.OR) {
 		operator := p.curr.Literal
 		p.proceed()
 		if p.curr.Type == token.BLANK {
@@ -31,7 +39,7 @@ func (p *Parser) parseTestExpression() ast.Expression {
 		expr = ast.BinaryConditional{
 			Left:     expr,
 			Operator: operator,
-			Right:    p.parseConditionals(),
+			Right:    p.parseTestExpression(true),
 		}
 	}
 
