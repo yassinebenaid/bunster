@@ -30,9 +30,9 @@ var parameterAssignmentTests = []testCase{
 				ast.Word("var=value"),
 			},
 			Env: []ast.Assignement{
-				ast.Assignement{Name: "var"},
-				ast.Assignement{Name: "var2", Value: ast.Word("value")},
-				ast.Assignement{Name: "var3"},
+				{Name: "var"},
+				{Name: "var2", Value: ast.Word("value")},
+				{Name: "var3"},
 			},
 		},
 	}},
