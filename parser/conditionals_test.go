@@ -189,11 +189,17 @@ var conditionalsTests = []testCase{
 	}},
 	{`
 		[[ !file1 && !file2 ]]
+		[[ ! -a file1 && ! -b file2 ]]
 	`, ast.Script{
 		ast.Test{Expr: ast.BinaryConditional{
 			Left:     ast.Negation{Operand: ast.Word("file1")},
 			Operator: "&&",
 			Right:    ast.Negation{Operand: ast.Word("file2")},
+		}},
+		ast.Test{Expr: ast.BinaryConditional{
+			Left:     ast.Negation{Operand: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")}},
+			Operator: "&&",
+			Right:    ast.Negation{Operand: ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")}},
 		}},
 	}},
 }
