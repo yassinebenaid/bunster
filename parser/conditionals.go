@@ -21,7 +21,8 @@ func (p *Parser) parseTestCommand() ast.Statement {
 func (p *Parser) parseTestExpression() ast.Expression {
 	expr := p.parseConditionals()
 
-	for p.curr.Type == token.AND {
+	for p.curr.Type == token.AND || p.curr.Type == token.OR {
+		operator := p.curr.Literal
 		p.proceed()
 		if p.curr.Type == token.BLANK {
 			p.proceed()
@@ -29,7 +30,7 @@ func (p *Parser) parseTestExpression() ast.Expression {
 
 		expr = ast.BinaryConditional{
 			Left:     expr,
-			Operator: "&&",
+			Operator: operator,
 			Right:    p.parseConditionals(),
 		}
 	}
