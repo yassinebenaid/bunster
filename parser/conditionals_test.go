@@ -231,7 +231,9 @@ var conditionalsTests = []testCase{
 	}},
 	{`
 		[[ (file1) ]]
+		[[ (!file1) ]]
 	`, ast.Script{
 		ast.Test{Expr: ast.Word("file1")},
+		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
 	}},
 }
