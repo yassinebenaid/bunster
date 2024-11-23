@@ -94,7 +94,9 @@ var conditionalsTests = []testCase{
 	}},
 	{`
 		[[ file1 && file2 ]]
+		[[ file1 || file2 ]]
 	`, ast.Script{
 		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "||", Right: ast.Word("file2")}},
 	}},
 }
