@@ -731,4 +731,5 @@ var conditionalsTests = []testCase{
 var conditionalsErrorHandlingCases = []errorHandlingTestCase{
 	{`[[`, "syntax error: bad conditional expression, unexpected token `end of file`. (line: 1, column: 3)"},
 	{`[[]]`, "syntax error: expected a conditional expression before `]]`. (line: 1, column: 3)"},
+	{`[[  ]]`, "syntax error: expected a conditional expression before `]]`. (line: 1, column: 5)"},
 }
