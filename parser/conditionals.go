@@ -3,6 +3,7 @@ package parser
 import (
 	"github.com/yassinebenaid/bunny/ast"
 	"github.com/yassinebenaid/bunny/token"
+	"github.com/yassinebenaid/godump"
 )
 
 func (p *Parser) parseTestCommand() ast.Statement {
@@ -77,10 +78,10 @@ func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
 	var expr ast.Expression
 	if p.curr.Type == token.EXCLAMATION {
 		p.proceed()
-		expr = ast.Negation{Operand: p.parseTestExpression(true)}
+		expr = ast.Negation{Operand: p.parsePosixTestExpression(true)}
 	} else if p.curr.Type == token.LEFT_PAREN {
 		p.proceed()
-		expr = p.parseTestExpression(false)
+		expr = p.parsePosixTestExpression(false)
 		if p.curr.Type != token.RIGHT_PAREN {
 			p.error("expected a closing `)`, found `%s`", p.curr)
 		}
@@ -92,9 +93,17 @@ func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
 		expr = p.parseConditionals()
 	}
 
-	for !prefix && (p.curr.Type == token.AND || p.curr.Type == token.OR) {
-		operator := p.curr.Literal
-		p.proceed()
+	for !prefix {
+		operator := p.parsePosixConditionalBinaryOperator()
+		if operator == "" {
+			break
+		}
+		if operator == "-a" {
+			operator = "&&"
+		} else {
+			operator = "||"
+		}
+
 		if p.curr.Type == token.BLANK {
 			p.proceed()
 		}
@@ -102,10 +111,11 @@ func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
 		expr = ast.BinaryConditional{
 			Left:     expr,
 			Operator: operator,
-			Right:    p.parseTestExpression(true),
+			Right:    p.parsePosixTestExpression(true),
 		}
 	}
 
+	godump.Dump(expr)
 	return expr
 }
 
@@ -204,6 +214,25 @@ func (p *Parser) parseConditionalBinaryOperator() string {
 		}
 	}
 
+	return ""
+}
+
+func (p *Parser) parsePosixConditionalBinaryOperator() string {
+	if p.curr.Type == token.MINUS {
+		switch p.next.Literal {
+		case "a", "o":
+			if p.next2.Type != token.BLANK {
+				break
+			}
+
+			p.proceed()
+			operator := "-" + p.curr.Literal
+			p.proceed()
+			p.proceed()
+
+			return operator
+		}
+	}
 	return ""
 }
 
