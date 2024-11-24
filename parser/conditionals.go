@@ -79,11 +79,14 @@ func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
 			p.proceed()
 		}
 
-		expr = ast.BinaryConditional{
-			Left:     expr,
-			Operator: operator,
-			Right:    p.parseTestExpression(true),
+		bin := ast.BinaryConditional{Left: expr, Operator: operator}
+		if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
+			bin.Right = p.parseTestExpression(true)
 		}
+		if bin.Right == nil {
+			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+		}
+		expr = bin
 	}
 
 	return expr
