@@ -2,3 +2,4 @@ _test*
 /docs/.vitepress/cache
 /docs/.vitepress/dist
 /docs/node_modules
+/coverage.txt

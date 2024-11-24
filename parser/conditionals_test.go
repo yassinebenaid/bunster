@@ -726,6 +726,36 @@ var conditionalsTests = []testCase{
 		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
 		ast.Test{Expr: ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}}},
 	}},
+	{`[[ str =~ $var ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+		Left: ast.Word("str"), Operator: "=~", Right: ast.Var("var"),
+	}}}},
+	{`[[ str =~ $(cmd) ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+		Left: ast.Word("str"), Operator: "=~", Right: ast.CommandSubstitution{
+			ast.Command{Name: ast.Word("cmd")},
+		},
+	}}}},
+	{`[[ str =~ <(cmd) ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+		Left: ast.Word("str"), Operator: "=~", Right: ast.ProcessSubstitution{
+			Direction: '<', Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+		},
+	}}}},
+	{`[[ str =~ >(cmd) ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+		Left: ast.Word("str"), Operator: "=~", Right: ast.ProcessSubstitution{
+			Direction: '>', Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+		},
+	}}}},
+	{`[[ str =~ "str" ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+		Left: ast.Word("str"), Operator: "=~", Right: ast.Word("str"),
+	}}}},
+	{`[[ str =~ 'str' ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+		Left: ast.Word("str"), Operator: "=~", Right: ast.Word("str"),
+	}}}},
+	{`[[ str =~ ${var} ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+		Left: ast.Word("str"), Operator: "=~", Right: ast.Var("var"),
+	}}}},
+	{`[[ str =~ $((var)) ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+		Left: ast.Word("str"), Operator: "=~", Right: ast.Arithmetic{ast.Var("var")},
+	}}}},
 }
 
 var conditionalsErrorHandlingCases = []errorHandlingTestCase{
@@ -742,6 +772,8 @@ var conditionalsErrorHandlingCases = []errorHandlingTestCase{
 	{`[[ ! ]] `, "syntax error: bad conditional expression, unexpected token `]]`. (line: 1, column: 6)"},
 	{`[[ ( ]] `, "syntax error: bad conditional expression, unexpected token `]]`. (line: 1, column: 6)"},
 	{`[[ (exp ]] `, "syntax error: expected a closing `)`, found `]]`. (line: 1, column: 9)"},
+	{`[[ file1 -ef-file2 ]] `, "syntax error: expected `]]` to close conditional expression, found `-`. (line: 1, column: 10)"},
+	{`[[ file1 =file2 ]] `, "syntax error: expected `]]` to close conditional expression, found `=`. (line: 1, column: 10)"},
 
 	{`[`, "syntax error: bad conditional expression, unexpected token `end of file`. (line: 1, column: 2)"},
 	{`[ &`, "syntax error: bad conditional expression, unexpected token `&`. (line: 1, column: 3)"},
@@ -756,4 +788,16 @@ var conditionalsErrorHandlingCases = []errorHandlingTestCase{
 	{`[ ! ] `, "syntax error: bad conditional expression, unexpected token `]`. (line: 1, column: 5)"},
 	{`[ ( ] `, "syntax error: bad conditional expression, unexpected token `]`. (line: 1, column: 5)"},
 	{`[ (exp ] `, "syntax error: expected a closing `)`, found `]`. (line: 1, column: 8)"},
+	{`[ exp -o-exp ] `, "syntax error: expected `]` to close conditional expression, found `-`. (line: 1, column: 7)"},
+
+	{`test`, "syntax error: bad conditional expression, unexpected token `end of file`. (line: 1, column: 5)"},
+	{`test &`, "syntax error: bad conditional expression, unexpected token `&`. (line: 1, column: 6)"},
+	{`test  -a  `, "syntax error: bad conditional expression, expected an operand after -a, found `end of file`. (line: 1, column: 11)"},
+	{`test file file`, "syntax error: bad conditional expected, unexpected token `file`. (line: 1, column: 11)"},
+	{`test file =  `, "syntax error: bad conditional expression, expected an operand after `=`, found `end of file`. (line: 1, column: 14)"},
+	{`test file = &  `, "syntax error: bad conditional expression, expected an operand after `=`, found `&`. (line: 1, column: 13)"},
+	{`test file -a  `, "syntax error: bad conditional expression, unexpected token `end of file`. (line: 1, column: 15)"},
+	{`test !  `, "syntax error: bad conditional expression, unexpected token `end of file`. (line: 1, column: 9)"},
+	{`test ( `, "syntax error: bad conditional expression, unexpected token `end of file`. (line: 1, column: 8)"},
+	{`test (exp `, "syntax error: expected a closing `)`, found `end of file`. (line: 1, column: 11)"},
 }
