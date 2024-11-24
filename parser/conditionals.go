@@ -3,7 +3,6 @@ package parser
 import (
 	"github.com/yassinebenaid/bunny/ast"
 	"github.com/yassinebenaid/bunny/token"
-	"github.com/yassinebenaid/godump"
 )
 
 func (p *Parser) parseTestCommand() ast.Statement {
@@ -125,7 +124,6 @@ func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
 		}
 	}
 
-	godump.Dump(expr)
 	return expr
 }
 

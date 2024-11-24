@@ -728,6 +728,6 @@ var conditionalsTests = []testCase{
 	}},
 }
 
-// var CommandAndProcessSubstitutionErrorHandlingCases = []errorHandlingTestCase{
-// 	{`$(`, "syntax error: expeceted a command list after `$(`. (line: 1, column: 3)"},
-// }
+var conditionalsErrorHandlingCases = []errorHandlingTestCase{
+	{`[[`, "syntax error: expeceted a command list after `$(`. (line: 1, column: 3)"},
+}

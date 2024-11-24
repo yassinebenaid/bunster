@@ -384,6 +384,8 @@ var errorHandlingTestCases = []struct {
 	{"Parameter Expansion", parameterExpansionErrorHandlingCases},
 	{"Arithmetics", arithmeticsErrorHandlingCases},
 	{"Functions", functionsErrorHandlingCases},
+	{"Conditionals", conditionalsErrorHandlingCases},
+
 }
 
 func TestParserErrorHandling(t *testing.T) {
