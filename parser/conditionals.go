@@ -220,7 +220,7 @@ func (p *Parser) parseUnaryConditional() ast.Expression {
 			p.proceed()
 			p.proceed()
 
-			if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
+			if p.curr.Type != token.DOUBLE_RIGHT_BRACKET && p.curr.Type != token.RIGHT_BRACKET {
 				u.Operand = p.parseExpression()
 			}
 			if u.Operand == nil {
