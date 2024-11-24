@@ -91,7 +91,6 @@ var testCases = []struct {
 
 	{"Strings", []testCase{
 		{`cmd 'hello world'`, ast.Script{
-
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Expression{
@@ -100,7 +99,6 @@ var testCases = []struct {
 			},
 		}},
 		{`cmd 'if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset'`, ast.Script{
-
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Expression{
@@ -109,7 +107,6 @@ var testCases = []struct {
 			},
 		}},
 		{`cmd '+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~'`, ast.Script{
-
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Expression{
@@ -118,7 +115,6 @@ var testCases = []struct {
 			},
 		}},
 		{`cmd '' '\' '$foo'`, ast.Script{
-
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Expression{
@@ -129,7 +125,6 @@ var testCases = []struct {
 			},
 		}},
 		{`cmd ""`, ast.Script{
-
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Expression{
@@ -154,7 +149,6 @@ var testCases = []struct {
 			},
 		}},
 		{`cmd "\"" "\$ESCAPED_VAR" "\foo\bar\\" \$var \" \foo`, ast.Script{
-
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Expression{
@@ -168,11 +162,9 @@ var testCases = []struct {
 			},
 		}},
 		{"cmd \"\\\nfoo\"", ast.Script{
-
 			ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word(`foo`)}},
 		}},
 		{`/usr/bin/$BINARY_NAME --path=/home/$USER/dir --option -f --do=something $HOME$DIR_NAME$PKG_NAME/foo`, ast.Script{
-
 			ast.Command{
 				Name: ast.UnquotedString{
 					ast.Word("/usr/bin/"),
@@ -197,7 +189,6 @@ var testCases = []struct {
 			},
 		}},
 		{`cmd 'foo''bar' "foo""bar" "foo"'bar' "'foo'"`, ast.Script{
-
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Expression{
@@ -209,11 +200,25 @@ var testCases = []struct {
 			},
 		}},
 		{"cmd \"\n\"", ast.Script{
-
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Expression{
 					ast.Word("\n"),
+				},
+			},
+		}},
+		{`"${var}"`, ast.Script{ast.Command{Name: ast.QuotedString{ast.Var("var")}}}},
+		{`"$(cmd)"`, ast.Script{
+			ast.Command{
+				Name: ast.QuotedString{
+					ast.CommandSubstitution{ast.Command{Name: ast.Word("cmd")}},
+				},
+			},
+		}},
+		{`"$((var))"`, ast.Script{
+			ast.Command{
+				Name: ast.QuotedString{
+					ast.Arithmetic{ast.Var("var")},
 				},
 			},
 		}},
