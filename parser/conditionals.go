@@ -10,6 +10,9 @@ func (p *Parser) parseTestCommand() ast.Statement {
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()
 	}
+	if p.curr.Type == token.DOUBLE_RIGHT_BRACKET {
+		p.error("expected a conditional expression before `]]`")
+	}
 	expr := p.parseTestExpression(false)
 
 	if expr == nil {
