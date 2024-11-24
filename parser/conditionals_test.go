@@ -327,4 +327,89 @@ var conditionalsTests = []testCase{
 		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "<", Right: ast.Word("file2")}},
 		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: ">", Right: ast.Word("file2")}},
 	}},
+	{`test foo-bar_baz `, ast.Script{
+		ast.Test{
+			Expr: ast.Word("foo-bar_baz"),
+		},
+	}},
+	{`test -a-file `, ast.Script{
+		ast.Test{
+			Expr: ast.Word("-a-file"),
+		},
+	}},
+	{`test "-a" `, ast.Script{
+		ast.Test{
+			Expr: ast.Word("-a"),
+		},
+	}},
+	{`
+		test  -a  file
+		test  -b  file
+		test  -c  file
+		test  -d  file
+		test  -e  file
+		test  -f  file
+		test  -g  file
+		test  -h  file
+		test  -k  file
+		test  -p  file
+		test  -r  file
+		test  -s  file
+		test  -t  file
+		test  -u  file
+		test  -w  file
+		test  -x  file
+		test  -G  file
+		test  -L  file
+		test  -N  file
+		test  -O  file
+		test  -S  file
+		test  -z  file
+		test  -n  file
+		test  -v  file
+	`, ast.Script{
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-c", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-d", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-e", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-f", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-g", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-h", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-k", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-p", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-r", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-s", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-t", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-u", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-w", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-x", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-G", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-L", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-N", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-O", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-S", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-z", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-n", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-v", Operand: ast.Word("file")}},
+	}},
+	{`
+		test file1 -ef file2
+		test file1 -nt file2
+		test file1 -ot file2
+		test file1 = file2
+		test file1 == file2
+		test file1 != file2
+		test file1 < file2
+		test file1 > file2
+	`, ast.Script{
+		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-nt", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ot", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "=", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "==", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "!=", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "<", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: ">", Right: ast.Word("file2")}},
+	}},
 }
