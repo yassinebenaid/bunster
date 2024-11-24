@@ -726,6 +726,33 @@ var conditionalsTests = []testCase{
 		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
 		ast.Test{Expr: ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}}},
 	}},
+	{`[[ str =~ $var ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+		Left: ast.Word("str"), Operator: "=~", Right: ast.Var("var"),
+	}}}},
+	{`[[ str =~ $(cmd) ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+		Left: ast.Word("str"), Operator: "=~", Right: ast.CommandSubstitution{
+			ast.Command{Name: ast.Word("cmd")},
+		},
+	}}}},
+	{`[[ str =~ <(cmd) ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+		Left: ast.Word("str"), Operator: "=~", Right: ast.ProcessSubstitution{
+			Direction: '<', Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+		},
+	}}}},
+	{`[[ str =~ >(cmd) ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+		Left: ast.Word("str"), Operator: "=~", Right: ast.ProcessSubstitution{
+			Direction: '>', Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+		},
+	}}}},
+	{`[[ str =~ "str" ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+		Left: ast.Word("str"), Operator: "=~", Right: ast.Word("str"),
+	}}}},
+	{`[[ str =~ 'str' ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+		Left: ast.Word("str"), Operator: "=~", Right: ast.Word("str"),
+	}}}},
+	{`[[ str =~ ${var} ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+		Left: ast.Word("str"), Operator: "=~", Right: ast.Var("var"),
+	}}}},
 }
 
 var conditionalsErrorHandlingCases = []errorHandlingTestCase{
