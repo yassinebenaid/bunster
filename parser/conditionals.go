@@ -67,7 +67,15 @@ func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
 		expr = neg
 	} else if p.curr.Type == token.LEFT_PAREN {
 		p.proceed()
-		expr = p.parseTestExpression(false)
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+		if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
+			expr = p.parseTestExpression(false)
+		}
+		if expr == nil {
+			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+		}
 		if p.curr.Type == token.BLANK {
 			p.proceed()
 		}
