@@ -234,11 +234,29 @@ var conditionalsTests = []testCase{
 		[[ (!file1) ]]
 		[[ !(file1) ]]
 		[[ !(file1 && file2) ]]
+		[[ ! (   file1  ) ]]
 	`, ast.Script{
 		ast.Test{Expr: ast.Word("file1")},
 		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
 		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
 		ast.Test{Expr: ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}}},
+		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
+	}},
+	{`
+		[[
+			-a file1
+		]]
+		[[
+			-a file1 &&
+			-b file2
+		]]
+	`, ast.Script{
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")}},
+		ast.Test{Expr: ast.BinaryConditional{
+			Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+			Operator: "&&",
+			Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+		}},
 	}},
 
 	// POSIX compatible variant.
@@ -708,4 +726,15 @@ var conditionalsTests = []testCase{
 		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
 		ast.Test{Expr: ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}}},
 	}},
+}
+
+var conditionalsErrorHandlingCases = []errorHandlingTestCase{
+	{`[[`, "syntax error: bad conditional expression, unexpected token `end of file`. (line: 1, column: 3)"},
+	{`[[]]`, "syntax error: expected a conditional expression before `]]`. (line: 1, column: 3)"},
+	{`[[  ]]`, "syntax error: expected a conditional expression before `]]`. (line: 1, column: 5)"},
+	{`[[  file `, "syntax error: expected `]]` to close conditional expression, found `end of file`. (line: 1, column: 10)"},
+	{`[[  -a ]] `, "syntax error: bad conditional expression, expected an operand after -a, found `]]`. (line: 1, column: 8)"},
+	{`[[ file file ]] `, "syntax error: expected `]]` to close conditional expression, found `file`. (line: 1, column: 9)"},
+	{`[[ file = ]] `, "syntax error: bad conditional expression, expected an operand after `=`, found `]]`. (line: 1, column: 11)"},
+	{`[[ file = & ]] `, "syntax error: bad conditional expression, expected an operand after `=`, found `&`. (line: 1, column: 11)"},
 }

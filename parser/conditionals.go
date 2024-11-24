@@ -3,15 +3,24 @@ package parser
 import (
 	"github.com/yassinebenaid/bunny/ast"
 	"github.com/yassinebenaid/bunny/token"
-	"github.com/yassinebenaid/godump"
 )
 
 func (p *Parser) parseTestCommand() ast.Statement {
 	p.proceed()
-	if p.curr.Type == token.BLANK {
+	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()
 	}
+	if p.curr.Type == token.DOUBLE_RIGHT_BRACKET {
+		p.error("expected a conditional expression before `]]`")
+	}
 	expr := p.parseTestExpression(false)
+
+	if expr == nil {
+		p.error("bad conditional expression, unexpected token `%s`", p.curr)
+	}
+	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+		p.proceed()
+	}
 
 	if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
 		p.error("expected `]]` to close conditional expression, found `%s`", p.curr)
@@ -39,6 +48,9 @@ func (p *Parser) parsePosixTestCommand() ast.Statement {
 }
 
 func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
 	var expr ast.Expression
 	if p.curr.Type == token.EXCLAMATION {
 		p.proceed()
@@ -46,6 +58,9 @@ func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
 	} else if p.curr.Type == token.LEFT_PAREN {
 		p.proceed()
 		expr = p.parseTestExpression(false)
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
 		if p.curr.Type != token.RIGHT_PAREN {
 			p.error("expected a closing `)`, found `%s`", p.curr)
 		}
@@ -60,7 +75,7 @@ func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
 	for !prefix && (p.curr.Type == token.AND || p.curr.Type == token.OR) {
 		operator := p.curr.Literal
 		p.proceed()
-		if p.curr.Type == token.BLANK {
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
 		}
 
@@ -115,7 +130,6 @@ func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
 		}
 	}
 
-	godump.Dump(expr)
 	return expr
 }
 
@@ -144,10 +158,16 @@ func (p *Parser) parseConditionals() ast.Expression {
 
 	bin := ast.BinaryConditional{Left: exp, Operator: operator}
 
-	if operator == "=~" {
-		bin.Right = p.parsePatternExpression()
-	} else {
-		bin.Right = p.parseExpression()
+	if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
+		if operator == "=~" {
+			bin.Right = p.parsePatternExpression()
+		} else {
+			bin.Right = p.parseExpression()
+		}
+	}
+
+	if bin.Right == nil {
+		p.error("bad conditional expression, expected an operand after `%s`, found `%s`", operator, p.curr)
 	}
 
 	if p.curr.Type == token.BLANK {
