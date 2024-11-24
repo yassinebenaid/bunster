@@ -240,6 +240,13 @@ var conditionalsTests = []testCase{
 		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
 		ast.Test{Expr: ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}}},
 	}},
+	{`
+		[[
+			-a file1
+		]]
+	`, ast.Script{
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file2")}},
+	}},
 
 	// POSIX compatible variant.
 	{`[ foo-bar_baz ]`, ast.Script{
@@ -709,3 +716,7 @@ var conditionalsTests = []testCase{
 		ast.Test{Expr: ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}}},
 	}},
 }
+
+// var CommandAndProcessSubstitutionErrorHandlingCases = []errorHandlingTestCase{
+// 	{`$(`, "syntax error: expeceted a command list after `$(`. (line: 1, column: 3)"},
+// }
