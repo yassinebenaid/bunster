@@ -54,7 +54,17 @@ func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
 	var expr ast.Expression
 	if p.curr.Type == token.EXCLAMATION {
 		p.proceed()
-		expr = ast.Negation{Operand: p.parseTestExpression(true)}
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+		var neg ast.Negation
+		if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
+			neg.Operand = p.parseTestExpression(true)
+		}
+		if neg.Operand == nil {
+			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+		}
+		expr = neg
 	} else if p.curr.Type == token.LEFT_PAREN {
 		p.proceed()
 		expr = p.parseTestExpression(false)
