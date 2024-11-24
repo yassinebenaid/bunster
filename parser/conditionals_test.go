@@ -742,6 +742,8 @@ var conditionalsErrorHandlingCases = []errorHandlingTestCase{
 	{`[[ ! ]] `, "syntax error: bad conditional expression, unexpected token `]]`. (line: 1, column: 6)"},
 	{`[[ ( ]] `, "syntax error: bad conditional expression, unexpected token `]]`. (line: 1, column: 6)"},
 	{`[[ (exp ]] `, "syntax error: expected a closing `)`, found `]]`. (line: 1, column: 9)"},
+	{`[[ file1 -ef-file2 ]] `, "syntax error: expected `]]` to close conditional expression, found `-`. (line: 1, column: 10)"},
+	{`[[ file1 =file2 ]] `, "syntax error: expected `]]` to close conditional expression, found `=`. (line: 1, column: 10)"},
 
 	{`[`, "syntax error: bad conditional expression, unexpected token `end of file`. (line: 1, column: 2)"},
 	{`[ &`, "syntax error: bad conditional expression, unexpected token `&`. (line: 1, column: 3)"},
