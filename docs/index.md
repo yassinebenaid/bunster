@@ -7,7 +7,7 @@ hero:
   text: "Compile shell scripts to native executable programs"
   tagline: A shell compiler that turns your scripts into a self-contained executable programs
   image:
-    src: /logo.png
+    src: ./logo.png
     alt: Bunny
   actions:
     - theme: brand
