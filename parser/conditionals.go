@@ -158,10 +158,16 @@ func (p *Parser) parseConditionals() ast.Expression {
 
 	bin := ast.BinaryConditional{Left: exp, Operator: operator}
 
-	if operator == "=~" {
-		bin.Right = p.parsePatternExpression()
-	} else {
-		bin.Right = p.parseExpression()
+	if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
+		if operator == "=~" {
+			bin.Right = p.parsePatternExpression()
+		} else {
+			bin.Right = p.parseExpression()
+		}
+	}
+
+	if bin.Right == nil {
+		p.error("bad conditional expression, expected an operand after `%s`, found `%s`", operator, p.curr)
 	}
 
 	if p.curr.Type == token.BLANK {
