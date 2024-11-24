@@ -56,9 +56,6 @@ func (p *Parser) parsePosixTestCommand() ast.Statement {
 }
 
 func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
-	if p.curr.Type == token.BLANK {
-		p.proceed()
-	}
 	var expr ast.Expression
 	if p.curr.Type == token.EXCLAMATION {
 		p.proceed()
@@ -83,9 +80,6 @@ func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
 		}
 		if expr == nil {
 			p.error("bad conditional expression, unexpected token `%s`", p.curr)
-		}
-		if p.curr.Type == token.BLANK {
-			p.proceed()
 		}
 		if p.curr.Type != token.RIGHT_PAREN {
 			p.error("expected a closing `)`, found `%s`", p.curr)
@@ -144,9 +138,6 @@ func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
 		if expr == nil {
 			p.error("bad conditional expression, unexpected token `%s`", p.curr)
 		}
-		if p.curr.Type == token.BLANK {
-			p.proceed()
-		}
 		if p.curr.Type != token.RIGHT_PAREN {
 			p.error("expected a closing `)`, found `%s`", p.curr)
 		}
@@ -169,10 +160,6 @@ func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
 			operator = "||"
 		}
 
-		if p.curr.Type == token.BLANK {
-			p.proceed()
-		}
-
 		bin := ast.BinaryConditional{Left: expr, Operator: operator}
 		if p.curr.Type != token.RIGHT_BRACKET && p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
 			bin.Right = p.parsePosixTestExpression(true)
@@ -187,10 +174,6 @@ func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
 }
 
 func (p *Parser) parseConditionals() ast.Expression {
-	if p.curr.Type == token.BLANK {
-		p.proceed()
-	}
-
 	if exp := p.parseUnaryConditional(); exp != nil {
 		if p.curr.Type == token.BLANK {
 			p.proceed()
