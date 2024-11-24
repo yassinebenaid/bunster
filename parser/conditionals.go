@@ -3,6 +3,7 @@ package parser
 import (
 	"github.com/yassinebenaid/bunny/ast"
 	"github.com/yassinebenaid/bunny/token"
+	"github.com/yassinebenaid/godump"
 )
 
 func (p *Parser) parseTestCommand() ast.Statement {
@@ -14,6 +15,23 @@ func (p *Parser) parseTestCommand() ast.Statement {
 
 	if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
 		p.error("expected `]]` to close conditional expression, found `%s`", p.curr)
+	}
+	p.proceed()
+
+	return ast.Test{Expr: expr}
+}
+
+func (p *Parser) parsePosixTestCommand() ast.Statement {
+	testKeyword := p.curr.Type == token.TEST
+
+	p.proceed()
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+	expr := p.parsePosixTestExpression(false)
+
+	if !testKeyword && p.curr.Type != token.RIGHT_BRACKET {
+		p.error("expected `]` to close conditional expression, found `%s`", p.curr)
 	}
 	p.proceed()
 
@@ -53,6 +71,51 @@ func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
 		}
 	}
 
+	return expr
+}
+
+func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
+	var expr ast.Expression
+	if p.curr.Type == token.EXCLAMATION {
+		p.proceed()
+		expr = ast.Negation{Operand: p.parsePosixTestExpression(true)}
+	} else if p.curr.Type == token.LEFT_PAREN {
+		p.proceed()
+		expr = p.parsePosixTestExpression(false)
+		if p.curr.Type != token.RIGHT_PAREN {
+			p.error("expected a closing `)`, found `%s`", p.curr)
+		}
+		p.proceed()
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+	} else {
+		expr = p.parseConditionals()
+	}
+
+	for !prefix {
+		operator := p.parsePosixConditionalBinaryOperator()
+		if operator == "" {
+			break
+		}
+		if operator == "-a" {
+			operator = "&&"
+		} else {
+			operator = "||"
+		}
+
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+
+		expr = ast.BinaryConditional{
+			Left:     expr,
+			Operator: operator,
+			Right:    p.parsePosixTestExpression(true),
+		}
+	}
+
+	godump.Dump(expr)
 	return expr
 }
 
@@ -151,6 +214,25 @@ func (p *Parser) parseConditionalBinaryOperator() string {
 		}
 	}
 
+	return ""
+}
+
+func (p *Parser) parsePosixConditionalBinaryOperator() string {
+	if p.curr.Type == token.MINUS {
+		switch p.next.Literal {
+		case "a", "o":
+			if p.next2.Type != token.BLANK {
+				break
+			}
+
+			p.proceed()
+			operator := "-" + p.curr.Literal
+			p.proceed()
+			p.proceed()
+
+			return operator
+		}
+	}
 	return ""
 }
 
