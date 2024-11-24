@@ -25,7 +25,7 @@ func (p *Parser) parsePosixTestCommand() ast.Statement {
 	if p.curr.Type == token.BLANK {
 		p.proceed()
 	}
-	expr := p.parsePosixTestExpression(false)
+	expr := p.parsePosixTestExpression()
 
 	if p.curr.Type != token.RIGHT_BRACKET {
 		p.error("expected `]` to close conditional expression, found `%s`", p.curr)
@@ -71,40 +71,13 @@ func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
 	return expr
 }
 
-func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
-	var expr ast.Expression
+func (p *Parser) parsePosixTestExpression() ast.Expression {
 	if p.curr.Type == token.EXCLAMATION {
 		p.proceed()
-		expr = ast.Negation{Operand: p.parseTestExpression(true)}
-	} else if p.curr.Type == token.LEFT_PAREN {
-		p.proceed()
-		expr = p.parseTestExpression(false)
-		if p.curr.Type != token.RIGHT_PAREN {
-			p.error("expected a closing `)`, found `%s`", p.curr)
-		}
-		p.proceed()
-		if p.curr.Type == token.BLANK {
-			p.proceed()
-		}
-	} else {
-		expr = p.parseConditionals()
+		return ast.Negation{Operand: p.parseConditionals()}
 	}
 
-	for !prefix && (p.curr.Type == token.AND || p.curr.Type == token.OR) {
-		operator := p.curr.Literal
-		p.proceed()
-		if p.curr.Type == token.BLANK {
-			p.proceed()
-		}
-
-		expr = ast.BinaryConditional{
-			Left:     expr,
-			Operator: operator,
-			Right:    p.parseTestExpression(true),
-		}
-	}
-
-	return expr
+	return p.parseConditionals()
 }
 
 func (p *Parser) parseConditionals() ast.Expression {
