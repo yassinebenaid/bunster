@@ -43,6 +43,9 @@ func (p *Parser) parsePosixTestCommand() ast.Statement {
 }
 
 func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
 	var expr ast.Expression
 	if p.curr.Type == token.EXCLAMATION {
 		p.proceed()
@@ -50,6 +53,9 @@ func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
 	} else if p.curr.Type == token.LEFT_PAREN {
 		p.proceed()
 		expr = p.parseTestExpression(false)
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
 		if p.curr.Type != token.RIGHT_PAREN {
 			p.error("expected a closing `)`, found `%s`", p.curr)
 		}
