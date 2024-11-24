@@ -753,6 +753,9 @@ var conditionalsTests = []testCase{
 	{`[[ str =~ ${var} ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
 		Left: ast.Word("str"), Operator: "=~", Right: ast.Var("var"),
 	}}}},
+	{`[[ str =~ $((var)) ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+		Left: ast.Word("str"), Operator: "=~", Right: ast.Arithmetic{ast.Var("var")},
+	}}}},
 }
 
 var conditionalsErrorHandlingCases = []errorHandlingTestCase{

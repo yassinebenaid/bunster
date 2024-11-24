@@ -312,6 +312,8 @@ loop:
 			exprs = append(exprs, p.parseProcessSubstitution())
 		case token.DOLLAR_BRACE:
 			exprs = append(exprs, p.parseParameterExpansion())
+		case token.DOLLAR_DOUBLE_PAREN:
+			exprs = append(exprs, p.parseArithmeticSubstitution())
 		default:
 			exprs = append(exprs, ast.Word(p.curr.Literal))
 		}
