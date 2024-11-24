@@ -245,7 +245,7 @@ var conditionalsTests = []testCase{
 			-a file1
 		]]
 	`, ast.Script{
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file2")}},
+		ast.Test{Expr: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")}},
 	}},
 
 	// POSIX compatible variant.
