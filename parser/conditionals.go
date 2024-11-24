@@ -37,7 +37,13 @@ func (p *Parser) parsePosixTestCommand() ast.Statement {
 	if p.curr.Type == token.BLANK {
 		p.proceed()
 	}
+	if p.curr.Type == token.RIGHT_BRACKET {
+		p.error("expected a conditional expression before `]`")
+	}
 	expr := p.parsePosixTestExpression(false)
+	if expr == nil {
+		p.error("bad conditional expression, unexpected token `%s`", p.curr)
+	}
 
 	if !testKeyword && p.curr.Type != token.RIGHT_BRACKET {
 		p.error("expected `]` to close conditional expression, found `%s`", p.curr)
@@ -54,10 +60,28 @@ func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
 	var expr ast.Expression
 	if p.curr.Type == token.EXCLAMATION {
 		p.proceed()
-		expr = ast.Negation{Operand: p.parseTestExpression(true)}
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+		var neg ast.Negation
+		if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
+			neg.Operand = p.parseTestExpression(true)
+		}
+		if neg.Operand == nil {
+			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+		}
+		expr = neg
 	} else if p.curr.Type == token.LEFT_PAREN {
 		p.proceed()
-		expr = p.parseTestExpression(false)
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+		if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
+			expr = p.parseTestExpression(false)
+		}
+		if expr == nil {
+			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+		}
 		if p.curr.Type == token.BLANK {
 			p.proceed()
 		}
@@ -79,11 +103,14 @@ func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
 			p.proceed()
 		}
 
-		expr = ast.BinaryConditional{
-			Left:     expr,
-			Operator: operator,
-			Right:    p.parseTestExpression(true),
+		bin := ast.BinaryConditional{Left: expr, Operator: operator}
+		if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
+			bin.Right = p.parseTestExpression(true)
 		}
+		if bin.Right == nil {
+			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+		}
+		expr = bin
 	}
 
 	return expr
@@ -93,10 +120,31 @@ func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
 	var expr ast.Expression
 	if p.curr.Type == token.EXCLAMATION {
 		p.proceed()
-		expr = ast.Negation{Operand: p.parsePosixTestExpression(true)}
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+		var neg ast.Negation
+		if p.curr.Type != token.RIGHT_BRACKET {
+			neg.Operand = p.parsePosixTestExpression(true)
+		}
+		if neg.Operand == nil {
+			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+		}
+		expr = neg
 	} else if p.curr.Type == token.LEFT_PAREN {
 		p.proceed()
-		expr = p.parsePosixTestExpression(false)
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+		if p.curr.Type != token.RIGHT_BRACKET {
+			expr = p.parsePosixTestExpression(false)
+		}
+		if expr == nil {
+			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+		}
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
 		if p.curr.Type != token.RIGHT_PAREN {
 			p.error("expected a closing `)`, found `%s`", p.curr)
 		}
@@ -123,11 +171,14 @@ func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
 			p.proceed()
 		}
 
-		expr = ast.BinaryConditional{
-			Left:     expr,
-			Operator: operator,
-			Right:    p.parsePosixTestExpression(true),
+		bin := ast.BinaryConditional{Left: expr, Operator: operator}
+		if p.curr.Type != token.RIGHT_BRACKET && p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
+			bin.Right = p.parsePosixTestExpression(true)
 		}
+		if bin.Right == nil {
+			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+		}
+		expr = bin
 	}
 
 	return expr
@@ -158,7 +209,7 @@ func (p *Parser) parseConditionals() ast.Expression {
 
 	bin := ast.BinaryConditional{Left: exp, Operator: operator}
 
-	if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
+	if p.curr.Type != token.DOUBLE_RIGHT_BRACKET && p.curr.Type != token.RIGHT_BRACKET {
 		if operator == "=~" {
 			bin.Right = p.parsePatternExpression()
 		} else {
@@ -193,7 +244,7 @@ func (p *Parser) parseUnaryConditional() ast.Expression {
 			p.proceed()
 			p.proceed()
 
-			if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
+			if p.curr.Type != token.DOUBLE_RIGHT_BRACKET && p.curr.Type != token.RIGHT_BRACKET {
 				u.Operand = p.parseExpression()
 			}
 			if u.Operand == nil {

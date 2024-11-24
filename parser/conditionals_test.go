@@ -730,6 +730,7 @@ var conditionalsTests = []testCase{
 
 var conditionalsErrorHandlingCases = []errorHandlingTestCase{
 	{`[[`, "syntax error: bad conditional expression, unexpected token `end of file`. (line: 1, column: 3)"},
+	{`[[ &`, "syntax error: bad conditional expression, unexpected token `&`. (line: 1, column: 4)"},
 	{`[[]]`, "syntax error: expected a conditional expression before `]]`. (line: 1, column: 3)"},
 	{`[[  ]]`, "syntax error: expected a conditional expression before `]]`. (line: 1, column: 5)"},
 	{`[[  file `, "syntax error: expected `]]` to close conditional expression, found `end of file`. (line: 1, column: 10)"},
@@ -737,4 +738,22 @@ var conditionalsErrorHandlingCases = []errorHandlingTestCase{
 	{`[[ file file ]] `, "syntax error: expected `]]` to close conditional expression, found `file`. (line: 1, column: 9)"},
 	{`[[ file = ]] `, "syntax error: bad conditional expression, expected an operand after `=`, found `]]`. (line: 1, column: 11)"},
 	{`[[ file = & ]] `, "syntax error: bad conditional expression, expected an operand after `=`, found `&`. (line: 1, column: 11)"},
+	{`[[ file && ]] `, "syntax error: bad conditional expression, unexpected token `]]`. (line: 1, column: 12)"},
+	{`[[ ! ]] `, "syntax error: bad conditional expression, unexpected token `]]`. (line: 1, column: 6)"},
+	{`[[ ( ]] `, "syntax error: bad conditional expression, unexpected token `]]`. (line: 1, column: 6)"},
+	{`[[ (exp ]] `, "syntax error: expected a closing `)`, found `]]`. (line: 1, column: 9)"},
+
+	{`[`, "syntax error: bad conditional expression, unexpected token `end of file`. (line: 1, column: 2)"},
+	{`[ &`, "syntax error: bad conditional expression, unexpected token `&`. (line: 1, column: 3)"},
+	{`[]`, "syntax error: expected a conditional expression before `]`. (line: 1, column: 2)"},
+	{`[  ]`, "syntax error: expected a conditional expression before `]`. (line: 1, column: 4)"},
+	{`[  file `, "syntax error: expected `]` to close conditional expression, found `end of file`. (line: 1, column: 9)"},
+	{`[  -a ] `, "syntax error: bad conditional expression, expected an operand after -a, found `]`. (line: 1, column: 7)"},
+	{`[ file file ] `, "syntax error: expected `]` to close conditional expression, found `file`. (line: 1, column: 8)"},
+	{`[ file = ] `, "syntax error: bad conditional expression, expected an operand after `=`, found `]`. (line: 1, column: 10)"},
+	{`[ file = & ] `, "syntax error: bad conditional expression, expected an operand after `=`, found `&`. (line: 1, column: 10)"},
+	{`[ file -a ] `, "syntax error: bad conditional expression, unexpected token `]`. (line: 1, column: 11)"},
+	{`[ ! ] `, "syntax error: bad conditional expression, unexpected token `]`. (line: 1, column: 5)"},
+	{`[ ( ] `, "syntax error: bad conditional expression, unexpected token `]`. (line: 1, column: 5)"},
+	{`[ (exp ] `, "syntax error: expected a closing `)`, found `]`. (line: 1, column: 8)"},
 }
