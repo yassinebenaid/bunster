@@ -37,6 +37,9 @@ func (p *Parser) parsePosixTestCommand() ast.Statement {
 	if p.curr.Type == token.BLANK {
 		p.proceed()
 	}
+	if p.curr.Type == token.RIGHT_BRACKET {
+		p.error("expected a conditional expression before `]`")
+	}
 	expr := p.parsePosixTestExpression(false)
 	if expr == nil {
 		p.error("bad conditional expression, unexpected token `%s`", p.curr)
