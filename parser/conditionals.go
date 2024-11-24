@@ -120,10 +120,31 @@ func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
 	var expr ast.Expression
 	if p.curr.Type == token.EXCLAMATION {
 		p.proceed()
-		expr = ast.Negation{Operand: p.parsePosixTestExpression(true)}
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+		var neg ast.Negation
+		if p.curr.Type != token.RIGHT_BRACKET {
+			neg.Operand = p.parsePosixTestExpression(true)
+		}
+		if neg.Operand == nil {
+			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+		}
+		expr = neg
 	} else if p.curr.Type == token.LEFT_PAREN {
 		p.proceed()
-		expr = p.parsePosixTestExpression(false)
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+		if p.curr.Type != token.RIGHT_BRACKET {
+			expr = p.parsePosixTestExpression(false)
+		}
+		if expr == nil {
+			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+		}
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
 		if p.curr.Type != token.RIGHT_PAREN {
 			p.error("expected a closing `)`, found `%s`", p.curr)
 		}
