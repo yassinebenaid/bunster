@@ -729,5 +729,5 @@ var conditionalsTests = []testCase{
 }
 
 var conditionalsErrorHandlingCases = []errorHandlingTestCase{
-	{`[[`, "syntax error: expeceted a command list after `$(`. (line: 1, column: 3)"},
+	{`[[`, "syntax error: bad conditional expression, unexpected token `end of file`. (line: 1, column: 3)"},
 }

@@ -12,6 +12,9 @@ func (p *Parser) parseTestCommand() ast.Statement {
 	}
 	expr := p.parseTestExpression(false)
 
+	if expr == nil {
+		p.error("bad conditional expression, unexpected token `%s`", p.curr)
+	}
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()
 	}
