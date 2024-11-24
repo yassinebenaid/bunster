@@ -26,4 +26,5 @@ export default defineConfig({
       { icon: "github", link: "https://github.com/yassinebenaid/bunny" },
     ],
   },
+  head: [["link", { rel: "manifest", href: "/site.webmanifest" }]],
 });
