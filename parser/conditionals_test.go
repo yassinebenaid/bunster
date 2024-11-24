@@ -244,8 +244,17 @@ var conditionalsTests = []testCase{
 		[[
 			-a file1
 		]]
+		[[
+			-a file1 &&
+			-b file2
+		]]
 	`, ast.Script{
 		ast.Test{Expr: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")}},
+		ast.Test{Expr: ast.BinaryConditional{
+			Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+			Operator: "&&",
+			Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+		}},
 	}},
 
 	// POSIX compatible variant.

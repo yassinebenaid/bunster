@@ -64,7 +64,7 @@ func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
 	for !prefix && (p.curr.Type == token.AND || p.curr.Type == token.OR) {
 		operator := p.curr.Literal
 		p.proceed()
-		if p.curr.Type == token.BLANK {
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
 		}
 
