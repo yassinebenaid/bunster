@@ -150,11 +150,14 @@ func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
 			p.proceed()
 		}
 
-		expr = ast.BinaryConditional{
-			Left:     expr,
-			Operator: operator,
-			Right:    p.parsePosixTestExpression(true),
+		bin := ast.BinaryConditional{Left: expr, Operator: operator}
+		if p.curr.Type != token.RIGHT_BRACKET && p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
+			bin.Right = p.parsePosixTestExpression(true)
 		}
+		if bin.Right == nil {
+			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+		}
+		expr = bin
 	}
 
 	return expr

@@ -752,7 +752,7 @@ var conditionalsErrorHandlingCases = []errorHandlingTestCase{
 	{`[ file file ] `, "syntax error: expected `]` to close conditional expression, found `file`. (line: 1, column: 8)"},
 	{`[ file = ] `, "syntax error: bad conditional expression, expected an operand after `=`, found `]`. (line: 1, column: 10)"},
 	{`[ file = & ] `, "syntax error: bad conditional expression, expected an operand after `=`, found `&`. (line: 1, column: 10)"},
-	// {`[ file && ] `, "syntax error: bad conditional expression, unexpected token `]`. (line: 1, column: 12)"},
+	{`[ file -a ] `, "syntax error: bad conditional expression, unexpected token `]`. (line: 1, column: 11)"},
 	// {`[ ! ] `, "syntax error: bad conditional expression, unexpected token `]`. (line: 1, column: 6)"},
 	// {`[ ( ] `, "syntax error: bad conditional expression, unexpected token `]`. (line: 1, column: 6)"},
 	// {`[ (exp ] `, "syntax error: expected a closing `)`, found `]`. (line: 1, column: 9)"},
