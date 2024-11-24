@@ -26,6 +26,7 @@ const (
 	CASE     // `case`
 	ESAC     // `esac`
 	FUNCTION // `function`
+	TEST     // `test`
 	SELECT   // `select`
 	TRAP     // `trap`
 	RETURN   // `return`
@@ -141,6 +142,7 @@ var Keywords = map[string]TokenType{
 	"case":     CASE,
 	"esac":     ESAC,
 	"function": FUNCTION,
+	"test":     TEST,
 	"select":   SELECT,
 	"trap":     TRAP,
 	"return":   RETURN,

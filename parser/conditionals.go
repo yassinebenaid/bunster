@@ -21,13 +21,15 @@ func (p *Parser) parseTestCommand() ast.Statement {
 }
 
 func (p *Parser) parsePosixTestCommand() ast.Statement {
+	testKeyword := p.curr.Type == token.TEST
+
 	p.proceed()
 	if p.curr.Type == token.BLANK {
 		p.proceed()
 	}
 	expr := p.parsePosixTestExpression()
 
-	if p.curr.Type != token.RIGHT_BRACKET {
+	if !testKeyword && p.curr.Type != token.RIGHT_BRACKET {
 		p.error("expected `]` to close conditional expression, found `%s`", p.curr)
 	}
 	p.proceed()
