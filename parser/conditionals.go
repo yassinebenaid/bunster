@@ -185,7 +185,7 @@ func (p *Parser) parseConditionals() ast.Expression {
 
 	bin := ast.BinaryConditional{Left: exp, Operator: operator}
 
-	if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
+	if p.curr.Type != token.DOUBLE_RIGHT_BRACKET && p.curr.Type != token.RIGHT_BRACKET {
 		if operator == "=~" {
 			bin.Right = p.parsePatternExpression()
 		} else {
