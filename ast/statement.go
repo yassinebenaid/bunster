@@ -120,14 +120,11 @@ type Function struct {
 	Command Statement
 }
 
-type Var string
-
 type Test struct {
 	Expr         Expression
 	Redirections []Redirection
 }
 
-func (Var) node()                 {}
 func (Redirection) node()         {}
 func (Command) node()             {}
 func (Pipeline) node()            {}
@@ -145,12 +142,10 @@ func (Function) node()            {}
 func (Test) node()                {}
 
 // Expressions
-func (Var) expr()                 {}
 func (Redirection) expr()         {}
 func (CommandSubstitution) expr() {}
 func (ProcessSubstitution) expr() {}
 
-func (v Var) string() string               { return string(v) }
 func (CommandSubstitution) string() string { return "" }
 func (ProcessSubstitution) string() string { return "" }
 
