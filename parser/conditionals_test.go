@@ -802,6 +802,7 @@ var conditionalsErrorHandlingCases = []errorHandlingTestCase{
 	{`[[ (exp ]] `, "syntax error: expected a closing `)`, found `]]`. (line: 1, column: 9)"},
 	{`[[ file1 -ef-file2 ]] `, "syntax error: expected `]]` to close conditional expression, found `-`. (line: 1, column: 10)"},
 	{`[[ file1 =file2 ]] `, "syntax error: expected `]]` to close conditional expression, found `=`. (line: 1, column: 10)"},
+	{`[[ file1 ]] arg`, "syntax error: unexpected token `arg`. (line: 1, column: 13)"},
 
 	{`[`, "syntax error: bad conditional expression, unexpected token `end of file`. (line: 1, column: 2)"},
 	{`[ &`, "syntax error: bad conditional expression, unexpected token `&`. (line: 1, column: 3)"},

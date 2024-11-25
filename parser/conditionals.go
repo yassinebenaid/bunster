@@ -17,6 +17,7 @@ func (p *Parser) parseTestCommand() ast.Statement {
 
 	if expr == nil {
 		p.error("bad conditional expression, unexpected token `%s`", p.curr)
+		return nil
 	}
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()
@@ -24,6 +25,7 @@ func (p *Parser) parseTestCommand() ast.Statement {
 
 	if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
 		p.error("expected `]]` to close conditional expression, found `%s`", p.curr)
+		return nil
 	}
 	p.proceed()
 
@@ -43,6 +45,7 @@ loop:
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
+		return nil
 	}
 
 	return test
