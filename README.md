@@ -4,11 +4,7 @@
 
 <div align="center">
 
-<<<<<<< HEAD
 # Ryuko
-=======
-# Chrollo
->>>>>>> master
 </div>
 
 Compile shell scripts into self contained executable binaries.
