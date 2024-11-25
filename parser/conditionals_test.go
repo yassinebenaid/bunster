@@ -258,7 +258,7 @@ var conditionalsTests = []testCase{
 			Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
 		}},
 	}},
-	{`[[ str ]]|[[ str ]]|&[[ str ]]
+	{`[[ str ]]|[[ str ]] |& [[ str ]]
 	`, ast.Script{
 		ast.Pipeline{
 			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}},
