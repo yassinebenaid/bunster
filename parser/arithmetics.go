@@ -169,7 +169,7 @@ func (p *Parser) parsePrefix() ast.Expression {
 }
 
 func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
-	exp := ast.BinaryArithmetic{
+	exp := ast.Binary{
 		Left:     left,
 		Operator: p.curr.Literal,
 	}
@@ -198,7 +198,7 @@ func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
 	case token.ASSIGN, token.STAR_ASSIGN, token.SLASH_ASSIGN, token.PLUS_ASSIGN, token.MINUS_ASSIGN,
 		token.CIRCUMFLEX_ASSIGN, token.PERCENT_ASSIGN, token.DOUBLE_GT_ASSIGN, token.DOUBLE_LT_ASSIGN,
 		token.AMPERSAND_ASSIGN, token.PIPE_ASSIGN:
-		exp := ast.BinaryArithmetic{
+		exp := ast.Binary{
 			Left:     left,
 			Operator: p.curr.Literal,
 		}

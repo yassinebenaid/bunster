@@ -23,7 +23,7 @@ var arithmeticsTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: "+",
 						Right:    ast.Number("2"),
@@ -50,10 +50,10 @@ var arithmeticsTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
-						Left: ast.BinaryArithmetic{
-							Left: ast.BinaryArithmetic{
-								Left: ast.BinaryArithmetic{
+					ast.Binary{
+						Left: ast.Binary{
+							Left: ast.Binary{
+								Left: ast.Binary{
 									Left:     ast.Number("1"),
 									Operator: "+",
 									Right:    ast.Number("2"),
@@ -168,14 +168,14 @@ var arithmeticsTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: "**",
 						Right:    ast.Number("2"),
 					},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Var("var"),
 						Operator: "**",
 						Right:    ast.Var("var"),
@@ -189,21 +189,21 @@ var arithmeticsTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: "*",
 						Right:    ast.Number("2"),
 					},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: "/",
 						Right:    ast.Number("2"),
 					},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: "%",
 						Right:    ast.Number("2"),
@@ -217,14 +217,14 @@ var arithmeticsTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: "<<",
 						Right:    ast.Number("2"),
 					},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: ">>",
 						Right:    ast.Number("2"),
@@ -238,28 +238,28 @@ var arithmeticsTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: "<",
 						Right:    ast.Number("2"),
 					},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: ">",
 						Right:    ast.Number("2"),
 					},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: "<=",
 						Right:    ast.Number("2"),
 					},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: ">=",
 						Right:    ast.Number("2"),
@@ -273,14 +273,14 @@ var arithmeticsTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: "==",
 						Right:    ast.Number("2"),
 					},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: "!=",
 						Right:    ast.Number("2"),
@@ -294,21 +294,21 @@ var arithmeticsTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: "&",
 						Right:    ast.Number("2"),
 					},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: "^",
 						Right:    ast.Number("2"),
 					},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: "|",
 						Right:    ast.Number("2"),
@@ -322,14 +322,14 @@ var arithmeticsTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: "&&",
 						Right:    ast.Number("2"),
 					},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{
+					ast.Binary{
 						Left:     ast.Number("1"),
 						Operator: "||",
 						Right:    ast.Number("2"),
@@ -369,37 +369,37 @@ var arithmeticsTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
-					ast.BinaryArithmetic{Left: ast.Var("x"), Operator: "=", Right: ast.Var("y")},
+					ast.Binary{Left: ast.Var("x"), Operator: "=", Right: ast.Var("y")},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{Left: ast.Var("x"), Operator: "*=", Right: ast.Var("y")},
+					ast.Binary{Left: ast.Var("x"), Operator: "*=", Right: ast.Var("y")},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{Left: ast.Var("x"), Operator: "/=", Right: ast.Var("y")},
+					ast.Binary{Left: ast.Var("x"), Operator: "/=", Right: ast.Var("y")},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{Left: ast.Var("x"), Operator: "%=", Right: ast.Var("y")},
+					ast.Binary{Left: ast.Var("x"), Operator: "%=", Right: ast.Var("y")},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{Left: ast.Var("x"), Operator: "+=", Right: ast.Var("y")},
+					ast.Binary{Left: ast.Var("x"), Operator: "+=", Right: ast.Var("y")},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{Left: ast.Var("x"), Operator: "-=", Right: ast.Var("y")},
+					ast.Binary{Left: ast.Var("x"), Operator: "-=", Right: ast.Var("y")},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{Left: ast.Var("x"), Operator: "<<=", Right: ast.Var("y")},
+					ast.Binary{Left: ast.Var("x"), Operator: "<<=", Right: ast.Var("y")},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{Left: ast.Var("x"), Operator: ">>=", Right: ast.Var("y")},
+					ast.Binary{Left: ast.Var("x"), Operator: ">>=", Right: ast.Var("y")},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{Left: ast.Var("x"), Operator: "&=", Right: ast.Var("y")},
+					ast.Binary{Left: ast.Var("x"), Operator: "&=", Right: ast.Var("y")},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{Left: ast.Var("x"), Operator: "^=", Right: ast.Var("y")},
+					ast.Binary{Left: ast.Var("x"), Operator: "^=", Right: ast.Var("y")},
 				},
 				ast.Arithmetic{
-					ast.BinaryArithmetic{Left: ast.Var("x"), Operator: "|=", Right: ast.Var("y")},
+					ast.Binary{Left: ast.Var("x"), Operator: "|=", Right: ast.Var("y")},
 				},
 			},
 		},
@@ -409,9 +409,9 @@ var arithmeticsTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
-					ast.BinaryArithmetic{Left: ast.Var("x"), Operator: "=", Right: ast.Var("y")},
-					ast.BinaryArithmetic{Left: ast.Var("x"), Operator: "+", Right: ast.Var("y")},
-					ast.BinaryArithmetic{Left: ast.Var("x"), Operator: "*", Right: ast.Var("y")},
+					ast.Binary{Left: ast.Var("x"), Operator: "=", Right: ast.Var("y")},
+					ast.Binary{Left: ast.Var("x"), Operator: "+", Right: ast.Var("y")},
+					ast.Binary{Left: ast.Var("x"), Operator: "*", Right: ast.Var("y")},
 				},
 			},
 		},
@@ -422,7 +422,7 @@ var arithmeticsTests = []testCase{
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Var("x"),
-					ast.BinaryArithmetic{Left: ast.Var("x"), Operator: "+", Right: ast.Var("y")},
+					ast.Binary{Left: ast.Var("x"), Operator: "+", Right: ast.Var("y")},
 				},
 			},
 		},
@@ -433,7 +433,7 @@ var arithmeticsTests = []testCase{
 		ast.ArithmeticCommand{
 			Arithmetic: ast.Arithmetic{
 				ast.Var("x"),
-				ast.BinaryArithmetic{Left: ast.Var("x"), Operator: "+", Right: ast.Var("y")},
+				ast.Binary{Left: ast.Var("x"), Operator: "+", Right: ast.Var("y")},
 			},
 		},
 	}},
