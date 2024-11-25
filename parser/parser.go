@@ -75,6 +75,7 @@ func (p *Parser) ParseScript() ast.Script {
 			}
 			if p.curr.Type == token.LEFT_PAREN || p.curr.Type == token.RIGHT_PAREN {
 				p.error("token `%s` cannot be placed here", p.curr)
+				return nil
 			}
 		}
 	}
@@ -304,6 +305,7 @@ loop:
 
 	if p.curr.Type != token.DOUBLE_QUOTE {
 		p.error("a closing double quote is missing")
+		return nil
 	}
 
 	return concat(exprs, true)
@@ -318,11 +320,13 @@ func (p *Parser) parseFunction() ast.Statement {
 	nameExpr := p.parseExpression()
 	if nameExpr == nil {
 		p.error("function name is required")
+		return nil
 	}
 
 	name, ok := nameExpr.(ast.Word)
 	if !ok {
 		p.error("invalid function name was supplied")
+		return nil
 	}
 	if p.curr.Type == token.BLANK {
 		p.proceed()
@@ -335,6 +339,7 @@ func (p *Parser) parseFunction() ast.Statement {
 		}
 		if p.curr.Type != token.RIGHT_PAREN {
 			p.error("expected `)`, found `%s`", p.curr)
+			return nil
 		}
 		p.proceed()
 	}
@@ -356,6 +361,7 @@ func (p *Parser) parseNakedFunction(nameExpr ast.Expression) ast.Statement {
 	name, ok := nameExpr.(ast.Word)
 	if !ok {
 		p.error("invalid function name was supplied")
+		return nil
 	}
 
 	p.proceed()
@@ -364,6 +370,7 @@ func (p *Parser) parseNakedFunction(nameExpr ast.Expression) ast.Statement {
 	}
 	if p.curr.Type != token.RIGHT_PAREN {
 		p.error("expected `)`, found `%s`", p.curr)
+		return nil
 	}
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {

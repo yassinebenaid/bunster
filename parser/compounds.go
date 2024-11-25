@@ -58,8 +58,10 @@ func (p *Parser) parseWhileLoop() ast.Statement {
 
 	if loop.Head == nil {
 		p.error("expected command list after `%s`", loopKeyword)
+		return nil
 	} else if p.curr.Type != token.DO {
 		p.error("expected `do`, found `%s`", p.curr)
+		return nil
 	}
 
 	p.proceed()
@@ -83,8 +85,10 @@ func (p *Parser) parseWhileLoop() ast.Statement {
 
 	if loop.Body == nil {
 		p.error("expected command list after `do`")
+		return nil
 	} else if p.curr.Type != token.DONE {
 		p.error("expected `done` to close `%s` loop", loopKeyword)
+		return nil
 	}
 
 	p.proceed()
@@ -103,6 +107,7 @@ loop:
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
+		return nil
 	}
 
 	return loop
@@ -129,6 +134,7 @@ func (p *Parser) parseForLoop() ast.Statement {
 		}
 		if p.curr.Type != token.SEMICOLON {
 			p.error("expected a semicolon `;`, found `%s`", p.curr)
+			return nil
 		}
 		p.proceed()
 		if p.curr.Type == token.BLANK {
@@ -139,6 +145,7 @@ func (p *Parser) parseForLoop() ast.Statement {
 		}
 		if p.curr.Type != token.SEMICOLON {
 			p.error("expected a semicolon `;`, found `%s`", p.curr)
+			return nil
 		}
 		p.proceed()
 		if p.curr.Type == token.BLANK {
@@ -150,6 +157,7 @@ func (p *Parser) parseForLoop() ast.Statement {
 
 		if !(p.curr.Type == token.RIGHT_PAREN && p.next.Type == token.RIGHT_PAREN) {
 			p.error("expected `))` to close loop head, found `%s`", p.curr)
+			return nil
 		}
 		p.proceed()
 		p.proceed()
@@ -157,6 +165,7 @@ func (p *Parser) parseForLoop() ast.Statement {
 
 		if p.curr.Type != token.WORD {
 			p.error("expected identifier after `for`")
+			return nil
 		}
 		loopVar = p.curr.Literal
 		p.proceed()
@@ -173,7 +182,7 @@ func (p *Parser) parseForLoop() ast.Statement {
 				member := p.parseExpression()
 				if member == nil {
 					p.error("unexpected token `%s`", p.curr)
-					break
+					return nil
 				}
 				loopOperands = append(loopOperands, member)
 				if p.curr.Type == token.BLANK {
@@ -182,6 +191,7 @@ func (p *Parser) parseForLoop() ast.Statement {
 			}
 			if loopOperands == nil {
 				p.error("missing operand after `in`")
+				return nil
 			}
 		}
 	}
@@ -195,6 +205,7 @@ func (p *Parser) parseForLoop() ast.Statement {
 
 	if p.curr.Type != token.DO {
 		p.error("expected `do`, found `%s`", p.curr)
+		return nil
 	}
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
@@ -217,8 +228,10 @@ func (p *Parser) parseForLoop() ast.Statement {
 
 	if loopBody == nil {
 		p.error("expected command list after `do`")
+		return nil
 	} else if p.curr.Type != token.DONE {
 		p.error("expected `done` to close `for` loop")
+		return nil
 	}
 
 	p.proceed()
@@ -237,6 +250,7 @@ loop:
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
+		return nil
 	}
 
 	if loopVar == "" {
@@ -278,8 +292,10 @@ func (p *Parser) parseIf() ast.Statement {
 
 	if cond.Head == nil {
 		p.error("expected command list after `if`")
+		return nil
 	} else if p.curr.Type != token.THEN {
 		p.error("expected `then`, found `%s`", p.curr)
+		return nil
 	}
 
 	p.proceed()
@@ -303,6 +319,7 @@ func (p *Parser) parseIf() ast.Statement {
 
 	if cond.Body == nil {
 		p.error("expected command list after `then`")
+		return nil
 	}
 
 	for p.curr.Type == token.ELIF {
@@ -329,8 +346,10 @@ func (p *Parser) parseIf() ast.Statement {
 
 		if elif.Head == nil {
 			p.error("expected command list after `elif`")
+			return nil
 		} else if p.curr.Type != token.THEN {
 			p.error("expected `then`, found `%s`", p.curr)
+			return nil
 		}
 
 		p.proceed()
@@ -354,6 +373,7 @@ func (p *Parser) parseIf() ast.Statement {
 
 		if elif.Body == nil {
 			p.error("expected command list after `then`")
+			return nil
 		}
 
 		cond.Elifs = append(cond.Elifs, elif)
@@ -379,11 +399,13 @@ func (p *Parser) parseIf() ast.Statement {
 		}
 		if cond.Alternate == nil {
 			p.error("expected command list after `else`")
+			return nil
 		}
 	}
 
 	if p.curr.Type != token.FI {
 		p.error("expected `fi` to close `if` command")
+		return nil
 	}
 
 	p.proceed()
@@ -402,6 +424,7 @@ loop:
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
+		return nil
 	}
 
 	return cond
@@ -417,6 +440,7 @@ func (p *Parser) parseCase() ast.Statement {
 	stmt.Word = p.parseExpression()
 	if stmt.Word == nil {
 		p.error("incomplete `case` statement, an operand is required after `case`")
+		return nil
 	}
 
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
@@ -425,6 +449,7 @@ func (p *Parser) parseCase() ast.Statement {
 
 	if p.curr.Type != token.IN {
 		p.error("expected `in`, found `%s`", p.curr)
+		return nil
 	}
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
@@ -441,6 +466,7 @@ func (p *Parser) parseCase() ast.Statement {
 			pattern := p.parseExpression()
 			if pattern == nil {
 				p.error("invalid pattern provided, unexpected token `%s`", p.curr)
+				return nil
 			}
 			item.Patterns = append(item.Patterns, pattern)
 
@@ -458,6 +484,7 @@ func (p *Parser) parseCase() ast.Statement {
 
 		if p.curr.Type != token.RIGHT_PAREN {
 			p.error("expected `)`, found `%s`", p.curr)
+			return nil
 		}
 		p.proceed()
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
@@ -517,6 +544,7 @@ func (p *Parser) parseCase() ast.Statement {
 
 	if p.curr.Type != token.ESAC {
 		p.error("expected `esac` to close `case` command")
+		return nil
 	}
 	p.proceed()
 
@@ -534,6 +562,7 @@ loop:
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
+		return nil
 	}
 
 	return stmt
@@ -570,10 +599,12 @@ func (p *Parser) parseGroup() ast.Statement {
 
 	if len(group.Body) == 0 {
 		p.error("expeceted a command list after `{`")
+		return nil
 	}
 
 	if p.curr.Type != token.RIGHT_BRACE {
 		p.error("expected `}`, found `%s`", p.curr)
+		return nil
 	}
 
 	p.proceed()
@@ -592,6 +623,7 @@ loop:
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
+		return nil
 	}
 
 	return group
@@ -626,10 +658,12 @@ func (p *Parser) parseSubShell() ast.Statement {
 
 	if len(shell.Body) == 0 {
 		p.error("expeceted a command list after `(`")
+		return nil
 	}
 
 	if p.curr.Type != token.RIGHT_PAREN {
 		p.error("expected `)`, found `%s`", p.curr)
+		return nil
 	}
 
 	p.proceed()
@@ -648,6 +682,7 @@ loop:
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
+		return nil
 	}
 
 	return shell
@@ -664,6 +699,7 @@ func (p *Parser) parseArithmeticCommand() ast.Statement {
 
 	if !(p.curr.Type == token.RIGHT_PAREN && p.next.Type == token.RIGHT_PAREN) {
 		p.error("expected `))` to close arithmetic expression, found `%s`", p.curr)
+		return nil
 	}
 	p.proceed()
 	p.proceed()
@@ -682,6 +718,7 @@ loop:
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
+		return nil
 	}
 
 	return arth

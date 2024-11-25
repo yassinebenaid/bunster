@@ -34,10 +34,12 @@ func (p *Parser) parseCommandSubstitution() ast.Expression {
 
 	if len(cmds) == 0 {
 		p.error("expeceted a command list after `$(`")
+		return nil
 	}
 
 	if p.curr.Type != token.RIGHT_PAREN {
 		p.error("unexpected end of file, expeceted `)`")
+		return nil
 	}
 
 	return cmds
@@ -79,10 +81,12 @@ func (p *Parser) parseProcessSubstitution() ast.Expression {
 
 	if len(process.Body) == 0 {
 		p.error("expeceted a command list after `%s`", tok)
+		return nil
 	}
 
 	if p.curr.Type != token.RIGHT_PAREN {
 		p.error("unexpected end of file, expeceted `)`")
+		return nil
 	}
 
 	return process
@@ -98,6 +102,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 
 		if p.curr.Type != token.RIGHT_BRACE {
 			p.error("expected closing brace `}`, found `%s`", p.curr)
+			return nil
 		}
 		return exp
 	}
@@ -197,6 +202,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 		case "U", "u", "L", "Q", "E", "P", "A", "K", "a", "k":
 		default:
 			p.error("bad substitution operator `%s`, possible operators are (U, u, L, Q, E, P, A, K, a, k)", p.curr)
+			return nil
 		}
 		exp = ast.Transform{Parameter: param, Operator: p.curr.Literal}
 		p.proceed()
@@ -204,6 +210,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 
 	if p.curr.Type != token.RIGHT_BRACE {
 		p.error("expected closing brace `}`, found `%s`", p.curr)
+		return nil
 	}
 
 	return exp

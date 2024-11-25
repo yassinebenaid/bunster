@@ -58,6 +58,7 @@ func (p *Parser) parseArithmeticSubstitution() ast.Expression {
 
 	if !(p.curr.Type == token.RIGHT_PAREN && p.next.Type == token.RIGHT_PAREN) {
 		p.error("expected `))` to close arithmetic expression, found `%s`", p.curr)
+		return nil
 	}
 	p.proceed()
 
@@ -135,7 +136,7 @@ func (p *Parser) parsePrefix() ast.Expression {
 		exp.Operand = p.parseArithmeticExpresion(PRE_INCREMENT)
 		return exp
 	case token.PLUS, token.MINUS:
-		exp := ast.UnaryArithmetic{
+		exp := ast.Unary{
 			Operator: p.curr.Literal,
 		}
 		p.proceed()
@@ -156,20 +157,21 @@ func (p *Parser) parsePrefix() ast.Expression {
 
 		if p.curr.Type != token.RIGHT_PAREN {
 			p.error("expected a closing `)`, found `%s`", p.curr)
+			return nil
 		}
 		p.proceed()
 		return exp
 	case token.EOF:
 		p.error("bad arithmetic expression, unexpected end of file")
+		return nil
 	default:
 		p.error("bad arithmetic expression, unexpected token `%s`", p.curr)
+		return nil
 	}
-
-	return nil
 }
 
 func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
-	exp := ast.BinaryArithmetic{
+	exp := ast.Binary{
 		Left:     left,
 		Operator: p.curr.Literal,
 	}
@@ -198,7 +200,7 @@ func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
 	case token.ASSIGN, token.STAR_ASSIGN, token.SLASH_ASSIGN, token.PLUS_ASSIGN, token.MINUS_ASSIGN,
 		token.CIRCUMFLEX_ASSIGN, token.PERCENT_ASSIGN, token.DOUBLE_GT_ASSIGN, token.DOUBLE_LT_ASSIGN,
 		token.AMPERSAND_ASSIGN, token.PIPE_ASSIGN:
-		exp := ast.BinaryArithmetic{
+		exp := ast.Binary{
 			Left:     left,
 			Operator: p.curr.Literal,
 		}

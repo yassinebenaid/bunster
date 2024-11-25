@@ -46,30 +46,30 @@ var conditionalsTests = []testCase{
 		[[  -n  file ]]
 		[[  -v  file ]]
 	`, ast.Script{
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-c", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-d", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-e", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-f", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-g", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-h", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-k", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-p", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-r", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-s", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-t", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-u", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-w", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-x", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-G", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-L", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-N", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-O", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-S", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-z", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-n", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-v", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-a", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-b", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-c", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-d", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-e", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-f", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-g", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-h", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-k", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-p", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-r", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-s", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-t", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-u", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-w", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-x", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-G", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-L", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-N", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-O", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-S", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-z", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-n", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-v", Operand: ast.Word("file")}},
 	}},
 	{`
 		[[ file1 -ef file2 ]]
@@ -82,15 +82,15 @@ var conditionalsTests = []testCase{
 		[[ file1 > file2 ]]
 		[[ file1 =~ ^(.*)/([[:alnum:]]+)-(.*)$ ]]
 	`, ast.Script{
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-nt", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ot", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "=", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "==", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "!=", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "<", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: ">", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "=~", Right: ast.Word("^(.*)/([[:alnum:]]+)-(.*)$")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "-nt", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "-ot", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "=", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "==", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "!=", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "<", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: ">", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "=~", Right: ast.Word("^(.*)/([[:alnum:]]+)-(.*)$")}},
 	}},
 	{`
 		[[ file1 && file2 ]]
@@ -98,18 +98,18 @@ var conditionalsTests = []testCase{
 		[[ file1 && file2 || file3 ]]
 		[[ file1 || file2 && file3 ]]
 	`, ast.Script{
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "||", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "||", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
 				Left:     ast.Word("file1"),
 				Operator: "&&",
 				Right:    ast.Word("file2")},
 			Operator: "||",
 			Right:    ast.Word("file3"),
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
 				Left:     ast.Word("file1"),
 				Operator: "||",
 				Right:    ast.Word("file2")},
@@ -123,33 +123,33 @@ var conditionalsTests = []testCase{
 		[[ -a file1 && -b file2 || -c file3 ]]
 		[[ -a file1 || -b file2 && -c file3 ]]
 	`, ast.Script{
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Unary{Operator: "-a", Operand: ast.Word("file1")},
 			Operator: "&&",
-			Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+			Right:    ast.Unary{Operator: "-b", Operand: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Unary{Operator: "-a", Operand: ast.Word("file1")},
 			Operator: "||",
-			Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+			Right:    ast.Unary{Operator: "-b", Operand: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
-				Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
+				Left:     ast.Unary{Operator: "-a", Operand: ast.Word("file1")},
 				Operator: "&&",
-				Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+				Right:    ast.Unary{Operator: "-b", Operand: ast.Word("file2")},
 			},
 			Operator: "||",
-			Right:    ast.UnaryConditional{Operator: "-c", Operand: ast.Word("file3")},
+			Right:    ast.Unary{Operator: "-c", Operand: ast.Word("file3")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
-				Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
+				Left:     ast.Unary{Operator: "-a", Operand: ast.Word("file1")},
 				Operator: "||",
-				Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+				Right:    ast.Unary{Operator: "-b", Operand: ast.Word("file2")},
 			},
 			Operator: "&&",
-			Right:    ast.UnaryConditional{Operator: "-c", Operand: ast.Word("file3")},
+			Right:    ast.Unary{Operator: "-c", Operand: ast.Word("file3")},
 		}},
 	}},
 	{`
@@ -158,33 +158,33 @@ var conditionalsTests = []testCase{
 		[[ file1 -ef file2 && file1 -ef file2 || file1 -ef file2 ]]
 		[[ file1 -ef file2 || file1 -ef file2 && file1 -ef file2 ]]
 	`, ast.Script{
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 			Operator: "&&",
-			Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+			Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 			Operator: "||",
-			Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+			Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
-				Left:     ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
+				Left:     ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 				Operator: "&&",
-				Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+				Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 			},
 			Operator: "||",
-			Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+			Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
-				Left:     ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
+				Left:     ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 				Operator: "||",
-				Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+				Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 			},
 			Operator: "&&",
-			Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+			Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 		}},
 	}},
 	{`
@@ -198,35 +198,35 @@ var conditionalsTests = []testCase{
 		[[ ! file1 -ef file2 || !file1 -ef file2 ]]
 	`, ast.Script{
 		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
-		ast.Test{Expr: ast.BinaryConditional{
+		ast.Test{Expr: ast.Binary{
 			Left:     ast.Negation{Operand: ast.Word("file1")},
 			Operator: "&&",
 			Right:    ast.Negation{Operand: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.Negation{Operand: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")}},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Negation{Operand: ast.Unary{Operator: "-a", Operand: ast.Word("file1")}},
 			Operator: "&&",
-			Right:    ast.Negation{Operand: ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")}},
+			Right:    ast.Negation{Operand: ast.Unary{Operator: "-b", Operand: ast.Word("file2")}},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Negation{Operand: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
 			Operator: "&&",
-			Right:    ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
+			Right:    ast.Negation{Operand: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
+		ast.Test{Expr: ast.Binary{
 			Left:     ast.Negation{Operand: ast.Word("file1")},
 			Operator: "||",
 			Right:    ast.Negation{Operand: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.Negation{Operand: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")}},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Negation{Operand: ast.Unary{Operator: "-a", Operand: ast.Word("file1")}},
 			Operator: "||",
-			Right:    ast.Negation{Operand: ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")}},
+			Right:    ast.Negation{Operand: ast.Unary{Operator: "-b", Operand: ast.Word("file2")}},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Negation{Operand: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
 			Operator: "||",
-			Right:    ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
+			Right:    ast.Negation{Operand: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
 		}},
 	}},
 	{`
@@ -239,7 +239,7 @@ var conditionalsTests = []testCase{
 		ast.Test{Expr: ast.Word("file1")},
 		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
 		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
-		ast.Test{Expr: ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}}},
+		ast.Test{Expr: ast.Negation{Operand: ast.Binary{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}}},
 		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
 	}},
 	{`
@@ -251,12 +251,40 @@ var conditionalsTests = []testCase{
 			-b file2
 		]]
 	`, ast.Script{
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+		ast.Test{Expr: ast.Unary{Operator: "-a", Operand: ast.Word("file1")}},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Unary{Operator: "-a", Operand: ast.Word("file1")},
 			Operator: "&&",
-			Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+			Right:    ast.Unary{Operator: "-b", Operand: ast.Word("file2")},
 		}},
+	}},
+	{`[[ str ]]|[[ str ]] |& [[ str ]]
+	`, ast.Script{
+		ast.Pipeline{
+			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}},
+			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}},
+			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}, Stderr: true},
+		},
+	}},
+	{`[[ str ]] >output.txt <input.txt 2>error.txt >&3 \
+		 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6
+	`, ast.Script{
+		ast.Test{
+			Expr: ast.Word("str"),
+			Redirections: []ast.Redirection{
+				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
+				{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+				{Src: "2", Method: ">", Dst: ast.Word("error.txt")},
+				{Src: "1", Method: ">&", Dst: ast.Word("3")},
+				{Src: "1", Method: ">>", Dst: ast.Word("output.txt")},
+				{Src: "0", Method: "<<<", Dst: ast.Word("input.txt")},
+				{Src: "2", Method: ">>", Dst: ast.Word("error.txt")},
+				{Method: "&>", Dst: ast.Word("all.txt")},
+				{Method: "&>>", Dst: ast.Word("all.txt")},
+				{Src: "0", Method: "<&", Dst: ast.Word("4")},
+				{Src: "5", Method: "<&", Dst: ast.Word("6")},
+			},
+		},
 	}},
 
 	// POSIX compatible variant.
@@ -301,30 +329,30 @@ var conditionalsTests = []testCase{
 		[  -n  file ]
 		[  -v  file ]
 	`, ast.Script{
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-c", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-d", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-e", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-f", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-g", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-h", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-k", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-p", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-r", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-s", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-t", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-u", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-w", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-x", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-G", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-L", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-N", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-O", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-S", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-z", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-n", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-v", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-a", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-b", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-c", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-d", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-e", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-f", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-g", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-h", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-k", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-p", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-r", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-s", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-t", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-u", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-w", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-x", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-G", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-L", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-N", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-O", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-S", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-z", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-n", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-v", Operand: ast.Word("file")}},
 	}},
 	{`
 		[ file1 -ef file2 ]
@@ -336,14 +364,14 @@ var conditionalsTests = []testCase{
 		[ file1 < file2 ]
 		[ file1 > file2 ]
 	`, ast.Script{
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-nt", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ot", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "=", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "==", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "!=", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "<", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: ">", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "-nt", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "-ot", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "=", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "==", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "!=", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "<", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: ">", Right: ast.Word("file2")}},
 	}},
 	{`
 		[ file1 -a file2 ]
@@ -351,18 +379,18 @@ var conditionalsTests = []testCase{
 		[ file1 -a file2 -o file3 ]
 		[ file1 -o file2 -a file3 ]
 	`, ast.Script{
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "||", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "||", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
 				Left:     ast.Word("file1"),
 				Operator: "&&",
 				Right:    ast.Word("file2")},
 			Operator: "||",
 			Right:    ast.Word("file3"),
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
 				Left:     ast.Word("file1"),
 				Operator: "||",
 				Right:    ast.Word("file2")},
@@ -376,33 +404,33 @@ var conditionalsTests = []testCase{
 		[ -a file1 -a -b file2 -o -c file3 ]
 		[ -a file1 -o -b file2 -a -c file3 ]
 	`, ast.Script{
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Unary{Operator: "-a", Operand: ast.Word("file1")},
 			Operator: "&&",
-			Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+			Right:    ast.Unary{Operator: "-b", Operand: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Unary{Operator: "-a", Operand: ast.Word("file1")},
 			Operator: "||",
-			Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+			Right:    ast.Unary{Operator: "-b", Operand: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
-				Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
+				Left:     ast.Unary{Operator: "-a", Operand: ast.Word("file1")},
 				Operator: "&&",
-				Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+				Right:    ast.Unary{Operator: "-b", Operand: ast.Word("file2")},
 			},
 			Operator: "||",
-			Right:    ast.UnaryConditional{Operator: "-c", Operand: ast.Word("file3")},
+			Right:    ast.Unary{Operator: "-c", Operand: ast.Word("file3")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
-				Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
+				Left:     ast.Unary{Operator: "-a", Operand: ast.Word("file1")},
 				Operator: "||",
-				Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+				Right:    ast.Unary{Operator: "-b", Operand: ast.Word("file2")},
 			},
 			Operator: "&&",
-			Right:    ast.UnaryConditional{Operator: "-c", Operand: ast.Word("file3")},
+			Right:    ast.Unary{Operator: "-c", Operand: ast.Word("file3")},
 		}},
 	}},
 	{`
@@ -411,33 +439,33 @@ var conditionalsTests = []testCase{
 		[ file1 -ef file2 -a file1 -ef file2 -o file1 -ef file2 ]
 		[ file1 -ef file2 -o file1 -ef file2 -a file1 -ef file2 ]
 	`, ast.Script{
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 			Operator: "&&",
-			Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+			Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 			Operator: "||",
-			Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+			Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
-				Left:     ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
+				Left:     ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 				Operator: "&&",
-				Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+				Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 			},
 			Operator: "||",
-			Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+			Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
-				Left:     ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
+				Left:     ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 				Operator: "||",
-				Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+				Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 			},
 			Operator: "&&",
-			Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+			Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 		}},
 	}},
 	{`
@@ -451,35 +479,35 @@ var conditionalsTests = []testCase{
 		[ ! file1 -ef file2 -o !file1 -ef file2 ]
 	`, ast.Script{
 		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
-		ast.Test{Expr: ast.BinaryConditional{
+		ast.Test{Expr: ast.Binary{
 			Left:     ast.Negation{Operand: ast.Word("file1")},
 			Operator: "&&",
 			Right:    ast.Negation{Operand: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.Negation{Operand: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")}},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Negation{Operand: ast.Unary{Operator: "-a", Operand: ast.Word("file1")}},
 			Operator: "&&",
-			Right:    ast.Negation{Operand: ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")}},
+			Right:    ast.Negation{Operand: ast.Unary{Operator: "-b", Operand: ast.Word("file2")}},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Negation{Operand: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
 			Operator: "&&",
-			Right:    ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
+			Right:    ast.Negation{Operand: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
+		ast.Test{Expr: ast.Binary{
 			Left:     ast.Negation{Operand: ast.Word("file1")},
 			Operator: "||",
 			Right:    ast.Negation{Operand: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.Negation{Operand: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")}},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Negation{Operand: ast.Unary{Operator: "-a", Operand: ast.Word("file1")}},
 			Operator: "||",
-			Right:    ast.Negation{Operand: ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")}},
+			Right:    ast.Negation{Operand: ast.Unary{Operator: "-b", Operand: ast.Word("file2")}},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Negation{Operand: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
 			Operator: "||",
-			Right:    ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
+			Right:    ast.Negation{Operand: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
 		}},
 	}},
 	{`
@@ -491,8 +519,37 @@ var conditionalsTests = []testCase{
 		ast.Test{Expr: ast.Word("file1")},
 		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
 		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
-		ast.Test{Expr: ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}}},
+		ast.Test{Expr: ast.Negation{Operand: ast.Binary{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}}},
 	}},
+	{`[ str ]|[ str ] |& [ str ]
+	`, ast.Script{
+		ast.Pipeline{
+			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}},
+			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}},
+			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}, Stderr: true},
+		},
+	}},
+	{`[ str ] >output.txt <input.txt 2>error.txt >&3 \
+		 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6
+	`, ast.Script{
+		ast.Test{
+			Expr: ast.Word("str"),
+			Redirections: []ast.Redirection{
+				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
+				{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+				{Src: "2", Method: ">", Dst: ast.Word("error.txt")},
+				{Src: "1", Method: ">&", Dst: ast.Word("3")},
+				{Src: "1", Method: ">>", Dst: ast.Word("output.txt")},
+				{Src: "0", Method: "<<<", Dst: ast.Word("input.txt")},
+				{Src: "2", Method: ">>", Dst: ast.Word("error.txt")},
+				{Method: "&>", Dst: ast.Word("all.txt")},
+				{Method: "&>>", Dst: ast.Word("all.txt")},
+				{Src: "0", Method: "<&", Dst: ast.Word("4")},
+				{Src: "5", Method: "<&", Dst: ast.Word("6")},
+			},
+		},
+	}},
+
 	{`test foo-bar_baz `, ast.Script{
 		ast.Test{
 			Expr: ast.Word("foo-bar_baz"),
@@ -534,30 +591,30 @@ var conditionalsTests = []testCase{
 		test  -n  file
 		test  -v  file
 	`, ast.Script{
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-c", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-d", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-e", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-f", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-g", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-h", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-k", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-p", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-r", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-s", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-t", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-u", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-w", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-x", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-G", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-L", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-N", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-O", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-S", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-z", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-n", Operand: ast.Word("file")}},
-		ast.Test{Expr: ast.UnaryConditional{Operator: "-v", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-a", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-b", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-c", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-d", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-e", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-f", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-g", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-h", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-k", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-p", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-r", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-s", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-t", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-u", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-w", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-x", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-G", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-L", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-N", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-O", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-S", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-z", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-n", Operand: ast.Word("file")}},
+		ast.Test{Expr: ast.Unary{Operator: "-v", Operand: ast.Word("file")}},
 	}},
 	{`
 		test file1 -ef file2
@@ -569,14 +626,14 @@ var conditionalsTests = []testCase{
 		test file1 < file2
 		test file1 > file2
 	`, ast.Script{
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-nt", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ot", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "=", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "==", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "!=", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "<", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: ">", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "-nt", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "-ot", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "=", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "==", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "!=", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "<", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: ">", Right: ast.Word("file2")}},
 	}},
 	{`
 		test file1 -a file2
@@ -584,18 +641,18 @@ var conditionalsTests = []testCase{
 		test file1 -a file2 -o file3
 		test file1 -o file2 -a file3
 	`, ast.Script{
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "||", Right: ast.Word("file2")}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "||", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
 				Left:     ast.Word("file1"),
 				Operator: "&&",
 				Right:    ast.Word("file2")},
 			Operator: "||",
 			Right:    ast.Word("file3"),
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
 				Left:     ast.Word("file1"),
 				Operator: "||",
 				Right:    ast.Word("file2")},
@@ -609,33 +666,33 @@ var conditionalsTests = []testCase{
 		test -a file1 -a -b file2 -o -c file3
 		test -a file1 -o -b file2 -a -c file3
 	`, ast.Script{
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Unary{Operator: "-a", Operand: ast.Word("file1")},
 			Operator: "&&",
-			Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+			Right:    ast.Unary{Operator: "-b", Operand: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Unary{Operator: "-a", Operand: ast.Word("file1")},
 			Operator: "||",
-			Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+			Right:    ast.Unary{Operator: "-b", Operand: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
-				Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
+				Left:     ast.Unary{Operator: "-a", Operand: ast.Word("file1")},
 				Operator: "&&",
-				Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+				Right:    ast.Unary{Operator: "-b", Operand: ast.Word("file2")},
 			},
 			Operator: "||",
-			Right:    ast.UnaryConditional{Operator: "-c", Operand: ast.Word("file3")},
+			Right:    ast.Unary{Operator: "-c", Operand: ast.Word("file3")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
-				Left:     ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")},
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
+				Left:     ast.Unary{Operator: "-a", Operand: ast.Word("file1")},
 				Operator: "||",
-				Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
+				Right:    ast.Unary{Operator: "-b", Operand: ast.Word("file2")},
 			},
 			Operator: "&&",
-			Right:    ast.UnaryConditional{Operator: "-c", Operand: ast.Word("file3")},
+			Right:    ast.Unary{Operator: "-c", Operand: ast.Word("file3")},
 		}},
 	}},
 	{`
@@ -644,33 +701,33 @@ var conditionalsTests = []testCase{
 		test file1 -ef file2 -a file1 -ef file2 -o file1 -ef file2
 		test file1 -ef file2 -o file1 -ef file2 -a file1 -ef file2
 	`, ast.Script{
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 			Operator: "&&",
-			Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+			Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 			Operator: "||",
-			Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+			Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
-				Left:     ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
+				Left:     ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 				Operator: "&&",
-				Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+				Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 			},
 			Operator: "||",
-			Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+			Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left: ast.BinaryConditional{
-				Left:     ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+		ast.Test{Expr: ast.Binary{
+			Left: ast.Binary{
+				Left:     ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 				Operator: "||",
-				Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+				Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 			},
 			Operator: "&&",
-			Right:    ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
+			Right:    ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")},
 		}},
 	}},
 	{`
@@ -684,35 +741,35 @@ var conditionalsTests = []testCase{
 		test ! file1 -ef file2 -o !file1 -ef file2
 	`, ast.Script{
 		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
-		ast.Test{Expr: ast.BinaryConditional{
+		ast.Test{Expr: ast.Binary{
 			Left:     ast.Negation{Operand: ast.Word("file1")},
 			Operator: "&&",
 			Right:    ast.Negation{Operand: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.Negation{Operand: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")}},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Negation{Operand: ast.Unary{Operator: "-a", Operand: ast.Word("file1")}},
 			Operator: "&&",
-			Right:    ast.Negation{Operand: ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")}},
+			Right:    ast.Negation{Operand: ast.Unary{Operator: "-b", Operand: ast.Word("file2")}},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Negation{Operand: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
 			Operator: "&&",
-			Right:    ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
+			Right:    ast.Negation{Operand: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
+		ast.Test{Expr: ast.Binary{
 			Left:     ast.Negation{Operand: ast.Word("file1")},
 			Operator: "||",
 			Right:    ast.Negation{Operand: ast.Word("file2")},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.Negation{Operand: ast.UnaryConditional{Operator: "-a", Operand: ast.Word("file1")}},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Negation{Operand: ast.Unary{Operator: "-a", Operand: ast.Word("file1")}},
 			Operator: "||",
-			Right:    ast.Negation{Operand: ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")}},
+			Right:    ast.Negation{Operand: ast.Unary{Operator: "-b", Operand: ast.Word("file2")}},
 		}},
-		ast.Test{Expr: ast.BinaryConditional{
-			Left:     ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{
+			Left:     ast.Negation{Operand: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
 			Operator: "||",
-			Right:    ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
+			Right:    ast.Negation{Operand: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
 		}},
 	}},
 	{`
@@ -724,36 +781,65 @@ var conditionalsTests = []testCase{
 		ast.Test{Expr: ast.Word("file1")},
 		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
 		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
-		ast.Test{Expr: ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}}},
+		ast.Test{Expr: ast.Negation{Operand: ast.Binary{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}}},
 	}},
-	{`[[ str =~ $var ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+	{`test str|test str |& test str
+	`, ast.Script{
+		ast.Pipeline{
+			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}},
+			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}},
+			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}, Stderr: true},
+		},
+	}},
+	{`test str>output.txt <input.txt 2>error.txt >&3 \
+		 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6
+	`, ast.Script{
+		ast.Test{
+			Expr: ast.Word("str"),
+			Redirections: []ast.Redirection{
+				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
+				{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+				{Src: "2", Method: ">", Dst: ast.Word("error.txt")},
+				{Src: "1", Method: ">&", Dst: ast.Word("3")},
+				{Src: "1", Method: ">>", Dst: ast.Word("output.txt")},
+				{Src: "0", Method: "<<<", Dst: ast.Word("input.txt")},
+				{Src: "2", Method: ">>", Dst: ast.Word("error.txt")},
+				{Method: "&>", Dst: ast.Word("all.txt")},
+				{Method: "&>>", Dst: ast.Word("all.txt")},
+				{Src: "0", Method: "<&", Dst: ast.Word("4")},
+				{Src: "5", Method: "<&", Dst: ast.Word("6")},
+			},
+		},
+	}},
+
+	{`[[ str =~ $var ]]`, ast.Script{ast.Test{Expr: ast.Binary{
 		Left: ast.Word("str"), Operator: "=~", Right: ast.Var("var"),
 	}}}},
-	{`[[ str =~ $(cmd) ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+	{`[[ str =~ $(cmd) ]]`, ast.Script{ast.Test{Expr: ast.Binary{
 		Left: ast.Word("str"), Operator: "=~", Right: ast.CommandSubstitution{
 			ast.Command{Name: ast.Word("cmd")},
 		},
 	}}}},
-	{`[[ str =~ <(cmd) ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+	{`[[ str =~ <(cmd) ]]`, ast.Script{ast.Test{Expr: ast.Binary{
 		Left: ast.Word("str"), Operator: "=~", Right: ast.ProcessSubstitution{
 			Direction: '<', Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
 		},
 	}}}},
-	{`[[ str =~ >(cmd) ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+	{`[[ str =~ >(cmd) ]]`, ast.Script{ast.Test{Expr: ast.Binary{
 		Left: ast.Word("str"), Operator: "=~", Right: ast.ProcessSubstitution{
 			Direction: '>', Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
 		},
 	}}}},
-	{`[[ str =~ "str" ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+	{`[[ str =~ "str" ]]`, ast.Script{ast.Test{Expr: ast.Binary{
 		Left: ast.Word("str"), Operator: "=~", Right: ast.Word("str"),
 	}}}},
-	{`[[ str =~ 'str' ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+	{`[[ str =~ 'str' ]]`, ast.Script{ast.Test{Expr: ast.Binary{
 		Left: ast.Word("str"), Operator: "=~", Right: ast.Word("str"),
 	}}}},
-	{`[[ str =~ ${var} ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+	{`[[ str =~ ${var} ]]`, ast.Script{ast.Test{Expr: ast.Binary{
 		Left: ast.Word("str"), Operator: "=~", Right: ast.Var("var"),
 	}}}},
-	{`[[ str =~ $((var)) ]]`, ast.Script{ast.Test{Expr: ast.BinaryConditional{
+	{`[[ str =~ $((var)) ]]`, ast.Script{ast.Test{Expr: ast.Binary{
 		Left: ast.Word("str"), Operator: "=~", Right: ast.Arithmetic{ast.Var("var")},
 	}}}},
 }
@@ -774,6 +860,7 @@ var conditionalsErrorHandlingCases = []errorHandlingTestCase{
 	{`[[ (exp ]] `, "syntax error: expected a closing `)`, found `]]`. (line: 1, column: 9)"},
 	{`[[ file1 -ef-file2 ]] `, "syntax error: expected `]]` to close conditional expression, found `-`. (line: 1, column: 10)"},
 	{`[[ file1 =file2 ]] `, "syntax error: expected `]]` to close conditional expression, found `=`. (line: 1, column: 10)"},
+	{`[[ file1 ]] arg`, "syntax error: unexpected token `arg`. (line: 1, column: 13)"},
 
 	{`[`, "syntax error: bad conditional expression, unexpected token `end of file`. (line: 1, column: 2)"},
 	{`[ &`, "syntax error: bad conditional expression, unexpected token `&`. (line: 1, column: 3)"},
@@ -789,11 +876,12 @@ var conditionalsErrorHandlingCases = []errorHandlingTestCase{
 	{`[ ( ] `, "syntax error: bad conditional expression, unexpected token `]`. (line: 1, column: 5)"},
 	{`[ (exp ] `, "syntax error: expected a closing `)`, found `]`. (line: 1, column: 8)"},
 	{`[ exp -o-exp ] `, "syntax error: expected `]` to close conditional expression, found `-`. (line: 1, column: 7)"},
+	{`[ file1 ] arg`, "syntax error: bad conditional expression, unexpected token `arg`. (line: 1, column: 11)"},
 
 	{`test`, "syntax error: bad conditional expression, unexpected token `end of file`. (line: 1, column: 5)"},
 	{`test &`, "syntax error: bad conditional expression, unexpected token `&`. (line: 1, column: 6)"},
 	{`test  -a  `, "syntax error: bad conditional expression, expected an operand after -a, found `end of file`. (line: 1, column: 11)"},
-	{`test file file`, "syntax error: bad conditional expected, unexpected token `file`. (line: 1, column: 11)"},
+	{`test file file`, "syntax error: bad conditional expression, unexpected token `file`. (line: 1, column: 11)"},
 	{`test file =  `, "syntax error: bad conditional expression, expected an operand after `=`, found `end of file`. (line: 1, column: 14)"},
 	{`test file = &  `, "syntax error: bad conditional expression, expected an operand after `=`, found `&`. (line: 1, column: 13)"},
 	{`test file -a  `, "syntax error: bad conditional expression, unexpected token `end of file`. (line: 1, column: 15)"},
