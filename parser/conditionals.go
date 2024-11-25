@@ -27,7 +27,25 @@ func (p *Parser) parseTestCommand() ast.Statement {
 	}
 	p.proceed()
 
-	return ast.Test{Expr: expr}
+	test := ast.Test{Expr: expr}
+
+loop:
+	for {
+		switch {
+		case p.curr.Type == token.BLANK:
+			p.proceed()
+		case p.isRedirectionToken():
+			p.HandleRedirection(&test.Redirections)
+		default:
+			break loop
+		}
+	}
+
+	if !p.isControlToken() && p.curr.Type != token.EOF {
+		p.error("unexpected token `%s`", p.curr)
+	}
+
+	return test
 }
 
 func (p *Parser) parsePosixTestCommand() ast.Statement {

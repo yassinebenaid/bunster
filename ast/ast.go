@@ -129,7 +129,8 @@ type Function struct {
 type Var string
 
 type Test struct {
-	Expr Expression
+	Expr         Expression
+	Redirections []Redirection
 }
 
 func (Word) node()                {}
