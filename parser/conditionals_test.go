@@ -258,6 +258,14 @@ var conditionalsTests = []testCase{
 			Right:    ast.UnaryConditional{Operator: "-b", Operand: ast.Word("file2")},
 		}},
 	}},
+	{`[[ str ]]|[[ str ]]|&[[ str ]]
+	`, ast.Script{
+		ast.Pipeline{
+			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}},
+			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}},
+			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}, Stderr: true},
+		},
+	}},
 
 	// POSIX compatible variant.
 	{`[ foo-bar_baz ]`, ast.Script{
