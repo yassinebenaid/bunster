@@ -1,6 +1,6 @@
 package parser_test
 
-import "github.com/yassinebenaid/bunny/ast"
+import "github.com/yassinebenaid/chrollo/ast"
 
 var parameterAssignmentTests = []testCase{
 	{`var=value var2='value2'    var3="value3"`, ast.Script{

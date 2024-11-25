@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"github.com/yassinebenaid/bunny/ast"
-	"github.com/yassinebenaid/bunny/token"
+	"github.com/yassinebenaid/chrollo/ast"
+	"github.com/yassinebenaid/chrollo/token"
 )
 
 func (p *Parser) isRedirectionToken() bool {
