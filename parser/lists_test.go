@@ -1,6 +1,6 @@
 package parser_test
 
-import "github.com/yassinebenaid/chrollo/ast"
+import "github.com/yassinebenaid/ryuko/ast"
 
 var commandListTests = []testCase{
 	{` cmd && cmd2 `, ast.Script{

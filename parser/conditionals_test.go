@@ -1,7 +1,7 @@
 package parser_test
 
 import (
-	"github.com/yassinebenaid/chrollo/ast"
+	"github.com/yassinebenaid/ryuko/ast"
 )
 
 var conditionalsTests = []testCase{

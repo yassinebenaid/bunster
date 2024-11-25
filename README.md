@@ -4,7 +4,7 @@
 
 <div align="center">
 
-# Chrollo
+# Ryuko
 </div>
 
 Compile shell scripts into self contained executable binaries.

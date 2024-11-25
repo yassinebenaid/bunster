@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"github.com/yassinebenaid/chrollo/ast"
-	"github.com/yassinebenaid/chrollo/token"
+	"github.com/yassinebenaid/ryuko/ast"
+	"github.com/yassinebenaid/ryuko/token"
 )
 
 func (p *Parser) parseCommandSubstitution() ast.Expression {
