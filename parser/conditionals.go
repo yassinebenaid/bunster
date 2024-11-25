@@ -66,14 +66,33 @@ func (p *Parser) parsePosixTestCommand() ast.Statement {
 		p.error("bad conditional expression, unexpected token `%s`", p.curr)
 	}
 
-	if !testKeyword && p.curr.Type != token.RIGHT_BRACKET {
-		p.error("expected `]` to close conditional expression, found `%s`", p.curr)
-	} else if testKeyword && (!p.isControlToken() && p.curr.Type != token.EOF) {
-		p.error("bad conditional expected, unexpected token `%s`", p.curr)
+	if !testKeyword {
+		if p.curr.Type != token.RIGHT_BRACKET {
+			p.error("expected `]` to close conditional expression, found `%s`", p.curr)
+		}
+		p.proceed()
 	}
-	p.proceed()
 
-	return ast.Test{Expr: expr}
+	test := ast.Test{Expr: expr}
+
+loop:
+	for {
+		switch {
+		case p.curr.Type == token.BLANK:
+			p.proceed()
+		case p.isRedirectionToken():
+			p.HandleRedirection(&test.Redirections)
+		default:
+			break loop
+		}
+	}
+
+	if !p.isControlToken() && p.curr.Type != token.EOF {
+		p.error("bad conditional expression, unexpected token `%s`", p.curr)
+		return nil
+	}
+
+	return test
 }
 
 func (p *Parser) parseTestExpression(prefix bool) ast.Expression {

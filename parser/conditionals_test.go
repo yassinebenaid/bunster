@@ -521,6 +521,35 @@ var conditionalsTests = []testCase{
 		ast.Test{Expr: ast.Negation{Operand: ast.Word("file1")}},
 		ast.Test{Expr: ast.Negation{Operand: ast.BinaryConditional{Left: ast.Word("file1"), Operator: "&&", Right: ast.Word("file2")}}},
 	}},
+	{`[ str ]|[ str ] |& [ str ]
+	`, ast.Script{
+		ast.Pipeline{
+			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}},
+			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}},
+			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}, Stderr: true},
+		},
+	}},
+	{`[ str ] >output.txt <input.txt 2>error.txt >&3 \
+		 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6
+	`, ast.Script{
+		ast.Test{
+			Expr: ast.Word("str"),
+			Redirections: []ast.Redirection{
+				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
+				{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+				{Src: "2", Method: ">", Dst: ast.Word("error.txt")},
+				{Src: "1", Method: ">&", Dst: ast.Word("3")},
+				{Src: "1", Method: ">>", Dst: ast.Word("output.txt")},
+				{Src: "0", Method: "<<<", Dst: ast.Word("input.txt")},
+				{Src: "2", Method: ">>", Dst: ast.Word("error.txt")},
+				{Method: "&>", Dst: ast.Word("all.txt")},
+				{Method: "&>>", Dst: ast.Word("all.txt")},
+				{Src: "0", Method: "<&", Dst: ast.Word("4")},
+				{Src: "5", Method: "<&", Dst: ast.Word("6")},
+			},
+		},
+	}},
+
 	{`test foo-bar_baz `, ast.Script{
 		ast.Test{
 			Expr: ast.Word("foo-bar_baz"),
@@ -822,7 +851,7 @@ var conditionalsErrorHandlingCases = []errorHandlingTestCase{
 	{`test`, "syntax error: bad conditional expression, unexpected token `end of file`. (line: 1, column: 5)"},
 	{`test &`, "syntax error: bad conditional expression, unexpected token `&`. (line: 1, column: 6)"},
 	{`test  -a  `, "syntax error: bad conditional expression, expected an operand after -a, found `end of file`. (line: 1, column: 11)"},
-	{`test file file`, "syntax error: bad conditional expected, unexpected token `file`. (line: 1, column: 11)"},
+	{`test file file`, "syntax error: bad conditional expression, unexpected token `file`. (line: 1, column: 11)"},
 	{`test file =  `, "syntax error: bad conditional expression, expected an operand after `=`, found `end of file`. (line: 1, column: 14)"},
 	{`test file = &  `, "syntax error: bad conditional expression, expected an operand after `=`, found `&`. (line: 1, column: 13)"},
 	{`test file -a  `, "syntax error: bad conditional expression, unexpected token `end of file`. (line: 1, column: 15)"},
