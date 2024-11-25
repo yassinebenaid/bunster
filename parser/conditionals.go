@@ -12,6 +12,7 @@ func (p *Parser) parseTestCommand() ast.Statement {
 	}
 	if p.curr.Type == token.DOUBLE_RIGHT_BRACKET {
 		p.error("expected a conditional expression before `]]`")
+		return nil
 	}
 	expr := p.parseTestExpression(false)
 
@@ -60,15 +61,18 @@ func (p *Parser) parsePosixTestCommand() ast.Statement {
 	}
 	if p.curr.Type == token.RIGHT_BRACKET {
 		p.error("expected a conditional expression before `]`")
+		return nil
 	}
 	expr := p.parsePosixTestExpression(false)
 	if expr == nil {
 		p.error("bad conditional expression, unexpected token `%s`", p.curr)
+		return nil
 	}
 
 	if !testKeyword {
 		if p.curr.Type != token.RIGHT_BRACKET {
 			p.error("expected `]` to close conditional expression, found `%s`", p.curr)
+			return nil
 		}
 		p.proceed()
 	}
@@ -108,6 +112,7 @@ func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
 		}
 		if neg.Operand == nil {
 			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+			return nil
 		}
 		expr = neg
 	} else if p.curr.Type == token.LEFT_PAREN {
@@ -120,9 +125,11 @@ func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
 		}
 		if expr == nil {
 			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+			return nil
 		}
 		if p.curr.Type != token.RIGHT_PAREN {
 			p.error("expected a closing `)`, found `%s`", p.curr)
+			return nil
 		}
 		p.proceed()
 		if p.curr.Type == token.BLANK {
@@ -145,6 +152,7 @@ func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
 		}
 		if bin.Right == nil {
 			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+			return nil
 		}
 		expr = bin
 	}
@@ -165,6 +173,7 @@ func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
 		}
 		if neg.Operand == nil {
 			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+			return nil
 		}
 		expr = neg
 	} else if p.curr.Type == token.LEFT_PAREN {
@@ -177,9 +186,11 @@ func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
 		}
 		if expr == nil {
 			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+			return nil
 		}
 		if p.curr.Type != token.RIGHT_PAREN {
 			p.error("expected a closing `)`, found `%s`", p.curr)
+			return nil
 		}
 		p.proceed()
 		if p.curr.Type == token.BLANK {
@@ -206,6 +217,7 @@ func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
 		}
 		if bin.Right == nil {
 			p.error("bad conditional expression, unexpected token `%s`", p.curr)
+			return nil
 		}
 		expr = bin
 	}
@@ -244,6 +256,7 @@ func (p *Parser) parseConditionals() ast.Expression {
 
 	if bin.Right == nil {
 		p.error("bad conditional expression, expected an operand after `%s`, found `%s`", operator, p.curr)
+		return nil
 	}
 
 	if p.curr.Type == token.BLANK {
@@ -274,6 +287,7 @@ func (p *Parser) parseUnaryConditional() ast.Expression {
 			}
 			if u.Operand == nil {
 				p.error("bad conditional expression, expected an operand after %s, found `%s`", u.Operator, p.curr)
+				return nil
 			}
 			return u
 		}
