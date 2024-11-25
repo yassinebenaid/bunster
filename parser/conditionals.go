@@ -262,7 +262,7 @@ func (p *Parser) parseUnaryConditional() ast.Expression {
 				break
 			}
 
-			u := ast.UnaryConditional{
+			u := ast.Unary{
 				Operator: "-" + p.next.Literal,
 			}
 			p.proceed()
