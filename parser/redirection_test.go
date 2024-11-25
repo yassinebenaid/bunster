@@ -1,6 +1,6 @@
 package parser_test
 
-import "github.com/yassinebenaid/bunny/ast"
+import "github.com/yassinebenaid/ryuko/ast"
 
 var redirectionTests = []testCase{
 	{`cmd>'file.ext' arg > file>/foo/bar arg2 >"$var" arg345>xyz 645 >file 3>foo.bar 45> /foo/bar 12.34>baz`, ast.Script{

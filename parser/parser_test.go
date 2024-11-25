@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/yassinebenaid/bunny/ast"
-	"github.com/yassinebenaid/bunny/lexer"
-	"github.com/yassinebenaid/bunny/parser"
+	"github.com/yassinebenaid/ryuko/ast"
+	"github.com/yassinebenaid/ryuko/lexer"
+	"github.com/yassinebenaid/ryuko/parser"
 	"github.com/yassinebenaid/godump"
 )
 

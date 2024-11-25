@@ -1,4 +1,4 @@
-module github.com/yassinebenaid/bunny
+module github.com/yassinebenaid/ryuko
 
 go 1.22.3
 

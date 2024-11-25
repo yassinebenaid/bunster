@@ -3,8 +3,8 @@ package lexer_test
 import (
 	"testing"
 
-	"github.com/yassinebenaid/bunny/lexer"
-	"github.com/yassinebenaid/bunny/token"
+	"github.com/yassinebenaid/ryuko/lexer"
+	"github.com/yassinebenaid/ryuko/token"
 	"github.com/yassinebenaid/godump"
 )
 

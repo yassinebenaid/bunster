@@ -1,6 +1,6 @@
 package parser_test
 
-import "github.com/yassinebenaid/bunny/ast"
+import "github.com/yassinebenaid/ryuko/ast"
 
 var parameterExpansionTests = []testCase{
 	{`cmd ${var} ${var[123]} `, ast.Script{

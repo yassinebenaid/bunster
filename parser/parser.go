@@ -3,9 +3,9 @@ package parser
 import (
 	"fmt"
 
-	"github.com/yassinebenaid/bunny/ast"
-	"github.com/yassinebenaid/bunny/lexer"
-	"github.com/yassinebenaid/bunny/token"
+	"github.com/yassinebenaid/ryuko/ast"
+	"github.com/yassinebenaid/ryuko/lexer"
+	"github.com/yassinebenaid/ryuko/token"
 )
 
 func New(l lexer.Lexer) Parser {

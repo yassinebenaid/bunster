@@ -3,12 +3,12 @@
 layout: home
 
 hero:
-  name: "Bunny"
+  name: "Ryuko"
   text: "Compile shell scripts to native executable programs"
   tagline: A shell compiler that turns your scripts into a self-contained executable programs
   image:
     src: /logo.png
-    alt: Bunny
+    alt: Ryuko
   actions:
     - theme: brand
       text: Markdown Examples

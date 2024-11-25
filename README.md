@@ -4,7 +4,7 @@
 
 <div align="center">
 
-# Bunny
+# Ryuko
 </div>
 
 Compile shell scripts into self contained executable binaries.
