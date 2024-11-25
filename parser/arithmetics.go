@@ -135,7 +135,7 @@ func (p *Parser) parsePrefix() ast.Expression {
 		exp.Operand = p.parseArithmeticExpresion(PRE_INCREMENT)
 		return exp
 	case token.PLUS, token.MINUS:
-		exp := ast.UnaryArithmetic{
+		exp := ast.Unary{
 			Operator: p.curr.Literal,
 		}
 		p.proceed()

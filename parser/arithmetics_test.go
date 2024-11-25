@@ -113,20 +113,20 @@ var arithmeticsTests = []testCase{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
-					ast.UnaryArithmetic{
+					ast.Unary{
 						Operand:  ast.Var("var"),
 						Operator: "+",
 					},
 				},
 				ast.Arithmetic{
-					ast.UnaryArithmetic{
+					ast.Unary{
 						Operand:  ast.Var("var"),
 						Operator: "-",
 					},
 				},
 				ast.Arithmetic{
-					ast.UnaryArithmetic{
-						Operand: ast.UnaryArithmetic{
+					ast.Unary{
+						Operand: ast.Unary{
 							Operand:  ast.Var("var"),
 							Operator: "-",
 						},
@@ -134,8 +134,8 @@ var arithmeticsTests = []testCase{
 					},
 				},
 				ast.Arithmetic{
-					ast.UnaryArithmetic{
-						Operand: ast.UnaryArithmetic{
+					ast.Unary{
+						Operand: ast.Unary{
 							Operand:  ast.Var("var"),
 							Operator: "+",
 						},

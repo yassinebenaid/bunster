@@ -29,11 +29,6 @@ type PreIncDecArithmetic struct {
 	Operator string
 }
 
-type UnaryArithmetic struct {
-	Operand  Expression
-	Operator string
-}
-
 type Negation struct {
 	Operand Expression
 }
@@ -54,7 +49,6 @@ func (ArithmeticCommand) node()    {}
 func (BinaryArithmetic) node()     {}
 func (PostIncDecArithmetic) node() {}
 func (PreIncDecArithmetic) node()  {}
-func (UnaryArithmetic) node()      {}
 func (Negation) node()             {}
 func (BitFlip) node()              {}
 func (Conditional) node()          {}
@@ -64,7 +58,6 @@ func (Arithmetic) expr()           {}
 func (BinaryArithmetic) expr()     {}
 func (PostIncDecArithmetic) expr() {}
 func (PreIncDecArithmetic) expr()  {}
-func (UnaryArithmetic) expr()      {}
 func (Negation) expr()             {}
 func (BitFlip) expr()              {}
 func (Conditional) expr()          {}
@@ -78,22 +71,24 @@ func (n Number) string() string {
 func (in BinaryArithmetic) string() string {
 	return "(" + in.Left.string() + " " + in.Operator + " " + in.Right.string() + ")"
 }
+
 func (p PostIncDecArithmetic) string() string {
 	return "(" + p.Operand.string() + p.Operator + ")"
 }
+
 func (p PreIncDecArithmetic) string() string {
 	return "(" + p.Operator + p.Operand.string() + ")"
 
 }
-func (u UnaryArithmetic) string() string {
-	return "(" + u.Operator + u.Operand.string() + ")"
-}
+
 func (n Negation) string() string {
 	return "(!" + n.Operand.string() + ")"
 }
+
 func (bf BitFlip) string() string {
 	return "(~" + bf.Operand.string() + ")"
 }
+
 func (c Conditional) string() string {
 	return "(" + c.Test.string() + " ? " + c.Body.string() + " : " + c.Alternate.string() + ")"
 }
