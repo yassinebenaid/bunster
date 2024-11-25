@@ -467,6 +467,7 @@ var caseErrorHandlingCases = []errorHandlingTestCase{
 	{`case foo in pattern) foo;;;& esac`, "syntax error: invalid pattern provided, unexpected token `;`. (line: 1, column: 27)"},
 	{`case foo in esac arg`, "syntax error: unexpected token `arg`. (line: 1, column: 18)"},
 	{`case foo in esac <in >out <<<etc arg`, "syntax error: unexpected token `arg`. (line: 1, column: 34)"},
+	{`case foo in foo) cmd (; esac`, "syntax error: expected `)`, found `;`. (line: 1, column: 23)"},
 
 	{`esac`, "syntax error: `esac` is a reserved keyword, cannot be used a command name. (line: 1, column: 1)"},
 }
