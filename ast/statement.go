@@ -47,10 +47,6 @@ type Command struct {
 	Env          []Assignement
 }
 
-type UnquotedString []Expression
-
-type QuotedString []Expression
-
 type Loop struct {
 	Negate       bool
 	Head         []Statement
@@ -133,8 +129,6 @@ type Test struct {
 
 func (Var) node()                 {}
 func (Redirection) node()         {}
-func (UnquotedString) node()      {}
-func (QuotedString) node()        {}
 func (Command) node()             {}
 func (Pipeline) node()            {}
 func (List) node()                {}
@@ -153,14 +147,10 @@ func (Test) node()                {}
 // Expressions
 func (Var) expr()                 {}
 func (Redirection) expr()         {}
-func (UnquotedString) expr()      {}
-func (QuotedString) expr()        {}
 func (CommandSubstitution) expr() {}
 func (ProcessSubstitution) expr() {}
 
 func (v Var) string() string               { return string(v) }
-func (UnquotedString) string() string      { return "" }
-func (QuotedString) string() string        { return "" }
 func (CommandSubstitution) string() string { return "" }
 func (ProcessSubstitution) string() string { return "" }
 
