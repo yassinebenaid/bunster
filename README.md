@@ -7,4 +7,4 @@
 # Ryuko
 </div>
 
-Compile shell scripts into self contained executable binaries.
+Compile shell scripts into self-contained programs.
