@@ -5,6 +5,7 @@ import (
 
 	"github.com/yassinebenaid/ryuko/lexer"
 	"github.com/yassinebenaid/ryuko/token"
+
 	"github.com/yassinebenaid/godump"
 )
 

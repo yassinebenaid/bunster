@@ -3,12 +3,20 @@
 layout: home
 
 hero:
+<<<<<<< HEAD
   name: "Ryuko"
+=======
+  name: "Chrollo"
+>>>>>>> master
   text: "Compile shell scripts to native executable programs"
   tagline: A shell compiler that turns your scripts into a self-contained executable programs
   image:
     src: /logo.png
+<<<<<<< HEAD
     alt: Ryuko
+=======
+    alt: Chrollo
+>>>>>>> master
   actions:
     - theme: brand
       text: Markdown Examples
