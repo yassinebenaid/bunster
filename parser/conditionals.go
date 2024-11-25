@@ -139,7 +139,7 @@ func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
 			p.proceed()
 		}
 
-		bin := ast.BinaryConditional{Left: expr, Operator: operator}
+		bin := ast.Binary{Left: expr, Operator: operator}
 		if p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
 			bin.Right = p.parseTestExpression(true)
 		}
@@ -200,7 +200,7 @@ func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
 			operator = "||"
 		}
 
-		bin := ast.BinaryConditional{Left: expr, Operator: operator}
+		bin := ast.Binary{Left: expr, Operator: operator}
 		if p.curr.Type != token.RIGHT_BRACKET && p.curr.Type != token.DOUBLE_RIGHT_BRACKET {
 			bin.Right = p.parsePosixTestExpression(true)
 		}
@@ -232,7 +232,7 @@ func (p *Parser) parseConditionals() ast.Expression {
 		return exp
 	}
 
-	bin := ast.BinaryConditional{Left: exp, Operator: operator}
+	bin := ast.Binary{Left: exp, Operator: operator}
 
 	if p.curr.Type != token.DOUBLE_RIGHT_BRACKET && p.curr.Type != token.RIGHT_BRACKET {
 		if operator == "=~" {
