@@ -1,6 +1,6 @@
 package parser_test
 
-import "github.com/yassinebenaid/bunny/ast"
+import "github.com/yassinebenaid/chrollo/ast"
 
 var caseTests = []testCase{
 	{`case foo in bar) cmd; esac`, ast.Script{
