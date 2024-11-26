@@ -537,14 +537,12 @@ var arithmeticsPrecedenceTests = []struct {
 
 func TestArithmeticsPrecedence(t *testing.T) {
 	for i, tc := range arithmeticsPrecedenceTests {
-		p := parser.New(
+		script, err := parser.Parse(
 			lexer.New([]byte(tc.input)),
 		)
 
-		script := p.ParseScript()
-
-		if p.Error != nil {
-			t.Fatalf("\nCase: %s\nInput: %s\nUnexpected Error: %s\n", dump(i), dump(tc.input), dump(p.Error.Error()))
+		if err != nil {
+			t.Fatalf("\nCase: %s\nInput: %s\nUnexpected Error: %s\n", dump(i), dump(tc.input), dump(err.Error()))
 		}
 
 		if len(script) != 1 {

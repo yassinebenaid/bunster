@@ -8,46 +8,46 @@ import (
 type precedence uint
 
 const (
-	BASIC          precedence = iota
-	LOR                       // ||
-	LAND                      // &&
-	BITOR                     // |
-	BITXOR                    // ^
-	BITAND                    // &
-	EQUALITY                  // == !=
-	COMPARISON                // <= >= < >
-	BINSHIFT                  // << >>
-	ADDITION                  // + -
-	MULDIVREM                 // * / %
-	EXPONENTIATION            // **
-	NEGATION                  // ! ~
-	UNARY                     // - +
-	PRE_INCREMENT             // ++id --id
+	pBASIC          precedence = iota
+	pLOR                       // ||
+	pLAND                      // &&
+	pBITOR                     // |
+	pBITXOR                    // ^
+	pBITAND                    // &
+	pEQUALITY                  // == !=
+	pCOMPARISON                // <= >= < >
+	pBINSHIFT                  // << >>
+	pADDITION                  // + -
+	pMULDIVREM                 // * / %
+	pEXPONENTIATION            // **
+	pNEGATION                  // ! ~
+	pUNARY                     // - +
+	pPRE_INCREMENT             // ++id --id
 )
 
 var infixPrecedences = map[token.TokenType]precedence{
-	token.OR:             LOR,
-	token.AND:            LAND,
-	token.PIPE:           BITOR,
-	token.CIRCUMFLEX:     BITXOR,
-	token.AMPERSAND:      BITAND,
-	token.EQ:             EQUALITY,
-	token.NOT_EQ:         EQUALITY,
-	token.GT:             COMPARISON,
-	token.LT:             COMPARISON,
-	token.GT_EQ:          COMPARISON,
-	token.LT_EQ:          COMPARISON,
-	token.DOUBLE_GT:      BINSHIFT,
-	token.DOUBLE_LT:      BINSHIFT,
-	token.STAR:           MULDIVREM,
-	token.SLASH:          MULDIVREM,
-	token.PERCENT:        MULDIVREM,
-	token.EXPONENTIATION: EXPONENTIATION,
-	token.PLUS:           ADDITION,
-	token.MINUS:          ADDITION,
+	token.OR:             pLOR,
+	token.AND:            pLAND,
+	token.PIPE:           pBITOR,
+	token.CIRCUMFLEX:     pBITXOR,
+	token.AMPERSAND:      pBITAND,
+	token.EQ:             pEQUALITY,
+	token.NOT_EQ:         pEQUALITY,
+	token.GT:             pCOMPARISON,
+	token.LT:             pCOMPARISON,
+	token.GT_EQ:          pCOMPARISON,
+	token.LT_EQ:          pCOMPARISON,
+	token.DOUBLE_GT:      pBINSHIFT,
+	token.DOUBLE_LT:      pBINSHIFT,
+	token.STAR:           pMULDIVREM,
+	token.SLASH:          pMULDIVREM,
+	token.PERCENT:        pMULDIVREM,
+	token.EXPONENTIATION: pEXPONENTIATION,
+	token.PLUS:           pADDITION,
+	token.MINUS:          pADDITION,
 }
 
-func (p *Parser) parseArithmeticSubstitution() ast.Expression {
+func (p *parser) parseArithmeticSubstitution() ast.Expression {
 	p.proceed()
 
 	if p.curr.Type == token.BLANK {
@@ -65,11 +65,11 @@ func (p *Parser) parseArithmeticSubstitution() ast.Expression {
 	return expr
 }
 
-func (p *Parser) parseArithmetics() ast.Arithmetic {
+func (p *parser) parseArithmetics() ast.Arithmetic {
 	var expr ast.Arithmetic
 
 	for {
-		expr = append(expr, p.parseArithmeticExpresion(BASIC))
+		expr = append(expr, p.parseArithmeticExpresion(pBASIC))
 
 		if p.curr.Type != token.COMMA {
 			break
@@ -80,7 +80,7 @@ func (p *Parser) parseArithmetics() ast.Arithmetic {
 	return expr
 }
 
-func (p *Parser) parseArithmeticExpresion(prec precedence) ast.Expression {
+func (p *parser) parseArithmeticExpresion(prec precedence) ast.Expression {
 	if p.curr.Type == token.BLANK {
 		p.proceed()
 	}
@@ -100,7 +100,7 @@ func (p *Parser) parseArithmeticExpresion(prec precedence) ast.Expression {
 	return exp
 }
 
-func (p *Parser) parsePrefix() ast.Expression {
+func (p *parser) parsePrefix() ast.Expression {
 	switch p.curr.Type {
 	case token.INT:
 		exp := ast.Number(p.curr.Literal)
@@ -133,7 +133,7 @@ func (p *Parser) parsePrefix() ast.Expression {
 		}
 		p.proceed()
 
-		exp.Operand = p.parseArithmeticExpresion(PRE_INCREMENT)
+		exp.Operand = p.parseArithmeticExpresion(pPRE_INCREMENT)
 		return exp
 	case token.PLUS, token.MINUS:
 		exp := ast.Unary{
@@ -141,19 +141,19 @@ func (p *Parser) parsePrefix() ast.Expression {
 		}
 		p.proceed()
 
-		exp.Operand = p.parseArithmeticExpresion(UNARY)
+		exp.Operand = p.parseArithmeticExpresion(pUNARY)
 		return exp
 	case token.EXCLAMATION:
 		p.proceed()
-		exp := ast.Negation{Operand: p.parseArithmeticExpresion(NEGATION)}
+		exp := ast.Negation{Operand: p.parseArithmeticExpresion(pNEGATION)}
 		return exp
 	case token.TILDE:
 		p.proceed()
-		exp := ast.BitFlip{Operand: p.parseArithmeticExpresion(NEGATION)}
+		exp := ast.BitFlip{Operand: p.parseArithmeticExpresion(pNEGATION)}
 		return exp
 	case token.LEFT_PAREN:
 		p.proceed()
-		exp := p.parseArithmeticExpresion(BASIC)
+		exp := p.parseArithmeticExpresion(pBASIC)
 
 		if p.curr.Type != token.RIGHT_PAREN {
 			p.error("expected a closing `)`, found `%s`", p.curr)
@@ -170,7 +170,7 @@ func (p *Parser) parsePrefix() ast.Expression {
 	}
 }
 
-func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
+func (p *parser) parseInfix(left ast.Expression) ast.Expression {
 	exp := ast.Binary{
 		Left:     left,
 		Operator: p.curr.Literal,
@@ -183,19 +183,19 @@ func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
 	return exp
 }
 
-func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
+func (p *parser) parsePostfix(left ast.Expression) ast.Expression {
 	switch p.curr.Type {
 	case token.QUESTION:
 		p.proceed()
 		exp := ast.Conditional{Test: left}
-		exp.Body = p.parseArithmeticExpresion(BASIC)
+		exp.Body = p.parseArithmeticExpresion(pBASIC)
 
 		if p.curr.Type != token.COLON {
 			p.error("expected a colon `:`, found `%s`", p.curr)
 		}
 
 		p.proceed()
-		exp.Alternate = p.parseArithmeticExpresion(BASIC)
+		exp.Alternate = p.parseArithmeticExpresion(pBASIC)
 		return exp
 	case token.ASSIGN, token.STAR_ASSIGN, token.SLASH_ASSIGN, token.PLUS_ASSIGN, token.MINUS_ASSIGN,
 		token.CIRCUMFLEX_ASSIGN, token.PERCENT_ASSIGN, token.DOUBLE_GT_ASSIGN, token.DOUBLE_LT_ASSIGN,
@@ -205,7 +205,7 @@ func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
 			Operator: p.curr.Literal,
 		}
 		p.proceed()
-		exp.Right = p.parseArithmeticExpresion(BASIC)
+		exp.Right = p.parseArithmeticExpresion(pBASIC)
 		return exp
 	default:
 		return left

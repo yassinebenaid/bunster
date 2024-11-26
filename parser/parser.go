@@ -8,8 +8,8 @@ import (
 	"github.com/yassinebenaid/ryuko/token"
 )
 
-func New(l lexer.Lexer) Parser {
-	var p = Parser{l: l}
+func Parse(l lexer.Lexer) (ast.Script, error) {
+	var p = parser{l: l}
 
 	// So that all of curr and next, next2 and next3 tokens get initialized.
 	p.proceed()
@@ -17,10 +17,14 @@ func New(l lexer.Lexer) Parser {
 	p.proceed()
 	p.proceed()
 
-	return p
+	script := p.ParseScript()
+	if p.Error != nil {
+		return nil, p.Error
+	}
+	return script, nil
 }
 
-type Parser struct {
+type parser struct {
 	l     lexer.Lexer
 	curr  token.Token
 	next  token.Token
@@ -35,11 +39,11 @@ type ParserError struct {
 	Message  string
 }
 
-func (err ParserError) Error() string {
+func (err *ParserError) Error() string {
 	return fmt.Sprintf("syntax error: %s. (line: %d, column: %d)", err.Message, err.Line, err.Position)
 }
 
-func (p *Parser) error(msg string, args ...any) {
+func (p *parser) error(msg string, args ...any) {
 	if p.Error == nil {
 		p.Error = &ParserError{
 			Line:     p.curr.Line,
@@ -49,14 +53,14 @@ func (p *Parser) error(msg string, args ...any) {
 	}
 }
 
-func (p *Parser) proceed() {
+func (p *parser) proceed() {
 	p.curr = p.next
 	p.next = p.next2
 	p.next2 = p.next3
 	p.next3 = p.l.NextToken()
 }
 
-func (p *Parser) ParseScript() ast.Script {
+func (p *parser) ParseScript() ast.Script {
 	var script ast.Script
 
 	for ; p.curr.Type != token.EOF; p.proceed() {
@@ -83,7 +87,7 @@ func (p *Parser) ParseScript() ast.Script {
 	return script
 }
 
-func (p *Parser) parseCommandList() ast.Statement {
+func (p *parser) parseCommandList() ast.Statement {
 	var left ast.Statement
 	pipe := p.parsePipline()
 
@@ -126,7 +130,7 @@ func (p *Parser) parseCommandList() ast.Statement {
 	return left
 }
 
-func (p *Parser) parsePipline() ast.Pipeline {
+func (p *parser) parsePipline() ast.Pipeline {
 	var pipeline ast.Pipeline
 
 	cmd := p.parseCommand()
@@ -157,7 +161,7 @@ func (p *Parser) parsePipline() ast.Pipeline {
 	return pipeline
 }
 
-func (p *Parser) parseCommand() ast.Statement {
+func (p *parser) parseCommand() ast.Statement {
 	if p.curr.Type == token.FUNCTION {
 		return p.parseFunction()
 	}
@@ -214,7 +218,7 @@ loop:
 	return cmd
 }
 
-func (p *Parser) parseExpression() ast.Expression {
+func (p *parser) parseExpression() ast.Expression {
 	var exprs []ast.Expression
 
 loop:
@@ -255,7 +259,7 @@ loop:
 	return concat(exprs, false)
 }
 
-func (p *Parser) parseLiteralString() ast.Word {
+func (p *parser) parseLiteralString() ast.Word {
 	p.proceed()
 
 	if p.curr.Type == token.SINGLE_QUOTE {
@@ -272,7 +276,7 @@ func (p *Parser) parseLiteralString() ast.Word {
 	return ast.Word(word)
 }
 
-func (p *Parser) parseString() ast.Expression {
+func (p *parser) parseString() ast.Expression {
 	p.proceed()
 
 	if p.curr.Type == token.DOUBLE_QUOTE {
@@ -311,7 +315,7 @@ loop:
 	return concat(exprs, true)
 }
 
-func (p *Parser) parseFunction() ast.Statement {
+func (p *parser) parseFunction() ast.Statement {
 	p.proceed()
 	if p.curr.Type == token.BLANK {
 		p.proceed()
@@ -357,7 +361,7 @@ func (p *Parser) parseFunction() ast.Statement {
 	return ast.Function{Name: string(name), Command: compound()}
 }
 
-func (p *Parser) parseNakedFunction(nameExpr ast.Expression) ast.Statement {
+func (p *parser) parseNakedFunction(nameExpr ast.Expression) ast.Statement {
 	name, ok := nameExpr.(ast.Word)
 	if !ok {
 		p.error("invalid function name was supplied")
@@ -429,7 +433,7 @@ func concat(n []ast.Expression, quoted bool) ast.Expression {
 	return conc
 }
 
-func (p *Parser) isControlToken() bool {
+func (p *parser) isControlToken() bool {
 	return p.curr.Type == token.PIPE ||
 		p.curr.Type == token.PIPE_AMPERSAND ||
 		p.curr.Type == token.AND ||

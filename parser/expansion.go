@@ -5,7 +5,7 @@ import (
 	"github.com/yassinebenaid/ryuko/token"
 )
 
-func (p *Parser) parseCommandSubstitution() ast.Expression {
+func (p *parser) parseCommandSubstitution() ast.Expression {
 	var cmds ast.CommandSubstitution
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
@@ -45,7 +45,7 @@ func (p *Parser) parseCommandSubstitution() ast.Expression {
 	return cmds
 }
 
-func (p *Parser) parseProcessSubstitution() ast.Expression {
+func (p *parser) parseProcessSubstitution() ast.Expression {
 	tok := p.curr.Literal
 	var process ast.ProcessSubstitution
 
@@ -92,7 +92,7 @@ func (p *Parser) parseProcessSubstitution() ast.Expression {
 	return process
 }
 
-func (p *Parser) parseParameterExpansion() ast.Expression {
+func (p *parser) parseParameterExpansion() ast.Expression {
 	var exp ast.Expression
 	p.proceed()
 
@@ -216,7 +216,7 @@ func (p *Parser) parseParameterExpansion() ast.Expression {
 	return exp
 }
 
-func (p *Parser) parseExpansionOperandExpression(stopAt token.TokenType) ast.Expression {
+func (p *parser) parseExpansionOperandExpression(stopAt token.TokenType) ast.Expression {
 	var exprs []ast.Expression
 
 loop:
@@ -250,7 +250,7 @@ loop:
 	return concat(exprs, false)
 }
 
-func (p *Parser) parseParameter() ast.Param {
+func (p *parser) parseParameter() ast.Param {
 	if p.curr.Type != token.WORD {
 		p.error("couldn't find a valid parameter name, found `%s`", p.curr)
 	}
