@@ -5,7 +5,7 @@ import (
 	"github.com/yassinebenaid/ryuko/token"
 )
 
-func (p *Parser) getCompoundParser() func() ast.Statement {
+func (p *parser) getCompoundParser() func() ast.Statement {
 	switch p.curr.Type {
 	case token.WHILE, token.UNTIL:
 		return p.parseWhileLoop
@@ -33,7 +33,7 @@ func (p *Parser) getCompoundParser() func() ast.Statement {
 	}
 }
 
-func (p *Parser) parseWhileLoop() ast.Statement {
+func (p *parser) parseWhileLoop() ast.Statement {
 	var loop ast.Loop
 	loopKeyword := p.curr.Literal
 	loop.Negate = p.curr.Type == token.UNTIL
@@ -113,7 +113,7 @@ loop:
 	return loop
 }
 
-func (p *Parser) parseForLoop() ast.Statement {
+func (p *parser) parseForLoop() ast.Statement {
 	var loopHead ast.ForHead
 	var loopVar string
 	var loopOperands []ast.Expression
@@ -269,7 +269,7 @@ loop:
 	}
 }
 
-func (p *Parser) parseIf() ast.Statement {
+func (p *parser) parseIf() ast.Statement {
 	var cond ast.If
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
@@ -430,7 +430,7 @@ loop:
 	return cond
 }
 
-func (p *Parser) parseCase() ast.Statement {
+func (p *parser) parseCase() ast.Statement {
 	var stmt ast.Case
 	p.proceed()
 	if p.curr.Type == token.BLANK {
@@ -568,7 +568,7 @@ loop:
 	return stmt
 }
 
-func (p *Parser) parseGroup() ast.Statement {
+func (p *parser) parseGroup() ast.Statement {
 	var group ast.Group
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
@@ -629,7 +629,7 @@ loop:
 	return group
 }
 
-func (p *Parser) parseSubShell() ast.Statement {
+func (p *parser) parseSubShell() ast.Statement {
 	var shell ast.SubShell
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
@@ -688,7 +688,7 @@ loop:
 	return shell
 }
 
-func (p *Parser) parseArithmeticCommand() ast.Statement {
+func (p *parser) parseArithmeticCommand() ast.Statement {
 	p.proceed()
 	for p.curr.Type == token.BLANK {
 		p.proceed()

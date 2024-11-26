@@ -40,13 +40,12 @@ func treeCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	p := parser.New(
+	script, err := parser.Parse(
 		lexer.New(v),
 	)
 
-	script := p.ParseScript()
-	if p.Error != nil {
-		return p.Error
+	if err != nil {
+		return err
 	}
 
 	var d godump.Dumper

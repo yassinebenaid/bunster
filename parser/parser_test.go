@@ -311,14 +311,12 @@ func TestParser(t *testing.T) {
 				continue
 			}
 
-			p := parser.New(
+			script, err := parser.Parse(
 				lexer.New([]byte(tc.input)),
 			)
 
-			script := p.ParseScript()
-
-			if p.Error != nil {
-				t.Fatalf("\nGroup: %sCase: %sInput: %s\nUnexpected Error: %s\n", dump(group.label), dump(i), dump(tc.input), dump(p.Error.Error()))
+			if err != nil {
+				t.Fatalf("\nGroup: %sCase: %sInput: %s\nUnexpected Error: %s\n", dump(group.label), dump(i), dump(tc.input), dump(err.Error()))
 			}
 
 			if !reflect.DeepEqual(script, tc.expected) {
@@ -405,18 +403,16 @@ func TestParserErrorHandling(t *testing.T) {
 				continue
 			}
 
-			p := parser.New(
+			_, err := parser.Parse(
 				lexer.New([]byte(tc.input)),
 			)
 
-			p.ParseScript()
-
-			if p.Error == nil {
+			if err == nil {
 				t.Fatalf("\nGroup: %s\nCase#%d: Expected Error, got nil\n", group.label, i)
 			}
 
-			if p.Error.Error() != tc.err {
-				t.Fatalf("\nGroup: %sCase: %s\nwant:\n%s\ngot:\n%s", dump(group.label), dump(i), dump(tc.err), dump(p.Error.Error()))
+			if err.Error() != tc.err {
+				t.Fatalf("\nGroup: %sCase: %s\nwant:\n%s\ngot:\n%s", dump(group.label), dump(i), dump(tc.err), dump(err.Error()))
 			}
 		}
 	}

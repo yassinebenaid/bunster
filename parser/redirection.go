@@ -5,7 +5,7 @@ import (
 	"github.com/yassinebenaid/ryuko/token"
 )
 
-func (p *Parser) isRedirectionToken() bool {
+func (p *parser) isRedirectionToken() bool {
 	switch p.curr.Type {
 	case token.GT, token.DOUBLE_GT, token.AMPERSAND_GT, token.GT_AMPERSAND,
 		token.LT, token.LT_AMPERSAND, token.TRIPLE_LT, token.GT_PIPE, token.AMPERSAND_DOUBLE_GT:
@@ -21,7 +21,7 @@ func (p *Parser) isRedirectionToken() bool {
 	return false
 }
 
-func (p *Parser) HandleRedirection(rt *[]ast.Redirection) {
+func (p *parser) HandleRedirection(rt *[]ast.Redirection) {
 	switch p.curr.Type {
 	case token.GT, token.DOUBLE_GT, token.GT_AMPERSAND, token.GT_PIPE:
 		p.fromStdout(rt)
@@ -34,7 +34,7 @@ func (p *Parser) HandleRedirection(rt *[]ast.Redirection) {
 	}
 }
 
-func (p *Parser) fromStdout(rt *[]ast.Redirection) {
+func (p *parser) fromStdout(rt *[]ast.Redirection) {
 	var r ast.Redirection
 	r.Src = "1"
 	r.Method = p.curr.Literal
@@ -52,7 +52,7 @@ func (p *Parser) fromStdout(rt *[]ast.Redirection) {
 	*rt = append(*rt, r)
 }
 
-func (p *Parser) fromFileDescriptor(rt *[]ast.Redirection) {
+func (p *parser) fromFileDescriptor(rt *[]ast.Redirection) {
 	var r ast.Redirection
 	r.Src = p.curr.Literal
 
@@ -72,7 +72,7 @@ func (p *Parser) fromFileDescriptor(rt *[]ast.Redirection) {
 	*rt = append(*rt, r)
 }
 
-func (p *Parser) allOutputsToFile(rt *[]ast.Redirection) {
+func (p *parser) allOutputsToFile(rt *[]ast.Redirection) {
 	var r ast.Redirection
 	r.Method = p.curr.Literal
 
@@ -88,7 +88,7 @@ func (p *Parser) allOutputsToFile(rt *[]ast.Redirection) {
 	*rt = append(*rt, r)
 }
 
-func (p *Parser) toStdin(rt *[]ast.Redirection) {
+func (p *parser) toStdin(rt *[]ast.Redirection) {
 	var r ast.Redirection
 	r.Src = "0"
 	r.Method = p.curr.Literal

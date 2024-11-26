@@ -5,7 +5,7 @@ import (
 	"github.com/yassinebenaid/ryuko/token"
 )
 
-func (p *Parser) parseAssignement() ast.ParameterAssignement {
+func (p *parser) parseAssignement() ast.ParameterAssignement {
 	var assigns ast.ParameterAssignement
 
 	for {

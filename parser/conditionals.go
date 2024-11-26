@@ -5,7 +5,7 @@ import (
 	"github.com/yassinebenaid/ryuko/token"
 )
 
-func (p *Parser) parseTestCommand() ast.Statement {
+func (p *parser) parseTestCommand() ast.Statement {
 	p.proceed()
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()
@@ -52,7 +52,7 @@ loop:
 	return test
 }
 
-func (p *Parser) parsePosixTestCommand() ast.Statement {
+func (p *parser) parsePosixTestCommand() ast.Statement {
 	testKeyword := p.curr.Type == token.TEST
 
 	p.proceed()
@@ -99,7 +99,7 @@ loop:
 	return test
 }
 
-func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
+func (p *parser) parseTestExpression(prefix bool) ast.Expression {
 	var expr ast.Expression
 	if p.curr.Type == token.EXCLAMATION {
 		p.proceed()
@@ -160,7 +160,7 @@ func (p *Parser) parseTestExpression(prefix bool) ast.Expression {
 	return expr
 }
 
-func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
+func (p *parser) parsePosixTestExpression(prefix bool) ast.Expression {
 	var expr ast.Expression
 	if p.curr.Type == token.EXCLAMATION {
 		p.proceed()
@@ -225,7 +225,7 @@ func (p *Parser) parsePosixTestExpression(prefix bool) ast.Expression {
 	return expr
 }
 
-func (p *Parser) parseConditionals() ast.Expression {
+func (p *parser) parseConditionals() ast.Expression {
 	if exp := p.parseUnaryConditional(); exp != nil {
 		if p.curr.Type == token.BLANK {
 			p.proceed()
@@ -266,7 +266,7 @@ func (p *Parser) parseConditionals() ast.Expression {
 	return bin
 }
 
-func (p *Parser) parseUnaryConditional() ast.Expression {
+func (p *parser) parseUnaryConditional() ast.Expression {
 	if p.curr.Type == token.MINUS {
 		switch p.next.Literal {
 		case "a", "b", "c", "d", "e", "f", "g", "h", "k", "p", "r", "s",
@@ -296,7 +296,7 @@ func (p *Parser) parseUnaryConditional() ast.Expression {
 	return nil
 }
 
-func (p *Parser) parseConditionalBinaryOperator() string {
+func (p *parser) parseConditionalBinaryOperator() string {
 	switch p.curr.Type {
 	case token.ASSIGN, token.EQ, token.NOT_EQ, token.GT, token.LT, token.EQ_TILDE:
 		if p.next.Type != token.BLANK {
@@ -327,7 +327,7 @@ func (p *Parser) parseConditionalBinaryOperator() string {
 	return ""
 }
 
-func (p *Parser) parsePosixConditionalBinaryOperator() string {
+func (p *parser) parsePosixConditionalBinaryOperator() string {
 	if p.curr.Type == token.MINUS {
 		switch p.next.Literal {
 		case "a", "o":
@@ -346,7 +346,7 @@ func (p *Parser) parsePosixConditionalBinaryOperator() string {
 	return ""
 }
 
-func (p *Parser) parsePatternExpression() ast.Expression {
+func (p *parser) parsePatternExpression() ast.Expression {
 	var exprs []ast.Expression
 
 loop:

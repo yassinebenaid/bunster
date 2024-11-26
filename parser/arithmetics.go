@@ -47,7 +47,7 @@ var infixPrecedences = map[token.TokenType]precedence{
 	token.MINUS:          ADDITION,
 }
 
-func (p *Parser) parseArithmeticSubstitution() ast.Expression {
+func (p *parser) parseArithmeticSubstitution() ast.Expression {
 	p.proceed()
 
 	if p.curr.Type == token.BLANK {
@@ -65,7 +65,7 @@ func (p *Parser) parseArithmeticSubstitution() ast.Expression {
 	return expr
 }
 
-func (p *Parser) parseArithmetics() ast.Arithmetic {
+func (p *parser) parseArithmetics() ast.Arithmetic {
 	var expr ast.Arithmetic
 
 	for {
@@ -80,7 +80,7 @@ func (p *Parser) parseArithmetics() ast.Arithmetic {
 	return expr
 }
 
-func (p *Parser) parseArithmeticExpresion(prec precedence) ast.Expression {
+func (p *parser) parseArithmeticExpresion(prec precedence) ast.Expression {
 	if p.curr.Type == token.BLANK {
 		p.proceed()
 	}
@@ -100,7 +100,7 @@ func (p *Parser) parseArithmeticExpresion(prec precedence) ast.Expression {
 	return exp
 }
 
-func (p *Parser) parsePrefix() ast.Expression {
+func (p *parser) parsePrefix() ast.Expression {
 	switch p.curr.Type {
 	case token.INT:
 		exp := ast.Number(p.curr.Literal)
@@ -170,7 +170,7 @@ func (p *Parser) parsePrefix() ast.Expression {
 	}
 }
 
-func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
+func (p *parser) parseInfix(left ast.Expression) ast.Expression {
 	exp := ast.Binary{
 		Left:     left,
 		Operator: p.curr.Literal,
@@ -183,7 +183,7 @@ func (p *Parser) parseInfix(left ast.Expression) ast.Expression {
 	return exp
 }
 
-func (p *Parser) parsePostfix(left ast.Expression) ast.Expression {
+func (p *parser) parsePostfix(left ast.Expression) ast.Expression {
 	switch p.curr.Type {
 	case token.QUESTION:
 		p.proceed()
