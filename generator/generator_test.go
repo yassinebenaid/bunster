@@ -37,7 +37,7 @@ var testCases = []struct {
 	}},
 }
 
-func TestParser(t *testing.T) {
+func TestGenerator(t *testing.T) {
 	tgroup, tcase := os.Getenv("TEST_GROUP"), os.Getenv("TEST_CASE")
 
 	for _, group := range testCases {
@@ -61,7 +61,7 @@ func TestParser(t *testing.T) {
 			program := generator.Generate(script)
 
 			if !reflect.DeepEqual(program, tc.expected) {
-				t.Fatalf("\nGroup: %sCase: %sInput: %s\nwant:\n%s\ngot:\n%s", dump(group.label), dump(i), dump(tc.input), dump(tc.expected), dump(script))
+				t.Fatalf("\nGroup: %sCase: %sInput: %s\nWant:\n%s\nGot:\n%s", dump(group.label), dump(i), dump(tc.input), dump(tc.expected), dump(program))
 			}
 		}
 	}
