@@ -29,7 +29,11 @@ var testCases = []struct {
 	cases []testCase
 }{
 	{"Simple Commands", []testCase{
-		{"cmd", ir.Program{}},
+		{"cmd", ir.Program{Instructions: []ir.Instruction{
+			ir.Assign{Name: "cmd_1_name", Value: ir.String("cmd")},
+			ir.InitCommand{Name: "cmd_1"},
+			ir.RunCommanOrFail{Name: "cmd_1"},
+		}}},
 	}},
 }
 

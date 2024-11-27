@@ -6,6 +6,14 @@ import (
 )
 
 func Generate(script ast.Script) ir.Program {
+	g := generator{}
+
+	return g.generate(script)
+}
+
+type generator struct{}
+
+func (*generator) generate(ast.Script) ir.Program {
 	var program ir.Program
 
 	return program
