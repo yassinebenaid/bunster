@@ -30,9 +30,9 @@ var testCases = []struct {
 }{
 	{"Simple Commands", []testCase{
 		{"cmd", ir.Program{Instructions: []ir.Instruction{
-			ir.Assign{Name: "cmd_1_name", Value: ir.String("cmd")},
-			ir.InitCommand{Name: "cmd_1"},
-			ir.RunCommanOrFail{Name: "cmd_1"},
+			ir.Assign{Name: "cmd_0_name", Value: ir.String("cmd")},
+			ir.Assign{Name: "cmd_0", Value: ir.InitCommand{Name: "cmd_0_name"}},
+			ir.RunCommanOrFail{Name: "cmd_0"},
 		}}},
 	}},
 }
