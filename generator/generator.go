@@ -1,4 +1,4 @@
-package gen
+package generator
 
 import (
 	"github.com/yassinebenaid/ryuko/ast"
