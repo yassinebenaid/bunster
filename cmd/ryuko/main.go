@@ -4,9 +4,11 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/urfave/cli/v3"
 	"github.com/yassinebenaid/godump"
+	"github.com/yassinebenaid/ryuko/generator"
 	"github.com/yassinebenaid/ryuko/lexer"
 	"github.com/yassinebenaid/ryuko/parser"
 )
@@ -22,6 +24,11 @@ func main() {
 				Flags: []cli.Flag{
 					&cli.BoolFlag{Name: "no-ansi", Aliases: []string{"n"}},
 				},
+			},
+			{
+				Name:        "build",
+				Description: "Build the script as go program",
+				Action:      buildCMD,
 			},
 		},
 	}
@@ -56,4 +63,64 @@ func treeCMD(_ context.Context, cmd *cli.Command) error {
 	}
 
 	return d.Println(script)
+}
+
+func buildCMD(_ context.Context, cmd *cli.Command) error {
+	filename := cmd.Args().Get(0)
+	v, err := os.ReadFile(filename)
+	if err != nil {
+		return err
+	}
+
+	script, err := parser.Parse(
+		lexer.New(v),
+	)
+
+	if err != nil {
+		return err
+	}
+
+	program := generator.Generate(script)
+
+	var instructions string
+
+	for _, ins := range program.Instructions {
+		instructions += ins.String() + "\n"
+	}
+
+	var _prog = fmt.Sprintf(`package main
+
+import "os/exec"
+
+func main(){
+	%s
+}
+	`, instructions)
+
+	wd, err := os.MkdirTemp(os.TempDir(), "ryuko-build-*")
+	if err != nil {
+		return err
+	}
+
+	err = os.WriteFile(wd+"/main.go", []byte(_prog), 0666)
+	if err != nil {
+		return err
+	}
+
+	err = os.WriteFile(wd+"/go.mod", []byte("module ryuko-build\ngo 1.22.3"), 0666)
+	if err != nil {
+		return err
+	}
+
+	output, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+	gocmd := exec.Command("go", "build", "-o", output+"/program")
+	gocmd.Stdin = os.Stdin
+	gocmd.Stdout = os.Stdout
+	gocmd.Stderr = os.Stderr
+	gocmd.Dir = wd
+
+	return gocmd.Run()
 }
