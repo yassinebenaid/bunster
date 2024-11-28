@@ -12,11 +12,13 @@ type Program struct {
 }
 
 type Assign struct {
-	Name  string
-	Value Instruction
+	Name       string
+	Initialize bool
+	Value      Instruction
 }
 
 type String string
+type Literal string
 
 type InitCommand struct {
 	Name string
@@ -32,14 +34,22 @@ type Panic string
 
 func (Assign) inst()          {}
 func (String) inst()          {}
+func (Literal) inst()         {}
 func (InitCommand) inst()     {}
 func (RunCommanOrFail) inst() {}
 
 func (a Assign) String() string {
-	return fmt.Sprintf("%s := %s\n", a.Name, a.Value.String())
+	op := "="
+	if a.Initialize {
+		op = ":="
+	}
+	return fmt.Sprintf("%s %s %s\n", a.Name, op, a.Value.String())
 }
 func (s String) String() string {
 	return fmt.Sprintf(`"%s"`, string(s))
+}
+func (s Literal) String() string {
+	return fmt.Sprintf(`%s`, string(s))
 }
 func (ic InitCommand) String() string {
 	return fmt.Sprintf("exec.Command(%s)", ic.Name)
@@ -47,7 +57,8 @@ func (ic InitCommand) String() string {
 func (rcf RunCommanOrFail) String() string {
 	return fmt.Sprintf(`
 		if err := %s.Run(); err != nil {
-			panic(err)
+			fmt.Fprintf(os.Stderr, "command %%q not found.\n", %s.Path)
+			os.Exit(1)
 		}
-		`, rcf.Name)
+		`, rcf.Name, rcf.Name)
 }
