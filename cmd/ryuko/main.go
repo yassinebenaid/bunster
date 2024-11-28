@@ -94,7 +94,11 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 
 	var _prog = fmt.Sprintf(`package main
 
-import "os/exec"
+import (
+	"fmt"
+	"os"
+	"os/exec"
+)
 
 func main(){
 	%s

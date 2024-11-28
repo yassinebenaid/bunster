@@ -37,15 +37,30 @@ func (g *generator) handleSimpleCommand(cmd ast.Command) {
 	g.cmdCount++
 
 	g.addInstruction(ir.Assign{
-		Name:  fmt.Sprintf("cmd_%d_name", id),
-		Value: g.handleExpression(cmd.Name),
+		Initialize: true,
+		Name:       fmt.Sprintf("cmd_%d_name", id),
+		Value:      g.handleExpression(cmd.Name),
 	})
 
 	g.addInstruction(ir.Assign{
-		Name: fmt.Sprintf("cmd_%d", id),
+		Initialize: true,
+		Name:       fmt.Sprintf("cmd_%d", id),
 		Value: ir.InitCommand{
 			Name: fmt.Sprintf("cmd_%d_name", id),
 		},
+	})
+
+	g.addInstruction(ir.Assign{
+		Name:  fmt.Sprintf("cmd_%d.Stdin", id),
+		Value: ir.Literal("os.Stdin"),
+	})
+	g.addInstruction(ir.Assign{
+		Name:  fmt.Sprintf("cmd_%d.Stdout", id),
+		Value: ir.Literal("os.Stdout"),
+	})
+	g.addInstruction(ir.Assign{
+		Name:  fmt.Sprintf("cmd_%d.Stderr", id),
+		Value: ir.Literal("os.Stderr"),
 	})
 
 	g.addInstruction(ir.RunCommanOrFail{
