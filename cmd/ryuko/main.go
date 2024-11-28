@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path"
 
 	"github.com/urfave/cli/v3"
 	"github.com/yassinebenaid/godump"
@@ -29,6 +30,9 @@ func main() {
 				Name:        "build",
 				Description: "Build the script as go program",
 				Action:      buildCMD,
+				Flags: []cli.Flag{
+					&cli.StringFlag{Name: "o", Required: true},
+				},
 			},
 		},
 	}
@@ -112,15 +116,18 @@ func main(){
 		return err
 	}
 
-	output, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-	gocmd := exec.Command("go", "build", "-o", output+"/program")
+	gocmd := exec.Command("go", "build", "-o", "build.bin")
 	gocmd.Stdin = os.Stdin
 	gocmd.Stdout = os.Stdout
 	gocmd.Stderr = os.Stderr
 	gocmd.Dir = wd
+	if err := gocmd.Run(); err != nil {
+		return err
+	}
 
-	return gocmd.Run()
+	if err := os.Rename(path.Join(wd, "build.bin"), cmd.String("o")); err != nil {
+		return err
+	}
+
+	return nil
 }
