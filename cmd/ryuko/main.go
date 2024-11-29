@@ -3,12 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
-	"io"
 	"os"
 
 	"github.com/urfave/cli/v3"
 	"github.com/yassinebenaid/godump"
-	"github.com/yassinebenaid/ryuko"
 	"github.com/yassinebenaid/ryuko/lexer"
 	"github.com/yassinebenaid/ryuko/parser"
 )
@@ -31,19 +29,6 @@ func main() {
 				Action:      buildCMD,
 				Flags: []cli.Flag{
 					&cli.StringFlag{Name: "o", Required: true},
-				},
-			},
-			{
-				Name: "test",
-				Action: func(ctx context.Context, c *cli.Command) error {
-					r, err := ryuko.RuntimeFS.Open("runtime/shell.go")
-					if err != nil {
-						return err
-					}
-
-					_, err = io.Copy(os.Stdout, r)
-
-					return err
 				},
 			},
 		},

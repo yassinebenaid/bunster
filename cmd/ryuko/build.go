@@ -36,6 +36,11 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 		instructions += ins.String() + "\n"
 	}
 
+	// main_stub, err := ryuko.StubsFS.Open("stubs/main.go.stub")
+	// if err != nil {
+	// 	return fmt.Errorf("internal error: failed to load necessary assets, %v", err)
+	// }
+
 	var _prog = fmt.Sprintf(`package main
 
 import (
