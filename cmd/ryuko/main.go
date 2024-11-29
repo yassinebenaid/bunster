@@ -8,9 +8,9 @@ import (
 
 	"github.com/urfave/cli/v3"
 	"github.com/yassinebenaid/godump"
+	"github.com/yassinebenaid/ryuko"
 	"github.com/yassinebenaid/ryuko/lexer"
 	"github.com/yassinebenaid/ryuko/parser"
-	"github.com/yassinebenaid/ryuko/runtime"
 )
 
 func main() {
@@ -36,7 +36,7 @@ func main() {
 			{
 				Name: "test",
 				Action: func(ctx context.Context, c *cli.Command) error {
-					r, err := runtime.RuntimeFS.Open("shell.go")
+					r, err := ryuko.RuntimeFS.Open("runtime/shell.go")
 					if err != nil {
 						return err
 					}

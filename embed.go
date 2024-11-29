@@ -1,6 +1,6 @@
-package runtime
+package ryuko
 
 import "embed"
 
-//go:embed *
+//go:embed runtime
 var RuntimeFS embed.FS
