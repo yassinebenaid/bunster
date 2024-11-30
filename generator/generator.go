@@ -41,10 +41,13 @@ func (g *generator) handleSimpleCommand(cmd ast.Command) {
 		Value: g.handleExpression(cmd.Name),
 	})
 
+	g.ins(ir.DeclareSlice(fmt.Sprintf("cmd_%d_args", id)))
+
 	g.ins(ir.Declare{
 		Name: fmt.Sprintf("cmd_%d", id),
 		Value: ir.InitCommand{
 			Name: fmt.Sprintf("cmd_%d_name", id),
+			Args: fmt.Sprintf("cmd_%d_args", id),
 		},
 	})
 

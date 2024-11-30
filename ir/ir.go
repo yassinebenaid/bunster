@@ -18,6 +18,8 @@ type Declare struct {
 	Value Instruction
 }
 
+type DeclareSlice string
+
 type Set struct {
 	Name  string
 	Value Instruction
@@ -39,6 +41,7 @@ type RunCommanOrFail struct {
 type Panic string
 
 func (Declare) inst()         {}
+func (DeclareSlice) inst()    {}
 func (Set) inst()             {}
 func (String) inst()          {}
 func (Literal) inst()         {}
@@ -73,6 +76,9 @@ func (d Declare) String() string {
 	return fmt.Sprintf("var %s = %s\n", d.Name, d.Value.String())
 }
 
+func (d DeclareSlice) String() string {
+	return fmt.Sprintf("var %s []string\n", string(d))
+}
 func (a Set) String() string {
 	return fmt.Sprintf("%s = %s\n", a.Name, a.Value.String())
 }
@@ -84,7 +90,7 @@ func (s Literal) String() string {
 	return fmt.Sprintf(`%s`, string(s))
 }
 func (ic InitCommand) String() string {
-	return fmt.Sprintf("exec.Command(%s)", ic.Name)
+	return fmt.Sprintf("exec.Command(%s, %s...)", ic.Name, ic.Args)
 }
 func (rcf RunCommanOrFail) String() string {
 	return fmt.Sprintf(`
