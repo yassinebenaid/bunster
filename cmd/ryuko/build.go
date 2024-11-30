@@ -37,9 +37,10 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 	var _prog = fmt.Sprintf(`package main
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
+
+	"ryuko-build/runtime"
 )
 
 func main(){

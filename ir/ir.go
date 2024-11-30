@@ -57,8 +57,7 @@ func (ic InitCommand) String() string {
 func (rcf RunCommanOrFail) String() string {
 	return fmt.Sprintf(`
 		if err := %s.Run(); err != nil {
-			fmt.Fprintf(os.Stderr, "command %%q not found.\n", %s.Path)
-			os.Exit(1)
+			runtime.HandleCommandRunError(err)
 		}
-		`, rcf.Name, rcf.Name)
+		`, rcf.Name)
 }
