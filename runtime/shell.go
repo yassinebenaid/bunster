@@ -28,10 +28,14 @@ func (shell *Shell) ReadVar(name string) string {
 	return os.Getenv(name)
 }
 
-func (shell *Shell) HandleCommandRunError(err error) {
+func (shell *Shell) HandleCommandRunError(cmd string, err error) {
 	shell.ExitCode = 1
 
-	if e, ok := err.(*exec.Error); ok {
-		fmt.Fprintf(shell.Stderr, "failed to recognize command %q, %v\n", e.Name, e.Err)
+	switch e := err.(type) {
+	case *exec.Error:
+		fmt.Fprintf(shell.Stderr, "failed to recognize command %q, %v\n", cmd, e.Err)
+	default:
+		fmt.Fprintln(shell.Stderr, err)
 	}
+
 }

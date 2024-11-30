@@ -72,7 +72,8 @@ func (g *generator) handleSimpleCommand(cmd ast.Command) {
 	})
 
 	g.ins(ir.RunCommanOrFail{
-		Name: fmt.Sprintf("cmd_%d", id),
+		Command: fmt.Sprintf("cmd_%d", id),
+		Name:    fmt.Sprintf("cmd_%d_name", id),
 	})
 }
 

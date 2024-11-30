@@ -41,8 +41,8 @@ type InitCommand struct {
 }
 
 type RunCommanOrFail struct {
+	Command string
 	Name    string
-	OnError Instruction
 }
 
 type Panic string
@@ -111,9 +111,9 @@ func (ic InitCommand) String() string {
 func (rcf RunCommanOrFail) String() string {
 	return fmt.Sprintf(`
 		if err := %s.Run(); err != nil {
-			shell.HandleCommandRunError(err)
+			shell.HandleCommandRunError(%s, err)
 		}else{
 			shell.ExitCode = 0
 		}
-		`, rcf.Name)
+		`, rcf.Command, rcf.Name)
 }
