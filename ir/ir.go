@@ -13,14 +13,27 @@ type Program struct {
 	Instructions []Instruction
 }
 
-type Assign struct {
-	Name       string
-	Initialize bool
-	Value      Instruction
+type Declare struct {
+	Name  string
+	Value Instruction
+}
+
+type DeclareSlice string
+
+type Set struct {
+	Name  string
+	Value Instruction
+}
+
+type Append struct {
+	Name  string
+	Value Instruction
 }
 
 type String string
 type Literal string
+
+type ReadVar string
 
 type InitCommand struct {
 	Name string
@@ -28,13 +41,17 @@ type InitCommand struct {
 }
 
 type RunCommanOrFail struct {
+	Command string
 	Name    string
-	OnError Instruction
 }
 
 type Panic string
 
-func (Assign) inst()          {}
+func (Declare) inst()         {}
+func (DeclareSlice) inst()    {}
+func (Append) inst()          {}
+func (ReadVar) inst()         {}
+func (Set) inst()             {}
 func (String) inst()          {}
 func (Literal) inst()         {}
 func (InitCommand) inst()     {}
@@ -51,41 +68,52 @@ func (p Program) String() string {
 )`
 
 	str += `
-func Main(shell *runtime.Shell) error {
+func Main(shell *runtime.Shell) {
 		`
 
 	for _, in := range p.Instructions {
 		str += in.String()
 	}
 
-	str += `
-		return nil
-		}`
+	str += `}`
 	return str
 }
 
-func (a Assign) String() string {
-	op := "="
-	if a.Initialize {
-		op = ":="
-	}
-	return fmt.Sprintf("%s %s %s\n", a.Name, op, a.Value.String())
+func (d Declare) String() string {
+	return fmt.Sprintf("var %s = %s\n", d.Name, d.Value.String())
 }
+
+func (d DeclareSlice) String() string {
+	return fmt.Sprintf("var %s []string\n", string(d))
+}
+
+func (a Set) String() string {
+	return fmt.Sprintf("%s = %s\n", a.Name, a.Value.String())
+}
+
+func (rv ReadVar) String() string {
+	return fmt.Sprintf("shell.ReadVar(%q)", string(rv))
+}
+
+func (a Append) String() string {
+	return fmt.Sprintf("%s = append(%s, %s)\n", a.Name, a.Name, a.Value.String())
+}
+
 func (s String) String() string {
-	return fmt.Sprintf(`"%s"`, string(s))
+	return fmt.Sprintf("`%s`", string(s))
 }
 func (s Literal) String() string {
 	return fmt.Sprintf(`%s`, string(s))
 }
 func (ic InitCommand) String() string {
-	return fmt.Sprintf("exec.Command(%s)", ic.Name)
+	return fmt.Sprintf("exec.Command(%s, %s...)", ic.Name, ic.Args)
 }
 func (rcf RunCommanOrFail) String() string {
 	return fmt.Sprintf(`
 		if err := %s.Run(); err != nil {
-			shell.HandleCommandRunError(err)
+			shell.HandleCommandRunError(%s, err)
 		}else{
 			shell.ExitCode = 0
 		}
-		`, rcf.Name)
+		`, rcf.Command, rcf.Name)
 }
