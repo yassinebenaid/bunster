@@ -1,7 +1,19 @@
 package main
 
+import (
+	"os"
+	"ryuko-build/runtime"
+)
+
 func main() {
 
-	%s
+	shell := runtime.Shell{
+		Stdin:  os.Stdin,
+		Stdout: os.Stdout,
+		Stderr: os.Stderr,
 
+		Main: Main,
+	}
+
+	os.Exit(shell.Run())
 }

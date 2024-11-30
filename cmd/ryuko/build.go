@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path"
 
 	"github.com/urfave/cli/v3"
+	"github.com/yassinebenaid/ryuko"
 	"github.com/yassinebenaid/ryuko/generator"
 	"github.com/yassinebenaid/ryuko/lexer"
 	"github.com/yassinebenaid/ryuko/parser"
@@ -20,54 +21,33 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	script, err := parser.Parse(
-		lexer.New(v),
-	)
-
+	script, err := parser.Parse(lexer.New(v))
 	if err != nil {
 		return err
 	}
 
 	program := generator.Generate(script)
 
-	var instructions string
-
-	for _, ins := range program.Instructions {
-		instructions += ins.String() + "\n"
-	}
-
-	// main_stub, err := ryuko.StubsFS.Open("stubs/main.go.stub")
-	// if err != nil {
-	// 	return fmt.Errorf("internal error: failed to load necessary assets, %v", err)
-	// }
-
-	var _prog = fmt.Sprintf(`package main
-
-import (
-	"fmt"
-	"os"
-	"os/exec"
-)
-
-func main(){
-	%s
-}
-	`, instructions)
-
-	wd, err := os.MkdirTemp(os.TempDir(), "ryuko-build-*")
+	wd, err := os.MkdirTemp(cmd.String("build-space"), "ryuko-build-*")
 	if err != nil {
 		return err
 	}
 
-	err = os.WriteFile(wd+"/main.go", []byte(_prog), 0666)
+	err = os.WriteFile(wd+"/program.go", []byte(program.String()), 0666)
 	if err != nil {
 		return err
 	}
 
-	err = os.WriteFile(wd+"/go.mod", []byte("module ryuko-build\ngo 1.22.3"), 0666)
-	if err != nil {
+	if err := cloneRuntime(wd); err != nil {
 		return err
 	}
+
+	if err := cloneStubs(wd); err != nil {
+		return err
+	}
+
+	// we ignore the error, because this is just an optional step that shouldn't stop us from building the binary
+	exec.Command("gofmt", "-w", wd).Run()
 
 	gocmd := exec.Command("go", "build", "-o", "build.bin")
 	gocmd.Stdin = os.Stdin
@@ -79,6 +59,37 @@ func main(){
 	}
 
 	if err := os.Rename(path.Join(wd, "build.bin"), cmd.String("o")); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func cloneRuntime(dst string) error {
+	return fs.WalkDir(ryuko.RuntimeFS, "runtime", func(dpath string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return nil
+		}
+
+		if d.IsDir() {
+			return os.MkdirAll(path.Join(dst, dpath), 0766)
+		}
+
+		content, err := ryuko.RuntimeFS.ReadFile(dpath)
+		if err != nil {
+			return err
+		}
+
+		return os.WriteFile(path.Join(dst, dpath), content, 0644)
+	})
+}
+
+func cloneStubs(dst string) error {
+	if err := os.WriteFile(path.Join(dst, "main.go"), ryuko.MainGoStub, 0644); err != nil {
+		return err
+	}
+
+	if err := os.WriteFile(path.Join(dst, "go.mod"), ryuko.GoModStub, 0644); err != nil {
 		return err
 	}
 

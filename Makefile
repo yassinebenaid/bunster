@@ -9,4 +9,5 @@ build:
 	@go build -o ./bin/ryuko ./cmd/ryuko
 
 compile: build
-	@./bin/ryuko build script.test.bash -o ./bin/script
+	@[ -d .test-build ] || mkdir .test-build
+	@./bin/ryuko build script.test.bash -o ./bin/script --build-space .test-build

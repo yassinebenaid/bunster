@@ -16,19 +16,20 @@ func main() {
 		Name: "ryuko",
 		Commands: []*cli.Command{
 			{
-				Name:        "tree",
-				Description: "Print the script tree",
-				Action:      treeCMD,
+				Name:        "ast",
+				Description: "Print the script ast",
+				Action:      astCMD,
 				Flags: []cli.Flag{
 					&cli.BoolFlag{Name: "no-ansi", Aliases: []string{"n"}},
 				},
 			},
 			{
 				Name:        "build",
-				Description: "Build the script as go program",
+				Description: "Build a script",
 				Action:      buildCMD,
 				Flags: []cli.Flag{
 					&cli.StringFlag{Name: "o", Required: true},
+					&cli.StringFlag{Name: "build-space"},
 				},
 			},
 		},
@@ -41,7 +42,7 @@ func main() {
 	}
 }
 
-func treeCMD(_ context.Context, cmd *cli.Command) error {
+func astCMD(_ context.Context, cmd *cli.Command) error {
 	filename := cmd.Args().Get(0)
 	v, err := os.ReadFile(filename)
 	if err != nil {

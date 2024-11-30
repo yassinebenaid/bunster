@@ -1,6 +1,8 @@
 package ir
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Instruction interface {
 	inst()
@@ -38,6 +40,30 @@ func (Literal) inst()         {}
 func (InitCommand) inst()     {}
 func (RunCommanOrFail) inst() {}
 
+func (p Program) String() string {
+	var str = "package main\n\n"
+
+	str += `import (
+	"os"
+	"os/exec"
+
+	"ryuko-build/runtime"
+)`
+
+	str += `
+func Main(shell *runtime.Shell) error {
+		`
+
+	for _, in := range p.Instructions {
+		str += in.String()
+	}
+
+	str += `
+		return nil
+		}`
+	return str
+}
+
 func (a Assign) String() string {
 	op := "="
 	if a.Initialize {
@@ -57,8 +83,9 @@ func (ic InitCommand) String() string {
 func (rcf RunCommanOrFail) String() string {
 	return fmt.Sprintf(`
 		if err := %s.Run(); err != nil {
-			fmt.Fprintf(os.Stderr, "command %%q not found.\n", %s.Path)
-			os.Exit(1)
+			shell.HandleCommandRunError(err)
+		}else{
+			shell.ExitCode = 0
 		}
-		`, rcf.Name, rcf.Name)
+		`, rcf.Name)
 }
