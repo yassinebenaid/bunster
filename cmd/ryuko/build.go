@@ -3,11 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path"
 
 	"github.com/urfave/cli/v3"
+	"github.com/yassinebenaid/ryuko"
 	"github.com/yassinebenaid/ryuko/generator"
 	"github.com/yassinebenaid/ryuko/lexer"
 	"github.com/yassinebenaid/ryuko/parser"
@@ -31,11 +33,6 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 	for _, ins := range program.Instructions {
 		instructions += ins.String() + "\n"
 	}
-
-	// main_stub, err := ryuko.StubsFS.Open("stubs/main.go.stub")
-	// if err != nil {
-	// 	return fmt.Errorf("internal error: failed to load necessary assets, %v", err)
-	// }
 
 	var _prog = fmt.Sprintf(`package main
 
@@ -65,6 +62,10 @@ func main(){
 		return err
 	}
 
+	if err := cloneRuntime(wd); err != nil {
+		return err
+	}
+
 	gocmd := exec.Command("go", "build", "-o", "build.bin")
 	gocmd.Stdin = os.Stdin
 	gocmd.Stdout = os.Stdout
@@ -79,4 +80,23 @@ func main(){
 	}
 
 	return nil
+}
+
+func cloneRuntime(dst string) error {
+	return fs.WalkDir(ryuko.RuntimeFS, "runtime", func(dpath string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return nil
+		}
+
+		if d.IsDir() {
+			return os.MkdirAll(path.Join(dst, dpath), 0766)
+		}
+
+		content, err := ryuko.RuntimeFS.ReadFile(dpath)
+		if err != nil {
+			return err
+		}
+
+		return os.WriteFile(path.Join(dst, dpath), content, 0644)
+	})
 }
