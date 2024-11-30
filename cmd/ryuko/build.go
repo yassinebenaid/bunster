@@ -20,10 +20,7 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	script, err := parser.Parse(
-		lexer.New(v),
-	)
-
+	script, err := parser.Parse(lexer.New(v))
 	if err != nil {
 		return err
 	}
@@ -31,7 +28,6 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 	program := generator.Generate(script)
 
 	var instructions string
-
 	for _, ins := range program.Instructions {
 		instructions += ins.String() + "\n"
 	}
@@ -54,7 +50,7 @@ func main(){
 }
 	`, instructions)
 
-	wd, err := os.MkdirTemp(os.TempDir(), "ryuko-build-*")
+	wd, err := os.MkdirTemp(cmd.String("build-space"), "ryuko-build-*")
 	if err != nil {
 		return err
 	}
