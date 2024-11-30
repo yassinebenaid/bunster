@@ -1,6 +1,8 @@
 package ir
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Instruction interface {
 	inst()
@@ -37,6 +39,30 @@ func (String) inst()          {}
 func (Literal) inst()         {}
 func (InitCommand) inst()     {}
 func (RunCommanOrFail) inst() {}
+
+func (p Program) String() string {
+	var str = "package main\n\n"
+
+	str += `import (
+	"os"
+	"os/exec"
+
+	"ryuko-build/runtime"
+)`
+
+	str += `
+func Main(*runtime.Shell) error {
+		`
+
+	for _, in := range p.Instructions {
+		str += in.String()
+	}
+
+	str += `
+		return nil
+		}`
+	return str
+}
 
 func (a Assign) String() string {
 	op := "="

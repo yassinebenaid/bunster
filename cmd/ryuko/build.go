@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"io/fs"
 	"os"
 	"os/exec"
@@ -29,41 +28,21 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 
 	program := generator.Generate(script)
 
-	var instructions string
-	for _, ins := range program.Instructions {
-		instructions += ins.String() + "\n"
-	}
-
-	var _prog = fmt.Sprintf(`package main
-
-import (
-	"os"
-	"os/exec"
-
-	"ryuko-build/runtime"
-)
-
-func main(){
-	%s
-}
-	`, instructions)
-
 	wd, err := os.MkdirTemp(cmd.String("build-space"), "ryuko-build-*")
 	if err != nil {
 		return err
 	}
 
-	err = os.WriteFile(wd+"/main.go", []byte(_prog), 0666)
-	if err != nil {
-		return err
-	}
-
-	err = os.WriteFile(wd+"/go.mod", []byte("module ryuko-build\ngo 1.22.3"), 0666)
+	err = os.WriteFile(wd+"/program.go", []byte(program.String()), 0666)
 	if err != nil {
 		return err
 	}
 
 	if err := cloneRuntime(wd); err != nil {
+		return err
+	}
+
+	if err := cloneStubs(wd); err != nil {
 		return err
 	}
 
@@ -100,4 +79,16 @@ func cloneRuntime(dst string) error {
 
 		return os.WriteFile(path.Join(dst, dpath), content, 0644)
 	})
+}
+
+func cloneStubs(dst string) error {
+	if err := os.WriteFile(path.Join(dst, "main.go"), ryuko.MainGoStub, 0644); err != nil {
+		return err
+	}
+
+	if err := os.WriteFile(path.Join(dst, "go.mod"), ryuko.GoModStub, 0644); err != nil {
+		return err
+	}
+
+	return nil
 }
