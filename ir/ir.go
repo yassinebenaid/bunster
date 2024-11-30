@@ -13,10 +13,14 @@ type Program struct {
 	Instructions []Instruction
 }
 
-type Assign struct {
-	Name       string
-	Initialize bool
-	Value      Instruction
+type Declare struct {
+	Name  string
+	Value Instruction
+}
+
+type Set struct {
+	Name  string
+	Value Instruction
 }
 
 type String string
@@ -34,7 +38,8 @@ type RunCommanOrFail struct {
 
 type Panic string
 
-func (Assign) inst()          {}
+func (Declare) inst()         {}
+func (Set) inst()             {}
 func (String) inst()          {}
 func (Literal) inst()         {}
 func (InitCommand) inst()     {}
@@ -64,13 +69,14 @@ func Main(shell *runtime.Shell) error {
 	return str
 }
 
-func (a Assign) String() string {
-	op := "="
-	if a.Initialize {
-		op = ":="
-	}
-	return fmt.Sprintf("%s %s %s\n", a.Name, op, a.Value.String())
+func (d Declare) String() string {
+	return fmt.Sprintf("var %s = %s\n", d.Name, d.Value.String())
 }
+
+func (a Set) String() string {
+	return fmt.Sprintf("%s = %s\n", a.Name, a.Value.String())
+}
+
 func (s String) String() string {
 	return fmt.Sprintf(`"%s"`, string(s))
 }

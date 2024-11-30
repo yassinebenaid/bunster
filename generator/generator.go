@@ -19,7 +19,7 @@ type generator struct {
 	cmdCount int
 }
 
-func (g *generator) addInstruction(ins ir.Instruction) {
+func (g *generator) ins(ins ir.Instruction) {
 	g.program.Instructions = append(g.program.Instructions, ins)
 }
 
@@ -36,34 +36,32 @@ func (g *generator) handleSimpleCommand(cmd ast.Command) {
 	id := g.cmdCount
 	g.cmdCount++
 
-	g.addInstruction(ir.Assign{
-		Initialize: true,
-		Name:       fmt.Sprintf("cmd_%d_name", id),
-		Value:      g.handleExpression(cmd.Name),
+	g.ins(ir.Declare{
+		Name:  fmt.Sprintf("cmd_%d_name", id),
+		Value: g.handleExpression(cmd.Name),
 	})
 
-	g.addInstruction(ir.Assign{
-		Initialize: true,
-		Name:       fmt.Sprintf("cmd_%d", id),
+	g.ins(ir.Declare{
+		Name: fmt.Sprintf("cmd_%d", id),
 		Value: ir.InitCommand{
 			Name: fmt.Sprintf("cmd_%d_name", id),
 		},
 	})
 
-	g.addInstruction(ir.Assign{
+	g.ins(ir.Set{
 		Name:  fmt.Sprintf("cmd_%d.Stdin", id),
 		Value: ir.Literal("os.Stdin"),
 	})
-	g.addInstruction(ir.Assign{
+	g.ins(ir.Set{
 		Name:  fmt.Sprintf("cmd_%d.Stdout", id),
 		Value: ir.Literal("os.Stdout"),
 	})
-	g.addInstruction(ir.Assign{
+	g.ins(ir.Set{
 		Name:  fmt.Sprintf("cmd_%d.Stderr", id),
 		Value: ir.Literal("os.Stderr"),
 	})
 
-	g.addInstruction(ir.RunCommanOrFail{
+	g.ins(ir.RunCommanOrFail{
 		Name: fmt.Sprintf("cmd_%d", id),
 	})
 }

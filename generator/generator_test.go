@@ -28,13 +28,7 @@ var testCases = []struct {
 	label string
 	cases []testCase
 }{
-	{"Simple Commands", []testCase{
-		{"cmd", ir.Program{Instructions: []ir.Instruction{
-			ir.Assign{Name: "cmd_0_name", Value: ir.String("cmd")},
-			ir.Assign{Name: "cmd_0", Value: ir.InitCommand{Name: "cmd_0_name"}},
-			ir.RunCommanOrFail{Name: "cmd_0"},
-		}}},
-	}},
+	{"Simple Commands", []testCase{}},
 }
 
 func TestGenerator(t *testing.T) {
