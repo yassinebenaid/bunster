@@ -25,6 +25,11 @@ type Set struct {
 	Value Instruction
 }
 
+type Append struct {
+	Name  string
+	Value Instruction
+}
+
 type String string
 type Literal string
 
@@ -42,6 +47,7 @@ type Panic string
 
 func (Declare) inst()         {}
 func (DeclareSlice) inst()    {}
+func (Append) inst()          {}
 func (Set) inst()             {}
 func (String) inst()          {}
 func (Literal) inst()         {}
@@ -79,12 +85,17 @@ func (d Declare) String() string {
 func (d DeclareSlice) String() string {
 	return fmt.Sprintf("var %s []string\n", string(d))
 }
+
 func (a Set) String() string {
 	return fmt.Sprintf("%s = %s\n", a.Name, a.Value.String())
 }
 
+func (a Append) String() string {
+	return fmt.Sprintf("%s = append(%s, %s)\n", a.Name, a.Name, a.Value.String())
+}
+
 func (s String) String() string {
-	return fmt.Sprintf(`"%s"`, string(s))
+	return fmt.Sprintf("`%s`", string(s))
 }
 func (s Literal) String() string {
 	return fmt.Sprintf(`%s`, string(s))
