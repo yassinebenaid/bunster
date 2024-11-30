@@ -13,7 +13,7 @@ type Shell struct {
 
 	ExitCode int
 
-	Main func(*Shell) error
+	Main func(*Shell)
 }
 
 func (shell *Shell) Run() int {

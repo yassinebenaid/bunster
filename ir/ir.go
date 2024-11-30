@@ -65,16 +65,14 @@ func (p Program) String() string {
 )`
 
 	str += `
-func Main(shell *runtime.Shell) error {
+func Main(shell *runtime.Shell) {
 		`
 
 	for _, in := range p.Instructions {
 		str += in.String()
 	}
 
-	str += `
-		return nil
-		}`
+	str += `}`
 	return str
 }
 
