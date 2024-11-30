@@ -51,7 +51,7 @@ func (p Program) String() string {
 )`
 
 	str += `
-func Main(*runtime.Shell) error {
+func Main(shell *runtime.Shell) error {
 		`
 
 	for _, in := range p.Instructions {
@@ -83,7 +83,9 @@ func (ic InitCommand) String() string {
 func (rcf RunCommanOrFail) String() string {
 	return fmt.Sprintf(`
 		if err := %s.Run(); err != nil {
-			runtime.HandleCommandRunError(err)
+			shell.HandleCommandRunError(err)
+		}else{
+			shell.ExitCode = 0
 		}
 		`, rcf.Name)
 }

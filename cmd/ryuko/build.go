@@ -46,6 +46,9 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
+	// we ignore the error, because this is just an optional step that shouldn't stop us from building the binary
+	exec.Command("gofmt", "-w", wd).Run()
+
 	gocmd := exec.Command("go", "build", "-o", "build.bin")
 	gocmd.Stdin = os.Stdin
 	gocmd.Stdout = os.Stdout

@@ -3,7 +3,6 @@ package runtime
 import (
 	"fmt"
 	"io"
-	"os"
 	"os/exec"
 )
 
@@ -12,18 +11,21 @@ type Shell struct {
 	Stdout io.Writer
 	Stderr io.Writer
 
+	ExitCode int
+
 	Main func(*Shell) error
 }
 
-func (*Shell) Run() int {
+func (shell *Shell) Run() int {
+	shell.Main(shell)
 
-	return 0
+	return shell.ExitCode
 }
 
-func HandleCommandRunError(err error) {
-	if e, ok := err.(*exec.Error); ok {
-		fmt.Fprintf(os.Stderr, "failed to recognize command %q, %v", e.Name, e.Err)
-	}
+func (shell *Shell) HandleCommandRunError(err error) {
+	shell.ExitCode = 1
 
-	os.Exit(1)
+	if e, ok := err.(*exec.Error); ok {
+		fmt.Fprintf(shell.Stderr, "failed to recognize command %q, %v\n", e.Name, e.Err)
+	}
 }
