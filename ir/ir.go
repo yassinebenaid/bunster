@@ -33,6 +33,8 @@ type Append struct {
 type String string
 type Literal string
 
+type ReadVar string
+
 type InitCommand struct {
 	Name string
 	Args string
@@ -48,6 +50,7 @@ type Panic string
 func (Declare) inst()         {}
 func (DeclareSlice) inst()    {}
 func (Append) inst()          {}
+func (ReadVar) inst()         {}
 func (Set) inst()             {}
 func (String) inst()          {}
 func (Literal) inst()         {}
@@ -86,6 +89,10 @@ func (d DeclareSlice) String() string {
 
 func (a Set) String() string {
 	return fmt.Sprintf("%s = %s\n", a.Name, a.Value.String())
+}
+
+func (rv ReadVar) String() string {
+	return fmt.Sprintf("shell.ReadVar(%q)", string(rv))
 }
 
 func (a Append) String() string {

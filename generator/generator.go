@@ -80,7 +80,9 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 	switch v := expression.(type) {
 	case ast.Word:
 		return ir.String(v)
+	case ast.Var:
+		return ir.ReadVar(v)
+	default:
+		panic(fmt.Sprintf("unhandled expression type (%T)", expression))
 	}
-
-	return nil
 }
