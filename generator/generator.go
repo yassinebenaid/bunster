@@ -102,6 +102,15 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Name:  fmt.Sprintf("%s.Stdout", name),
 				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 			})
+		case ">>":
+			g.ins(ir.OpenFileForAppending{
+				Name: fmt.Sprintf("%s_file_%d", name, i),
+				File: g.handleExpression(redirection.Dst),
+			})
+			g.ins(ir.Set{
+				Name:  fmt.Sprintf("%s.Stdout", name),
+				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
+			})
 		}
 	}
 }
