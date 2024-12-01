@@ -45,21 +45,21 @@ type RunCommanOrFail struct {
 	Name    string
 }
 
-type OpenFile struct {
+type OpenFileForWriting struct {
 	Name string
 	File Instruction
 }
 
-func (Declare) inst()         {}
-func (DeclareSlice) inst()    {}
-func (Append) inst()          {}
-func (ReadVar) inst()         {}
-func (Set) inst()             {}
-func (String) inst()          {}
-func (Literal) inst()         {}
-func (InitCommand) inst()     {}
-func (OpenFile) inst()        {}
-func (RunCommanOrFail) inst() {}
+func (Declare) inst()            {}
+func (DeclareSlice) inst()       {}
+func (Append) inst()             {}
+func (ReadVar) inst()            {}
+func (Set) inst()                {}
+func (String) inst()             {}
+func (Literal) inst()            {}
+func (InitCommand) inst()        {}
+func (OpenFileForWriting) inst() {}
+func (RunCommanOrFail) inst()    {}
 
 func (p Program) String() string {
 	var str = "package main\n\n"
@@ -124,9 +124,9 @@ func (rcf RunCommanOrFail) String() string {
 		`, rcf.Command, rcf.Name)
 }
 
-func (of OpenFile) String() string {
+func (of OpenFileForWriting) String() string {
 	return fmt.Sprintf(`
-		%s, err := runtime.OpenFile(%s)
+		%s, err := runtime.OpenFileForWriting(%s)
 		if err != nil {
 			shell.HandleError("", err)
 		}else{

@@ -91,16 +91,16 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 		Value: ir.Literal("shell.Stderr"),
 	})
 
-	for _, redirection := range redirections {
+	for i, redirection := range redirections {
 		switch redirection.Method {
 		case ">":
-			g.ins(ir.OpenFile{
-				Name: fmt.Sprintf("%s_file", name),
+			g.ins(ir.OpenFileForWriting{
+				Name: fmt.Sprintf("%s_file_%d", name, i),
 				File: g.handleExpression(redirection.Dst),
 			})
 			g.ins(ir.Set{
 				Name:  fmt.Sprintf("%s.Stdout", name),
-				Value: ir.Literal(fmt.Sprintf("%s_file", name)),
+				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 			})
 		}
 	}
