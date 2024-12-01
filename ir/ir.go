@@ -64,6 +64,10 @@ type NewStringStream struct {
 	Target Instruction
 }
 
+type NewStreamFromFD struct {
+	Fd Instruction
+}
+
 func (Declare) inst()                        {}
 func (DeclareSlice) inst()                   {}
 func (Append) inst()                         {}
@@ -77,6 +81,7 @@ func (OpenOrCreateStreamForAppending) inst() {}
 func (OpenOrCreateStream) inst()             {}
 func (NewStringStream) inst()                {}
 func (RunCommanOrFail) inst()                {}
+func (NewStreamFromFD) inst()                {}
 
 func (p Program) String() string {
 	var str = "package main\n\n"
@@ -176,4 +181,8 @@ func (of OpenOrCreateStreamForAppending) String() string {
 
 func (of NewStringStream) String() string {
 	return fmt.Sprintf("runtime.NewStringStream(%s)", of.Target.String())
+}
+
+func (nsfd NewStreamFromFD) String() string {
+	return fmt.Sprintf("runtime.NewStreamFromFD(%s)", nsfd.Fd.String())
 }

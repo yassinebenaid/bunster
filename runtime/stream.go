@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 )
 
 type Stream interface {
@@ -51,6 +52,14 @@ func (s *stringStream) Write(p []byte) (n int, err error) {
 	return s.buf.Write(p)
 }
 
-func NewStringStream(s string) *stringStream {
+func NewStringStream(s string) Stream {
 	return &stringStream{buf: bytes.NewBufferString(s)}
+}
+
+func NewStreamFromFD(fds string) Stream {
+	fd, err := strconv.ParseUint(fds, 10, 10)
+	if err != nil {
+		return nil
+	}
+	return os.NewFile(uintptr(fd), fmt.Sprintf("fd%d", fd))
 }
