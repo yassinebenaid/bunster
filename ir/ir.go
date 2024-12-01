@@ -61,7 +61,6 @@ func (p Program) String() string {
 	var str = "package main\n\n"
 
 	str += `import (
-	"os"
 	"os/exec"
 
 	"ryuko-build/runtime"

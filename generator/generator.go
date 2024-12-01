@@ -58,18 +58,7 @@ func (g *generator) handleSimpleCommand(cmd ast.Command) {
 		},
 	})
 
-	g.ins(ir.Set{
-		Name:  fmt.Sprintf("cmd_%d.Stdin", id),
-		Value: ir.Literal("os.Stdin"),
-	})
-	g.ins(ir.Set{
-		Name:  fmt.Sprintf("cmd_%d.Stdout", id),
-		Value: ir.Literal("os.Stdout"),
-	})
-	g.ins(ir.Set{
-		Name:  fmt.Sprintf("cmd_%d.Stderr", id),
-		Value: ir.Literal("os.Stderr"),
-	})
+	g.handleRedirections(fmt.Sprintf("cmd_%d", id), cmd.Redirections)
 
 	g.ins(ir.RunCommanOrFail{
 		Command: fmt.Sprintf("cmd_%d", id),
@@ -86,4 +75,19 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 	default:
 		panic(fmt.Sprintf("unhandled expression type (%T)", expression))
 	}
+}
+
+func (g *generator) handleRedirections(name string, cmd []ast.Redirection) {
+	g.ins(ir.Set{
+		Name:  fmt.Sprintf("%s.Stdin", name),
+		Value: ir.Literal("shell.Stdin"),
+	})
+	g.ins(ir.Set{
+		Name:  fmt.Sprintf("%s.Stdout", name),
+		Value: ir.Literal("shell.Stdout"),
+	})
+	g.ins(ir.Set{
+		Name:  fmt.Sprintf("%s.Stderr", name),
+		Value: ir.Literal("shell.Stderr"),
+	})
 }
