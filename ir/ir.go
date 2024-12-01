@@ -45,7 +45,7 @@ type RunCommanOrFail struct {
 	Name    string
 }
 
-type OpenFileForWriting struct {
+type OpenFile struct {
 	Name string
 	File Instruction
 }
@@ -63,7 +63,7 @@ func (Set) inst()                  {}
 func (String) inst()               {}
 func (Literal) inst()              {}
 func (InitCommand) inst()          {}
-func (OpenFileForWriting) inst()   {}
+func (OpenFile) inst()             {}
 func (OpenFileForAppending) inst() {}
 func (RunCommanOrFail) inst()      {}
 
@@ -130,9 +130,9 @@ func (rcf RunCommanOrFail) String() string {
 		`, rcf.Command, rcf.Name)
 }
 
-func (of OpenFileForWriting) String() string {
+func (of OpenFile) String() string {
 	return fmt.Sprintf(`
-		%s, err := runtime.OpenFileForWriting(%s)
+		%s, err := runtime.OpenFile(%s)
 		if err != nil {
 			shell.HandleError("", err)
 		}else{
