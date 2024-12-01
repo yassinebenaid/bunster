@@ -93,7 +93,7 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 
 	for i, redirection := range redirections {
 		switch redirection.Method {
-		case ">":
+		case ">", ">|":
 			g.ins(ir.OpenFileForWriting{
 				Name: fmt.Sprintf("%s_file_%d", name, i),
 				File: g.handleExpression(redirection.Dst),
