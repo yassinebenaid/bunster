@@ -147,9 +147,11 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 			})
 		case "<<<":
-			g.ins(ir.NewStringStream{
-				Name:   fmt.Sprintf("%s_file_%d", name, i),
-				Target: g.handleExpression(redirection.Dst),
+			g.ins(ir.Declare{
+				Name: fmt.Sprintf("%s_file_%d", name, i),
+				Value: ir.NewStringStream{
+					Target: g.handleExpression(redirection.Dst),
+				},
 			})
 			g.ins(ir.Set{
 				Name:  fmt.Sprintf("%s.Stdin", name),

@@ -61,7 +61,6 @@ type OpenOrCreateStreamForAppending struct {
 }
 
 type NewStringStream struct {
-	Name   string
 	Target Instruction
 }
 
@@ -176,5 +175,5 @@ func (of OpenOrCreateStreamForAppending) String() string {
 }
 
 func (of NewStringStream) String() string {
-	return fmt.Sprintf("%s := runtime.NewStringStream(%s)\n", of.Name, of.Target.String())
+	return fmt.Sprintf("runtime.NewStringStream(%s)", of.Target.String())
 }
