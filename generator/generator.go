@@ -94,7 +94,7 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 	for i, redirection := range redirections {
 		switch redirection.Method {
 		case ">", ">|":
-			g.ins(ir.OpenFile{
+			g.ins(ir.OpenOrCreateFile{
 				Name: fmt.Sprintf("%s_file_%d", name, i),
 				File: g.handleExpression(redirection.Dst),
 			})
@@ -103,7 +103,7 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 			})
 		case ">>":
-			g.ins(ir.OpenFileForAppending{
+			g.ins(ir.OpenOrCreateFileForAppending{
 				Name: fmt.Sprintf("%s_file_%d", name, i),
 				File: g.handleExpression(redirection.Dst),
 			})
@@ -112,7 +112,7 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 			})
 		case "&>":
-			g.ins(ir.OpenFile{
+			g.ins(ir.OpenOrCreateFile{
 				Name: fmt.Sprintf("%s_file_%d", name, i),
 				File: g.handleExpression(redirection.Dst),
 			})
@@ -125,7 +125,7 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 			})
 		case "&>>":
-			g.ins(ir.OpenFileForAppending{
+			g.ins(ir.OpenOrCreateFileForAppending{
 				Name: fmt.Sprintf("%s_file_%d", name, i),
 				File: g.handleExpression(redirection.Dst),
 			})
@@ -135,6 +135,15 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 			})
 			g.ins(ir.Set{
 				Name:  fmt.Sprintf("%s.Stderr", name),
+				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
+			})
+		case "<":
+			g.ins(ir.OpenFile{
+				Name: fmt.Sprintf("%s_file_%d", name, i),
+				File: g.handleExpression(redirection.Dst),
+			})
+			g.ins(ir.Set{
+				Name:  fmt.Sprintf("%s.Stdin", name),
 				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 			})
 		}

@@ -50,22 +50,28 @@ type OpenFile struct {
 	File Instruction
 }
 
-type OpenFileForAppending struct {
+type OpenOrCreateFile struct {
 	Name string
 	File Instruction
 }
 
-func (Declare) inst()              {}
-func (DeclareSlice) inst()         {}
-func (Append) inst()               {}
-func (ReadVar) inst()              {}
-func (Set) inst()                  {}
-func (String) inst()               {}
-func (Literal) inst()              {}
-func (InitCommand) inst()          {}
-func (OpenFile) inst()             {}
-func (OpenFileForAppending) inst() {}
-func (RunCommanOrFail) inst()      {}
+type OpenOrCreateFileForAppending struct {
+	Name string
+	File Instruction
+}
+
+func (Declare) inst()                      {}
+func (DeclareSlice) inst()                 {}
+func (Append) inst()                       {}
+func (ReadVar) inst()                      {}
+func (Set) inst()                          {}
+func (String) inst()                       {}
+func (Literal) inst()                      {}
+func (InitCommand) inst()                  {}
+func (OpenFile) inst()                     {}
+func (OpenOrCreateFileForAppending) inst() {}
+func (OpenOrCreateFile) inst()             {}
+func (RunCommanOrFail) inst()              {}
 
 func (p Program) String() string {
 	var str = "package main\n\n"
@@ -141,9 +147,20 @@ func (of OpenFile) String() string {
 		`, of.Name, of.File.String())
 }
 
-func (of OpenFileForAppending) String() string {
+func (of OpenOrCreateFile) String() string {
 	return fmt.Sprintf(`
-		%s, err := runtime.OpenFileForAppending(%s)
+		%s, err := runtime.OpenOrCreateFile(%s)
+		if err != nil {
+			shell.HandleError("", err)
+		}else{
+			shell.ExitCode = 0
+		}
+		`, of.Name, of.File.String())
+}
+
+func (of OpenOrCreateFileForAppending) String() string {
+	return fmt.Sprintf(`
+		%s, err := runtime.OpenOrCreateFileForAppending(%s)
 		if err != nil {
 			shell.HandleError("", err)
 		}else{
