@@ -45,33 +45,38 @@ type RunCommanOrFail struct {
 	Name    string
 }
 
-type OpenFile struct {
-	Name string
-	File Instruction
+type OpenStream struct {
+	Name   string
+	Target Instruction
 }
 
-type OpenOrCreateFile struct {
-	Name string
-	File Instruction
+type OpenOrCreateStream struct {
+	Name   string
+	Target Instruction
 }
 
-type OpenOrCreateFileForAppending struct {
-	Name string
-	File Instruction
+type OpenOrCreateStreamForAppending struct {
+	Name   string
+	Target Instruction
 }
 
-func (Declare) inst()                      {}
-func (DeclareSlice) inst()                 {}
-func (Append) inst()                       {}
-func (ReadVar) inst()                      {}
-func (Set) inst()                          {}
-func (String) inst()                       {}
-func (Literal) inst()                      {}
-func (InitCommand) inst()                  {}
-func (OpenFile) inst()                     {}
-func (OpenOrCreateFileForAppending) inst() {}
-func (OpenOrCreateFile) inst()             {}
-func (RunCommanOrFail) inst()              {}
+type NewStringStream struct {
+	Target Instruction
+}
+
+func (Declare) inst()                        {}
+func (DeclareSlice) inst()                   {}
+func (Append) inst()                         {}
+func (ReadVar) inst()                        {}
+func (Set) inst()                            {}
+func (String) inst()                         {}
+func (Literal) inst()                        {}
+func (InitCommand) inst()                    {}
+func (OpenStream) inst()                     {}
+func (OpenOrCreateStreamForAppending) inst() {}
+func (OpenOrCreateStream) inst()             {}
+func (NewStringStream) inst()                {}
+func (RunCommanOrFail) inst()                {}
 
 func (p Program) String() string {
 	var str = "package main\n\n"
@@ -136,35 +141,39 @@ func (rcf RunCommanOrFail) String() string {
 		`, rcf.Command, rcf.Name)
 }
 
-func (of OpenFile) String() string {
+func (of OpenStream) String() string {
 	return fmt.Sprintf(`
-		%s, err := runtime.OpenFile(%s)
+		%s, err := runtime.OpenStream(%s)
 		if err != nil {
 			shell.HandleError("", err)
 		}else{
 			shell.ExitCode = 0
 		}
-		`, of.Name, of.File.String())
+		`, of.Name, of.Target.String())
 }
 
-func (of OpenOrCreateFile) String() string {
+func (of OpenOrCreateStream) String() string {
 	return fmt.Sprintf(`
-		%s, err := runtime.OpenOrCreateFile(%s)
+		%s, err := runtime.OpenOrCreateStream(%s)
 		if err != nil {
 			shell.HandleError("", err)
 		}else{
 			shell.ExitCode = 0
 		}
-		`, of.Name, of.File.String())
+		`, of.Name, of.Target.String())
 }
 
-func (of OpenOrCreateFileForAppending) String() string {
+func (of OpenOrCreateStreamForAppending) String() string {
 	return fmt.Sprintf(`
-		%s, err := runtime.OpenOrCreateFileForAppending(%s)
+		%s, err := runtime.OpenOrCreateStreamForAppending(%s)
 		if err != nil {
 			shell.HandleError("", err)
 		}else{
 			shell.ExitCode = 0
 		}
-		`, of.Name, of.File.String())
+		`, of.Name, of.Target.String())
+}
+
+func (of NewStringStream) String() string {
+	return fmt.Sprintf("runtime.NewStringStream(%s)", of.Target.String())
 }

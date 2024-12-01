@@ -94,27 +94,27 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 	for i, redirection := range redirections {
 		switch redirection.Method {
 		case ">", ">|":
-			g.ins(ir.OpenOrCreateFile{
-				Name: fmt.Sprintf("%s_file_%d", name, i),
-				File: g.handleExpression(redirection.Dst),
+			g.ins(ir.OpenOrCreateStream{
+				Name:   fmt.Sprintf("%s_file_%d", name, i),
+				Target: g.handleExpression(redirection.Dst),
 			})
 			g.ins(ir.Set{
 				Name:  fmt.Sprintf("%s.Stdout", name),
 				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 			})
 		case ">>":
-			g.ins(ir.OpenOrCreateFileForAppending{
-				Name: fmt.Sprintf("%s_file_%d", name, i),
-				File: g.handleExpression(redirection.Dst),
+			g.ins(ir.OpenOrCreateStreamForAppending{
+				Name:   fmt.Sprintf("%s_file_%d", name, i),
+				Target: g.handleExpression(redirection.Dst),
 			})
 			g.ins(ir.Set{
 				Name:  fmt.Sprintf("%s.Stdout", name),
 				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 			})
 		case "&>":
-			g.ins(ir.OpenOrCreateFile{
-				Name: fmt.Sprintf("%s_file_%d", name, i),
-				File: g.handleExpression(redirection.Dst),
+			g.ins(ir.OpenOrCreateStream{
+				Name:   fmt.Sprintf("%s_file_%d", name, i),
+				Target: g.handleExpression(redirection.Dst),
 			})
 			g.ins(ir.Set{
 				Name:  fmt.Sprintf("%s.Stdout", name),
@@ -125,9 +125,9 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 			})
 		case "&>>":
-			g.ins(ir.OpenOrCreateFileForAppending{
-				Name: fmt.Sprintf("%s_file_%d", name, i),
-				File: g.handleExpression(redirection.Dst),
+			g.ins(ir.OpenOrCreateStreamForAppending{
+				Name:   fmt.Sprintf("%s_file_%d", name, i),
+				Target: g.handleExpression(redirection.Dst),
 			})
 			g.ins(ir.Set{
 				Name:  fmt.Sprintf("%s.Stdout", name),
@@ -138,9 +138,20 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 			})
 		case "<":
-			g.ins(ir.OpenFile{
+			g.ins(ir.OpenStream{
+				Name:   fmt.Sprintf("%s_file_%d", name, i),
+				Target: g.handleExpression(redirection.Dst),
+			})
+			g.ins(ir.Set{
+				Name:  fmt.Sprintf("%s.Stdin", name),
+				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
+			})
+		case "<<<":
+			g.ins(ir.Declare{
 				Name: fmt.Sprintf("%s_file_%d", name, i),
-				File: g.handleExpression(redirection.Dst),
+				Value: ir.NewStringStream{
+					Target: g.handleExpression(redirection.Dst),
+				},
 			})
 			g.ins(ir.Set{
 				Name:  fmt.Sprintf("%s.Stdin", name),

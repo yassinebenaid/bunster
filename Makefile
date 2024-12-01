@@ -12,5 +12,5 @@ compile: build
 	@rm -rf .test-build && mkdir .test-build
 	@./bin/ryuko build script.test.bash -o ./bin/script --build-space .test-build
 
-dump-ast:
+dump-ast: build
 	@./bin/ryuko ast script.test.bash
