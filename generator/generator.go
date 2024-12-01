@@ -77,7 +77,7 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 	}
 }
 
-func (g *generator) handleRedirections(name string, cmd []ast.Redirection) {
+func (g *generator) handleRedirections(name string, redirections []ast.Redirection) {
 	g.ins(ir.Set{
 		Name:  fmt.Sprintf("%s.Stdin", name),
 		Value: ir.Literal("shell.Stdin"),
@@ -90,4 +90,18 @@ func (g *generator) handleRedirections(name string, cmd []ast.Redirection) {
 		Name:  fmt.Sprintf("%s.Stderr", name),
 		Value: ir.Literal("shell.Stderr"),
 	})
+
+	for _, redirection := range redirections {
+		switch redirection.Method {
+		case ">":
+			g.ins(ir.OpenFile{
+				Name: fmt.Sprintf("%s_file", name),
+				File: g.handleExpression(redirection.Dst),
+			})
+			g.ins(ir.Set{
+				Name:  fmt.Sprintf("%s.Stdout", name),
+				Value: ir.Literal(fmt.Sprintf("%s_file", name)),
+			})
+		}
+	}
 }
