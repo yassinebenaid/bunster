@@ -98,10 +98,18 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 			})
-			g.ins(ir.Set{
-				Name:  fmt.Sprintf("%s.Stdout", name),
-				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
-			})
+
+			if redirection.Src == "1" {
+				g.ins(ir.Set{
+					Name:  fmt.Sprintf("%s.Stdout", name),
+					Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
+				})
+			} else {
+				g.ins(ir.DuplicateFD{
+					Old: fmt.Sprintf("int(%s_file_%d.Fd())", name, i),
+					New: redirection.Src,
+				})
+			}
 		case ">>":
 			g.ins(ir.OpenOrCreateStreamForAppending{
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
