@@ -2,6 +2,7 @@ package runtime
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"os"
 )
@@ -25,14 +26,31 @@ func OpenOrCreateStreamForAppending(name string) (Stream, error) {
 }
 
 type stringStream struct {
-	buf bytes.Buffer
+	buf *bytes.Buffer
 }
 
 func (s *stringStream) Close() error {
-	s.buf = bytes.Buffer{}
+	if s.buf == nil {
+		return fmt.Errorf("cannot close closed stream")
+	}
+	s.buf = nil
 	return nil
 }
 
-func NewStringStream(s string) stringStream {
-	return stringStream{buf: *bytes.NewBufferString(s)}
+func (s *stringStream) Read(p []byte) (n int, err error) {
+	if s.buf == nil {
+		return 0, fmt.Errorf("cannot read from closed stream")
+	}
+	return s.buf.Read(p)
+}
+
+func (s *stringStream) Write(p []byte) (n int, err error) {
+	if s.buf == nil {
+		return 0, fmt.Errorf("cannot write to closed stream")
+	}
+	return s.buf.Write(p)
+}
+
+func NewStringStream(s string) *stringStream {
+	return &stringStream{buf: bytes.NewBufferString(s)}
 }

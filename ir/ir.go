@@ -46,18 +46,23 @@ type RunCommanOrFail struct {
 }
 
 type OpenStream struct {
-	Name string
-	File Instruction
+	Name   string
+	Target Instruction
 }
 
 type OpenOrCreateStream struct {
-	Name string
-	File Instruction
+	Name   string
+	Target Instruction
 }
 
 type OpenOrCreateStreamForAppending struct {
-	Name string
-	File Instruction
+	Name   string
+	Target Instruction
+}
+
+type NewStringStream struct {
+	Name   string
+	Target Instruction
 }
 
 func (Declare) inst()                        {}
@@ -71,6 +76,7 @@ func (InitCommand) inst()                    {}
 func (OpenStream) inst()                     {}
 func (OpenOrCreateStreamForAppending) inst() {}
 func (OpenOrCreateStream) inst()             {}
+func (NewStringStream) inst()                {}
 func (RunCommanOrFail) inst()                {}
 
 func (p Program) String() string {
@@ -144,7 +150,7 @@ func (of OpenStream) String() string {
 		}else{
 			shell.ExitCode = 0
 		}
-		`, of.Name, of.File.String())
+		`, of.Name, of.Target.String())
 }
 
 func (of OpenOrCreateStream) String() string {
@@ -155,7 +161,7 @@ func (of OpenOrCreateStream) String() string {
 		}else{
 			shell.ExitCode = 0
 		}
-		`, of.Name, of.File.String())
+		`, of.Name, of.Target.String())
 }
 
 func (of OpenOrCreateStreamForAppending) String() string {
@@ -166,5 +172,9 @@ func (of OpenOrCreateStreamForAppending) String() string {
 		}else{
 			shell.ExitCode = 0
 		}
-		`, of.Name, of.File.String())
+		`, of.Name, of.Target.String())
+}
+
+func (of NewStringStream) String() string {
+	return fmt.Sprintf("%s := runtime.NewStringStream(%s)\n", of.Name, of.Target.String())
 }
