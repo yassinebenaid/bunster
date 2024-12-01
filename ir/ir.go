@@ -64,6 +64,14 @@ type NewStringStream struct {
 	Target Instruction
 }
 
+type NewStreamFromFD struct {
+	Fd Instruction
+}
+
+type DuplicateFD struct {
+	Old, New string
+}
+
 func (Declare) inst()                        {}
 func (DeclareSlice) inst()                   {}
 func (Append) inst()                         {}
@@ -77,6 +85,8 @@ func (OpenOrCreateStreamForAppending) inst() {}
 func (OpenOrCreateStream) inst()             {}
 func (NewStringStream) inst()                {}
 func (RunCommanOrFail) inst()                {}
+func (NewStreamFromFD) inst()                {}
+func (DuplicateFD) inst()                    {}
 
 func (p Program) String() string {
 	var str = "package main\n\n"
@@ -176,4 +186,16 @@ func (of OpenOrCreateStreamForAppending) String() string {
 
 func (of NewStringStream) String() string {
 	return fmt.Sprintf("runtime.NewStringStream(%s)", of.Target.String())
+}
+
+func (nsfd NewStreamFromFD) String() string {
+	return fmt.Sprintf("runtime.NewStreamFromFD(%s)", nsfd.Fd.String())
+}
+
+func (dfd DuplicateFD) String() string {
+	return fmt.Sprintf(`
+	if err := runtime.DuplicateFD(%s, %s); err != nil {
+		shell.HandleError("", err)
+	}
+	`, dfd.Old, dfd.New)
 }
