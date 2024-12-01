@@ -45,23 +45,32 @@ type RunCommanOrFail struct {
 	Name    string
 }
 
-type Panic string
+type OpenFileForWriting struct {
+	Name string
+	File Instruction
+}
 
-func (Declare) inst()         {}
-func (DeclareSlice) inst()    {}
-func (Append) inst()          {}
-func (ReadVar) inst()         {}
-func (Set) inst()             {}
-func (String) inst()          {}
-func (Literal) inst()         {}
-func (InitCommand) inst()     {}
-func (RunCommanOrFail) inst() {}
+type OpenFileForAppending struct {
+	Name string
+	File Instruction
+}
+
+func (Declare) inst()              {}
+func (DeclareSlice) inst()         {}
+func (Append) inst()               {}
+func (ReadVar) inst()              {}
+func (Set) inst()                  {}
+func (String) inst()               {}
+func (Literal) inst()              {}
+func (InitCommand) inst()          {}
+func (OpenFileForWriting) inst()   {}
+func (OpenFileForAppending) inst() {}
+func (RunCommanOrFail) inst()      {}
 
 func (p Program) String() string {
 	var str = "package main\n\n"
 
 	str += `import (
-	"os"
 	"os/exec"
 
 	"ryuko-build/runtime"
@@ -102,18 +111,43 @@ func (a Append) String() string {
 func (s String) String() string {
 	return fmt.Sprintf("`%s`", string(s))
 }
+
 func (s Literal) String() string {
 	return fmt.Sprintf(`%s`, string(s))
 }
+
 func (ic InitCommand) String() string {
 	return fmt.Sprintf("exec.Command(%s, %s...)", ic.Name, ic.Args)
 }
+
 func (rcf RunCommanOrFail) String() string {
 	return fmt.Sprintf(`
 		if err := %s.Run(); err != nil {
-			shell.HandleCommandRunError(%s, err)
+			shell.HandleError(%s, err)
 		}else{
 			shell.ExitCode = 0
 		}
 		`, rcf.Command, rcf.Name)
+}
+
+func (of OpenFileForWriting) String() string {
+	return fmt.Sprintf(`
+		%s, err := runtime.OpenFileForWriting(%s)
+		if err != nil {
+			shell.HandleError("", err)
+		}else{
+			shell.ExitCode = 0
+		}
+		`, of.Name, of.File.String())
+}
+
+func (of OpenFileForAppending) String() string {
+	return fmt.Sprintf(`
+		%s, err := runtime.OpenFileForAppending(%s)
+		if err != nil {
+			shell.HandleError("", err)
+		}else{
+			shell.ExitCode = 0
+		}
+		`, of.Name, of.File.String())
 }

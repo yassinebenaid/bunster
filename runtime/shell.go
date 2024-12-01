@@ -28,7 +28,7 @@ func (shell *Shell) ReadVar(name string) string {
 	return os.Getenv(name)
 }
 
-func (shell *Shell) HandleCommandRunError(cmd string, err error) {
+func (shell *Shell) HandleError(cmd string, err error) {
 	shell.ExitCode = 1
 
 	switch e := err.(type) {
