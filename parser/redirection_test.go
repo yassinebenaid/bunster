@@ -172,7 +172,7 @@ var redirectionTests = []testCase{
 			},
 		},
 	}},
-	{`cmd <&- 2<&- >&- 2>&- <&5-`, ast.Script{
+	{`cmd <&- 2<&- >&- 2>&- <&5- 6<&5-`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Redirections: []ast.Redirection{
@@ -181,6 +181,7 @@ var redirectionTests = []testCase{
 				{Src: "1", Method: ">&", Close: true},
 				{Src: "2", Method: ">&", Close: true},
 				{Src: "0", Method: "<&", Dst: ast.Number("5"), Close: true},
+				{Src: "6", Method: "<&", Dst: ast.Number("5"), Close: true},
 			},
 		},
 	}},
