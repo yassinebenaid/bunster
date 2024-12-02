@@ -44,11 +44,15 @@ func (p *parser) fromStdout(rt *[]ast.Redirection) {
 		p.proceed()
 	}
 
-	r.Dst = p.parseExpression()
-
-	if r.Dst == nil {
-		p.error("a redirection operand was not provided after the `%s`", r.Method)
+	if r.Method == ">&" && p.curr.Type == token.MINUS {
+		r.Close = true
+	} else {
+		r.Dst = p.parseExpression()
+		if r.Dst == nil {
+			p.error("a redirection operand was not provided after the `%s`", r.Method)
+		}
 	}
+
 	*rt = append(*rt, r)
 }
 
