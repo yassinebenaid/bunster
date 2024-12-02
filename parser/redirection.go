@@ -68,7 +68,7 @@ func (p *parser) fromFileDescriptor(rt *[]ast.Redirection) {
 		p.proceed()
 	}
 
-	if r.Method == "<&" && p.curr.Type == token.MINUS {
+	if (r.Method == "<&" || r.Method == ">&") && p.curr.Type == token.MINUS {
 		r.Close = true
 	} else {
 		r.Dst = p.parseExpression()
