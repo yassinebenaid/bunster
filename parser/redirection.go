@@ -46,6 +46,10 @@ func (p *parser) fromStdout(rt *[]ast.Redirection) {
 
 	if r.Method == ">&" && p.curr.Type == token.MINUS {
 		r.Close = true
+	} else if r.Method == ">&" && p.curr.Type == token.INT && p.next.Type == token.MINUS {
+		r.Dst = ast.Number(p.curr.Literal)
+		r.Close = true
+		p.proceed()
 	} else {
 		r.Dst = p.parseExpression()
 		if r.Dst == nil {
@@ -70,7 +74,7 @@ func (p *parser) fromFileDescriptor(rt *[]ast.Redirection) {
 
 	if (r.Method == "<&" || r.Method == ">&") && p.curr.Type == token.MINUS {
 		r.Close = true
-	} else if r.Method == "<&" && p.curr.Type == token.INT && p.next.Type == token.MINUS {
+	} else if (r.Method == "<&" || r.Method == ">&") && p.curr.Type == token.INT && p.next.Type == token.MINUS {
 		r.Dst = ast.Number(p.curr.Literal)
 		r.Close = true
 		p.proceed()
