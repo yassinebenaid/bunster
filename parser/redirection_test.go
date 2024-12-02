@@ -172,6 +172,17 @@ var redirectionTests = []testCase{
 			},
 		},
 	}},
+	{`cmd 2<&-`, ast.Script{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.Word("arg"),
+				ast.Word("arg2"),
+			}, Redirections: []ast.Redirection{
+				{Src: "2", Method: "<&", Close: true},
+			},
+		},
+	}},
 }
 
 var redirectionErrorHandlingCases = []errorHandlingTestCase{
