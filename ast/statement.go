@@ -38,6 +38,7 @@ type Redirection struct {
 	Src    string
 	Method string
 	Dst    Expression
+	Close  bool
 }
 
 type Command struct {

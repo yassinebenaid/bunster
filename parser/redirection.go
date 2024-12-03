@@ -44,11 +44,19 @@ func (p *parser) fromStdout(rt *[]ast.Redirection) {
 		p.proceed()
 	}
 
-	r.Dst = p.parseExpression()
-
-	if r.Dst == nil {
-		p.error("a redirection operand was not provided after the `%s`", r.Method)
+	if r.Method == ">&" && p.curr.Type == token.MINUS {
+		r.Close = true
+	} else if r.Method == ">&" && p.curr.Type == token.INT && p.next.Type == token.MINUS {
+		r.Dst = ast.Number(p.curr.Literal)
+		r.Close = true
+		p.proceed()
+	} else {
+		r.Dst = p.parseExpression()
+		if r.Dst == nil {
+			p.error("a redirection operand was not provided after the `%s`", r.Method)
+		}
 	}
+
 	*rt = append(*rt, r)
 }
 
@@ -64,9 +72,17 @@ func (p *parser) fromFileDescriptor(rt *[]ast.Redirection) {
 		p.proceed()
 	}
 
-	r.Dst = p.parseExpression()
-	if r.Dst == nil {
-		p.error("a redirection operand was not provided after the `%s`", r.Method)
+	if (r.Method == "<&" || r.Method == ">&") && p.curr.Type == token.MINUS {
+		r.Close = true
+	} else if (r.Method == "<&" || r.Method == ">&") && p.curr.Type == token.INT && p.next.Type == token.MINUS {
+		r.Dst = ast.Number(p.curr.Literal)
+		r.Close = true
+		p.proceed()
+	} else {
+		r.Dst = p.parseExpression()
+		if r.Dst == nil {
+			p.error("a redirection operand was not provided after the `%s`", r.Method)
+		}
 	}
 
 	*rt = append(*rt, r)
@@ -98,9 +114,17 @@ func (p *parser) toStdin(rt *[]ast.Redirection) {
 		p.proceed()
 	}
 
-	r.Dst = p.parseExpression()
-	if r.Dst == nil {
-		p.error("a redirection operand was not provided after the `%s`", r.Method)
+	if r.Method == "<&" && p.curr.Type == token.MINUS {
+		r.Close = true
+	} else if r.Method == "<&" && p.curr.Type == token.INT && p.next.Type == token.MINUS {
+		r.Dst = ast.Number(p.curr.Literal)
+		r.Close = true
+		p.proceed()
+	} else {
+		r.Dst = p.parseExpression()
+		if r.Dst == nil {
+			p.error("a redirection operand was not provided after the `%s`", r.Method)
+		}
 	}
 
 	*rt = append(*rt, r)
