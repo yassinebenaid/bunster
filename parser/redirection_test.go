@@ -172,6 +172,25 @@ var redirectionTests = []testCase{
 			},
 		},
 	}},
+	{`cmd<>'file.ext' arg <> file<>/foo/bar arg123<>foo 3<>bar 928 <>bar 282`, ast.Script{
+
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.Word("arg"),
+				ast.Word("arg123"),
+				ast.Word("928"),
+				ast.Word("282"),
+			}, Redirections: []ast.Redirection{
+				{Src: "0", Method: "<>", Dst: ast.Word("file.ext")},
+				{Src: "0", Method: "<>", Dst: ast.Word("file")},
+				{Src: "0", Method: "<>", Dst: ast.Word("/foo/bar")},
+				{Src: "0", Method: "<>", Dst: ast.Word("foo")},
+				{Src: "3", Method: "<>", Dst: ast.Word("bar")},
+				{Src: "0", Method: "<>", Dst: ast.Word("bar")},
+			},
+		},
+	}},
 	// Duplicating/Closing file descriptors
 	{`cmd <&- 2<&- >&- 2>&- <&5- 6<&5- >&5- 6>&5-`, ast.Script{
 		ast.Command{

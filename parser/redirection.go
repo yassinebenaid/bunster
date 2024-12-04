@@ -7,13 +7,13 @@ import (
 
 func (p *parser) isRedirectionToken() bool {
 	switch p.curr.Type {
-	case token.GT, token.DOUBLE_GT, token.AMPERSAND_GT, token.GT_AMPERSAND,
+	case token.GT, token.DOUBLE_GT, token.AMPERSAND_GT, token.GT_AMPERSAND, token.LT_GT,
 		token.LT, token.LT_AMPERSAND, token.TRIPLE_LT, token.GT_PIPE, token.AMPERSAND_DOUBLE_GT:
 		return true
 	case token.INT:
 		// redirections that use file descriptor as source
 		switch p.next.Type {
-		case token.GT, token.DOUBLE_GT, token.GT_AMPERSAND, token.LT, token.LT_AMPERSAND, token.TRIPLE_LT, token.GT_PIPE:
+		case token.GT, token.DOUBLE_GT, token.GT_AMPERSAND, token.LT, token.LT_AMPERSAND, token.LT_GT, token.TRIPLE_LT, token.GT_PIPE:
 			return true
 		}
 	}
@@ -25,7 +25,7 @@ func (p *parser) HandleRedirection(rt *[]ast.Redirection) {
 	switch p.curr.Type {
 	case token.GT, token.DOUBLE_GT, token.GT_AMPERSAND, token.GT_PIPE:
 		p.fromStdout(rt)
-	case token.LT_AMPERSAND, token.LT, token.TRIPLE_LT:
+	case token.LT_AMPERSAND, token.LT, token.TRIPLE_LT, token.LT_GT:
 		p.toStdin(rt)
 	case token.AMPERSAND_GT, token.AMPERSAND_DOUBLE_GT:
 		p.allOutputsToFile(rt)
