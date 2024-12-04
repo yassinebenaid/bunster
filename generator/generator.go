@@ -105,9 +105,9 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 					Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 				})
 			} else {
-				g.ins(ir.DuplicateFD{
-					Old: fmt.Sprintf("int(%s_file_%d.Fd())", name, i),
-					New: redirection.Src,
+				g.ins(ir.AddStream{
+					Fd:         redirection.Src,
+					StreamName: fmt.Sprintf("%s_file_%d", name, i),
 				})
 			}
 		case ">>":
@@ -146,11 +146,13 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 			})
 		case ">&":
+			g.ins(ir.GetStream{
+				Fd:         g.handleExpression(redirection.Dst),
+				StreamName: fmt.Sprintf("%s_file_%d", name, i),
+			})
 			g.ins(ir.Set{
-				Name: fmt.Sprintf("%s.Stdout", name),
-				Value: ir.NewStreamFromFD{
-					Fd: g.handleExpression(redirection.Dst),
-				},
+				Name:  fmt.Sprintf("%s.Stdout", name),
+				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 			})
 		case "<&":
 			g.ins(ir.Set{

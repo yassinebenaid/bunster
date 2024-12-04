@@ -13,7 +13,8 @@ type Shell struct {
 	Stderr io.Writer
 
 	ExitCode int
-	Env      map[string]string
+
+	FDT map[string]Stream
 
 	Main func(*Shell)
 }
@@ -37,5 +38,19 @@ func (shell *Shell) HandleError(cmd string, err error) {
 	default:
 		fmt.Fprintln(shell.Stderr, err)
 	}
+}
 
+func (shell *Shell) AddStream(fd string, stream Stream) {
+	if shell.FDT == nil {
+		shell.FDT = make(map[string]Stream)
+	}
+	shell.FDT[fd] = stream
+}
+
+func (shell *Shell) GetStream(fd string) (Stream, error) {
+	if stream, ok := shell.FDT[fd]; ok {
+		return stream, nil
+	}
+
+	return nil, fmt.Errorf("bad file descriptor: %s (did you open it?)", fd)
 }
