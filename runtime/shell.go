@@ -2,15 +2,14 @@ package runtime
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 )
 
 type Shell struct {
-	Stdin  io.Reader
-	Stdout io.Writer
-	Stderr io.Writer
+	Stdin  Stream
+	Stdout Stream
+	Stderr Stream
 
 	ExitCode int
 
@@ -53,4 +52,17 @@ func (shell *Shell) GetStream(fd string) (Stream, error) {
 	}
 
 	return nil, fmt.Errorf("bad file descriptor: %s (did you open it?)", fd)
+}
+
+func (shell *Shell) DuplicateStream(oldfd, newfd string) error {
+	if shell.FDT == nil {
+		shell.FDT = make(map[string]Stream)
+	}
+
+	if stream, ok := shell.FDT[newfd]; !ok {
+		return fmt.Errorf("bad file descriptor: %s (did you open it?)", newfd)
+	} else {
+		shell.FDT[oldfd] = stream
+		return nil
+	}
 }

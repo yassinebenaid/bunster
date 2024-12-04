@@ -87,6 +87,11 @@ type GetStream struct {
 	StreamName string
 }
 
+type DuplicateStream struct {
+	Old string
+	New Instruction
+}
+
 func (Declare) inst()                {}
 func (DeclareSlice) inst()           {}
 func (Append) inst()                 {}
@@ -105,6 +110,7 @@ func (NewStreamFromFD) inst()        {}
 func (DuplicateFD) inst()            {}
 func (AddStream) inst()              {}
 func (GetStream) inst()              {}
+func (DuplicateStream) inst()        {}
 
 func (p Program) String() string {
 	var str = "package main\n\n"
@@ -244,4 +250,14 @@ func (as GetStream) String() string {
 			shell.ExitCode = 0
 		}
 	`, as.StreamName, as.Fd)
+}
+
+func (as DuplicateStream) String() string {
+	return fmt.Sprintf(`
+		if err := shell.DuplicateStream("%s", %s); err != nil {
+			shell.HandleError("", err)
+		}else{
+			shell.ExitCode = 0
+		}
+	`, as.Old, as.New)
 }
