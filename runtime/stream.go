@@ -21,11 +21,11 @@ func OpenReadableStream(name string) (Stream, error) {
 }
 
 func OpenWritableStream(name string) (Stream, error) {
-	return os.OpenFile(name, os.O_WRONLY, 0644)
+	return os.OpenFile(name, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 }
 
 func OpenReadWritableStream(name string) (Stream, error) {
-	return os.OpenFile(name, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+	return os.OpenFile(name, os.O_RDWR|os.O_CREATE, 0644)
 }
 
 func OpenAppendableStream(name string) (Stream, error) {
