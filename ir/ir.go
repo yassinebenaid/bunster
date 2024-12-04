@@ -45,17 +45,22 @@ type RunCommanOrFail struct {
 	Name    string
 }
 
-type OpenStream struct {
+type OpenReadableStream struct {
 	Name   string
 	Target Instruction
 }
 
-type OpenOrCreateStream struct {
+type OpenWritableStream struct {
 	Name   string
 	Target Instruction
 }
 
-type OpenOrCreateStreamForAppending struct {
+type OpenReadWritableStream struct {
+	Name   string
+	Target Instruction
+}
+
+type OpenAppendableStream struct {
 	Name   string
 	Target Instruction
 }
@@ -72,21 +77,22 @@ type DuplicateFD struct {
 	Old, New string
 }
 
-func (Declare) inst()                        {}
-func (DeclareSlice) inst()                   {}
-func (Append) inst()                         {}
-func (ReadVar) inst()                        {}
-func (Set) inst()                            {}
-func (String) inst()                         {}
-func (Literal) inst()                        {}
-func (InitCommand) inst()                    {}
-func (OpenStream) inst()                     {}
-func (OpenOrCreateStreamForAppending) inst() {}
-func (OpenOrCreateStream) inst()             {}
-func (NewStringStream) inst()                {}
-func (RunCommanOrFail) inst()                {}
-func (NewStreamFromFD) inst()                {}
-func (DuplicateFD) inst()                    {}
+func (Declare) inst()                {}
+func (DeclareSlice) inst()           {}
+func (Append) inst()                 {}
+func (ReadVar) inst()                {}
+func (Set) inst()                    {}
+func (String) inst()                 {}
+func (Literal) inst()                {}
+func (InitCommand) inst()            {}
+func (OpenReadableStream) inst()     {}
+func (OpenAppendableStream) inst()   {}
+func (OpenWritableStream) inst()     {}
+func (OpenReadWritableStream) inst() {}
+func (NewStringStream) inst()        {}
+func (RunCommanOrFail) inst()        {}
+func (NewStreamFromFD) inst()        {}
+func (DuplicateFD) inst()            {}
 
 func (p Program) String() string {
 	var str = "package main\n\n"
@@ -151,9 +157,9 @@ func (rcf RunCommanOrFail) String() string {
 		`, rcf.Command, rcf.Name)
 }
 
-func (of OpenStream) String() string {
+func (of OpenReadableStream) String() string {
 	return fmt.Sprintf(`
-		%s, err := runtime.OpenStream(%s)
+		%s, err := runtime.OpenReadableStream(%s)
 		if err != nil {
 			shell.HandleError("", err)
 		}else{
@@ -162,9 +168,9 @@ func (of OpenStream) String() string {
 		`, of.Name, of.Target.String())
 }
 
-func (of OpenOrCreateStream) String() string {
+func (of OpenWritableStream) String() string {
 	return fmt.Sprintf(`
-		%s, err := runtime.OpenOrCreateStream(%s)
+		%s, err := runtime.OpenWritableStream(%s)
 		if err != nil {
 			shell.HandleError("", err)
 		}else{
@@ -173,9 +179,20 @@ func (of OpenOrCreateStream) String() string {
 		`, of.Name, of.Target.String())
 }
 
-func (of OpenOrCreateStreamForAppending) String() string {
+func (of OpenAppendableStream) String() string {
 	return fmt.Sprintf(`
-		%s, err := runtime.OpenOrCreateStreamForAppending(%s)
+		%s, err := runtime.OpenAppendableStream(%s)
+		if err != nil {
+			shell.HandleError("", err)
+		}else{
+			shell.ExitCode = 0
+		}
+		`, of.Name, of.Target.String())
+}
+
+func (of OpenReadWritableStream) String() string {
+	return fmt.Sprintf(`
+		%s, err := runtime.OpenReadWritableStream(%s)
 		if err != nil {
 			shell.HandleError("", err)
 		}else{

@@ -94,7 +94,7 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 	for i, redirection := range redirections {
 		switch redirection.Method {
 		case ">", ">|":
-			g.ins(ir.OpenOrCreateStream{
+			g.ins(ir.OpenWritableStream{
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 			})
@@ -111,7 +111,7 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				})
 			}
 		case ">>":
-			g.ins(ir.OpenOrCreateStreamForAppending{
+			g.ins(ir.OpenAppendableStream{
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 			})
@@ -120,7 +120,7 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 			})
 		case "&>":
-			g.ins(ir.OpenOrCreateStream{
+			g.ins(ir.OpenWritableStream{
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 			})
@@ -133,7 +133,7 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 			})
 		case "&>>":
-			g.ins(ir.OpenOrCreateStreamForAppending{
+			g.ins(ir.OpenAppendableStream{
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 			})
@@ -160,7 +160,7 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				},
 			})
 		case "<":
-			g.ins(ir.OpenStream{
+			g.ins(ir.OpenReadableStream{
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 			})
@@ -180,7 +180,7 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 			})
 		case "<>":
-			g.ins(ir.OpenStream{
+			g.ins(ir.OpenReadWritableStream{
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 			})
