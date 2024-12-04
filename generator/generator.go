@@ -172,6 +172,15 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Name:  fmt.Sprintf("%s.Stdin", name),
 				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
 			})
+		case "<>":
+			g.ins(ir.OpenStream{
+				Name:   fmt.Sprintf("%s_file_%d", name, i),
+				Target: g.handleExpression(redirection.Dst),
+			})
+			g.ins(ir.Set{
+				Name:  fmt.Sprintf("%s.Stdin", name),
+				Value: ir.Literal(fmt.Sprintf("%s_file_%d", name, i)),
+			})
 		}
 	}
 }
