@@ -131,15 +131,21 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		case ">&", "<&":
-			g.ins(ir.DuplicateStream{
-				Old: redirection.Src,
-				New: g.handleExpression(redirection.Dst),
-			})
-
-			if redirection.Close {
+			if redirection.Dst == nil && redirection.Close {
 				g.ins(ir.CloseStream{
-					Fd: g.handleExpression(redirection.Dst),
+					Fd: ir.String(redirection.Src),
 				})
+			} else {
+				g.ins(ir.DuplicateStream{
+					Old: redirection.Src,
+					New: g.handleExpression(redirection.Dst),
+				})
+
+				if redirection.Close {
+					g.ins(ir.CloseStream{
+						Fd: g.handleExpression(redirection.Dst),
+					})
+				}
 			}
 		case "<":
 			g.ins(ir.OpenReadableStream{
