@@ -70,6 +70,8 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 	switch v := expression.(type) {
 	case ast.Word:
 		return ir.String(v)
+	case ast.Number:
+		return ir.String(v)
 	case ast.Var:
 		return ir.ReadVar(v)
 	default:
@@ -133,6 +135,12 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Old: redirection.Src,
 				New: g.handleExpression(redirection.Dst),
 			})
+
+			if redirection.Close {
+				g.ins(ir.CloseStream{
+					Fd: g.handleExpression(redirection.Dst),
+				})
+			}
 		case "<":
 			g.ins(ir.OpenReadableStream{
 				Name:   fmt.Sprintf("%s_file_%d", name, i),

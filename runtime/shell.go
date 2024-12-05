@@ -51,7 +51,7 @@ func (shell *Shell) GetStream(fd string) (Stream, error) {
 		return stream, nil
 	}
 
-	return nil, fmt.Errorf("bad file descriptor: %s (did you open it?)", fd)
+	return nil, fmt.Errorf("bad file descriptor: %s", fd)
 }
 
 func (shell *Shell) DuplicateStream(oldfd, newfd string) error {
@@ -60,9 +60,18 @@ func (shell *Shell) DuplicateStream(oldfd, newfd string) error {
 	}
 
 	if stream, ok := shell.FDT[newfd]; !ok {
-		return fmt.Errorf("bad file descriptor: %s (did you open it?)", newfd)
+		return fmt.Errorf("bad file descriptor: %s", newfd)
 	} else {
 		shell.FDT[oldfd] = stream
 		return nil
+	}
+}
+
+func (shell *Shell) CloseStream(fd string) error {
+	if stream, ok := shell.FDT[fd]; !ok {
+		return fmt.Errorf("trying to close bad file descriptor: %s", fd)
+	} else {
+		delete(shell.FDT, fd)
+		return stream.Close()
 	}
 }
