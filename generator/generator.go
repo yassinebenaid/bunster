@@ -128,17 +128,10 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Fd:         "2",
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
-		case ">&":
+		case ">&", "<&":
 			g.ins(ir.DuplicateStream{
 				Old: redirection.Src,
 				New: g.handleExpression(redirection.Dst),
-			})
-		case "<&":
-			g.ins(ir.Set{
-				Name: fmt.Sprintf("%s.Stdin", name),
-				Value: ir.NewStreamFromFD{
-					Fd: g.handleExpression(redirection.Dst),
-				},
 			})
 		case "<":
 			g.ins(ir.OpenReadableStream{
