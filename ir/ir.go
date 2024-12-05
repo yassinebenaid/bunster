@@ -92,6 +92,10 @@ type DuplicateStream struct {
 	New Instruction
 }
 
+type CloseStream struct {
+	Fd Instruction
+}
+
 func (Declare) inst()                {}
 func (DeclareSlice) inst()           {}
 func (Append) inst()                 {}
@@ -111,6 +115,7 @@ func (DuplicateFD) inst()            {}
 func (AddStream) inst()              {}
 func (GetStream) inst()              {}
 func (DuplicateStream) inst()        {}
+func (CloseStream) inst()            {}
 
 func (p Program) String() string {
 	var str = "package main\n\n"
@@ -260,4 +265,14 @@ func (as DuplicateStream) String() string {
 			shell.ExitCode = 0
 		}
 	`, as.Old, as.New)
+}
+
+func (as CloseStream) String() string {
+	return fmt.Sprintf(`
+		if err := shell.CloseStream(%s); err != nil {
+			shell.HandleError("", err)
+		}else{
+			shell.ExitCode = 0
+		}
+	`, as.Fd)
 }
