@@ -77,6 +77,21 @@ type DuplicateFD struct {
 	Old, New string
 }
 
+type AddStream struct {
+	Fd         string
+	StreamName string
+}
+
+type GetStream struct {
+	Fd         Instruction
+	StreamName string
+}
+
+type DuplicateStream struct {
+	Old string
+	New Instruction
+}
+
 func (Declare) inst()                {}
 func (DeclareSlice) inst()           {}
 func (Append) inst()                 {}
@@ -93,6 +108,9 @@ func (NewStringStream) inst()        {}
 func (RunCommanOrFail) inst()        {}
 func (NewStreamFromFD) inst()        {}
 func (DuplicateFD) inst()            {}
+func (AddStream) inst()              {}
+func (GetStream) inst()              {}
+func (DuplicateStream) inst()        {}
 
 func (p Program) String() string {
 	var str = "package main\n\n"
@@ -215,4 +233,31 @@ func (dfd DuplicateFD) String() string {
 		shell.HandleError("", err)
 	}
 	`, dfd.Old, dfd.New)
+}
+
+func (as AddStream) String() string {
+	return fmt.Sprintf(`
+		shell.AddStream("%s", %s)
+	`, as.Fd, as.StreamName)
+}
+
+func (as GetStream) String() string {
+	return fmt.Sprintf(`
+		%s, err := shell.GetStream(%s)
+		if err != nil {
+			shell.HandleError("", err)
+		}else{
+			shell.ExitCode = 0
+		}
+	`, as.StreamName, as.Fd)
+}
+
+func (as DuplicateStream) String() string {
+	return fmt.Sprintf(`
+		if err := shell.DuplicateStream("%s", %s); err != nil {
+			shell.HandleError("", err)
+		}else{
+			shell.ExitCode = 0
+		}
+	`, as.Old, as.New)
 }
