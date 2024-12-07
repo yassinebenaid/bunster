@@ -91,6 +91,7 @@ func (fdt FileDescriptorTable) Duplicate(oldfd, newfd string) error {
 	if stream, ok := fdt[newfd]; !ok {
 		return fmt.Errorf("trying to duplicate bad file descriptor: %s", newfd)
 	} else {
+		// TODO: reopen stream here
 		fdt[oldfd] = stream
 		return nil
 	}
