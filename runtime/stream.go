@@ -91,11 +91,22 @@ func (fdt FileDescriptorTable) Duplicate(oldfd, newfd string) error {
 	if stream, ok := fdt[newfd]; !ok {
 		return fmt.Errorf("trying to duplicate bad file descriptor: %s", newfd)
 	} else {
-		dupFd, err := syscall.Dup(int(stream.Fd()))
-		if err != nil {
-			return fmt.Errorf("failed to duplicate file descriptor '%s', %w", newfd, err)
+		switch stream.(type) {
+		case *stringStream:
+			newbuf := &bytes.Buffer{}
+			_, err := io.Copy(newbuf, stream)
+			if err != nil {
+				return fmt.Errorf("failed to duplicate file descriptor '%s', %w", newfd, err)
+			}
+			fdt[oldfd] = &stringStream{buf: newbuf}
+		default:
+			dupFd, err := syscall.Dup(int(stream.Fd()))
+			if err != nil {
+				return fmt.Errorf("failed to duplicate file descriptor '%s', %w", newfd, err)
+			}
+			fdt[oldfd] = os.NewFile(uintptr(dupFd), fmt.Sprintf("/dev/fd/%d", dupFd))
 		}
-		fdt[oldfd] = os.NewFile(uintptr(dupFd), fmt.Sprintf("/dev/fd/%d", dupFd))
+
 		return nil
 	}
 }
