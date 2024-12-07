@@ -192,7 +192,7 @@ func (as GetStream) togo() string {
 		}else{
 			shell.ExitCode = 0
 		}
-	`, as.StreamName, as.FDT, as.Fd)
+	`, as.StreamName, as.FDT, as.Fd.togo())
 }
 
 type DuplicateStream struct {
@@ -208,7 +208,7 @@ func (as DuplicateStream) togo() string {
 		}else{
 			shell.ExitCode = 0
 		}
-	`, as.FDT, as.Old, as.New)
+	`, as.FDT, as.Old, as.New.togo())
 }
 
 type CloseStream struct {
@@ -223,5 +223,5 @@ func (as CloseStream) togo() string {
 		}else{
 			shell.ExitCode = 0
 		}
-	`, as.FDT, as.Fd)
+	`, as.FDT, as.Fd.togo())
 }
