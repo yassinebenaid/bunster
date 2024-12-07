@@ -102,9 +102,10 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		case ">>":
-			g.ins(ir.OpenAppendableStream{
+			g.ins(ir.OpenStream{
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
+				Mode:   ir.FLAG_APPEND,
 			})
 			g.ins(ir.AddStream{
 				FDT:        fdt,
@@ -112,9 +113,10 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		case "&>":
-			g.ins(ir.OpenWritableStream{
+			g.ins(ir.OpenStream{
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
+				Mode:   ir.FLAG_WRITE,
 			})
 			g.ins(ir.AddStream{
 				FDT:        fdt,
@@ -127,9 +129,10 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		case "&>>":
-			g.ins(ir.OpenAppendableStream{
+			g.ins(ir.OpenStream{
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
+				Mode:   ir.FLAG_APPEND,
 			})
 			g.ins(ir.AddStream{
 				FDT:        fdt,
@@ -162,9 +165,10 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				}
 			}
 		case "<":
-			g.ins(ir.OpenReadableStream{
+			g.ins(ir.OpenStream{
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
+				Mode:   ir.FLAG_READ,
 			})
 			g.ins(ir.AddStream{
 				FDT:        fdt,
@@ -184,9 +188,10 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		case "<>":
-			g.ins(ir.OpenReadWritableStream{
+			g.ins(ir.OpenStream{
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
+				Mode:   ir.FLAG_RW,
 			})
 			g.ins(ir.AddStream{
 				FDT:        fdt,
