@@ -72,3 +72,34 @@ func NewStreamFromFD(fds string) Stream {
 func DuplicateFD(old int, new int) error {
 	return syscall.Dup2(old, int(new))
 }
+
+type FileDescriptorTable map[string]Stream
+
+func (fdt FileDescriptorTable) Add(fd string, stream Stream) {
+	fdt[fd] = stream
+}
+
+func (fdt FileDescriptorTable) Get(fd string) (Stream, error) {
+	if stream, ok := fdt[fd]; ok {
+		return stream, nil
+	}
+
+	return nil, fmt.Errorf("bad file descriptor: %s", fd)
+}
+
+func (fdt FileDescriptorTable) Duplicate(oldfd, newfd string) error {
+	if stream, ok := fdt[newfd]; !ok {
+		return fmt.Errorf("trying to duplicate bad file descriptor: %s", newfd)
+	} else {
+		fdt[oldfd] = stream
+		return nil
+	}
+}
+
+func (fdt FileDescriptorTable) Close(fd string) error {
+	if stream, ok := fdt[fd]; !ok {
+		return fmt.Errorf("trying to close bad file descriptor: %s", fd)
+	} else {
+		return stream.Close()
+	}
+}
