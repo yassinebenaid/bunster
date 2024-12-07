@@ -5,8 +5,14 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strconv"
 	"syscall"
+)
+
+const (
+	STREAM_FLAG_READ   = os.O_RDONLY
+	STREAM_FLAG_WRITE  = os.O_WRONLY | os.O_CREATE | os.O_TRUNC
+	STREAM_FLAG_RW     = os.O_RDWR | os.O_CREATE
+	STREAM_FLAG_APPEND = os.O_WRONLY | os.O_APPEND | os.O_CREATE
 )
 
 type Stream interface {
@@ -16,20 +22,8 @@ type Stream interface {
 	Fd() uintptr
 }
 
-func OpenReadableStream(name string) (Stream, error) {
-	return os.OpenFile(name, os.O_RDONLY, 0)
-}
-
-func OpenWritableStream(name string) (Stream, error) {
-	return os.OpenFile(name, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
-}
-
-func OpenReadWritableStream(name string) (Stream, error) {
-	return os.OpenFile(name, os.O_RDWR|os.O_CREATE, 0644)
-}
-
-func OpenAppendableStream(name string) (Stream, error) {
-	return os.OpenFile(name, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+func OpenStream(name string, flag int) (Stream, error) {
+	return os.OpenFile(name, flag, 0644)
 }
 
 type stringStream struct {
@@ -59,18 +53,6 @@ func (*stringStream) Fd() uintptr { return 0 }
 
 func NewStringStream(s string) Stream {
 	return &stringStream{buf: bytes.NewBufferString(s)}
-}
-
-func NewStreamFromFD(fds string) Stream {
-	fd, err := strconv.ParseUint(fds, 10, 10)
-	if err != nil {
-		return nil
-	}
-	return os.NewFile(uintptr(fd), fmt.Sprintf("fd%d", fd))
-}
-
-func DuplicateFD(old int, new int) error {
-	return syscall.Dup2(old, int(new))
 }
 
 type FileDescriptorTable map[string]Stream

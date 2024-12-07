@@ -5,124 +5,12 @@ import (
 )
 
 type Instruction interface {
-	inst()
-	fmt.Stringer
+	togo() string
 }
 
 type Program struct {
 	Instructions []Instruction
 }
-
-type Declare struct {
-	Name  string
-	Value Instruction
-}
-
-type DeclareSlice string
-
-type Set struct {
-	Name  string
-	Value Instruction
-}
-
-type Append struct {
-	Name  string
-	Value Instruction
-}
-
-type String string
-type Literal string
-
-type ReadVar string
-
-type InitCommand struct {
-	Name string
-	Args string
-}
-
-type RunCommanOrFail struct {
-	Command string
-	Name    string
-}
-
-type OpenReadableStream struct {
-	Name   string
-	Target Instruction
-}
-
-type OpenWritableStream struct {
-	Name   string
-	Target Instruction
-}
-
-type OpenReadWritableStream struct {
-	Name   string
-	Target Instruction
-}
-
-type OpenAppendableStream struct {
-	Name   string
-	Target Instruction
-}
-
-type NewStringStream struct {
-	Target Instruction
-}
-
-type NewStreamFromFD struct {
-	Fd Instruction
-}
-
-type DuplicateFD struct {
-	Old, New string
-}
-
-type CloneFDT struct{}
-
-type AddStream struct {
-	FDT        string
-	Fd         string
-	StreamName string
-}
-
-type GetStream struct {
-	FDT        string
-	Fd         Instruction
-	StreamName string
-}
-
-type DuplicateStream struct {
-	FDT string
-	Old string
-	New Instruction
-}
-
-type CloseStream struct {
-	FDT string
-	Fd  Instruction
-}
-
-func (Declare) inst()                {}
-func (DeclareSlice) inst()           {}
-func (Append) inst()                 {}
-func (ReadVar) inst()                {}
-func (Set) inst()                    {}
-func (String) inst()                 {}
-func (Literal) inst()                {}
-func (InitCommand) inst()            {}
-func (OpenReadableStream) inst()     {}
-func (OpenAppendableStream) inst()   {}
-func (OpenWritableStream) inst()     {}
-func (OpenReadWritableStream) inst() {}
-func (NewStringStream) inst()        {}
-func (RunCommanOrFail) inst()        {}
-func (NewStreamFromFD) inst()        {}
-func (DuplicateFD) inst()            {}
-func (AddStream) inst()              {}
-func (GetStream) inst()              {}
-func (DuplicateStream) inst()        {}
-func (CloseStream) inst()            {}
-func (CloneFDT) inst()               {}
 
 func (p Program) String() string {
 	var str = "package main\n\n"
@@ -138,46 +26,79 @@ func Main(shell *runtime.Shell) {
 		`
 
 	for _, in := range p.Instructions {
-		str += in.String()
+		str += in.togo()
 	}
 
 	str += `}`
 	return str
 }
 
-func (d Declare) String() string {
-	return fmt.Sprintf("var %s = %s\n", d.Name, d.Value.String())
+type Declare struct {
+	Name  string
+	Value Instruction
 }
 
-func (d DeclareSlice) String() string {
-	return fmt.Sprintf("var %s []string\n", string(d))
+func (d Declare) togo() string {
+	return fmt.Sprintf("var %s = %s\n", d.Name, d.Value.togo())
 }
 
-func (a Set) String() string {
-	return fmt.Sprintf("%s = %s\n", a.Name, a.Value.String())
+type DeclareSlice string
+
+func (d DeclareSlice) togo() string {
+	return fmt.Sprintf("var %s []string\n", d)
 }
 
-func (rv ReadVar) String() string {
-	return fmt.Sprintf("shell.ReadVar(%q)", string(rv))
+type Set struct {
+	Name  string
+	Value Instruction
 }
 
-func (a Append) String() string {
-	return fmt.Sprintf("%s = append(%s, %s)\n", a.Name, a.Name, a.Value.String())
+func (a Set) togo() string {
+	return fmt.Sprintf("%s = %s\n", a.Name, a.Value.togo())
 }
 
-func (s String) String() string {
-	return fmt.Sprintf("`%s`", string(s))
+type Append struct {
+	Name  string
+	Value Instruction
 }
 
-func (s Literal) String() string {
-	return fmt.Sprintf(`%s`, string(s))
+func (a Append) togo() string {
+	return fmt.Sprintf("%s = append(%s, %s)\n", a.Name, a.Name, a.Value.togo())
 }
 
-func (ic InitCommand) String() string {
+type String string
+
+func (s String) togo() string {
+	return fmt.Sprintf("`%s`", s)
+}
+
+type Literal string
+
+func (s Literal) togo() string {
+	return fmt.Sprintf(`%s`, s)
+}
+
+type ReadVar string
+
+func (rv ReadVar) togo() string {
+	return fmt.Sprintf("shell.ReadVar(%q)", rv)
+}
+
+type InitCommand struct {
+	Name string
+	Args string
+}
+
+func (ic InitCommand) togo() string {
 	return fmt.Sprintf("exec.Command(%s, %s...)", ic.Name, ic.Args)
 }
 
-func (rcf RunCommanOrFail) String() string {
+type RunCommanOrFail struct {
+	Command string
+	Name    string
+}
+
+func (rcf RunCommanOrFail) togo() string {
 	return fmt.Sprintf(`
 		if err := %s.Run(); err != nil {
 			shell.HandleError(%s, err)
@@ -187,73 +108,63 @@ func (rcf RunCommanOrFail) String() string {
 		`, rcf.Command, rcf.Name)
 }
 
-func (of OpenReadableStream) String() string {
+const (
+	FLAG_READ   = "STREAM_FLAG_READ"
+	FLAG_WRITE  = "STREAM_FLAG_WRITE"
+	FLAG_RW     = "STREAM_FLAG_RW"
+	FLAG_APPEND = "STREAM_FLAG_APPEND"
+)
+
+type OpenStream struct {
+	Name   string
+	Target Instruction
+	Mode   string
+}
+
+func (of OpenStream) togo() string {
 	return fmt.Sprintf(`
-		%s, err := runtime.OpenReadableStream(%s)
+		%s, err := runtime.OpenStream(%s, runtime.%s)
 		if err != nil {
 			shell.HandleError("", err)
 		}else{
 			shell.ExitCode = 0
 		}
-		`, of.Name, of.Target.String())
+		`, of.Name, of.Target.togo(), of.Mode)
 }
 
-func (of OpenWritableStream) String() string {
-	return fmt.Sprintf(`
-		%s, err := runtime.OpenWritableStream(%s)
-		if err != nil {
-			shell.HandleError("", err)
-		}else{
-			shell.ExitCode = 0
-		}
-		`, of.Name, of.Target.String())
+type NewStringStream struct {
+	Target Instruction
 }
 
-func (of OpenAppendableStream) String() string {
-	return fmt.Sprintf(`
-		%s, err := runtime.OpenAppendableStream(%s)
-		if err != nil {
-			shell.HandleError("", err)
-		}else{
-			shell.ExitCode = 0
-		}
-		`, of.Name, of.Target.String())
+func (of NewStringStream) togo() string {
+	return fmt.Sprintf("runtime.NewStringStream(%s)", of.Target.togo())
 }
 
-func (of OpenReadWritableStream) String() string {
-	return fmt.Sprintf(`
-		%s, err := runtime.OpenReadWritableStream(%s)
-		if err != nil {
-			shell.HandleError("", err)
-		}else{
-			shell.ExitCode = 0
-		}
-		`, of.Name, of.Target.String())
+type CloneFDT struct{}
+
+func (CloneFDT) togo() string {
+	return fmt.Sprintf(`shell.CloneFDT()`)
 }
 
-func (of NewStringStream) String() string {
-	return fmt.Sprintf("runtime.NewStringStream(%s)", of.Target.String())
+type AddStream struct {
+	FDT        string
+	Fd         string
+	StreamName string
 }
 
-func (nsfd NewStreamFromFD) String() string {
-	return fmt.Sprintf("runtime.NewStreamFromFD(%s)", nsfd.Fd.String())
-}
-
-func (dfd DuplicateFD) String() string {
-	return fmt.Sprintf(`
-	if err := runtime.DuplicateFD(%s, %s); err != nil {
-		shell.HandleError("", err)
-	}
-	`, dfd.Old, dfd.New)
-}
-
-func (as AddStream) String() string {
+func (as AddStream) togo() string {
 	return fmt.Sprintf(`
 		%s.Add("%s", %s)
 	`, as.FDT, as.Fd, as.StreamName)
 }
 
-func (as GetStream) String() string {
+type GetStream struct {
+	FDT        string
+	Fd         Instruction
+	StreamName string
+}
+
+func (as GetStream) togo() string {
 	return fmt.Sprintf(`
 		%s, err := %s.Get(%s)
 		if err != nil {
@@ -261,29 +172,36 @@ func (as GetStream) String() string {
 		}else{
 			shell.ExitCode = 0
 		}
-	`, as.StreamName, as.FDT, as.Fd)
+	`, as.StreamName, as.FDT, as.Fd.togo())
 }
 
-func (as DuplicateStream) String() string {
+type DuplicateStream struct {
+	FDT string
+	Old string
+	New Instruction
+}
+
+func (as DuplicateStream) togo() string {
 	return fmt.Sprintf(`
 		if err := %s.Duplicate("%s", %s); err != nil {
 			shell.HandleError("", err)
 		}else{
 			shell.ExitCode = 0
 		}
-	`, as.FDT, as.Old, as.New)
+	`, as.FDT, as.Old, as.New.togo())
 }
 
-func (as CloseStream) String() string {
+type CloseStream struct {
+	FDT string
+	Fd  Instruction
+}
+
+func (as CloseStream) togo() string {
 	return fmt.Sprintf(`
 		if err := %s.Close(%s); err != nil {
 			shell.HandleError("", err)
 		}else{
 			shell.ExitCode = 0
 		}
-	`, as.FDT, as.Fd)
-}
-
-func (CloneFDT) String() string {
-	return fmt.Sprintf(`shell.CloneFDT()`)
+	`, as.FDT, as.Fd.togo())
 }
