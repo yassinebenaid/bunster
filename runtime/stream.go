@@ -46,16 +46,13 @@ func (s *stringStream) Close() error {
 
 func (s *stringStream) Read(p []byte) (n int, err error) {
 	if s.buf == nil {
-		return 0, fmt.Errorf("cannot read from closed stream")
+		return 0, fmt.Errorf("bad file descriptor, cannot read from closed stream")
 	}
 	return s.buf.Read(p)
 }
 
 func (s *stringStream) Write(p []byte) (n int, err error) {
-	if s.buf == nil {
-		return 0, fmt.Errorf("cannot write to closed stream")
-	}
-	return s.buf.Write(p)
+	return 0, fmt.Errorf("bad file descriptor, cannot write to read only stream")
 }
 
 func (*stringStream) Fd() uintptr { return 0 }

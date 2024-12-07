@@ -71,7 +71,6 @@ func (shell *Shell) CloseStream(fd string) error {
 	if stream, ok := shell.FDT[fd]; !ok {
 		return fmt.Errorf("trying to close bad file descriptor: %s", fd)
 	} else {
-		delete(shell.FDT, fd)
 		return stream.Close()
 	}
 }
