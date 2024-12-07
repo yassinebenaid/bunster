@@ -26,5 +26,8 @@ export default defineConfig({
 			{ icon: "github", link: "https://github.com/yassinebenaid/bunster" },
 		],
 	},
-	head: [["link", { rel: "manifest", href: "/site.webmanifest" }]],
+	head: [
+		["link", { rel: "manifest", href: "/site.webmanifest" }],
+		["link", { rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+	],
 });
