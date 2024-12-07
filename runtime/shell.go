@@ -13,12 +13,14 @@ type Shell struct {
 
 	ExitCode int
 
-	FDT map[string]Stream
+	FDT FileDescriptorTable
 
 	Main func(*Shell)
 }
 
 func (shell *Shell) Run() int {
+	shell.FDT = make(FileDescriptorTable)
+
 	shell.Main(shell)
 
 	return shell.ExitCode
@@ -39,39 +41,22 @@ func (shell *Shell) HandleError(cmd string, err error) {
 	}
 }
 
+func (shell *Shell) CloneFDT() FileDescriptorTable {
+	return shell.FDT
+}
+
 func (shell *Shell) AddStream(fd string, stream Stream) {
-	if shell.FDT == nil {
-		shell.FDT = make(map[string]Stream)
-	}
-	shell.FDT[fd] = stream
+	shell.FDT.Add(fd, stream)
 }
 
 func (shell *Shell) GetStream(fd string) (Stream, error) {
-	if stream, ok := shell.FDT[fd]; ok {
-		return stream, nil
-	}
-
-	return nil, fmt.Errorf("bad file descriptor: %s", fd)
+	return shell.FDT.Get(fd)
 }
 
 func (shell *Shell) DuplicateStream(oldfd, newfd string) error {
-	if shell.FDT == nil {
-		shell.FDT = make(map[string]Stream)
-	}
-
-	if stream, ok := shell.FDT[newfd]; !ok {
-		return fmt.Errorf("bad file descriptor: %s", newfd)
-	} else {
-		shell.FDT[oldfd] = stream
-		return nil
-	}
+	return shell.FDT.Duplicate(oldfd, newfd)
 }
 
 func (shell *Shell) CloseStream(fd string) error {
-	if stream, ok := shell.FDT[fd]; !ok {
-		return fmt.Errorf("trying to close bad file descriptor: %s", fd)
-	} else {
-		delete(shell.FDT, fd)
-		return stream.Close()
-	}
+	return shell.FDT.Close(fd)
 }
