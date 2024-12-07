@@ -140,26 +140,6 @@ func (of NewStringStream) togo() string {
 	return fmt.Sprintf("runtime.NewStringStream(%s)", of.Target.togo())
 }
 
-type NewStreamFromFD struct {
-	Fd Instruction
-}
-
-func (nsfd NewStreamFromFD) togo() string {
-	return fmt.Sprintf("runtime.NewStreamFromFD(%s)", nsfd.Fd.togo())
-}
-
-type DuplicateFD struct {
-	Old, New string
-}
-
-func (dfd DuplicateFD) String() string {
-	return fmt.Sprintf(`
-	if err := runtime.DuplicateFD(%s, %s); err != nil {
-		shell.HandleError("", err)
-	}
-	`, dfd.Old, dfd.New)
-}
-
 type CloneFDT struct{}
 
 func (CloneFDT) togo() string {
