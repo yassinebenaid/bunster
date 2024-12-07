@@ -3,9 +3,9 @@ package parser
 import (
 	"fmt"
 
-	"github.com/yassinebenaid/ryuko/ast"
-	"github.com/yassinebenaid/ryuko/lexer"
-	"github.com/yassinebenaid/ryuko/token"
+	"github.com/yassinebenaid/bunster/ast"
+	"github.com/yassinebenaid/bunster/lexer"
+	"github.com/yassinebenaid/bunster/token"
 )
 
 func Parse(l lexer.Lexer) (ast.Script, error) {

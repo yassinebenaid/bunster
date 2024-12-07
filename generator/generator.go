@@ -3,8 +3,8 @@ package generator
 import (
 	"fmt"
 
-	"github.com/yassinebenaid/ryuko/ast"
-	"github.com/yassinebenaid/ryuko/ir"
+	"github.com/yassinebenaid/bunster/ast"
+	"github.com/yassinebenaid/bunster/ir"
 )
 
 func Generate(script ast.Script) ir.Program {

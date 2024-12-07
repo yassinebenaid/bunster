@@ -1,7 +1,7 @@
 package lexer
 
 import (
-	"github.com/yassinebenaid/ryuko/token"
+	"github.com/yassinebenaid/bunster/token"
 )
 
 type context byte

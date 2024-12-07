@@ -4,7 +4,8 @@
 
 <div align="center">
 
-# Ryuko
+# Bunster
+
 </div>
 
 Compile shell scripts into self-contained programs.

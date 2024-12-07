@@ -1,7 +1,7 @@
 package parser_test
 
 import (
-	"github.com/yassinebenaid/ryuko/ast"
+	"github.com/yassinebenaid/bunster/ast"
 )
 
 var functionsTests = []testCase{

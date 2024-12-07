@@ -1,4 +1,4 @@
-package ryuko
+package bunster
 
 import "embed"
 

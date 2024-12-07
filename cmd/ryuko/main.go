@@ -6,14 +6,14 @@ import (
 	"os"
 
 	"github.com/urfave/cli/v3"
+	"github.com/yassinebenaid/bunster/lexer"
+	"github.com/yassinebenaid/bunster/parser"
 	"github.com/yassinebenaid/godump"
-	"github.com/yassinebenaid/ryuko/lexer"
-	"github.com/yassinebenaid/ryuko/parser"
 )
 
 func main() {
 	app := cli.Command{
-		Name: "ryuko",
+		Name: "bunster",
 		Commands: []*cli.Command{
 			{
 				Name:        "ast",

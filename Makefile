@@ -6,11 +6,11 @@ build-docs:
 
 build:
 	@[ -d bin ] || mkdir bin
-	@go build -o ./bin/ryuko ./cmd/ryuko
+	@go build -o ./bin/bunster ./cmd/bunster
 
 compile: build
 	@rm -rf .test-build && mkdir .test-build
-	@./bin/ryuko build script.test.bash -o ./bin/script --build-space .test-build
+	@./bin/bunster build script.test.bash -o ./bin/script --build-space .test-build
 
 dump-ast: build
-	@./bin/ryuko ast script.test.bash
+	@./bin/bunster ast script.test.bash
