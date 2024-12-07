@@ -44,19 +44,3 @@ func (shell *Shell) HandleError(cmd string, err error) {
 func (shell *Shell) CloneFDT() FileDescriptorTable {
 	return shell.FDT
 }
-
-func (shell *Shell) AddStream(fd string, stream Stream) {
-	shell.FDT.Add(fd, stream)
-}
-
-func (shell *Shell) GetStream(fd string) (Stream, error) {
-	return shell.FDT.Get(fd)
-}
-
-func (shell *Shell) DuplicateStream(oldfd, newfd string) error {
-	return shell.FDT.Duplicate(oldfd, newfd)
-}
-
-func (shell *Shell) CloseStream(fd string) error {
-	return shell.FDT.Close(fd)
-}
