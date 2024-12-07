@@ -91,9 +91,10 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 	for i, redirection := range redirections {
 		switch redirection.Method {
 		case ">", ">|":
-			g.ins(ir.OpenWritableStream{
+			g.ins(ir.OpenStream{
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
+				Mode:   ir.FLAG_WRITE,
 			})
 			g.ins(ir.AddStream{
 				FDT:        fdt,

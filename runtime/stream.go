@@ -9,11 +9,22 @@ import (
 	"syscall"
 )
 
+const (
+	STREAM_FLAG_READ   = os.O_RDONLY
+	STREAM_FLAG_WRITE  = os.O_WRONLY | os.O_CREATE | os.O_TRUNC
+	STREAM_FLAG_RW     = os.O_RDWR | os.O_CREATE
+	STREAM_FLAG_APPEND = os.O_WRONLY | os.O_APPEND | os.O_CREATE
+)
+
 type Stream interface {
 	io.Reader
 	io.Writer
 	io.Closer
 	Fd() uintptr
+}
+
+func OpenStream(name string, flag int) (Stream, error) {
+	return os.OpenFile(name, flag, 0644)
 }
 
 func OpenReadableStream(name string) (Stream, error) {

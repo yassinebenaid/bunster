@@ -45,6 +45,19 @@ type RunCommanOrFail struct {
 	Name    string
 }
 
+const (
+	FLAG_READ   = "STREAM_FLAG_READ"
+	FLAG_WRITE  = "STREAM_FLAG_WRITE"
+	FLAG_RW     = "STREAM_FLAG_RW"
+	FLAG_APPEND = "STREAM_FLAG_APPEND"
+)
+
+type OpenStream struct {
+	Name   string
+	Target Instruction
+	Mode   string
+}
+
 type OpenReadableStream struct {
 	Name   string
 	Target Instruction
@@ -103,6 +116,7 @@ type CloseStream struct {
 }
 
 func (Declare) inst()                {}
+func (OpenStream) inst()             {}
 func (DeclareSlice) inst()           {}
 func (Append) inst()                 {}
 func (ReadVar) inst()                {}
@@ -229,6 +243,17 @@ func (of OpenReadWritableStream) String() string {
 			shell.ExitCode = 0
 		}
 		`, of.Name, of.Target.String())
+}
+
+func (of OpenStream) String() string {
+	return fmt.Sprintf(`
+		%s, err := runtime.OpenStream(%s, runtime.%s)
+		if err != nil {
+			shell.HandleError("", err)
+		}else{
+			shell.ExitCode = 0
+		}
+		`, of.Name, of.Target.String(), of.Mode)
 }
 
 func (of NewStringStream) String() string {
