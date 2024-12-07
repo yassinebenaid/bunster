@@ -3,9 +3,9 @@ package parser_test
 import (
 	"testing"
 
-	"github.com/yassinebenaid/ryuko/ast"
-	"github.com/yassinebenaid/ryuko/lexer"
-	"github.com/yassinebenaid/ryuko/parser"
+	"github.com/yassinebenaid/bunster/ast"
+	"github.com/yassinebenaid/bunster/lexer"
+	"github.com/yassinebenaid/bunster/parser"
 )
 
 var arithmeticsTests = []testCase{

@@ -130,7 +130,7 @@ func (p Program) String() string {
 	str += `import (
 	"os/exec"
 
-	"ryuko-build/runtime"
+	"bunster-build/runtime"
 )`
 
 	str += `

@@ -1,6 +1,6 @@
 package parser_test
 
-import "github.com/yassinebenaid/ryuko/ast"
+import "github.com/yassinebenaid/bunster/ast"
 
 var ifCommandTests = []testCase{
 	{`if cmd; then cmd2; fi`, ast.Script{

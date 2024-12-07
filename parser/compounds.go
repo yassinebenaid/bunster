@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"github.com/yassinebenaid/ryuko/ast"
-	"github.com/yassinebenaid/ryuko/token"
+	"github.com/yassinebenaid/bunster/ast"
+	"github.com/yassinebenaid/bunster/token"
 )
 
 func (p *parser) getCompoundParser() func() ast.Statement {

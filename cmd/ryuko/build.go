@@ -8,10 +8,10 @@ import (
 	"path"
 
 	"github.com/urfave/cli/v3"
-	"github.com/yassinebenaid/ryuko"
-	"github.com/yassinebenaid/ryuko/generator"
-	"github.com/yassinebenaid/ryuko/lexer"
-	"github.com/yassinebenaid/ryuko/parser"
+	"github.com/yassinebenaid/bunster"
+	"github.com/yassinebenaid/bunster/generator"
+	"github.com/yassinebenaid/bunster/lexer"
+	"github.com/yassinebenaid/bunster/parser"
 )
 
 func buildCMD(_ context.Context, cmd *cli.Command) error {
@@ -28,7 +28,7 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 
 	program := generator.Generate(script)
 
-	wd, err := os.MkdirTemp(cmd.String("build-space"), "ryuko-build-*")
+	wd, err := os.MkdirTemp(cmd.String("build-space"), "bunster-build-*")
 	if err != nil {
 		return err
 	}
@@ -66,7 +66,7 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 }
 
 func cloneRuntime(dst string) error {
-	return fs.WalkDir(ryuko.RuntimeFS, "runtime", func(dpath string, d fs.DirEntry, err error) error {
+	return fs.WalkDir(bunster.RuntimeFS, "runtime", func(dpath string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return nil
 		}
@@ -75,7 +75,7 @@ func cloneRuntime(dst string) error {
 			return os.MkdirAll(path.Join(dst, dpath), 0766)
 		}
 
-		content, err := ryuko.RuntimeFS.ReadFile(dpath)
+		content, err := bunster.RuntimeFS.ReadFile(dpath)
 		if err != nil {
 			return err
 		}
@@ -85,11 +85,11 @@ func cloneRuntime(dst string) error {
 }
 
 func cloneStubs(dst string) error {
-	if err := os.WriteFile(path.Join(dst, "main.go"), ryuko.MainGoStub, 0644); err != nil {
+	if err := os.WriteFile(path.Join(dst, "main.go"), bunster.MainGoStub, 0644); err != nil {
 		return err
 	}
 
-	if err := os.WriteFile(path.Join(dst, "go.mod"), ryuko.GoModStub, 0644); err != nil {
+	if err := os.WriteFile(path.Join(dst, "go.mod"), bunster.GoModStub, 0644); err != nil {
 		return err
 	}
 

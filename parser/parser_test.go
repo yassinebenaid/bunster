@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/yassinebenaid/bunster/ast"
+	"github.com/yassinebenaid/bunster/lexer"
+	"github.com/yassinebenaid/bunster/parser"
 	"github.com/yassinebenaid/godump"
-	"github.com/yassinebenaid/ryuko/ast"
-	"github.com/yassinebenaid/ryuko/lexer"
-	"github.com/yassinebenaid/ryuko/parser"
 )
 
 var dump = (&godump.Dumper{

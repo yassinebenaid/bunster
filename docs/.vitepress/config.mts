@@ -2,7 +2,7 @@ import { defineConfig } from "vitepress";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-	title: "Ryuko",
+	title: "Bunster",
 	description:
 		"Compile shell scripts to native self-contained executable programs",
 	themeConfig: {
@@ -23,7 +23,7 @@ export default defineConfig({
 		],
 
 		socialLinks: [
-			{ icon: "github", link: "https://github.com/yassinebenaid/ryuko" },
+			{ icon: "github", link: "https://github.com/yassinebenaid/bunster" },
 		],
 	},
 	head: [["link", { rel: "manifest", href: "/site.webmanifest" }]],
