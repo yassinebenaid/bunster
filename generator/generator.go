@@ -80,9 +80,13 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 }
 
 func (g *generator) handleRedirections(name string, redirections []ast.Redirection) {
-	g.ins(ir.AddStream{Fd: "0", StreamName: "shell.Stdin"})
-	g.ins(ir.AddStream{Fd: "1", StreamName: "shell.Stdout"})
-	g.ins(ir.AddStream{Fd: "2", StreamName: "shell.Stderr"})
+	var fdt = name + "_fdt"
+
+	g.ins(ir.Declare{Name: fdt, Value: ir.CloneFDT{}})
+
+	g.ins(ir.AddStream{FDT: fdt, Fd: "0", StreamName: "shell.Stdin"})
+	g.ins(ir.AddStream{FDT: fdt, Fd: "1", StreamName: "shell.Stdout"})
+	g.ins(ir.AddStream{FDT: fdt, Fd: "2", StreamName: "shell.Stderr"})
 
 	for i, redirection := range redirections {
 		switch redirection.Method {
@@ -92,6 +96,7 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Target: g.handleExpression(redirection.Dst),
 			})
 			g.ins(ir.AddStream{
+				FDT:        fdt,
 				Fd:         redirection.Src,
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
@@ -101,6 +106,7 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Target: g.handleExpression(redirection.Dst),
 			})
 			g.ins(ir.AddStream{
+				FDT:        fdt,
 				Fd:         redirection.Src,
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
@@ -110,10 +116,12 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Target: g.handleExpression(redirection.Dst),
 			})
 			g.ins(ir.AddStream{
+				FDT:        fdt,
 				Fd:         "1",
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 			g.ins(ir.AddStream{
+				FDT:        fdt,
 				Fd:         "2",
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
@@ -123,27 +131,32 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Target: g.handleExpression(redirection.Dst),
 			})
 			g.ins(ir.AddStream{
+				FDT:        fdt,
 				Fd:         "1",
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 			g.ins(ir.AddStream{
+				FDT:        fdt,
 				Fd:         "2",
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		case ">&", "<&":
 			if redirection.Dst == nil && redirection.Close {
 				g.ins(ir.CloseStream{
-					Fd: ir.String(redirection.Src),
+					FDT: fdt,
+					Fd:  ir.String(redirection.Src),
 				})
 			} else {
 				g.ins(ir.DuplicateStream{
+					FDT: fdt,
 					Old: redirection.Src,
 					New: g.handleExpression(redirection.Dst),
 				})
 
 				if redirection.Close {
 					g.ins(ir.CloseStream{
-						Fd: g.handleExpression(redirection.Dst),
+						FDT: fdt,
+						Fd:  g.handleExpression(redirection.Dst),
 					})
 				}
 			}
@@ -153,6 +166,7 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Target: g.handleExpression(redirection.Dst),
 			})
 			g.ins(ir.AddStream{
+				FDT:        fdt,
 				Fd:         redirection.Src,
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
@@ -164,6 +178,7 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				},
 			})
 			g.ins(ir.AddStream{
+				FDT:        fdt,
 				Fd:         redirection.Src,
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
@@ -173,16 +188,29 @@ func (g *generator) handleRedirections(name string, redirections []ast.Redirecti
 				Target: g.handleExpression(redirection.Dst),
 			})
 			g.ins(ir.AddStream{
+				FDT:        fdt,
 				Fd:         redirection.Src,
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		}
 	}
 
-	g.ins(ir.GetStream{Fd: ir.String("0"), StreamName: fmt.Sprintf("%s_stdin", name)})
+	g.ins(ir.GetStream{
+		FDT:        fdt,
+		Fd:         ir.String("0"),
+		StreamName: fmt.Sprintf("%s_stdin", name),
+	})
 	g.ins(ir.Set{Name: fmt.Sprintf("%s.Stdin", name), Value: ir.Literal(fmt.Sprintf("%s_stdin", name))})
-	g.ins(ir.GetStream{Fd: ir.String("1"), StreamName: fmt.Sprintf("%s_stdout", name)})
+	g.ins(ir.GetStream{
+		FDT:        fdt,
+		Fd:         ir.String("1"),
+		StreamName: fmt.Sprintf("%s_stdout", name),
+	})
 	g.ins(ir.Set{Name: fmt.Sprintf("%s.Stdout", name), Value: ir.Literal(fmt.Sprintf("%s_stdout", name))})
-	g.ins(ir.GetStream{Fd: ir.String("2"), StreamName: fmt.Sprintf("%s_stderr", name)})
+	g.ins(ir.GetStream{
+		FDT:        fdt,
+		Fd:         ir.String("2"),
+		StreamName: fmt.Sprintf("%s_stderr", name),
+	})
 	g.ins(ir.Set{Name: fmt.Sprintf("%s.Stderr", name), Value: ir.Literal(fmt.Sprintf("%s_stderr", name))})
 }

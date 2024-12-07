@@ -41,6 +41,10 @@ func (shell *Shell) HandleError(cmd string, err error) {
 	}
 }
 
+func (shell *Shell) CloneFDT() FileDescriptorTable {
+	return shell.FDT
+}
+
 func (shell *Shell) AddStream(fd string, stream Stream) {
 	shell.FDT.Add(fd, stream)
 }
