@@ -102,10 +102,10 @@ func (rcf RunCommanOrFail) togo() string {
 	return fmt.Sprintf(`
 		if err := %s.Run(); err != nil {
 			shell.HandleError(%s, err)
-		}else{
-			shell.ExitCode = 0
+			return
 		}
-		`, rcf.Command, rcf.Name)
+		shell.ExitCode = %s.ProcessState.ExitCode()
+		`, rcf.Command, rcf.Name, rcf.Command)
 }
 
 const (
@@ -126,8 +126,7 @@ func (of OpenStream) togo() string {
 		%s, err := runtime.OpenStream(%s, runtime.%s)
 		if err != nil {
 			shell.HandleError("", err)
-		}else{
-			shell.ExitCode = 0
+			return
 		}
 		`, of.Name, of.Target.togo(), of.Mode)
 }
@@ -140,10 +139,16 @@ func (of NewStringStream) togo() string {
 	return fmt.Sprintf("runtime.NewStringStream(%s)", of.Target.togo())
 }
 
-type CloneFDT struct{}
+type CloneFDT string
 
-func (CloneFDT) togo() string {
-	return fmt.Sprintf(`shell.CloneFDT()`)
+func (c CloneFDT) togo() string {
+	return fmt.Sprintf(`
+		%s, err := shell.CloneFDT()
+		if err != nil {
+			shell.HandleError("", err)
+			return
+		}
+		`, c)
 }
 
 type AddStream struct {
@@ -169,8 +174,7 @@ func (as GetStream) togo() string {
 		%s, err := %s.Get(%s)
 		if err != nil {
 			shell.HandleError("", err)
-		}else{
-			shell.ExitCode = 0
+			return
 		}
 	`, as.StreamName, as.FDT, as.Fd.togo())
 }
@@ -185,8 +189,7 @@ func (as DuplicateStream) togo() string {
 	return fmt.Sprintf(`
 		if err := %s.Duplicate("%s", %s); err != nil {
 			shell.HandleError("", err)
-		}else{
-			shell.ExitCode = 0
+			return
 		}
 	`, as.FDT, as.Old, as.New.togo())
 }
@@ -200,8 +203,25 @@ func (as CloseStream) togo() string {
 	return fmt.Sprintf(`
 		if err := %s.Close(%s); err != nil {
 			shell.HandleError("", err)
-		}else{
-			shell.ExitCode = 0
+			return
 		}
 	`, as.FDT, as.Fd.togo())
+}
+
+type Closure struct {
+	Body []Instruction
+}
+
+func (c Closure) togo() string {
+	var body string
+
+	for _, ins := range c.Body {
+		body += ins.togo()
+	}
+
+	return fmt.Sprintf(`
+		func(){
+			%s
+		}()
+	`, body)
 }

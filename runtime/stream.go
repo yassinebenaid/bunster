@@ -69,24 +69,26 @@ func (fdt FileDescriptorTable) Get(fd string) (Stream, error) {
 	return nil, fmt.Errorf("bad file descriptor: %s", fd)
 }
 
-func (fdt FileDescriptorTable) Duplicate(oldfd, newfd string) error {
-	if stream, ok := fdt[newfd]; !ok {
-		return fmt.Errorf("trying to duplicate bad file descriptor: %s", newfd)
+func (fdt FileDescriptorTable) Duplicate(newfd, oldfd string) error {
+	if stream, ok := fdt[oldfd]; !ok {
+		return fmt.Errorf("trying to duplicate bad file descriptor: %s", oldfd)
 	} else {
-		switch stream.(type) {
+		switch stream := stream.(type) {
 		case *stringStream:
 			newbuf := &bytes.Buffer{}
 			_, err := io.Copy(newbuf, stream)
 			if err != nil {
-				return fmt.Errorf("failed to duplicate file descriptor '%s', %w", newfd, err)
+				return fmt.Errorf("failed to duplicate file descriptor '%s', %w", oldfd, err)
 			}
-			fdt[oldfd] = &stringStream{buf: newbuf}
-		default:
+			fdt[newfd] = &stringStream{buf: newbuf}
+		case *os.File:
 			dupFd, err := syscall.Dup(int(stream.Fd()))
 			if err != nil {
-				return fmt.Errorf("failed to duplicate file descriptor '%s', %w", newfd, err)
+				return fmt.Errorf("failed to duplicate file descriptor '%s', %w", oldfd, err)
 			}
-			fdt[oldfd] = os.NewFile(uintptr(dupFd), fmt.Sprintf("/dev/fd/%d", dupFd))
+			fdt[newfd] = os.NewFile(uintptr(dupFd), stream.Name())
+		default:
+			panic(fmt.Sprintf("failed to clone (%s), unhandled stream type: %T", oldfd, stream))
 		}
 
 		return nil
@@ -99,4 +101,30 @@ func (fdt FileDescriptorTable) Close(fd string) error {
 	} else {
 		return stream.Close()
 	}
+}
+
+func (fdt FileDescriptorTable) clone() (FileDescriptorTable, error) {
+	clone := make(FileDescriptorTable, len(fdt))
+
+	for fd, stream := range fdt {
+		switch stream := stream.(type) {
+		case *stringStream:
+			newbuf := &bytes.Buffer{}
+			_, err := io.Copy(newbuf, stream)
+			if err != nil {
+				return nil, fmt.Errorf("failure when trying to inherit the FileDescriptorTable, failed to duplicate file descriptor '%s', %w", fd, err)
+			}
+			clone[fd] = &stringStream{buf: newbuf}
+		case *os.File:
+			dupFd, err := syscall.Dup(int(stream.Fd()))
+			if err != nil {
+				return nil, fmt.Errorf("failure when trying to inherit the FileDescriptorTable, failed to duplicate file descriptor '%s', %w", fd, err)
+			}
+			clone[fd] = os.NewFile(uintptr(dupFd), stream.Name())
+		default:
+			panic(fmt.Sprintf("failed to clone FDT, unhandled stream type: %T (%s)", stream, fd))
+		}
+	}
+
+	return clone, nil
 }
