@@ -159,19 +159,12 @@ func (as AddStream) togo() string {
 }
 
 type GetStream struct {
-	FDT        string
-	Fd         Instruction
-	StreamName string
+	FDT string
+	Fd  Instruction
 }
 
 func (as GetStream) togo() string {
-	return fmt.Sprintf(
-		`%s, err := %s.Get(%s)
-		if err != nil {
-			shell.HandleError("", err)
-			return
-		}
-		`, as.StreamName, as.FDT, as.Fd.togo())
+	return fmt.Sprintf(`%s.Get(%s)`, as.FDT, as.Fd.togo())
 }
 
 type DuplicateStream struct {

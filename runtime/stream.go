@@ -61,12 +61,8 @@ func (fdt FileDescriptorTable) Add(fd string, stream Stream) {
 	fdt[fd] = stream
 }
 
-func (fdt FileDescriptorTable) Get(fd string) (Stream, error) {
-	if stream, ok := fdt[fd]; ok {
-		return stream, nil
-	}
-
-	return nil, fmt.Errorf("bad file descriptor: %s", fd)
+func (fdt FileDescriptorTable) Get(fd string) Stream {
+	return fdt[fd]
 }
 
 func (fdt FileDescriptorTable) Duplicate(newfd, oldfd string) error {

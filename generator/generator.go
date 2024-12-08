@@ -202,22 +202,16 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 		}
 	}
 
-	buf.add(ir.GetStream{
-		FDT:        fdt,
-		Fd:         ir.String("0"),
-		StreamName: fmt.Sprintf("%s_stdin", name),
+	buf.add(ir.Set{
+		Name:  fmt.Sprintf("%s.Stdin", name),
+		Value: ir.GetStream{FDT: fdt, Fd: ir.String("0")},
 	})
-	buf.add(ir.Set{Name: fmt.Sprintf("%s.Stdin", name), Value: ir.Literal(fmt.Sprintf("%s_stdin", name))})
-	buf.add(ir.GetStream{
-		FDT:        fdt,
-		Fd:         ir.String("1"),
-		StreamName: fmt.Sprintf("%s_stdout", name),
+	buf.add(ir.Set{
+		Name:  fmt.Sprintf("%s.Stdout", name),
+		Value: ir.GetStream{FDT: fdt, Fd: ir.String("1")},
 	})
-	buf.add(ir.Set{Name: fmt.Sprintf("%s.Stdout", name), Value: ir.Literal(fmt.Sprintf("%s_stdout", name))})
-	buf.add(ir.GetStream{
-		FDT:        fdt,
-		Fd:         ir.String("2"),
-		StreamName: fmt.Sprintf("%s_stderr", name),
+	buf.add(ir.Set{
+		Name:  fmt.Sprintf("%s.Stderr", name),
+		Value: ir.GetStream{FDT: fdt, Fd: ir.String("3")},
 	})
-	buf.add(ir.Set{Name: fmt.Sprintf("%s.Stderr", name), Value: ir.Literal(fmt.Sprintf("%s_stderr", name))})
 }
