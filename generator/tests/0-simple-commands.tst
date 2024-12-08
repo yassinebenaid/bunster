@@ -7,7 +7,13 @@ Test: Simple commands
 
 
 --------output--------
-module main
+package main
 
-func Main(){
+import (
+    "os/exec"
+
+    "bunster-build/runtime"
+)
+
+func Main(shell *runtime.Shell) {
 }
