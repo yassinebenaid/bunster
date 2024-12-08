@@ -91,47 +91,71 @@ const (
 	colorReset = "\033[0m"
 )
 
-// diffStrings compares two strings and returns a formatted diff output
+// diffStrings generates a git-like diff between two strings
 func diffStrings(original, modified string) string {
-	// Split strings into lines
 	originalLines := strings.Split(original, "\n")
 	modifiedLines := strings.Split(modified, "\n")
 
+	// Compute the LCS and the diffs
+	ops := computeDiff(originalLines, modifiedLines)
+
 	var diffOutput []string
 
-	// Track the maximum length of lines for alignment
-	maxLen := max(len(originalLines), len(modifiedLines))
-
-	// Compare lines
-	for i := 0; i < maxLen; i++ {
-		var originalLine, modifiedLine string
-
-		// Get lines if they exist
-		if i < len(originalLines) {
-			originalLine = originalLines[i]
-		}
-		if i < len(modifiedLines) {
-			modifiedLine = modifiedLines[i]
-		}
-
-		// Compare lines
-		if originalLine != modifiedLine {
-			if i >= len(originalLines) {
-				// New line added
-				diffOutput = append(diffOutput, fmt.Sprintf("%s+ %s%s", colorGreen, modifiedLine, colorReset))
-			} else if i >= len(modifiedLines) {
-				// Line deleted
-				diffOutput = append(diffOutput, fmt.Sprintf("%s- %s%s", colorRed, originalLine, colorReset))
-			} else {
-				// Line modified
-				diffOutput = append(diffOutput, fmt.Sprintf("%s- %s%s", colorRed, originalLine, colorReset))
-				diffOutput = append(diffOutput, fmt.Sprintf("%s+ %s%s", colorGreen, modifiedLine, colorReset))
-			}
-		} else {
-			// Unchanged line
-			diffOutput = append(diffOutput, fmt.Sprintf("  %s", originalLine))
+	for _, op := range ops {
+		switch op.Type {
+		case "unchanged":
+			diffOutput = append(diffOutput, fmt.Sprintf("  %s", op.Line))
+		case "delete":
+			diffOutput = append(diffOutput, fmt.Sprintf("%s- %s%s", colorRed, op.Line, colorReset))
+		case "add":
+			diffOutput = append(diffOutput, fmt.Sprintf("%s+ %s%s", colorGreen, op.Line, colorReset))
 		}
 	}
 
 	return strings.Join(diffOutput, "\n")
+}
+
+// DiffOperation represents a single diff operation
+type DiffOperation struct {
+	Type string // "add", "delete", or "unchanged"
+	Line string
+}
+
+// computeDiff calculates the diff between two slices of lines using the LCS algorithm
+func computeDiff(original, modified []string) []DiffOperation {
+	m, n := len(original), len(modified)
+	lcs := make([][]int, m+1)
+	for i := range lcs {
+		lcs[i] = make([]int, n+1)
+	}
+
+	// Build the LCS table
+	for i := 1; i <= m; i++ {
+		for j := 1; j <= n; j++ {
+			if original[i-1] == modified[j-1] {
+				lcs[i][j] = lcs[i-1][j-1] + 1
+			} else {
+				lcs[i][j] = max(lcs[i-1][j], lcs[i][j-1])
+			}
+		}
+	}
+
+	// Backtrack to determine the diff
+	var ops []DiffOperation
+	i, j := m, n
+	for i > 0 || j > 0 {
+		if i > 0 && j > 0 && original[i-1] == modified[j-1] {
+			ops = append([]DiffOperation{{Type: "unchanged", Line: original[i-1]}}, ops...)
+			i--
+			j--
+		} else if j > 0 && (i == 0 || lcs[i][j-1] >= lcs[i-1][j]) {
+			ops = append([]DiffOperation{{Type: "add", Line: modified[j-1]}}, ops...)
+			j--
+		} else {
+			ops = append([]DiffOperation{{Type: "delete", Line: original[i-1]}}, ops...)
+			i--
+		}
+	}
+
+	return ops
 }

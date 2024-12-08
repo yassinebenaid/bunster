@@ -34,24 +34,9 @@ func Main(shell *runtime.Shell) {
  			return
   		}
   		defer cmd_0_fdt.Destroy()
-  		cmd_0_stdin, err := cmd_0_fdt.Get(`0`)
-  		if err != nil {
- 			shell.HandleError("", err)
- 			return
-  		}
-  		cmd_0.Stdin = cmd_0_stdin
-  		cmd_0_stdout, err := cmd_0_fdt.Get(`1`)
-  		if err != nil {
- 			shell.HandleError("", err)
- 			return
-  		}
-  		cmd_0.Stdout = cmd_0_stdout
-  		cmd_0_stderr, err := cmd_0_fdt.Get(`2`)
-  		if err != nil {
- 			shell.HandleError("", err)
- 			return
-  		}
-  		cmd_0.Stderr = cmd_0_stderr
+  		cmd_0.Stdin = cmd_0_fdt.Get(`0`)
+  		cmd_0.Stdout = cmd_0_fdt.Get(`1`)
+  		cmd_0.Stderr = cmd_0_fdt.Get(`2`)
   		if err := cmd_0.Run(); err != nil {
  			shell.HandleError(cmd_0_name, err)
  			return
