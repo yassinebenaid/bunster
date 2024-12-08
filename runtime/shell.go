@@ -44,6 +44,6 @@ func (shell *Shell) HandleError(cmd string, err error) {
 	}
 }
 
-func (shell *Shell) CloneFDT() FileDescriptorTable {
-	return shell.FDT
+func (shell *Shell) CloneFDT() (FileDescriptorTable, error) {
+	return shell.FDT.clone()
 }

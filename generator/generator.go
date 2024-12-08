@@ -81,7 +81,7 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 
 func (g *generator) handleRedirections(name string, redirections []ast.Redirection) {
 	var fdt = name + "_fdt"
-	g.ins(ir.Declare{Name: fdt, Value: ir.CloneFDT{}})
+	g.ins(ir.CloneFDT(fdt))
 
 	for i, redirection := range redirections {
 		switch redirection.Method {

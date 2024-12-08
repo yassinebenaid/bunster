@@ -100,3 +100,29 @@ func (fdt FileDescriptorTable) Close(fd string) error {
 		return stream.Close()
 	}
 }
+
+func (fdt FileDescriptorTable) clone() (FileDescriptorTable, error) {
+	clone := make(FileDescriptorTable, len(fdt))
+
+	for fd, stream := range fdt {
+		switch stream := stream.(type) {
+		case *stringStream:
+			newbuf := &bytes.Buffer{}
+			_, err := io.Copy(newbuf, stream)
+			if err != nil {
+				return nil, fmt.Errorf("failure when trying to inherit the FileDescriptorTable, failed to duplicate file descriptor '%s', %w", fd, err)
+			}
+			clone[fd] = &stringStream{buf: newbuf}
+		case *os.File:
+			dupFd, err := syscall.Dup(int(stream.Fd()))
+			if err != nil {
+				return nil, fmt.Errorf("failure when trying to inherit the FileDescriptorTable, failed to duplicate file descriptor '%s', %w", fd, err)
+			}
+			clone[fd] = os.NewFile(uintptr(dupFd), stream.Name())
+		default:
+			panic(fmt.Sprintf("failed to clone FDT, unhandled stream type: %T (%s)", stream, fd))
+		}
+	}
+
+	return clone, nil
+}

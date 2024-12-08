@@ -140,10 +140,17 @@ func (of NewStringStream) togo() string {
 	return fmt.Sprintf("runtime.NewStringStream(%s)", of.Target.togo())
 }
 
-type CloneFDT struct{}
+type CloneFDT string
 
-func (CloneFDT) togo() string {
-	return fmt.Sprintf(`shell.CloneFDT()`)
+func (c CloneFDT) togo() string {
+	return fmt.Sprintf(`
+		%s, err := shell.CloneFDT()
+		if err != nil {
+			shell.HandleError("", err)
+		}else{
+			shell.ExitCode = 0
+		}
+		`, c)
 }
 
 type AddStream struct {
