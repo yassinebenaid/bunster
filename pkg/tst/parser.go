@@ -50,54 +50,68 @@ func (p *Parser) Parse(reader io.Reader) (*Test, error) {
 	}
 
 	var currentCase *TestCase
-	var state string // "start", "input", "output"
+	var state string // "start", "waiting_input", "input", "waiting_output", "output"
 
 	for scanner.Scan() {
 		line := scanner.Text()
 
 		switch {
 		case strings.Contains(line, "------input------"):
-			if currentCase != nil {
-				test.Cases = append(test.Cases, *currentCase)
+			if currentCase != nil && (currentCase.Input == "" || currentCase.Output == "") {
+				return nil, errors.New("incomplete previous test case")
 			}
 			currentCase = &TestCase{}
-			state = "input"
+			state = "waiting_input"
 			continue
 
 		case strings.Contains(line, "------output------"):
 			if currentCase == nil {
-				return nil, errors.New("output before input")
+				return nil, errors.New("output marker before input marker")
 			}
-			state = "output"
+			if currentCase.Input == "" {
+				return nil, errors.New("output marker before input content")
+			}
+			state = "waiting_output"
 			continue
 
 		case strings.TrimSpace(line) == "------------":
-			if currentCase != nil {
-				test.Cases = append(test.Cases, *currentCase)
-				currentCase = nil
+			if currentCase == nil {
+				continue
 			}
+			// Validate that current case has both input and output
+			if currentCase.Input == "" || currentCase.Output == "" {
+				return nil, errors.New("incomplete test case before delimiter")
+			}
+			test.Cases = append(test.Cases, *currentCase)
+			currentCase = nil
+			state = "start"
 			continue
 		}
 
 		// Append content based on current state
 		switch state {
-		case "input":
-			if currentCase.Input == "" {
+		case "waiting_input":
+			if strings.TrimSpace(line) != "" {
 				currentCase.Input = line
-			} else {
-				currentCase.Input += "\n" + line
+				state = "input"
+			}
+		case "input":
+			currentCase.Input += "\n" + line
+		case "waiting_output":
+			if strings.TrimSpace(line) != "" {
+				currentCase.Output = line
+				state = "output"
 			}
 		case "output":
-			if currentCase.Output == "" {
-				currentCase.Output = line
-			} else {
-				currentCase.Output += "\n" + line
-			}
+			currentCase.Output += "\n" + line
 		}
 	}
 
-	// Add last case if exists
+	// Handle last case
 	if currentCase != nil {
+		if currentCase.Input == "" || currentCase.Output == "" {
+			return nil, errors.New("incomplete final test case")
+		}
 		test.Cases = append(test.Cases, *currentCase)
 	}
 

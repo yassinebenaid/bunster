@@ -22,13 +22,13 @@ func TestParser_Parse(t *testing.T) {
 go mod tidy
 ------output------
 package main
-func main(){ }`,
+func main(){ } `,
 			expected: &tst.Test{
 				Label: "Simple Commands",
 				Cases: []tst.TestCase{
 					{
 						Input:  "go mod tidy",
-						Output: "package main\nfunc main(){ }",
+						Output: "package main\nfunc main(){ } ",
 					},
 				},
 			},
