@@ -212,6 +212,6 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 	})
 	buf.add(ir.Set{
 		Name:  fmt.Sprintf("%s.Stderr", name),
-		Value: ir.GetStream{FDT: fdt, Fd: ir.String("3")},
+		Value: ir.GetStream{FDT: fdt, Fd: ir.String("2")},
 	})
 }
