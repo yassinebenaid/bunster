@@ -95,8 +95,8 @@ type RunCommanOrFail struct {
 }
 
 func (rcf RunCommanOrFail) togo() string {
-	return fmt.Sprintf(`
-		if err := %s.Run(); err != nil {
+	return fmt.Sprintf(
+		`if err := %s.Run(); err != nil {
 			shell.HandleError(%s, err)
 			return
 		}
@@ -118,8 +118,8 @@ type OpenStream struct {
 }
 
 func (of OpenStream) togo() string {
-	return fmt.Sprintf(`
-		%s, err := runtime.OpenStream(%s, runtime.%s)
+	return fmt.Sprintf(
+		`%s, err := runtime.OpenStream(%s, runtime.%s)
 		if err != nil {
 			shell.HandleError("", err)
 			return
@@ -138,8 +138,8 @@ func (of NewStringStream) togo() string {
 type CloneFDT string
 
 func (c CloneFDT) togo() string {
-	return fmt.Sprintf(`
-		%s, err := shell.CloneFDT()
+	return fmt.Sprintf(
+		`%s, err := shell.CloneFDT()
 		if err != nil {
 			shell.HandleError("", err)
 			return
@@ -155,9 +155,7 @@ type AddStream struct {
 }
 
 func (as AddStream) togo() string {
-	return fmt.Sprintf(`
-		%s.Add("%s", %s)
-	`, as.FDT, as.Fd, as.StreamName)
+	return fmt.Sprintf("%s.Add(`%s`, %s)\n", as.FDT, as.Fd, as.StreamName)
 }
 
 type GetStream struct {
@@ -167,13 +165,13 @@ type GetStream struct {
 }
 
 func (as GetStream) togo() string {
-	return fmt.Sprintf(`
-		%s, err := %s.Get(%s)
+	return fmt.Sprintf(
+		`%s, err := %s.Get(%s)
 		if err != nil {
 			shell.HandleError("", err)
 			return
 		}
-	`, as.StreamName, as.FDT, as.Fd.togo())
+		`, as.StreamName, as.FDT, as.Fd.togo())
 }
 
 type DuplicateStream struct {
@@ -183,8 +181,8 @@ type DuplicateStream struct {
 }
 
 func (as DuplicateStream) togo() string {
-	return fmt.Sprintf(`
-		if err := %s.Duplicate("%s", %s); err != nil {
+	return fmt.Sprintf(
+		`if err := %s.Duplicate("%s", %s); err != nil {
 			shell.HandleError("", err)
 			return
 		}
@@ -197,8 +195,8 @@ type CloseStream struct {
 }
 
 func (as CloseStream) togo() string {
-	return fmt.Sprintf(`
-		if err := %s.Close(%s); err != nil {
+	return fmt.Sprintf(
+		`if err := %s.Close(%s); err != nil {
 			shell.HandleError("", err)
 			return
 		}
@@ -216,8 +214,8 @@ func (c Closure) togo() string {
 		body += ins.togo()
 	}
 
-	return fmt.Sprintf(`
-		func(){
+	return fmt.Sprintf(
+		`func(){
 			%s
 		}()
 	`, body)
