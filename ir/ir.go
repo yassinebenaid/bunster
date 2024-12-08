@@ -102,10 +102,10 @@ func (rcf RunCommanOrFail) togo() string {
 	return fmt.Sprintf(`
 		if err := %s.Run(); err != nil {
 			shell.HandleError(%s, err)
-		}else{
-			shell.ExitCode = 0
+			return
 		}
-		`, rcf.Command, rcf.Name)
+		shell.ExitCode = %s.ProcessState.ExitCode()
+		`, rcf.Command, rcf.Name, rcf.Command)
 }
 
 const (
@@ -126,8 +126,7 @@ func (of OpenStream) togo() string {
 		%s, err := runtime.OpenStream(%s, runtime.%s)
 		if err != nil {
 			shell.HandleError("", err)
-		}else{
-			shell.ExitCode = 0
+			return
 		}
 		`, of.Name, of.Target.togo(), of.Mode)
 }
@@ -147,8 +146,7 @@ func (c CloneFDT) togo() string {
 		%s, err := shell.CloneFDT()
 		if err != nil {
 			shell.HandleError("", err)
-		}else{
-			shell.ExitCode = 0
+			return
 		}
 		`, c)
 }
@@ -176,8 +174,7 @@ func (as GetStream) togo() string {
 		%s, err := %s.Get(%s)
 		if err != nil {
 			shell.HandleError("", err)
-		}else{
-			shell.ExitCode = 0
+			return
 		}
 	`, as.StreamName, as.FDT, as.Fd.togo())
 }
@@ -192,8 +189,7 @@ func (as DuplicateStream) togo() string {
 	return fmt.Sprintf(`
 		if err := %s.Duplicate("%s", %s); err != nil {
 			shell.HandleError("", err)
-		}else{
-			shell.ExitCode = 0
+			return
 		}
 	`, as.FDT, as.Old, as.New.togo())
 }
@@ -207,8 +203,7 @@ func (as CloseStream) togo() string {
 	return fmt.Sprintf(`
 		if err := %s.Close(%s); err != nil {
 			shell.HandleError("", err)
-		}else{
-			shell.ExitCode = 0
+			return
 		}
 	`, as.FDT, as.Fd.togo())
 }
