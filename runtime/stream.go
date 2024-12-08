@@ -103,6 +103,12 @@ func (fdt FileDescriptorTable) Close(fd string) error {
 	}
 }
 
+func (fdt FileDescriptorTable) Destroy() {
+	for _, stream := range fdt {
+		stream.Close()
+	}
+}
+
 func (fdt FileDescriptorTable) clone() (FileDescriptorTable, error) {
 	clone := make(FileDescriptorTable, len(fdt))
 

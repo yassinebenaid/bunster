@@ -148,7 +148,8 @@ func (c CloneFDT) togo() string {
 			shell.HandleError("", err)
 			return
 		}
-		`, c)
+		defer %s.Destroy()
+		`, c, c)
 }
 
 type AddStream struct {
