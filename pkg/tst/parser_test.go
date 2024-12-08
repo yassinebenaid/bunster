@@ -81,11 +81,9 @@ go mod tidy`,
 		},
 	}
 
-	parser := &tst.Parser{}
-
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			result, err := parser.Parse(strings.NewReader(tc.input))
+			result, err := tst.Parse(strings.NewReader(tc.input))
 
 			if tc.wantErr {
 				if err == nil {

@@ -20,11 +20,8 @@ type Test struct {
 	Cases []TestCase
 }
 
-// Parser for the specific test case text format
-type Parser struct{}
-
 // Parse reads from an io.Reader and parses the test case format
-func (p *Parser) Parse(reader io.Reader) (*Test, error) {
+func Parse(reader io.Reader) (*Test, error) {
 	scanner := bufio.NewScanner(reader)
 
 	// First line must be "Test:" followed by label
