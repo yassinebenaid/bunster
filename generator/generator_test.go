@@ -2,6 +2,7 @@ package generator_test
 
 import (
 	"bytes"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -56,7 +57,10 @@ func TestGenerator(t *testing.T) {
 				}
 
 				if formattedProgram != formattedTestOutput {
-					t.Fatalf("#%d: The generated program doesn't match the expected output.\n Program:\n%s", i, dump(formattedProgram))
+					t.Fatalf(
+						"#%d: The generated program doesn't match the expected output.\n Program:\n%s",
+						i, diffStrings(formattedTestOutput, formattedProgram),
+					)
 				}
 			}
 		})
@@ -80,6 +84,54 @@ func gofmt(s string) (gofmtOut string, gofmtErr string, err error) {
 	return
 }
 
-// func generate(s string) ir.Program {
+// ANSI color codes
+const (
+	colorRed   = "\033[31m"
+	colorGreen = "\033[32m"
+	colorReset = "\033[0m"
+)
 
-// }
+// diffStrings compares two strings and returns a formatted diff output
+func diffStrings(original, modified string) string {
+	// Split strings into lines
+	originalLines := strings.Split(original, "\n")
+	modifiedLines := strings.Split(modified, "\n")
+
+	var diffOutput []string
+
+	// Track the maximum length of lines for alignment
+	maxLen := max(len(originalLines), len(modifiedLines))
+
+	// Compare lines
+	for i := 0; i < maxLen; i++ {
+		var originalLine, modifiedLine string
+
+		// Get lines if they exist
+		if i < len(originalLines) {
+			originalLine = originalLines[i]
+		}
+		if i < len(modifiedLines) {
+			modifiedLine = modifiedLines[i]
+		}
+
+		// Compare lines
+		if originalLine != modifiedLine {
+			if i >= len(originalLines) {
+				// New line added
+				diffOutput = append(diffOutput, fmt.Sprintf("%s+ %s%s", colorGreen, modifiedLine, colorReset))
+			} else if i >= len(modifiedLines) {
+				// Line deleted
+				diffOutput = append(diffOutput, fmt.Sprintf("%s- %s%s", colorRed, originalLine, colorReset))
+			} else {
+				// Line modified
+				diffOutput = append(diffOutput, fmt.Sprintf("%s- %s%s", colorRed, originalLine, colorReset))
+				diffOutput = append(diffOutput, fmt.Sprintf("%s+ %s%s", colorGreen, modifiedLine, colorReset))
+			}
+		} else {
+			// Unchanged line
+			diffOutput = append(diffOutput, fmt.Sprintf("  %s", originalLine))
+		}
+	}
+
+	return strings.Join(diffOutput, "\n")
+}
