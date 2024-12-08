@@ -26,7 +26,7 @@ func Parse(reader io.Reader) (*Test, error) {
 
 	// First line must be "Test:" followed by label
 	if !scanner.Scan() {
-		return nil, errors.New("empty input")
+		return nil, errors.New("tst: input cannot be empty")
 	}
 	firstLine := scanner.Text()
 	if !strings.HasPrefix(firstLine, "Test:") {
@@ -38,7 +38,7 @@ func Parse(reader io.Reader) (*Test, error) {
 
 	// Second line must be separator
 	if !scanner.Scan() || strings.TrimSpace(scanner.Text()) != "------------" {
-		return nil, errors.New("missing separator after label")
+		return nil, errors.New("tst: missing separator after label")
 	}
 
 	test := &Test{
@@ -55,7 +55,7 @@ func Parse(reader io.Reader) (*Test, error) {
 		switch {
 		case strings.Contains(line, "------input------"):
 			if currentCase != nil && (currentCase.Input == "" || currentCase.Output == "") {
-				return nil, errors.New("incomplete previous test case")
+				return nil, errors.New("tst: incomplete previous test case")
 			}
 			currentCase = &TestCase{}
 			state = "waiting_input"
@@ -63,10 +63,10 @@ func Parse(reader io.Reader) (*Test, error) {
 
 		case strings.Contains(line, "------output------"):
 			if currentCase == nil {
-				return nil, errors.New("output marker before input marker")
+				return nil, errors.New("tst: output marker before input marker")
 			}
 			if currentCase.Input == "" {
-				return nil, errors.New("output marker before input content")
+				return nil, errors.New("tst: output marker before input content")
 			}
 			state = "waiting_output"
 			continue
@@ -77,7 +77,7 @@ func Parse(reader io.Reader) (*Test, error) {
 			}
 			// Validate that current case has both input and output
 			if currentCase.Input == "" || currentCase.Output == "" {
-				return nil, errors.New("incomplete test case before delimiter")
+				return nil, errors.New("tst: incomplete test case before delimiter")
 			}
 			test.Cases = append(test.Cases, *currentCase)
 			currentCase = nil
@@ -107,7 +107,7 @@ func Parse(reader io.Reader) (*Test, error) {
 	// Handle last case
 	if currentCase != nil {
 		if currentCase.Input == "" || currentCase.Output == "" {
-			return nil, errors.New("incomplete final test case")
+			return nil, errors.New("tst: incomplete final test case")
 		}
 		test.Cases = append(test.Cases, *currentCase)
 	}
@@ -118,7 +118,7 @@ func Parse(reader io.Reader) (*Test, error) {
 
 	// Validate test has at least one case
 	if len(test.Cases) == 0 {
-		return nil, errors.New("no test cases found")
+		return nil, errors.New("tst: no test cases found")
 	}
 
 	return test, nil
