@@ -49,3 +49,7 @@ func (shell *Shell) HandleError(cmd string, err error) {
 func (shell *Shell) CloneFDT() (FileDescriptorTable, error) {
 	return shell.FDT.clone()
 }
+
+func (shell *Shell) Command(name string, args ...string) *exec.Cmd {
+	return exec.Command(name, args...)
+}

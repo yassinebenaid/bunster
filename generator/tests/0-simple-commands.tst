@@ -9,11 +9,7 @@ Test: Simple commands
 --------output--------
 package main
 
-import (
-    "os/exec"
-
-    "bunster-build/runtime"
-)
+import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell) {
 }

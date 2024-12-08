@@ -13,16 +13,12 @@ type Program struct {
 }
 
 func (p Program) String() string {
-	var str = "package main\n\n"
+	var str = `
+		package main
 
-	str += `import (
-	"os/exec"
+		import "bunster-build/runtime"
 
-	"bunster-build/runtime"
-)`
-
-	str += `
-func Main(shell *runtime.Shell) {
+		func Main(shell *runtime.Shell) {
 		`
 
 	for _, in := range p.Instructions {
@@ -90,7 +86,7 @@ type InitCommand struct {
 }
 
 func (ic InitCommand) togo() string {
-	return fmt.Sprintf("exec.Command(%s, %s...)", ic.Name, ic.Args)
+	return fmt.Sprintf("shell.Command(%s, %s...)", ic.Name, ic.Args)
 }
 
 type RunCommanOrFail struct {
