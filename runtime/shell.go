@@ -20,6 +20,9 @@ type Shell struct {
 
 func (shell *Shell) Run() int {
 	shell.FDT = make(FileDescriptorTable)
+	shell.FDT.Add("0", shell.Stdin)
+	shell.FDT.Add("1", shell.Stdout)
+	shell.FDT.Add("2", shell.Stderr)
 
 	shell.Main(shell)
 

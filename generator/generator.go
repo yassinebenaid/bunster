@@ -81,12 +81,7 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 
 func (g *generator) handleRedirections(name string, redirections []ast.Redirection) {
 	var fdt = name + "_fdt"
-
 	g.ins(ir.Declare{Name: fdt, Value: ir.CloneFDT{}})
-
-	g.ins(ir.AddStream{FDT: fdt, Fd: "0", StreamName: "shell.Stdin"})
-	g.ins(ir.AddStream{FDT: fdt, Fd: "1", StreamName: "shell.Stdout"})
-	g.ins(ir.AddStream{FDT: fdt, Fd: "2", StreamName: "shell.Stderr"})
 
 	for i, redirection := range redirections {
 		switch redirection.Method {
