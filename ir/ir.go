@@ -212,3 +212,21 @@ func (as CloseStream) togo() string {
 		}
 	`, as.FDT, as.Fd.togo())
 }
+
+type Closure struct {
+	Body []Instruction
+}
+
+func (c Closure) togo() string {
+	var body string
+
+	for _, ins := range c.Body {
+		body += ins.togo()
+	}
+
+	return fmt.Sprintf(`
+		func(){
+			%s
+		}()
+	`, body)
+}
