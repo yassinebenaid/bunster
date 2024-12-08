@@ -61,12 +61,14 @@ func (fdt FileDescriptorTable) Add(fd string, stream Stream) {
 	fdt[fd] = stream
 }
 
-func (fdt FileDescriptorTable) Get(fd string) (Stream, error) {
-	if stream, ok := fdt[fd]; ok {
-		return stream, nil
+func (fdt FileDescriptorTable) Get(fd string) Stream {
+	stream, ok := fdt[fd]
+	if !ok {
+		// I'm not sure if we need to handle this case because we only use this function
+		// to read 0, 1 and 2 file descriptors. Which are always available.
+		panic("FIXME: an error handler is needed here.")
 	}
-
-	return nil, fmt.Errorf("bad file descriptor: %s", fd)
+	return stream
 }
 
 func (fdt FileDescriptorTable) Duplicate(newfd, oldfd string) error {
