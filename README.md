@@ -1,11 +1,14 @@
 <div align="center">
     <img width="200" src="./docs/public/logo.png"/>
+
+# Bunster
+    
 </div>
 
 <div align="center">
 
-# Bunster
-
+[![CI](https://github.com/yassinebenaid/bunster/actions/workflows/ci.yml/badge.svg)](https://github.com/yassinebenaid/bunster/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/yassinebenaid/bunster/graph/badge.svg?token=56Vp2OyU5t)](https://codecov.io/gh/yassinebenaid/bunster)
 </div>
 
 Have you ever wished your shell scripts could be faster, more portable, and secure ? **Bunster** brings this to life by transforming your shell scripts into efficient, standalone binaries that are easy to distribute and deploy across platforms _(only unix is supported at the moment)_.
