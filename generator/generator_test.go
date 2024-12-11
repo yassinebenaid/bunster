@@ -13,7 +13,6 @@ import (
 	"github.com/yassinebenaid/bunster/lexer"
 	"github.com/yassinebenaid/bunster/parser"
 	"github.com/yassinebenaid/bunster/pkg/tst"
-	"github.com/yassinebenaid/godump"
 )
 
 func TestGenerator(t *testing.T) {
@@ -39,8 +38,6 @@ func TestGenerator(t *testing.T) {
 				if err != nil {
 					t.Fatalf("#%d: parser error.\nError: %s", i, err)
 				}
-
-				godump.Dump(test)
 
 				program := generator.Generate(script)
 				formattedProgram, gofmtErr, err := gofmt(program.String())
