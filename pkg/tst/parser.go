@@ -20,8 +20,8 @@ const (
 )
 
 // Parse reads from an io.Reader and parses the test case format
-func Parse(in []byte) ([]Test, error) {
-	var lines = splitIntoLines(string(in))
+func Parse(in string) ([]Test, error) {
+	var lines = splitIntoLines(in)
 
 	var step = START
 	var tests []Test
@@ -42,7 +42,7 @@ func Parse(in []byte) ([]Test, error) {
 
 			label, ok = strings.CutSuffix(label, ")")
 			if !ok {
-				panic("expected ')' to close test label, found " + label)
+				return nil, fmt.Errorf("bad test syntax, unclosed test header '#(TEST: ...)'")
 			}
 
 			test.Label = strings.TrimSpace(label)
