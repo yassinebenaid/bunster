@@ -1,6 +1,7 @@
 package tst
 
 import (
+	"errors"
 	"strings"
 )
 
@@ -68,8 +69,12 @@ func Parse(in []byte) ([]Test, error) {
 			test.Output += line
 			continue
 		}
-
 	}
+
+	if step == INPUT {
+		return nil, errors.New("bad test syntax, coundl't find #(RESULT) section")
+	}
+
 	return tests, nil
 }
 

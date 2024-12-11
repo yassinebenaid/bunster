@@ -17,7 +17,7 @@ func TestParser_Parse(t *testing.T) {
 	testCases := []struct {
 		input    string
 		expected []tst.Test
-		err      error
+		err      string
 	}{
 		{
 			input: `
@@ -36,13 +36,17 @@ foo bar
 				Output: " \nfoo bar\n \n",
 			}},
 		},
+		{
+			input: `#(TEST: foo bar)`,
+			err:   "bad test syntax, coundl't find #(RESULT) section",
+		},
 	}
 
 	for i, tc := range testCases {
 		tests, parseErr := tst.Parse([]byte(tc.input))
 
-		if tc.err != nil {
-			if parseErr == tc.err {
+		if tc.err != "" {
+			if parseErr == nil || parseErr.Error() != tc.err {
 				t.Errorf("expected:\n%sgot:\n%s", dump(tc.err), dump(parseErr))
 			}
 			return
