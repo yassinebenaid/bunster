@@ -1,4 +1,4 @@
-package tst
+package dottest
 
 import (
 	"fmt"

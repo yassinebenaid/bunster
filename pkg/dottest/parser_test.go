@@ -1,10 +1,10 @@
-package tst_test
+package dottest_test
 
 import (
 	"reflect"
 	"testing"
 
-	"github.com/yassinebenaid/bunster/pkg/tst"
+	"github.com/yassinebenaid/bunster/pkg/dottest"
 	"github.com/yassinebenaid/godump"
 )
 
@@ -16,7 +16,7 @@ var dump = (&godump.Dumper{
 func TestParser_Parse(t *testing.T) {
 	testCases := []struct {
 		input    string
-		expected []tst.Test
+		expected []dottest.Test
 		err      string
 	}{
 		{
@@ -24,7 +24,7 @@ func TestParser_Parse(t *testing.T) {
 #(TEST: foo bar)
 #(RESULT)
 #(ENDTEST)`,
-			expected: []tst.Test{{
+			expected: []dottest.Test{{
 				Label: `foo bar`,
 			}},
 		},
@@ -44,7 +44,7 @@ foo bar
 
 
 `,
-			expected: []tst.Test{{
+			expected: []dottest.Test{{
 				Label:  `foo bar`,
 				Input:  "\nfoo bar\n \n",
 				Output: " \nfoo bar\n \n",
@@ -67,7 +67,7 @@ output-2
 #(ENDTEST)
 
 `,
-			expected: []tst.Test{
+			expected: []dottest.Test{
 				{Label: `test 1`, Input: "input-1\n", Output: "output-1\n"},
 				{Label: `test 2`, Input: "input-2\n", Output: "output-2\n"},
 			},
@@ -75,7 +75,7 @@ output-2
 	}
 
 	for i, tc := range testCases {
-		tests, parseErr := tst.Parse(tc.input)
+		tests, parseErr := dottest.Parse(tc.input)
 
 		if tc.err != "" {
 			if parseErr == nil || parseErr.Error() != tc.err {
@@ -143,7 +143,7 @@ func TestParseErrors(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		_, parseErr := tst.Parse(tc.input)
+		_, parseErr := dottest.Parse(tc.input)
 
 		if parseErr == nil || parseErr.Error() != tc.err {
 			t.Errorf("expected:\n%sgot:\n%s", dump(tc.err), dump(parseErr))

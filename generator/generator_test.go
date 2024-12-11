@@ -12,11 +12,11 @@ import (
 	"github.com/yassinebenaid/bunster/generator"
 	"github.com/yassinebenaid/bunster/lexer"
 	"github.com/yassinebenaid/bunster/parser"
-	"github.com/yassinebenaid/bunster/pkg/tst"
+	"github.com/yassinebenaid/bunster/pkg/dottest"
 )
 
 func TestGenerator(t *testing.T) {
-	testFiles, err := filepath.Glob("./tests/*.tst")
+	testFiles, err := filepath.Glob("./tests/*.test")
 	if err != nil {
 		t.Fatalf("Failed to `Glob` test files, %v", err)
 	}
@@ -28,7 +28,7 @@ func TestGenerator(t *testing.T) {
 				t.Fatalf("Failed to open test file, %v", err)
 			}
 
-			tests, err := tst.Parse(string(testContent))
+			tests, err := dottest.Parse(string(testContent))
 			if err != nil {
 				t.Fatal(err)
 			}
