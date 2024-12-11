@@ -1,120 +1,58 @@
 package tst_test
 
 import (
-	"strings"
+	"reflect"
 	"testing"
 
 	"github.com/yassinebenaid/bunster/pkg/tst"
+	"github.com/yassinebenaid/godump"
 )
+
+var dump = (&godump.Dumper{
+	Theme:                   godump.DefaultTheme,
+	ShowPrimitiveNamedTypes: true,
+}).Sprintln
 
 func TestParser_Parse(t *testing.T) {
 	testCases := []struct {
-		name     string
 		input    string
-		expected *tst.Test
-		wantErr  bool
+		expected []tst.Test
+		err      error
 	}{
 		{
-			name: "Valid single case",
-			input: `Test: Simple Commands
-------------
-------input------
-go mod tidy
-------output------
-package main
-func main(){ } `,
-			expected: &tst.Test{
-				Label: "Simple Commands",
-				Cases: []tst.TestCase{
-					{
-						Input:  "go mod tidy",
-						Output: "package main\nfunc main(){ } ",
-					},
-				},
-			},
-		},
-		{
-			name: "Valid multiple cases",
-			input: `Test: Multiple Commands
-------------
-------input------
-go mod tidy
-------output------
-package main
-func main(){ }
-------------
-------input------
-go run main.go
-------output------
-Hello, World!`,
-			expected: &tst.Test{
-				Label: "Multiple Commands",
-				Cases: []tst.TestCase{
-					{
-						Input:  "go mod tidy",
-						Output: "package main\nfunc main(){ }",
-					},
-					{
-						Input:  "go run main.go",
-						Output: "Hello, World!",
-					},
-				},
-			},
-		},
-		{
-			name: "Invalid - missing Test:",
-			input: `Simple Commands
-------------
-------input------
-go mod tidy`,
-			wantErr: true,
-		},
-		{
-			name: "Invalid - output before input",
-			input: `Test: Invalid Command
-------------
-------output------
-package main
-------input------
-go mod tidy`,
-			wantErr: true,
+			input: `
+#(TEST: foo bar)
+
+foo bar
+
+  baz
+
+#(RESULT)
+
+foo bar
+	whatever
+
+#(ENDTEST)`,
 		},
 	}
 
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			result, err := tst.Parse(strings.NewReader(tc.input))
+	for i, tc := range testCases {
+		tests, parseErr := tst.Parse([]byte(tc.input))
 
-			if tc.wantErr {
-				if err == nil {
-					t.Errorf("expected error, got nil")
-				}
-				return
+		if tc.err != nil {
+			if parseErr == tc.err {
+				t.Errorf("expected:\n%sgot:\n%s", dump(tc.err), dump(parseErr))
 			}
+			return
+		}
 
-			if err != nil {
-				t.Errorf("unexpected error: %v", err)
-				return
-			}
+		if parseErr != nil {
+			t.Errorf("unexpected error: %v", parseErr)
+			return
+		}
 
-			// Compare results
-			if result.Label != tc.expected.Label {
-				t.Errorf("label mismatch: got %q, want %q", result.Label, tc.expected.Label)
-			}
-
-			if len(result.Cases) != len(tc.expected.Cases) {
-				t.Errorf("number of cases mismatch: got %d, want %d", len(result.Cases), len(tc.expected.Cases))
-				return
-			}
-
-			for i, case_ := range result.Cases {
-				if case_.Input != tc.expected.Cases[i].Input {
-					t.Errorf("input mismatch for case %d: got %q, want %q", i, case_.Input, tc.expected.Cases[i].Input)
-				}
-				if case_.Output != tc.expected.Cases[i].Output {
-					t.Errorf("output mismatch for case %d: got %q, want %q", i, case_.Output, tc.expected.Cases[i].Output)
-				}
-			}
-		})
+		if !reflect.DeepEqual(tc.expected, tests) {
+			t.Errorf("Case: %d\nExpected:\n%sGot:\n%s", i, dump(tc.expected), dump(tests))
+		}
 	}
 }
