@@ -73,6 +73,7 @@ func Parse(in string) ([]Test, error) {
 			if strings.TrimSpace(line) == "#(ENDTEST)" {
 				step = START
 				tests = append(tests, test)
+				test = Test{}
 				continue
 			}
 

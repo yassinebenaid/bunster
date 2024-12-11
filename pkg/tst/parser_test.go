@@ -45,6 +45,28 @@ foo bar
 				Output: " \nfoo bar\n \n",
 			}},
 		},
+		{
+			input: `
+
+
+#(TEST: test 1)
+input-1
+#(RESULT)
+output-1
+#(ENDTEST)
+
+#(TEST: test 2)
+input-2
+#(RESULT)
+output-2
+#(ENDTEST)
+
+`,
+			expected: []tst.Test{
+				{Label: `test 1`, Input: "input-1\n", Output: "output-1\n"},
+				{Label: `test 2`, Input: "input-2\n", Output: "output-2\n"},
+			},
+		},
 	}
 
 	for i, tc := range testCases {
