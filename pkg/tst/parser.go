@@ -53,6 +53,10 @@ func Parse(in string) ([]Test, error) {
 		}
 
 		if step == INPUT {
+			if strings.TrimSpace(line) == "#(ENDTEST)" || strings.HasPrefix(strings.TrimSpace(line), "#(TEST:") {
+				return nil, fmt.Errorf("line %d: bad test syntax, coundl't find #(RESULT) section", i+1)
+			}
+
 			if strings.TrimSpace(line) == "#(RESULT)" {
 				step = OUTPUT
 				continue
