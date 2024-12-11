@@ -238,7 +238,7 @@ func Main(shell *runtime.Shell) {
 
 
 
-#(TEST: output redirection)
+#(TEST: input redirection)
 
 git <output.txt 2<errors.txt 3<'file.txt' 4<"file.txt" 
 
