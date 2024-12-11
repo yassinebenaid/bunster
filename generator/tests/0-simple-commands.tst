@@ -18,6 +18,7 @@ func Main(shell *runtime.Shell) {
 git
 
 #(RESULT)
+
 package main
 
 import "bunster-build/runtime"
