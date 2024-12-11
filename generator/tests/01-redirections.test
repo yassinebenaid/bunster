@@ -298,7 +298,7 @@ func Main(shell *runtime.Shell) {
 
 
 
-#(TEST: input redirection)
+#(TEST: here string input redirection)
 
 git <<< Foo 2<<< 'Foo Bar' 
 
