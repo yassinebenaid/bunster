@@ -12,6 +12,19 @@ func Main(shell *runtime.Shell) {
 #(ENDTEST)
 
 
+#(TEST: Comments only)
+
+# hello world
+
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+}
+#(ENDTEST)
+
 
 #(TEST: simple command)
 
