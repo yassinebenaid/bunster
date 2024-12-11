@@ -13,13 +13,7 @@ import (
 	"github.com/yassinebenaid/bunster/lexer"
 	"github.com/yassinebenaid/bunster/parser"
 	"github.com/yassinebenaid/bunster/pkg/tst"
-	"github.com/yassinebenaid/godump"
 )
-
-var dump = (&godump.Dumper{
-	Theme:                   godump.DefaultTheme,
-	ShowPrimitiveNamedTypes: true,
-}).Sprintln
 
 func TestGenerator(t *testing.T) {
 	testFiles, err := filepath.Glob("./tests/*.tst")
@@ -29,18 +23,18 @@ func TestGenerator(t *testing.T) {
 
 	for _, testFile := range testFiles {
 		t.Run(testFile, func(t *testing.T) {
-			file, err := os.Open(testFile)
+			testContent, err := os.ReadFile(testFile)
 			if err != nil {
 				t.Fatalf("Failed to open test file, %v", err)
 			}
 
-			test, err := tst.Parse(file)
+			tests, err := tst.Parse(string(testContent))
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			for i, c := range test.Cases {
-				script, err := parser.Parse(lexer.New([]byte(c.Input)))
+			for i, test := range tests {
+				script, err := parser.Parse(lexer.New([]byte(test.Input)))
 				if err != nil {
 					t.Fatalf("#%d: parser error.\nError: %s", i, err)
 				}
@@ -51,7 +45,7 @@ func TestGenerator(t *testing.T) {
 					t.Fatalf("#%d: error when trying to format the generated program.\nError: %s.\nStderr: %s", i, err, gofmtErr)
 				}
 
-				formattedTestOutput, gofmtErr, err := gofmt(c.Output)
+				formattedTestOutput, gofmtErr, err := gofmt(test.Output)
 				if err != nil {
 					t.Fatalf("#%d: error when trying to format the test expected output.\nError: %s.\nStderr: %s", i, err, gofmtErr)
 				}
