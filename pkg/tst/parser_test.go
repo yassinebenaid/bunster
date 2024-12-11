@@ -37,6 +37,10 @@ foo bar
 			}},
 		},
 		{
+			input: `foo bar`,
+			err:   `bad test syntax, coundl't find test header '#(TEST: ...)', found "foo bar"`,
+		},
+		{
 			input: `#(TEST: foo bar)`,
 			err:   "bad test syntax, coundl't find #(RESULT) section",
 		},

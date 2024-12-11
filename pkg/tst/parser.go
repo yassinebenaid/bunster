@@ -2,6 +2,7 @@ package tst
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 )
 
@@ -36,7 +37,7 @@ func Parse(in []byte) ([]Test, error) {
 
 			label, ok := strings.CutPrefix(label, "#(TEST:")
 			if !ok {
-				panic("expected '#(TEST:', found " + label)
+				return nil, fmt.Errorf("bad test syntax, coundl't find test header '#(TEST: ...)', found %q", label)
 			}
 
 			label, ok = strings.CutSuffix(label, ")")
