@@ -33,6 +33,21 @@ foo bar
 	whatever
 
 #(ENDTEST)`,
+			expected: []tst.Test{{
+				Label: ` foo bar`,
+				Input: `
+
+foo bar
+
+  baz
+
+`, Output: `
+
+foo bar
+	whatever
+
+`,
+			}},
 		},
 	}
 
