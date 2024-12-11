@@ -46,6 +46,9 @@ func Parse(in string) ([]Test, error) {
 			}
 
 			test.Label = strings.TrimSpace(label)
+			if test.Label == "" {
+				return nil, fmt.Errorf("bad test syntax, test label cannot be blank")
+			}
 			step = INPUT
 			continue
 		}

@@ -22,6 +22,15 @@ func TestParser_Parse(t *testing.T) {
 		{
 			input: `
 #(TEST: foo bar)
+#(RESULT)
+#(ENDTEST)`,
+			expected: []tst.Test{{
+				Label: `foo bar`,
+			}},
+		},
+		{
+			input: `
+#(TEST: foo bar)
 
 foo bar
  
@@ -83,6 +92,10 @@ func TestParseErrors(t *testing.T) {
 		{
 			input: "#(TEST: foo bar) \n#(RESULT)",
 			err:   "bad test syntax, unclosed test, missing '#(ENDTEST)'",
+		},
+		{
+			input: "#(TEST: ) \n#(RESULT)\n#(ENDTEST)",
+			err:   "bad test syntax, test label cannot be blank",
 		},
 	}
 
