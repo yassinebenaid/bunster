@@ -24,29 +24,16 @@ func TestParser_Parse(t *testing.T) {
 #(TEST: foo bar)
 
 foo bar
-
-  baz
-
+ 
 #(RESULT)
-
+ 
 foo bar
-	whatever
-
+ 
 #(ENDTEST)`,
 			expected: []tst.Test{{
-				Label: ` foo bar`,
-				Input: `
-
-foo bar
-
-  baz
-
-`, Output: `
-
-foo bar
-	whatever
-
-`,
+				Label:  `foo bar`,
+				Input:  "\nfoo bar\n \n",
+				Output: " \nfoo bar\n \n",
 			}},
 		},
 	}
