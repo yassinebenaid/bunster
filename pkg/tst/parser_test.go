@@ -30,6 +30,8 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			input: `
+
+
 #(TEST: foo bar)
 
 foo bar
@@ -38,7 +40,10 @@ foo bar
  
 foo bar
  
-#(ENDTEST)`,
+#(ENDTEST)
+
+
+`,
 			expected: []tst.Test{{
 				Label:  `foo bar`,
 				Input:  "\nfoo bar\n \n",
