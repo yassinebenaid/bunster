@@ -2,7 +2,7 @@
 
 #(TEST: output redirection)
 
-git >output.txt 2>errors.txt 3>'file.txt' 4>"file.txt" 
+git >output.txt 2>|errors.txt 3>'file.txt' 4>"file.txt" 
 
 #(RESULT)
 
