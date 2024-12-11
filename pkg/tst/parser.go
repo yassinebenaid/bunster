@@ -75,6 +75,9 @@ func Parse(in string) ([]Test, error) {
 	if step == INPUT {
 		return nil, errors.New("bad test syntax, coundl't find #(RESULT) section")
 	}
+	if step == OUTPUT {
+		return nil, errors.New("bad test syntax, unclosed test, missing '#(ENDTEST)'")
+	}
 
 	return tests, nil
 }
