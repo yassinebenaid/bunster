@@ -67,6 +67,9 @@ func Parse(in string) ([]Test, error) {
 		}
 
 		if step == OUTPUT {
+			if strings.TrimSpace(line) == "#(RESULT)" || strings.HasPrefix(strings.TrimSpace(line), "#(TEST:") {
+				return nil, fmt.Errorf("line %d: bad test syntax, unclosed test, missing '#(ENDTEST)'", i+1)
+			}
 			if strings.TrimSpace(line) == "#(ENDTEST)" {
 				step = START
 				tests = append(tests, test)

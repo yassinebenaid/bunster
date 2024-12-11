@@ -105,6 +105,10 @@ func TestParseErrors(t *testing.T) {
 			input: "#(TEST: foobar )\n#(ENDTEST)",
 			err:   "line 2: bad test syntax, coundl't find #(RESULT) section",
 		},
+		{
+			input: "#(TEST: foobar )\n#(RESULT)\n#(RESULT)\n#(ENDTEST)",
+			err:   "line 3: bad test syntax, unclosed test, missing '#(ENDTEST)'",
+		},
 	}
 
 	for _, tc := range testCases {
