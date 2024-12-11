@@ -1,7 +1,6 @@
 package tst
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 )
@@ -27,7 +26,7 @@ func Parse(in string) ([]Test, error) {
 	var tests []Test
 	var test Test
 
-	for _, line := range lines {
+	for i, line := range lines {
 		if step == START {
 			if strings.TrimSpace(line) == "" {
 				continue
@@ -37,17 +36,17 @@ func Parse(in string) ([]Test, error) {
 
 			label, ok := strings.CutPrefix(label, "#(TEST:")
 			if !ok {
-				return nil, fmt.Errorf("bad test syntax, coundl't find test header '#(TEST: ...)', found %q", label)
+				return nil, fmt.Errorf("line %d: bad test syntax, coundl't find test header '#(TEST: ...)', found %q", i+1, label)
 			}
 
 			label, ok = strings.CutSuffix(label, ")")
 			if !ok {
-				return nil, fmt.Errorf("bad test syntax, unclosed test header '#(TEST: ...)'")
+				return nil, fmt.Errorf("line %d: bad test syntax, unclosed test header '#(TEST: ...)'", i+1)
 			}
 
 			test.Label = strings.TrimSpace(label)
 			if test.Label == "" {
-				return nil, fmt.Errorf("bad test syntax, test label cannot be blank")
+				return nil, fmt.Errorf("line %d: bad test syntax, test label cannot be blank", i+1)
 			}
 			step = INPUT
 			continue
@@ -76,10 +75,10 @@ func Parse(in string) ([]Test, error) {
 	}
 
 	if step == INPUT {
-		return nil, errors.New("bad test syntax, coundl't find #(RESULT) section")
+		return nil, fmt.Errorf("bad test syntax, coundl't find #(RESULT) section")
 	}
 	if step == OUTPUT {
-		return nil, errors.New("bad test syntax, unclosed test, missing '#(ENDTEST)'")
+		return nil, fmt.Errorf("bad test syntax, unclosed test, missing '#(ENDTEST)'")
 	}
 
 	return tests, nil
