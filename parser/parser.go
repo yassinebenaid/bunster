@@ -139,12 +139,12 @@ func (p *parser) parsePipline() ast.Pipeline {
 	}
 	pipeline = append(pipeline, ast.PipelineCommand{Command: cmd})
 
-	for {
+	for i := 0; ; i++ {
 		if p.curr.Type != token.PIPE && p.curr.Type != token.PIPE_AMPERSAND {
 			break
 		}
 		var pipe ast.PipelineCommand
-		pipe.Stderr = p.curr.Type == token.PIPE_AMPERSAND
+		pipeline[i].Stderr = p.curr.Type == token.PIPE_AMPERSAND
 
 		p.proceed()
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
