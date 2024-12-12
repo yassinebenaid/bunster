@@ -11,11 +11,11 @@ hero:
     alt: Bunster
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: Installation
+      link: /installation
     - theme: alt
-      text: API Examples
-      link: /api-examples
+      text: Documentation
+      link: /get-started
 
 features:
   - title: Feature A
