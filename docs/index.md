@@ -15,7 +15,7 @@ hero:
       link: /installation
     - theme: alt
       text: Documentation
-      link: /get-started
+      link: /quick-start
 
 features:
   - title: Feature A
