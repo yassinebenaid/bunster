@@ -24,6 +24,11 @@ export default defineConfig({
     socialLinks: [
       { icon: "github", link: "https://github.com/yassinebenaid/bunster" },
     ],
+
+    footer: {
+      message: "Released under the GPLv3 License.",
+      copyright: "Copyright © 2024-present Yassine Benaid",
+    },
   },
   head: [
     ["link", { rel: "manifest", href: "/site.webmanifest" }],
