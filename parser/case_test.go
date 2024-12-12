@@ -256,9 +256,9 @@ var caseTests = []testCase{
 						},
 					},
 				},
+				Stderr: true,
 			},
 			ast.PipelineCommand{
-				Stderr:  true,
 				Command: ast.Command{Name: ast.Word("cmd")},
 			},
 		},
