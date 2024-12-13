@@ -120,6 +120,14 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 				Fd:         "1",
 				StreamName: pc.writer,
 			})
+
+			if pc.stderr {
+				buf.add(ir.AddStream{
+					FDT:        fdt,
+					Fd:         "2",
+					StreamName: pc.writer,
+				})
+			}
 		}
 
 		if pc.reader != "" {
@@ -261,6 +269,7 @@ type pipeContext struct {
 	writer    string
 	reader    string
 	waitgroup string
+	stderr    bool
 }
 
 func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
@@ -276,7 +285,10 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 
 		var pc pipeContext
 		if i == 0 {
-			pc = pipeContext{writer: fmt.Sprintf("pipe_%d_writer", i+1)}
+			pc = pipeContext{
+				writer: fmt.Sprintf("pipe_%d_writer", i+1),
+				stderr: cmd.Stderr,
+			}
 		} else if i == (len(p) - 1) {
 			pc = pipeContext{
 				reader: fmt.Sprintf("pipe_%d_reader", i),
@@ -285,6 +297,7 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 			pc = pipeContext{
 				writer: fmt.Sprintf("pipe_%d_writer", i+1),
 				reader: fmt.Sprintf("pipe_%d_reader", i),
+				stderr: cmd.Stderr,
 			}
 		}
 
