@@ -38,9 +38,9 @@ func (shell *Shell) HandleError(cmd string, err error) {
 
 	switch e := err.(type) {
 	case *exec.Error:
-		fmt.Fprintf(shell.Stderr, "failed to recognize command %q, %v\n", cmd, e.Err)
+		fmt.Fprintf(shell.Stderr, "failed to recognize command %q, %v\n", e.Name, e.Err)
 	case *exec.ExitError:
-		// ignore this error
+		shell.ExitCode = e.ExitCode()
 	default:
 		fmt.Fprintln(shell.Stderr, err)
 	}
