@@ -32,13 +32,18 @@ docker pull ghcr.io/yassinebenaid/bunster:v0.3.0
 If you already have [the Go toolchain](https://go.dev/dl) installed. You can use the `go install` command to get **Bunster** on your machine.
 
 ```shell
-go install github.com/yassinebenaid/bunster@latest
+go install github.com/yassinebenaid/bunster/cmd/bunster@latest
 ```
 
 Or, if you want a specific version (v.0.3.0 for example):
 
 ```shell
-go install github.com/yassinebenaid/bunster@v0.3.0
+go install github.com/yassinebenaid/bunster/cmd/bunster@v0.3.0
+```
+
+This will build the binary at `$HOME/go/bin/bunster`, if you want to make it accessible by all users, you can move it to `/usr/local/bin`
+```shell
+mv $HOME/go/bin/bunster /usr/local/bin # you may need to use `sudo`.
 ```
 
 ::: info
