@@ -42,10 +42,13 @@ type WaitPipelineWaitgroup string
 
 func (w WaitPipelineWaitgroup) togo() string {
 	return fmt.Sprintf(
-		`if err := %s.Wait(); err != nil {
-			shell.HandleError("", err)
-			return
+		`for i, item := range %s {
+			if err := item.Wait(); err != nil {
+				shell.HandleError("", err)
+			}
+			if i < (len(%s) - 1){
+				shell.ExitCode = 0
+			}
 		}
-		//TODO: shell.ExitCode = %%s.ProcessState.ExitCode()
-		`, w)
+		`, w, w)
 }
