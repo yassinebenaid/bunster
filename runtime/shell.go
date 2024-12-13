@@ -2,6 +2,7 @@ package runtime
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
 	"os/exec"
 )
@@ -38,7 +39,9 @@ func (shell *Shell) HandleError(cmd string, err error) {
 
 	switch e := err.(type) {
 	case *exec.Error:
-		fmt.Fprintf(shell.Stderr, "failed to recognize command %q, %v\n", e.Name, e.Err)
+		fmt.Fprintf(shell.Stderr, "%q: %v\n", e.Name, e.Err)
+	case *fs.PathError:
+		fmt.Fprintf(shell.Stderr, "%q: %v\n", e.Path, e.Err)
 	case *exec.ExitError:
 		shell.ExitCode = e.ExitCode()
 	default:
