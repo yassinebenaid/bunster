@@ -212,3 +212,80 @@ func Main(shell *runtime.Shell) {
 }
 
 #(ENDTEST)
+
+
+#(TEST: pipeline that redirects stderr as well)
+cat file.txt |& grep foobar
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+	func() {
+		var pipeline_waitgroup runtime.PiplineWaitgroup
+		pipe_1_reader, pipe_1_writer, err := runtime.NewPipe()
+		if err != nil {
+			shell.HandleError("", err)
+			return
+		}
+		func() {
+			var cmd_0_name = `cat`
+			var cmd_0_args []string
+			cmd_0_args = append(cmd_0_args, `file.txt`)
+			var cmd_0 = shell.Command(cmd_0_name, cmd_0_args...)
+			cmd_0_fdt, err := shell.CloneFDT()
+			if err != nil {
+				shell.HandleError("", err)
+				return
+			}
+			defer cmd_0_fdt.Destroy()
+			cmd_0_fdt.Add(`1`, pipe_1_writer)
+			cmd_0_fdt.Add(`2`, pipe_1_writer)
+			cmd_0.Stdin = cmd_0_fdt.Get(`0`)
+			cmd_0.Stdout = cmd_0_fdt.Get(`1`)
+			cmd_0.Stderr = cmd_0_fdt.Get(`2`)
+			if err := cmd_0.Start(); err != nil {
+				shell.HandleError(cmd_0_name, err)
+				return
+			}
+			pipeline_waitgroup = append(pipeline_waitgroup, runtime.PiplineWaitgroupItem{
+				Wait: cmd_0.Wait,
+			})
+		}()
+		func() {
+			var cmd_1_name = `grep`
+			var cmd_1_args []string
+			cmd_1_args = append(cmd_1_args, `foobar`)
+			var cmd_1 = shell.Command(cmd_1_name, cmd_1_args...)
+			cmd_1_fdt, err := shell.CloneFDT()
+			if err != nil {
+				shell.HandleError("", err)
+				return
+			}
+			defer cmd_1_fdt.Destroy()
+			cmd_1_fdt.Add(`0`, pipe_1_reader)
+			cmd_1.Stdin = cmd_1_fdt.Get(`0`)
+			cmd_1.Stdout = cmd_1_fdt.Get(`1`)
+			cmd_1.Stderr = cmd_1_fdt.Get(`2`)
+			if err := cmd_1.Start(); err != nil {
+				shell.HandleError(cmd_1_name, err)
+				return
+			}
+			pipeline_waitgroup = append(pipeline_waitgroup, runtime.PiplineWaitgroupItem{
+				Wait: cmd_1.Wait,
+			})
+		}()
+		for i, item := range pipeline_waitgroup {
+			if err := item.Wait(); err != nil {
+				shell.HandleError("", err)
+			}
+			if i < (len(pipeline_waitgroup) - 1) {
+				shell.ExitCode = 0
+			}
+		}
+
+	}()
+}
+
+#(ENDTEST)
