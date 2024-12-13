@@ -46,6 +46,6 @@ func (w WaitPipelineWaitgroup) togo() string {
 			shell.HandleError("", err)
 			return
 		}
-		//TODO: shell.ExitCode = %s.ProcessState.ExitCode()
+		//TODO: shell.ExitCode = %%s.ProcessState.ExitCode()
 		`, w)
 }
