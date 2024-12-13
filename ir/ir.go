@@ -102,7 +102,8 @@ func (rcf RunCommanOrFail) togo() string {
 			shell.HandleError(%s, err)
 			return
 		}
-		`, rcf.Command, rcf.Name)
+		shell.ExitCode = %s.ProcessState.ExitCode()
+		`, rcf.Command, rcf.Name, rcf.Command)
 }
 
 type StartCommand struct {
