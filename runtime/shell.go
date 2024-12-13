@@ -57,3 +57,17 @@ func (shell *Shell) Command(name string, args ...string) *exec.Cmd {
 func NewPipe() (Stream, Stream, error) {
 	return os.Pipe()
 }
+
+type PiplineWaitgroupItem struct {
+	Wait func() error
+}
+type PiplineWaitgroup []PiplineWaitgroupItem
+
+func (pw PiplineWaitgroup) Wait() error {
+	for _, item := range pw {
+		if err := item.Wait(); err != nil {
+			return err
+		}
+	}
+	return nil
+}

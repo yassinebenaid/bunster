@@ -57,7 +57,10 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 		Value: g.handleExpression(cmd.Name),
 	})
 
-	buf.add(ir.DeclareSlice(fmt.Sprintf("cmd_%d_args", id)))
+	buf.add(ir.DeclareSlice{
+		Name: fmt.Sprintf("cmd_%d_args", id),
+		Type: "string",
+	})
 
 	for _, arg := range cmd.Args {
 		buf.add(ir.Append{
@@ -76,10 +79,21 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 
 	g.handleRedirections(buf, fmt.Sprintf("cmd_%d", id), cmd.Redirections, pc)
 
-	buf.add(ir.RunCommanOrFail{
-		Command: fmt.Sprintf("cmd_%d", id),
-		Name:    fmt.Sprintf("cmd_%d_name", id),
-	})
+	if pc != nil {
+		buf.add(ir.StartCommand{
+			Command: fmt.Sprintf("cmd_%d", id),
+			Name:    fmt.Sprintf("cmd_%d_name", id),
+		})
+		buf.add(ir.PushToPipelineWaitgroup{
+			Waitgroup: pc.waitgroup,
+			Command:   fmt.Sprintf("cmd_%d", id),
+		})
+	} else {
+		buf.add(ir.RunCommanOrFail{
+			Command: fmt.Sprintf("cmd_%d", id),
+			Name:    fmt.Sprintf("cmd_%d_name", id),
+		})
+	}
 }
 
 func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
@@ -244,11 +258,14 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 }
 
 type pipeContext struct {
-	writer string
-	reader string
+	writer    string
+	reader    string
+	waitgroup string
 }
 
 func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
+	buf.add(ir.NewPipelineWaitgroup("pipeline_waitgroup"))
+
 	for i, cmd := range p {
 		if i < (len(p) - 1) { //last command doesn't need a pipe
 			buf.add(ir.NewPipe{
@@ -257,47 +274,24 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 			})
 		}
 
+		var pc pipeContext
 		if i == 0 {
-			g.generate(buf, cmd.Command, &pipeContext{
-				writer: fmt.Sprintf("pipe_%d_writer", i+1),
-			})
+			pc = pipeContext{writer: fmt.Sprintf("pipe_%d_writer", i+1)}
 		} else if i == (len(p) - 1) {
-			g.generate(buf, cmd.Command, &pipeContext{
+			pc = pipeContext{
 				reader: fmt.Sprintf("pipe_%d_reader", i),
-			})
+			}
 		} else {
-			g.generate(buf, cmd.Command, &pipeContext{
+			pc = pipeContext{
 				writer: fmt.Sprintf("pipe_%d_writer", i+1),
 				reader: fmt.Sprintf("pipe_%d_reader", i),
-			})
+			}
 		}
 
-		_ = cmd
+		pc.waitgroup = "pipeline_waitgroup"
+		g.generate(buf, cmd.Command, &pc)
 	}
-	// id := g.cmdCount
-	// g.cmdCount++
 
-	// buf.add(ir.DeclareSlice(fmt.Sprintf("cmd_%d_args", id)))
+	buf.add(ir.WaitPipelineWaitgroup("pipeline_waitgroup"))
 
-	// for _, arg := range cmd.Args {
-	// 	buf.add(ir.Append{
-	// 		Name:  fmt.Sprintf("cmd_%d_args", id),
-	// 		Value: g.handleExpression(arg),
-	// 	})
-	// }
-
-	// buf.add(ir.Declare{
-	// 	Name: fmt.Sprintf("cmd_%d", id),
-	// 	Value: ir.InitCommand{
-	// 		Name: fmt.Sprintf("cmd_%d_name", id),
-	// 		Args: fmt.Sprintf("cmd_%d_args", id),
-	// 	},
-	// })
-
-	// g.handleRedirections(buf, fmt.Sprintf("cmd_%d", id), cmd.Redirections)
-
-	// buf.add(ir.RunCommanOrFail{
-	// 	Command: fmt.Sprintf("cmd_%d", id),
-	// 	Name:    fmt.Sprintf("cmd_%d_name", id),
-	// })
 }

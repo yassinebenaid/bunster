@@ -38,10 +38,12 @@ func (d Declare) togo() string {
 	return fmt.Sprintf("var %s = %s\n", d.Name, d.Value.togo())
 }
 
-type DeclareSlice string
+type DeclareSlice struct {
+	Name, Type string
+}
 
 func (d DeclareSlice) togo() string {
-	return fmt.Sprintf("var %s []string\n", d)
+	return fmt.Sprintf("var %s []%s\n", d.Name, d.Type)
 }
 
 type Set struct {
@@ -102,6 +104,20 @@ func (rcf RunCommanOrFail) togo() string {
 		}
 		shell.ExitCode = %s.ProcessState.ExitCode()
 		`, rcf.Command, rcf.Name, rcf.Command)
+}
+
+type StartCommand struct {
+	Command string
+	Name    string
+}
+
+func (rcf StartCommand) togo() string {
+	return fmt.Sprintf(
+		`if err := %s.Start(); err != nil {
+			shell.HandleError(%s, err)
+			return
+		}
+		`, rcf.Command, rcf.Name)
 }
 
 const (
