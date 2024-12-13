@@ -96,7 +96,7 @@ var ifCommandTests = []testCase{
 									{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
 								},
 							},
-							Stderr: false,
+							Stderr: true,
 						},
 						{
 							Command: ast.Command{
@@ -106,7 +106,7 @@ var ifCommandTests = []testCase{
 									{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 								},
 							},
-							Stderr: true,
+							Stderr: false,
 						},
 					},
 				},
@@ -148,7 +148,7 @@ var ifCommandTests = []testCase{
 										{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
 									},
 								},
-								Stderr: false,
+								Stderr: true,
 							},
 							{
 								Command: ast.Command{
@@ -158,7 +158,7 @@ var ifCommandTests = []testCase{
 										{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 									},
 								},
-								Stderr: true,
+								Stderr: false,
 							},
 						},
 					},
@@ -210,9 +210,9 @@ var ifCommandTests = []testCase{
 						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
+				Stderr: true,
 			},
 			ast.PipelineCommand{
-				Stderr: true,
 				Command: ast.If{
 					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},

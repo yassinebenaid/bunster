@@ -58,6 +58,13 @@ func NewStringStream(s string) Stream {
 type FileDescriptorTable map[string]Stream
 
 func (fdt FileDescriptorTable) Add(fd string, stream Stream) {
+	// If this stream is already open, we need to close it. otherwise, Its handler will be loats and leak.
+	// This is related to pipelines in particular. when instantiating a new pipeline, we add its ends to the FDT. but if
+	// a redirection happened afterwards, it will cause the pipline handler to be lost and kept open.
+	if fdt[fd] != nil {
+		_ = fdt[fd].Close() // error here is not important.
+	}
+
 	fdt[fd] = stream
 }
 

@@ -7,20 +7,20 @@ var pipesTests = []testCase{
 
 		ast.Pipeline{
 			{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
-			{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: false},
-			{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: true},
-			{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: false},
-			{Command: ast.Command{Name: ast.Word("cmd5")}, Stderr: true},
+			{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: true},
+			{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: false},
+			{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: true},
+			{Command: ast.Command{Name: ast.Word("cmd5")}, Stderr: false},
 		},
 	}},
 	{`cmd|cmd2|&cmd3|cmd4|&cmd5`, ast.Script{
 
 		ast.Pipeline{
 			{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
-			{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: false},
-			{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: true},
-			{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: false},
-			{Command: ast.Command{Name: ast.Word("cmd5")}, Stderr: true},
+			{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: true},
+			{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: false},
+			{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: true},
+			{Command: ast.Command{Name: ast.Word("cmd5")}, Stderr: false},
 		},
 	}},
 	{`cmd arg| cmd2 \|`, ast.Script{
@@ -50,13 +50,13 @@ var pipesTests = []testCase{
 					Name: ast.Word("cmd2"),
 					Args: []ast.Expression{ast.Word("123")},
 				},
-				Stderr: false,
+				Stderr: true,
 			},
 			{
 				Command: ast.Command{
 					Name: ast.Var("var"),
 				},
-				Stderr: true,
+				Stderr: false,
 			},
 		},
 	}},

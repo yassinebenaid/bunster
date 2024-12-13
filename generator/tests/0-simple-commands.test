@@ -58,7 +58,7 @@ func Main(shell *runtime.Shell) {
  			shell.HandleError(cmd_0_name, err)
  			return
   		}
-  		shell.ExitCode = cmd_0.ProcessState.ExitCode()
+        shell.ExitCode = cmd_0.ProcessState.ExitCode()
 
    	}()
 }
@@ -98,7 +98,7 @@ func Main(shell *runtime.Shell) {
  			shell.HandleError(cmd_0_name, err)
  			return
   		}
-  		shell.ExitCode = cmd_0.ProcessState.ExitCode()
+        shell.ExitCode = cmd_0.ProcessState.ExitCode()
 
    	}()
 }
@@ -140,7 +140,7 @@ func Main(shell *runtime.Shell) {
  			shell.HandleError(cmd_0_name, err)
  			return
   		}
-  		shell.ExitCode = cmd_0.ProcessState.ExitCode()
+        shell.ExitCode = cmd_0.ProcessState.ExitCode()
 
    	}()
 }
