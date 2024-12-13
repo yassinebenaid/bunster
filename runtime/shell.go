@@ -53,3 +53,7 @@ func (shell *Shell) CloneFDT() (FileDescriptorTable, error) {
 func (shell *Shell) Command(name string, args ...string) *exec.Cmd {
 	return exec.Command(name, args...)
 }
+
+func NewPipe() (Stream, Stream, error) {
+	return os.Pipe()
+}

@@ -187,13 +187,13 @@ type CloseStream struct {
 	Fd  Instruction
 }
 
-func (as CloseStream) togo() string {
+func (c CloseStream) togo() string {
 	return fmt.Sprintf(
 		`if err := %s.Close(%s); err != nil {
 			shell.HandleError("", err)
 			return
 		}
-	`, as.FDT, as.Fd.togo())
+	`, c.FDT, c.Fd.togo())
 }
 
 type Closure struct {
