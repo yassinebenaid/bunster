@@ -58,8 +58,8 @@ func TestGenerator(t *testing.T) {
 
 				if formattedProgram != formattedTestOutput {
 					t.Fatalf(
-						"\n#%d: The generated program doesn't match the expected output.\n Program:\n%s",
-						i, diffStrings(formattedTestOutput, formattedProgram),
+						"\n#%d: The generated program doesn't match the expected output.\nTest: %s\n Program:\n%s",
+						i, test.Label, diffStrings(formattedTestOutput, formattedProgram),
 					)
 				}
 			}

@@ -2,7 +2,7 @@
 
 #(TEST: output redirection)
 
-git >output.txt 2>|errors.txt 3>'file.txt' 4>"file.txt" 
+git >output.txt 2>|errors.txt 3>'file.txt' 4>"file.txt"
 
 #(RESULT)
 
@@ -52,7 +52,6 @@ func Main(shell *runtime.Shell) {
  			shell.HandleError(cmd_0_name, err)
  			return
   		}
-  		shell.ExitCode = cmd_0.ProcessState.ExitCode()
 
    	}()
 }
@@ -63,7 +62,7 @@ func Main(shell *runtime.Shell) {
 
 #(TEST: output appending redirection)
 
-git >>output.txt 2>>errors.txt 3>>'file.txt' 4>>"file.txt" 
+git >>output.txt 2>>errors.txt 3>>'file.txt' 4>>"file.txt"
 
 #(RESULT)
 
@@ -113,7 +112,6 @@ func Main(shell *runtime.Shell) {
  			shell.HandleError(cmd_0_name, err)
  			return
   		}
-  		shell.ExitCode = cmd_0.ProcessState.ExitCode()
 
    	}()
 }
@@ -163,7 +161,6 @@ func Main(shell *runtime.Shell) {
  			shell.HandleError(cmd_0_name, err)
  			return
   		}
-  		shell.ExitCode = cmd_0.ProcessState.ExitCode()
 
    	}()
 }
@@ -175,7 +172,7 @@ func Main(shell *runtime.Shell) {
 
 #(TEST: output file descriptor duplication and closing)
 
-git 3>file.txt >&3- 2>&1  4>>file.txt 4>&- 
+git 3>file.txt >&3- 2>&1  4>>file.txt 4>&-
 
 #(RESULT)
 
@@ -229,7 +226,6 @@ func Main(shell *runtime.Shell) {
  			shell.HandleError(cmd_0_name, err)
  			return
   		}
-  		shell.ExitCode = cmd_0.ProcessState.ExitCode()
 
    	}()
 }
@@ -240,7 +236,7 @@ func Main(shell *runtime.Shell) {
 
 #(TEST: input redirection)
 
-git <output.txt 2<errors.txt 3<'file.txt' 4<"file.txt" 
+git <output.txt 2<errors.txt 3<'file.txt' 4<"file.txt"
 
 #(RESULT)
 
@@ -290,7 +286,6 @@ func Main(shell *runtime.Shell) {
  			shell.HandleError(cmd_0_name, err)
  			return
   		}
-  		shell.ExitCode = cmd_0.ProcessState.ExitCode()
 
    	}()
 }
@@ -300,7 +295,7 @@ func Main(shell *runtime.Shell) {
 
 #(TEST: here string input redirection)
 
-git <<< Foo 2<<< 'Foo Bar' 
+git <<< Foo 2<<< 'Foo Bar'
 
 #(RESULT)
 
@@ -330,7 +325,6 @@ func Main(shell *runtime.Shell) {
  			shell.HandleError(cmd_0_name, err)
  			return
   		}
-  		shell.ExitCode = cmd_0.ProcessState.ExitCode()
 
    	}()
 }
@@ -341,7 +335,7 @@ func Main(shell *runtime.Shell) {
 
 #(TEST: output file descriptor duplication and closing)
 
-git 3<file.txt <&3- 2<&1  4<<<foobar 4<&- 
+git 3<file.txt <&3- 2<&1  4<<<foobar 4<&-
 
 #(RESULT)
 
@@ -391,7 +385,6 @@ func Main(shell *runtime.Shell) {
  			shell.HandleError(cmd_0_name, err)
  			return
   		}
-  		shell.ExitCode = cmd_0.ProcessState.ExitCode()
 
    	}()
 }
@@ -400,7 +393,7 @@ func Main(shell *runtime.Shell) {
 
 #(TEST: output redirection)
 
-git <>file.txt 2<>file.txt  
+git <>file.txt 2<>file.txt
 
 #(RESULT)
 
@@ -438,7 +431,6 @@ func Main(shell *runtime.Shell) {
  			shell.HandleError(cmd_0_name, err)
  			return
   		}
-  		shell.ExitCode = cmd_0.ProcessState.ExitCode()
 
    	}()
 }
