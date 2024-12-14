@@ -11,17 +11,17 @@ hero:
     alt: Bunster
   actions:
     - theme: brand
-      text: Markdown Examples
-      link: /markdown-examples
+      text: Installation
+      link: /installation
     - theme: alt
-      text: API Examples
-      link: /api-examples
-
+      text: Documentation
+      link: /quick-start
 features:
-  - title: Feature A
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature B
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  - title: Feature C
-    details: Lorem ipsum dolor sit amet, consectetur adipiscing elit
+  - title: Native Program Generation
+    details: |
+      Scripts compiled with Bunster are not just wrappers around your script, nor do they rely on any external shell on your system.
+  - title: Wite Once, Run Everywhere
+    details: Bunster offers static linking. Your scripts are compiled to a statically linked binary that runs on every machine.
+  - title: Module System
+    details: Bunsters's module system makes it easy to shares your scripts as a versioned modules to be used by others.
 ---

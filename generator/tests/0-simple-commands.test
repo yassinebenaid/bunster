@@ -1,0 +1,263 @@
+
+
+#(TEST: blank script)
+
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+}
+#(ENDTEST)
+
+
+
+
+#(TEST: Comments only)
+
+# hello world
+
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+}
+#(ENDTEST)
+
+
+
+
+#(TEST: simple command)
+
+git
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+    func() {
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
+  		if err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+  		defer commandFDT.Destroy()
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+}
+#(ENDTEST)
+
+
+
+#(TEST: command with arguments)
+
+cmd arg 'arg 2' "arg 3" $ARG3
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+    func() {
+  		var commandName = `cmd`
+  		var arguments []string
+        arguments = append(arguments, `arg`)
+        arguments = append(arguments, `arg 2`)
+        arguments = append(arguments, `arg 3`)
+        arguments = append(arguments, shell.ReadVar("ARG3"))
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
+  		if err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+  		defer commandFDT.Destroy()
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+}
+#(ENDTEST)
+
+
+#(TEST: multiline command with arguments)
+
+cmd --option=value \
+    --option='value' \
+    --option="value" \
+    -o
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+    func() {
+  		var commandName = `cmd`
+  		var arguments []string
+        arguments = append(arguments, `--option=value`)
+        arguments = append(arguments, `--option=value`)
+        arguments = append(arguments, `--option=value`)
+        arguments = append(arguments, `-o`)
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
+  		if err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+  		defer commandFDT.Destroy()
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+}
+#(ENDTEST)
+
+
+
+#(TEST: multiple commands)
+
+cmd1
+cmd2; cmd3
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+    func() {
+  		var commandName = `cmd1`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
+  		if err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+  		defer commandFDT.Destroy()
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+    func() {
+  		var commandName = `cmd2`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
+  		if err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+  		defer commandFDT.Destroy()
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+    func() {
+  		var commandName = `cmd3`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
+  		if err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+  		defer commandFDT.Destroy()
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+}
+#(ENDTEST)
+
+
+
+
+#(TEST: concatination)
+
+"$HOME/bin/cmd" $PWD:/path 'foo-''bar-'"baz-"boo
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+    func() {
+  		var commandName = shell.ReadVar("HOME")+`/bin/cmd`
+  		var arguments []string
+  		arguments = append(arguments, shell.ReadVar("PWD")+`:/path` )
+  		arguments = append(arguments, `foo-bar-baz-boo` )
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
+  		if err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+  		defer commandFDT.Destroy()
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+}
+#(ENDTEST)

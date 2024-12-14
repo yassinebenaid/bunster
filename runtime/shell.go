@@ -2,8 +2,10 @@ package runtime
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
 	"os/exec"
+	"syscall"
 )
 
 type Shell struct {
@@ -33,14 +35,16 @@ func (shell *Shell) ReadVar(name string) string {
 	return os.Getenv(name)
 }
 
-func (shell *Shell) HandleError(cmd string, err error) {
+func (shell *Shell) HandleError(err error) {
 	shell.ExitCode = 1
 
 	switch e := err.(type) {
 	case *exec.Error:
-		fmt.Fprintf(shell.Stderr, "failed to recognize command %q, %v\n", cmd, e.Err)
+		fmt.Fprintf(shell.Stderr, "%q: %v\n", e.Name, e.Err)
+	case *fs.PathError:
+		fmt.Fprintf(shell.Stderr, "%q: %v\n", e.Path, e.Err)
 	case *exec.ExitError:
-		// ignore this error
+		shell.ExitCode = e.ExitCode()
 	default:
 		fmt.Fprintln(shell.Stderr, err)
 	}
@@ -51,5 +55,16 @@ func (shell *Shell) CloneFDT() (FileDescriptorTable, error) {
 }
 
 func (shell *Shell) Command(name string, args ...string) *exec.Cmd {
-	return exec.Command(name, args...)
+	cmd := exec.Command(name, args...)
+	cmd.Env = syscall.Environ()
+	return cmd
 }
+
+func NewPipe() (Stream, Stream, error) {
+	return os.Pipe()
+}
+
+type PiplineWaitgroupItem struct {
+	Wait func() error
+}
+type PiplineWaitgroup []PiplineWaitgroupItem

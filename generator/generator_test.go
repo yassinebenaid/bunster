@@ -12,7 +12,7 @@ import (
 	"github.com/yassinebenaid/bunster/generator"
 	"github.com/yassinebenaid/bunster/lexer"
 	"github.com/yassinebenaid/bunster/parser"
-	"github.com/yassinebenaid/bunster/pkg/tst"
+	"github.com/yassinebenaid/bunster/pkg/dottest"
 	"github.com/yassinebenaid/godump"
 )
 
@@ -22,44 +22,44 @@ var dump = (&godump.Dumper{
 }).Sprintln
 
 func TestGenerator(t *testing.T) {
-	testFiles, err := filepath.Glob("./tests/*.tst")
+	testFiles, err := filepath.Glob("./tests/*.test")
 	if err != nil {
 		t.Fatalf("Failed to `Glob` test files, %v", err)
 	}
 
 	for _, testFile := range testFiles {
 		t.Run(testFile, func(t *testing.T) {
-			file, err := os.Open(testFile)
+			testContent, err := os.ReadFile(testFile)
 			if err != nil {
 				t.Fatalf("Failed to open test file, %v", err)
 			}
 
-			test, err := tst.Parse(file)
+			tests, err := dottest.Parse(string(testContent))
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			for i, c := range test.Cases {
-				script, err := parser.Parse(lexer.New([]byte(c.Input)))
+			for i, test := range tests {
+				script, err := parser.Parse(lexer.New([]byte(test.Input)))
 				if err != nil {
-					t.Fatalf("#%d: parser error.\nError: %s", i, err)
+					t.Fatalf("\nTest: %sError: %s", dump(test.Label), dump(err.Error()))
 				}
 
 				program := generator.Generate(script)
 				formattedProgram, gofmtErr, err := gofmt(program.String())
 				if err != nil {
-					t.Fatalf("#%d: error when trying to format the generated program.\nError: %s.\nStderr: %s", i, err, gofmtErr)
+					t.Fatalf("\n#%d: error when trying to format the generated program.\nError: %s.\nStderr: %s", i, err, gofmtErr)
 				}
 
-				formattedTestOutput, gofmtErr, err := gofmt(c.Output)
+				formattedTestOutput, gofmtErr, err := gofmt(test.Output)
 				if err != nil {
-					t.Fatalf("#%d: error when trying to format the test expected output.\nError: %s.\nStderr: %s", i, err, gofmtErr)
+					t.Fatalf("\n#%d: error when trying to format the test expected output.\nError: %s.\nStderr: %s", i, err, gofmtErr)
 				}
 
 				if formattedProgram != formattedTestOutput {
 					t.Fatalf(
-						"#%d: The generated program doesn't match the expected output.\n Program:\n%s",
-						i, diffStrings(formattedTestOutput, formattedProgram),
+						"\n#%d: The generated program doesn't match the expected output.\nTest: %s\n Program:\n%s",
+						i, test.Label, diffStrings(formattedTestOutput, formattedProgram),
 					)
 				}
 			}

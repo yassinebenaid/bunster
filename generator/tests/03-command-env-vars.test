@@ -1,0 +1,74 @@
+#(TEST: simple env var mutation)
+key=value cmd key=value
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+	func() {
+		var commandName = `cmd`
+		var arguments []string
+		arguments = append(arguments, `key=value`)
+		var command = shell.Command(commandName, arguments...)
+		command.Env = append(command.Env, `key=`+`value`)
+		commandFDT, err := shell.CloneFDT()
+		if err != nil {
+			shell.HandleError(err)
+			return
+		}
+		defer commandFDT.Destroy()
+		command.Stdin = commandFDT.Get(`0`)
+		command.Stdout = commandFDT.Get(`1`)
+		command.Stderr = commandFDT.Get(`2`)
+		if err := command.Run(); err != nil {
+			shell.HandleError(err)
+			return
+		}
+		shell.ExitCode = command.ProcessState.ExitCode()
+
+	}()
+}
+
+#(ENDTEST)
+
+
+
+#(TEST: multi env var mutation)
+
+key1=value key2='value' key3="value" \
+    key4=value cmd
+
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+	func() {
+		var commandName = `cmd`
+		var arguments []string
+		var command = shell.Command(commandName, arguments...)
+		command.Env = append(command.Env, `key1=`+`value`)
+		command.Env = append(command.Env, `key2=`+`value`)
+		command.Env = append(command.Env, `key3=`+`value`)
+		command.Env = append(command.Env, `key4=`+`value`)
+		commandFDT, err := shell.CloneFDT()
+		if err != nil {
+			shell.HandleError(err)
+			return
+		}
+		defer commandFDT.Destroy()
+		command.Stdin = commandFDT.Get(`0`)
+		command.Stdout = commandFDT.Get(`1`)
+		command.Stderr = commandFDT.Get(`2`)
+		if err := command.Run(); err != nil {
+			shell.HandleError(err)
+			return
+		}
+		shell.ExitCode = command.ProcessState.ExitCode()
+
+	}()
+}
+
+#(ENDTEST)

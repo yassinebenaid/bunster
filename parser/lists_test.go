@@ -63,7 +63,7 @@ var commandListTests = []testCase{
 							{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
 						},
 					},
-					Stderr: false,
+					Stderr: true,
 				},
 				{
 					Command: ast.Command{
@@ -73,7 +73,7 @@ var commandListTests = []testCase{
 							{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 						},
 					},
-					Stderr: true,
+					Stderr: false,
 				},
 			},
 		},
@@ -187,7 +187,7 @@ var commandListTests = []testCase{
 							{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
 						},
 					},
-					Stderr: false,
+					Stderr: true,
 				},
 				{
 					Command: ast.Command{
@@ -197,7 +197,7 @@ var commandListTests = []testCase{
 							{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 						},
 					},
-					Stderr: true,
+					Stderr: false,
 				},
 			},
 		},

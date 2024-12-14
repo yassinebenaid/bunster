@@ -38,10 +38,12 @@ func (d Declare) togo() string {
 	return fmt.Sprintf("var %s = %s\n", d.Name, d.Value.togo())
 }
 
-type DeclareSlice string
+type DeclareSlice struct {
+	Name string
+}
 
 func (d DeclareSlice) togo() string {
-	return fmt.Sprintf("var %s []string\n", d)
+	return fmt.Sprintf("var %s []string\n", d.Name)
 }
 
 type Set struct {
@@ -68,6 +70,19 @@ func (s String) togo() string {
 	return fmt.Sprintf("`%s`", s)
 }
 
+type Concat []Instruction
+
+func (c Concat) togo() string {
+	var str string
+	for i, ins := range c {
+		str += ins.togo()
+		if i < len(c)-1 {
+			str += "+"
+		}
+	}
+	return str
+}
+
 type Literal string
 
 func (s Literal) togo() string {
@@ -89,111 +104,27 @@ func (ic InitCommand) togo() string {
 	return fmt.Sprintf("shell.Command(%s, %s...)", ic.Name, ic.Args)
 }
 
-type RunCommanOrFail struct {
-	Command string
-	Name    string
-}
+type RunCommand string
 
-func (rcf RunCommanOrFail) togo() string {
+func (r RunCommand) togo() string {
 	return fmt.Sprintf(
 		`if err := %s.Run(); err != nil {
-			shell.HandleError(%s, err)
+			shell.HandleError(err)
 			return
 		}
 		shell.ExitCode = %s.ProcessState.ExitCode()
-		`, rcf.Command, rcf.Name, rcf.Command)
+		`, r, r)
 }
 
-const (
-	FLAG_READ   = "STREAM_FLAG_READ"
-	FLAG_WRITE  = "STREAM_FLAG_WRITE"
-	FLAG_RW     = "STREAM_FLAG_RW"
-	FLAG_APPEND = "STREAM_FLAG_APPEND"
-)
+type StartCommand string
 
-type OpenStream struct {
-	Name   string
-	Target Instruction
-	Mode   string
-}
-
-func (of OpenStream) togo() string {
+func (r StartCommand) togo() string {
 	return fmt.Sprintf(
-		`%s, err := runtime.OpenStream(%s, runtime.%s)
-		if err != nil {
-			shell.HandleError("", err)
+		`if err := %s.Start(); err != nil {
+			shell.HandleError(err)
 			return
 		}
-		`, of.Name, of.Target.togo(), of.Mode)
-}
-
-type NewStringStream struct {
-	Target Instruction
-}
-
-func (of NewStringStream) togo() string {
-	return fmt.Sprintf("runtime.NewStringStream(%s)", of.Target.togo())
-}
-
-type CloneFDT string
-
-func (c CloneFDT) togo() string {
-	return fmt.Sprintf(
-		`%s, err := shell.CloneFDT()
-		if err != nil {
-			shell.HandleError("", err)
-			return
-		}
-		defer %s.Destroy()
-		`, c, c)
-}
-
-type AddStream struct {
-	FDT        string
-	Fd         string
-	StreamName string
-}
-
-func (as AddStream) togo() string {
-	return fmt.Sprintf("%s.Add(`%s`, %s)\n", as.FDT, as.Fd, as.StreamName)
-}
-
-type GetStream struct {
-	FDT string
-	Fd  Instruction
-}
-
-func (as GetStream) togo() string {
-	return fmt.Sprintf(`%s.Get(%s)`, as.FDT, as.Fd.togo())
-}
-
-type DuplicateStream struct {
-	FDT string
-	Old string
-	New Instruction
-}
-
-func (as DuplicateStream) togo() string {
-	return fmt.Sprintf(
-		`if err := %s.Duplicate("%s", %s); err != nil {
-			shell.HandleError("", err)
-			return
-		}
-	`, as.FDT, as.Old, as.New.togo())
-}
-
-type CloseStream struct {
-	FDT string
-	Fd  Instruction
-}
-
-func (as CloseStream) togo() string {
-	return fmt.Sprintf(
-		`if err := %s.Close(%s); err != nil {
-			shell.HandleError("", err)
-			return
-		}
-	`, as.FDT, as.Fd.togo())
+		`, r)
 }
 
 type Closure struct {
@@ -212,4 +143,37 @@ func (c Closure) togo() string {
 			%s
 		}()
 	`, body)
+}
+
+type SetCmdEnv struct {
+	Command string
+	Key     string
+	Value   Instruction
+}
+
+func (s SetCmdEnv) togo() string {
+	return fmt.Sprintf("%s.Env = append(%s.Env,`%s=` + %s)\n", s.Command, s.Command, s.Key, s.Value.togo())
+}
+
+type IfLastExitCode struct {
+	Zero bool
+	Body []Instruction
+}
+
+func (i IfLastExitCode) togo() string {
+	var condition = "shell.ExitCode == 0"
+	if !i.Zero {
+		condition = "shell.ExitCode != 0"
+	}
+
+	var body string
+	for _, ins := range i.Body {
+		body += ins.togo()
+	}
+
+	return fmt.Sprintf(
+		`if %s {
+			%s
+		}
+		`, condition, body)
 }
