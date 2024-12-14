@@ -35,7 +35,7 @@ func (shell *Shell) ReadVar(name string) string {
 	return os.Getenv(name)
 }
 
-func (shell *Shell) HandleError(cmd string, err error) {
+func (shell *Shell) HandleError(err error) {
 	shell.ExitCode = 1
 
 	switch e := err.(type) {
@@ -68,12 +68,3 @@ type PiplineWaitgroupItem struct {
 	Wait func() error
 }
 type PiplineWaitgroup []PiplineWaitgroupItem
-
-func (pw PiplineWaitgroup) Wait() error {
-	for _, item := range pw {
-		if err := item.Wait(); err != nil {
-			return err
-		}
-	}
-	return nil
-}

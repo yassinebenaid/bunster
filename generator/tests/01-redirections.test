@@ -12,47 +12,47 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell) {
     func() {
-  		var cmd_0_name = `git`
-  		var cmd_0_args []string
-  		var cmd_0 = shell.Command(cmd_0_name, cmd_0_args...)
-  		cmd_0_fdt, err := shell.CloneFDT()
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer cmd_0_fdt.Destroy()
-        cmd_0_file_0, err := runtime.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
+  		defer commandFDT.Destroy()
+        command_file_0, err := runtime.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`1`, cmd_0_file_0)
-        cmd_0_file_1, err := runtime.OpenStream(`errors.txt`, runtime.STREAM_FLAG_WRITE)
+        commandFDT.Add(`1`, command_file_0)
+        command_file_1, err := runtime.OpenStream(`errors.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`2`, cmd_0_file_1)
-        cmd_0_file_2, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
+        commandFDT.Add(`2`, command_file_1)
+        command_file_2, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`3`, cmd_0_file_2)
-        cmd_0_file_3, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
+        commandFDT.Add(`3`, command_file_2)
+        command_file_3, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`4`, cmd_0_file_3)
-  		cmd_0.Stdin = cmd_0_fdt.Get(`0`)
-  		cmd_0.Stdout = cmd_0_fdt.Get(`1`)
-  		cmd_0.Stderr = cmd_0_fdt.Get(`2`)
-  		if err := cmd_0.Run(); err != nil {
- 			shell.HandleError(cmd_0_name, err)
+        commandFDT.Add(`4`, command_file_3)
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(commandName, err)
  			return
   		}
-        shell.ExitCode = cmd_0.ProcessState.ExitCode()
+        shell.ExitCode = command.ProcessState.ExitCode()
 
    	}()
 }
@@ -73,47 +73,47 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell) {
     func() {
-  		var cmd_0_name = `git`
-  		var cmd_0_args []string
-  		var cmd_0 = shell.Command(cmd_0_name, cmd_0_args...)
-  		cmd_0_fdt, err := shell.CloneFDT()
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer cmd_0_fdt.Destroy()
-        cmd_0_file_0, err := runtime.OpenStream(`output.txt`, runtime.STREAM_FLAG_APPEND)
+  		defer commandFDT.Destroy()
+        command_file_0, err := runtime.OpenStream(`output.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`1`, cmd_0_file_0)
-        cmd_0_file_1, err := runtime.OpenStream(`errors.txt`, runtime.STREAM_FLAG_APPEND)
+        commandFDT.Add(`1`, command_file_0)
+        command_file_1, err := runtime.OpenStream(`errors.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`2`, cmd_0_file_1)
-        cmd_0_file_2, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
+        commandFDT.Add(`2`, command_file_1)
+        command_file_2, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`3`, cmd_0_file_2)
-        cmd_0_file_3, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
+        commandFDT.Add(`3`, command_file_2)
+        command_file_3, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`4`, cmd_0_file_3)
-  		cmd_0.Stdin = cmd_0_fdt.Get(`0`)
-  		cmd_0.Stdout = cmd_0_fdt.Get(`1`)
-  		cmd_0.Stderr = cmd_0_fdt.Get(`2`)
-  		if err := cmd_0.Run(); err != nil {
- 			shell.HandleError(cmd_0_name, err)
+        commandFDT.Add(`4`, command_file_3)
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(commandName, err)
  			return
   		}
-        shell.ExitCode = cmd_0.ProcessState.ExitCode()
+        shell.ExitCode = command.ProcessState.ExitCode()
 
    	}()
 }
@@ -133,37 +133,37 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell) {
     func() {
-  		var cmd_0_name = `git`
-  		var cmd_0_args []string
-  		var cmd_0 = shell.Command(cmd_0_name, cmd_0_args...)
-  		cmd_0_fdt, err := shell.CloneFDT()
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer cmd_0_fdt.Destroy()
-        cmd_0_file_0, err := runtime.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
+  		defer commandFDT.Destroy()
+        command_file_0, err := runtime.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`1`, cmd_0_file_0)
-        cmd_0_fdt.Add(`2`, cmd_0_file_0)
-        cmd_0_file_1, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
+        commandFDT.Add(`1`, command_file_0)
+        commandFDT.Add(`2`, command_file_0)
+        command_file_1, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`1`, cmd_0_file_1)
-        cmd_0_fdt.Add(`2`, cmd_0_file_1)
-  		cmd_0.Stdin = cmd_0_fdt.Get(`0`)
-  		cmd_0.Stdout = cmd_0_fdt.Get(`1`)
-  		cmd_0.Stderr = cmd_0_fdt.Get(`2`)
-  		if err := cmd_0.Run(); err != nil {
- 			shell.HandleError(cmd_0_name, err)
+        commandFDT.Add(`1`, command_file_1)
+        commandFDT.Add(`2`, command_file_1)
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(commandName, err)
  			return
   		}
-        shell.ExitCode = cmd_0.ProcessState.ExitCode()
+        shell.ExitCode = command.ProcessState.ExitCode()
 
    	}()
 }
@@ -185,51 +185,51 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell) {
     func() {
-  		var cmd_0_name = `git`
-  		var cmd_0_args []string
-  		var cmd_0 = shell.Command(cmd_0_name, cmd_0_args...)
-  		cmd_0_fdt, err := shell.CloneFDT()
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer cmd_0_fdt.Destroy()
-        cmd_0_file_0, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
+  		defer commandFDT.Destroy()
+        command_file_0, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
             shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`3`, cmd_0_file_0)
-        if err := cmd_0_fdt.Duplicate("1", `3`); err != nil {
+        commandFDT.Add(`3`, command_file_0)
+        if err := commandFDT.Duplicate("1", `3`); err != nil {
             shell.HandleError("", err)
             return
         }
-        if err := cmd_0_fdt.Close(`3`); err != nil {
+        if err := commandFDT.Close(`3`); err != nil {
             shell.HandleError("", err)
             return
         }
-        if err := cmd_0_fdt.Duplicate("2", `1`); err != nil {
+        if err := commandFDT.Duplicate("2", `1`); err != nil {
             shell.HandleError("", err)
             return
         }
-        cmd_0_file_3, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
+        command_file_3, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
             shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`4`, cmd_0_file_3)
-        if err := cmd_0_fdt.Close(`4`); err != nil {
+        commandFDT.Add(`4`, command_file_3)
+        if err := commandFDT.Close(`4`); err != nil {
             shell.HandleError("", err)
             return
         }
-  		cmd_0.Stdin = cmd_0_fdt.Get(`0`)
-  		cmd_0.Stdout = cmd_0_fdt.Get(`1`)
-  		cmd_0.Stderr = cmd_0_fdt.Get(`2`)
-  		if err := cmd_0.Run(); err != nil {
- 			shell.HandleError(cmd_0_name, err)
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(commandName, err)
  			return
   		}
-        shell.ExitCode = cmd_0.ProcessState.ExitCode()
+        shell.ExitCode = command.ProcessState.ExitCode()
 
    	}()
 }
@@ -250,47 +250,47 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell) {
     func() {
-  		var cmd_0_name = `git`
-  		var cmd_0_args []string
-  		var cmd_0 = shell.Command(cmd_0_name, cmd_0_args...)
-  		cmd_0_fdt, err := shell.CloneFDT()
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer cmd_0_fdt.Destroy()
-        cmd_0_file_0, err := runtime.OpenStream(`output.txt`, runtime.STREAM_FLAG_READ)
+  		defer commandFDT.Destroy()
+        command_file_0, err := runtime.OpenStream(`output.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`0`, cmd_0_file_0)
-        cmd_0_file_1, err := runtime.OpenStream(`errors.txt`, runtime.STREAM_FLAG_READ)
+        commandFDT.Add(`0`, command_file_0)
+        command_file_1, err := runtime.OpenStream(`errors.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`2`, cmd_0_file_1)
-        cmd_0_file_2, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
+        commandFDT.Add(`2`, command_file_1)
+        command_file_2, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`3`, cmd_0_file_2)
-        cmd_0_file_3, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
+        commandFDT.Add(`3`, command_file_2)
+        command_file_3, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`4`, cmd_0_file_3)
-  		cmd_0.Stdin = cmd_0_fdt.Get(`0`)
-  		cmd_0.Stdout = cmd_0_fdt.Get(`1`)
-  		cmd_0.Stderr = cmd_0_fdt.Get(`2`)
-  		if err := cmd_0.Run(); err != nil {
- 			shell.HandleError(cmd_0_name, err)
+        commandFDT.Add(`4`, command_file_3)
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(commandName, err)
  			return
   		}
-        shell.ExitCode = cmd_0.ProcessState.ExitCode()
+        shell.ExitCode = command.ProcessState.ExitCode()
 
    	}()
 }
@@ -310,27 +310,27 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell) {
     func() {
-  		var cmd_0_name = `git`
-  		var cmd_0_args []string
-  		var cmd_0 = shell.Command(cmd_0_name, cmd_0_args...)
-  		cmd_0_fdt, err := shell.CloneFDT()
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer cmd_0_fdt.Destroy()
-        var cmd_0_file_0 = runtime.NewStringStream(`Foo`)
-        cmd_0_fdt.Add(`0`, cmd_0_file_0)
-        var cmd_0_file_1 = runtime.NewStringStream(`Foo Bar`)
-        cmd_0_fdt.Add(`2`, cmd_0_file_1)
-  		cmd_0.Stdin = cmd_0_fdt.Get(`0`)
-  		cmd_0.Stdout = cmd_0_fdt.Get(`1`)
-  		cmd_0.Stderr = cmd_0_fdt.Get(`2`)
-  		if err := cmd_0.Run(); err != nil {
- 			shell.HandleError(cmd_0_name, err)
+  		defer commandFDT.Destroy()
+        var command_file_0 = runtime.NewStringStream(`Foo`)
+        commandFDT.Add(`0`, command_file_0)
+        var command_file_1 = runtime.NewStringStream(`Foo Bar`)
+        commandFDT.Add(`2`, command_file_1)
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(commandName, err)
  			return
   		}
-        shell.ExitCode = cmd_0.ProcessState.ExitCode()
+        shell.ExitCode = command.ProcessState.ExitCode()
 
    	}()
 }
@@ -351,47 +351,47 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell) {
     func() {
-  		var cmd_0_name = `git`
-  		var cmd_0_args []string
-  		var cmd_0 = shell.Command(cmd_0_name, cmd_0_args...)
-  		cmd_0_fdt, err := shell.CloneFDT()
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer cmd_0_fdt.Destroy()
-        cmd_0_file_0, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
+  		defer commandFDT.Destroy()
+        command_file_0, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
             shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`3`, cmd_0_file_0)
-        if err := cmd_0_fdt.Duplicate("0", `3`); err != nil {
+        commandFDT.Add(`3`, command_file_0)
+        if err := commandFDT.Duplicate("0", `3`); err != nil {
             shell.HandleError("", err)
             return
         }
-        if err := cmd_0_fdt.Close(`3`); err != nil {
+        if err := commandFDT.Close(`3`); err != nil {
             shell.HandleError("", err)
             return
         }
-        if err := cmd_0_fdt.Duplicate("2", `1`); err != nil {
+        if err := commandFDT.Duplicate("2", `1`); err != nil {
             shell.HandleError("", err)
             return
         }
-        var cmd_0_file_3 = runtime.NewStringStream(`foobar`)
-        cmd_0_fdt.Add(`4`, cmd_0_file_3)
-        if err := cmd_0_fdt.Close(`4`); err != nil {
+        var command_file_3 = runtime.NewStringStream(`foobar`)
+        commandFDT.Add(`4`, command_file_3)
+        if err := commandFDT.Close(`4`); err != nil {
             shell.HandleError("", err)
             return
         }
-  		cmd_0.Stdin = cmd_0_fdt.Get(`0`)
-  		cmd_0.Stdout = cmd_0_fdt.Get(`1`)
-  		cmd_0.Stderr = cmd_0_fdt.Get(`2`)
-  		if err := cmd_0.Run(); err != nil {
- 			shell.HandleError(cmd_0_name, err)
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(commandName, err)
  			return
   		}
-        shell.ExitCode = cmd_0.ProcessState.ExitCode()
+        shell.ExitCode = command.ProcessState.ExitCode()
 
    	}()
 }
@@ -410,35 +410,35 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell) {
     func() {
-  		var cmd_0_name = `git`
-  		var cmd_0_args []string
-  		var cmd_0 = shell.Command(cmd_0_name, cmd_0_args...)
-  		cmd_0_fdt, err := shell.CloneFDT()
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer cmd_0_fdt.Destroy()
-        cmd_0_file_0, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_RW)
+  		defer commandFDT.Destroy()
+        command_file_0, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_RW)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`0`, cmd_0_file_0)
-        cmd_0_file_1, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_RW)
+        commandFDT.Add(`0`, command_file_0)
+        command_file_1, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_RW)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        cmd_0_fdt.Add(`2`, cmd_0_file_1)
-  		cmd_0.Stdin = cmd_0_fdt.Get(`0`)
-  		cmd_0.Stdout = cmd_0_fdt.Get(`1`)
-  		cmd_0.Stderr = cmd_0_fdt.Get(`2`)
-  		if err := cmd_0.Run(); err != nil {
- 			shell.HandleError(cmd_0_name, err)
+        commandFDT.Add(`2`, command_file_1)
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(commandName, err)
  			return
   		}
-        shell.ExitCode = cmd_0.ProcessState.ExitCode()
+        shell.ExitCode = command.ProcessState.ExitCode()
 
    	}()
 }

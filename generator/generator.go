@@ -21,8 +21,7 @@ func Generate(script ast.Script) ir.Program {
 }
 
 type generator struct {
-	program  ir.Program
-	cmdCount int
+	program ir.Program
 }
 
 type InstructionBuffer []ir.Instruction
@@ -49,45 +48,36 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, pc
 }
 
 func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command, pc *pipeContext) {
-	id := g.cmdCount
-	g.cmdCount++
-
-	buf.add(ir.Declare{Name: fmt.Sprintf("cmd_%d_name", id), Value: g.handleExpression(cmd.Name)})
-	buf.add(ir.DeclareSlice{Name: fmt.Sprintf("cmd_%d_args", id)})
+	buf.add(ir.Declare{Name: "commandName", Value: g.handleExpression(cmd.Name)})
+	buf.add(ir.DeclareSlice{Name: "arguments"})
 
 	for _, arg := range cmd.Args {
-		buf.add(ir.Append{Name: fmt.Sprintf("cmd_%d_args", id), Value: g.handleExpression(arg)})
+		buf.add(ir.Append{Name: "arguments", Value: g.handleExpression(arg)})
 	}
 
 	buf.add(ir.Declare{
-		Name:  fmt.Sprintf("cmd_%d", id),
-		Value: ir.InitCommand{Name: fmt.Sprintf("cmd_%d_name", id), Args: fmt.Sprintf("cmd_%d_args", id)},
+		Name:  "command",
+		Value: ir.InitCommand{Name: "commandName", Args: "arguments"},
 	})
 
 	for _, env := range cmd.Env {
 		buf.add(ir.SetCmdEnv{
-			Command: fmt.Sprintf("cmd_%d", id),
+			Command: "command",
 			Key:     env.Name,
 			Value:   g.handleExpression(env.Value),
 		})
 	}
 
-	g.handleRedirections(buf, fmt.Sprintf("cmd_%d", id), cmd.Redirections, pc)
+	g.handleRedirections(buf, "command", cmd.Redirections, pc)
 
 	if pc != nil {
-		buf.add(ir.StartCommand{
-			Command: fmt.Sprintf("cmd_%d", id),
-			Name:    fmt.Sprintf("cmd_%d_name", id),
-		})
+		buf.add(ir.StartCommand("command"))
 		buf.add(ir.PushToPipelineWaitgroup{
 			Waitgroup: pc.waitgroup,
-			Command:   fmt.Sprintf("cmd_%d", id),
+			Command:   "command",
 		})
 	} else {
-		buf.add(ir.RunCommanOrFail{
-			Command: fmt.Sprintf("cmd_%d", id),
-			Name:    fmt.Sprintf("cmd_%d_name", id),
-		})
+		buf.add(ir.RunCommand("command"))
 	}
 }
 
@@ -105,34 +95,24 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 }
 
 func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redirections []ast.Redirection, pc *pipeContext) {
-	var fdt = name + "_fdt"
+	var fdt = name + "FDT"
 	buf.add(ir.CloneFDT(fdt))
 
+	// if we're inside a pipline, we need to connect the pipe to the command.(before any other redirection)
 	if pc != nil {
 		if pc.writer != "" {
-			buf.add(ir.AddStream{
-				FDT:        fdt,
-				Fd:         "1",
-				StreamName: pc.writer,
-			})
+			buf.add(ir.AddStream{FDT: fdt, Fd: "1", StreamName: pc.writer})
 
 			if pc.stderr {
-				buf.add(ir.AddStream{
-					FDT:        fdt,
-					Fd:         "2",
-					StreamName: pc.writer,
-				})
+				buf.add(ir.AddStream{FDT: fdt, Fd: "2", StreamName: pc.writer})
 			}
 		}
 
 		if pc.reader != "" {
-			buf.add(ir.AddStream{
-				FDT:        fdt,
-				Fd:         "0",
-				StreamName: pc.reader,
-			})
+			buf.add(ir.AddStream{FDT: fdt, Fd: "0", StreamName: pc.reader})
 		}
 	}
+
 	for i, redirection := range redirections {
 		switch redirection.Method {
 		case ">", ">|":
@@ -268,38 +248,38 @@ type pipeContext struct {
 }
 
 func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
-	buf.add(ir.NewPipelineWaitgroup("pipeline_waitgroup"))
+	buf.add(ir.NewPipelineWaitgroup("pipelineWaitgroup"))
 
 	for i, cmd := range p {
 		if i < (len(p) - 1) { //last command doesn't need a pipe
 			buf.add(ir.NewPipe{
-				Writer: fmt.Sprintf("pipe_%d_writer", i+1),
-				Reader: fmt.Sprintf("pipe_%d_reader", i+1),
+				Writer: fmt.Sprintf("pipeWriter%d", i+1),
+				Reader: fmt.Sprintf("pipeReader%d", i+1),
 			})
 		}
 
 		var pc pipeContext
 		if i == 0 {
 			pc = pipeContext{
-				writer: fmt.Sprintf("pipe_%d_writer", i+1),
+				writer: fmt.Sprintf("pipeWriter%d", i+1),
 				stderr: cmd.Stderr,
 			}
 		} else if i == (len(p) - 1) {
 			pc = pipeContext{
-				reader: fmt.Sprintf("pipe_%d_reader", i),
+				reader: fmt.Sprintf("pipeReader%d", i),
 			}
 		} else {
 			pc = pipeContext{
-				writer: fmt.Sprintf("pipe_%d_writer", i+1),
-				reader: fmt.Sprintf("pipe_%d_reader", i),
+				writer: fmt.Sprintf("pipeWriter%d", i+1),
+				reader: fmt.Sprintf("pipeReader%d", i),
 				stderr: cmd.Stderr,
 			}
 		}
 
-		pc.waitgroup = "pipeline_waitgroup"
+		pc.waitgroup = "pipelineWaitgroup"
 		g.generate(buf, cmd.Command, &pc)
 	}
 
-	buf.add(ir.WaitPipelineWaitgroup("pipeline_waitgroup"))
+	buf.add(ir.WaitPipelineWaitgroup("pipelineWaitgroup"))
 
 }

@@ -42,23 +42,23 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell) {
     func() {
-  		var cmd_0_name = `git`
-  		var cmd_0_args []string
-  		var cmd_0 = shell.Command(cmd_0_name, cmd_0_args...)
-  		cmd_0_fdt, err := shell.CloneFDT()
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer cmd_0_fdt.Destroy()
-  		cmd_0.Stdin = cmd_0_fdt.Get(`0`)
-  		cmd_0.Stdout = cmd_0_fdt.Get(`1`)
-  		cmd_0.Stderr = cmd_0_fdt.Get(`2`)
-  		if err := cmd_0.Run(); err != nil {
- 			shell.HandleError(cmd_0_name, err)
+  		defer commandFDT.Destroy()
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(commandName, err)
  			return
   		}
-        shell.ExitCode = cmd_0.ProcessState.ExitCode()
+        shell.ExitCode = command.ProcessState.ExitCode()
 
    	}()
 }
@@ -78,27 +78,27 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell) {
     func() {
-  		var cmd_0_name = `cmd`
-  		var cmd_0_args []string
-        cmd_0_args = append(cmd_0_args, `arg`)
-        cmd_0_args = append(cmd_0_args, `arg 2`)
-        cmd_0_args = append(cmd_0_args, `arg 3`)
-        cmd_0_args = append(cmd_0_args, shell.ReadVar("ARG3"))
-  		var cmd_0 = shell.Command(cmd_0_name, cmd_0_args...)
-  		cmd_0_fdt, err := shell.CloneFDT()
+  		var commandName = `cmd`
+  		var arguments []string
+        arguments = append(arguments, `arg`)
+        arguments = append(arguments, `arg 2`)
+        arguments = append(arguments, `arg 3`)
+        arguments = append(arguments, shell.ReadVar("ARG3"))
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer cmd_0_fdt.Destroy()
-  		cmd_0.Stdin = cmd_0_fdt.Get(`0`)
-  		cmd_0.Stdout = cmd_0_fdt.Get(`1`)
-  		cmd_0.Stderr = cmd_0_fdt.Get(`2`)
-  		if err := cmd_0.Run(); err != nil {
- 			shell.HandleError(cmd_0_name, err)
+  		defer commandFDT.Destroy()
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(commandName, err)
  			return
   		}
-        shell.ExitCode = cmd_0.ProcessState.ExitCode()
+        shell.ExitCode = command.ProcessState.ExitCode()
 
    	}()
 }
@@ -120,27 +120,27 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell) {
     func() {
-  		var cmd_0_name = `cmd`
-  		var cmd_0_args []string
-        cmd_0_args = append(cmd_0_args, `--option=value`)
-        cmd_0_args = append(cmd_0_args, `--option=value`)
-        cmd_0_args = append(cmd_0_args, `--option=value`)
-        cmd_0_args = append(cmd_0_args, `-o`)
-  		var cmd_0 = shell.Command(cmd_0_name, cmd_0_args...)
-  		cmd_0_fdt, err := shell.CloneFDT()
+  		var commandName = `cmd`
+  		var arguments []string
+        arguments = append(arguments, `--option=value`)
+        arguments = append(arguments, `--option=value`)
+        arguments = append(arguments, `--option=value`)
+        arguments = append(arguments, `-o`)
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer cmd_0_fdt.Destroy()
-  		cmd_0.Stdin = cmd_0_fdt.Get(`0`)
-  		cmd_0.Stdout = cmd_0_fdt.Get(`1`)
-  		cmd_0.Stderr = cmd_0_fdt.Get(`2`)
-  		if err := cmd_0.Run(); err != nil {
- 			shell.HandleError(cmd_0_name, err)
+  		defer commandFDT.Destroy()
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(commandName, err)
  			return
   		}
-        shell.ExitCode = cmd_0.ProcessState.ExitCode()
+        shell.ExitCode = command.ProcessState.ExitCode()
 
    	}()
 }

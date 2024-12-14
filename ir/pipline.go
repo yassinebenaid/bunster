@@ -12,7 +12,7 @@ func (p NewPipe) togo() string {
 	return fmt.Sprintf(
 		`%s, %s, err := runtime.NewPipe()
 		if err != nil {
-			shell.HandleError("", err)
+			shell.HandleError(err)
 			return
 		}
 		`, p.Reader, p.Writer)
@@ -44,7 +44,7 @@ func (w WaitPipelineWaitgroup) togo() string {
 	return fmt.Sprintf(
 		`for i, item := range %s {
 			if err := item.Wait(); err != nil {
-				shell.HandleError("", err)
+				shell.HandleError(err)
 			}
 			if i < (len(%s) - 1){
 				shell.ExitCode = 0
