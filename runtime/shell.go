@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"os"
 	"os/exec"
+	"strconv"
 	"syscall"
 )
 
@@ -12,6 +13,8 @@ type Shell struct {
 	Stdin  Stream
 	Stdout Stream
 	Stderr Stream
+
+	Args []string
 
 	ExitCode int
 
@@ -33,6 +36,20 @@ func (shell *Shell) Run() int {
 
 func (shell *Shell) ReadVar(name string) string {
 	return os.Getenv(name)
+}
+
+func (shell *Shell) ReadSpecialVar(name string) string {
+	switch name {
+	default:
+		index, err := strconv.ParseUint(name, 10, 64)
+		if err != nil {
+			return ""
+		}
+		if int(index) < len(shell.Args) {
+			return shell.Args[index]
+		}
+		return ""
+	}
 }
 
 func (shell *Shell) HandleError(err error) {
