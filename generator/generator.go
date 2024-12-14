@@ -101,34 +101,24 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 }
 
 func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redirections []ast.Redirection, pc *pipeContext) {
-	var fdt = name + "_fdt"
+	var fdt = name + "FDT"
 	buf.add(ir.CloneFDT(fdt))
 
+	// if we're inside a pipline, we need to connect the pipe to the command.(before any other redirection)
 	if pc != nil {
 		if pc.writer != "" {
-			buf.add(ir.AddStream{
-				FDT:        fdt,
-				Fd:         "1",
-				StreamName: pc.writer,
-			})
+			buf.add(ir.AddStream{FDT: fdt, Fd: "1", StreamName: pc.writer})
 
 			if pc.stderr {
-				buf.add(ir.AddStream{
-					FDT:        fdt,
-					Fd:         "2",
-					StreamName: pc.writer,
-				})
+				buf.add(ir.AddStream{FDT: fdt, Fd: "2", StreamName: pc.writer})
 			}
 		}
 
 		if pc.reader != "" {
-			buf.add(ir.AddStream{
-				FDT:        fdt,
-				Fd:         "0",
-				StreamName: pc.reader,
-			})
+			buf.add(ir.AddStream{FDT: fdt, Fd: "0", StreamName: pc.reader})
 		}
 	}
+
 	for i, redirection := range redirections {
 		switch redirection.Method {
 		case ">", ">|":

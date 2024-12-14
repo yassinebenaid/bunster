@@ -15,39 +15,39 @@ func Main(shell *runtime.Shell) {
   		var commandName = `git`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		command_fdt, err := shell.CloneFDT()
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer command_fdt.Destroy()
+  		defer commandFDT.Destroy()
         command_file_0, err := runtime.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`1`, command_file_0)
+        commandFDT.Add(`1`, command_file_0)
         command_file_1, err := runtime.OpenStream(`errors.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`2`, command_file_1)
+        commandFDT.Add(`2`, command_file_1)
         command_file_2, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`3`, command_file_2)
+        commandFDT.Add(`3`, command_file_2)
         command_file_3, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`4`, command_file_3)
-  		command.Stdin = command_fdt.Get(`0`)
-  		command.Stdout = command_fdt.Get(`1`)
-  		command.Stderr = command_fdt.Get(`2`)
+        commandFDT.Add(`4`, command_file_3)
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
   		if err := command.Run(); err != nil {
  			shell.HandleError(commandName, err)
  			return
@@ -76,39 +76,39 @@ func Main(shell *runtime.Shell) {
   		var commandName = `git`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		command_fdt, err := shell.CloneFDT()
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer command_fdt.Destroy()
+  		defer commandFDT.Destroy()
         command_file_0, err := runtime.OpenStream(`output.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`1`, command_file_0)
+        commandFDT.Add(`1`, command_file_0)
         command_file_1, err := runtime.OpenStream(`errors.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`2`, command_file_1)
+        commandFDT.Add(`2`, command_file_1)
         command_file_2, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`3`, command_file_2)
+        commandFDT.Add(`3`, command_file_2)
         command_file_3, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`4`, command_file_3)
-  		command.Stdin = command_fdt.Get(`0`)
-  		command.Stdout = command_fdt.Get(`1`)
-  		command.Stderr = command_fdt.Get(`2`)
+        commandFDT.Add(`4`, command_file_3)
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
   		if err := command.Run(); err != nil {
  			shell.HandleError(commandName, err)
  			return
@@ -136,29 +136,29 @@ func Main(shell *runtime.Shell) {
   		var commandName = `git`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		command_fdt, err := shell.CloneFDT()
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer command_fdt.Destroy()
+  		defer commandFDT.Destroy()
         command_file_0, err := runtime.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`1`, command_file_0)
-        command_fdt.Add(`2`, command_file_0)
+        commandFDT.Add(`1`, command_file_0)
+        commandFDT.Add(`2`, command_file_0)
         command_file_1, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`1`, command_file_1)
-        command_fdt.Add(`2`, command_file_1)
-  		command.Stdin = command_fdt.Get(`0`)
-  		command.Stdout = command_fdt.Get(`1`)
-  		command.Stderr = command_fdt.Get(`2`)
+        commandFDT.Add(`1`, command_file_1)
+        commandFDT.Add(`2`, command_file_1)
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
   		if err := command.Run(); err != nil {
  			shell.HandleError(commandName, err)
  			return
@@ -188,27 +188,27 @@ func Main(shell *runtime.Shell) {
   		var commandName = `git`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		command_fdt, err := shell.CloneFDT()
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer command_fdt.Destroy()
+  		defer commandFDT.Destroy()
         command_file_0, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
             shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`3`, command_file_0)
-        if err := command_fdt.Duplicate("1", `3`); err != nil {
+        commandFDT.Add(`3`, command_file_0)
+        if err := commandFDT.Duplicate("1", `3`); err != nil {
             shell.HandleError("", err)
             return
         }
-        if err := command_fdt.Close(`3`); err != nil {
+        if err := commandFDT.Close(`3`); err != nil {
             shell.HandleError("", err)
             return
         }
-        if err := command_fdt.Duplicate("2", `1`); err != nil {
+        if err := commandFDT.Duplicate("2", `1`); err != nil {
             shell.HandleError("", err)
             return
         }
@@ -217,14 +217,14 @@ func Main(shell *runtime.Shell) {
             shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`4`, command_file_3)
-        if err := command_fdt.Close(`4`); err != nil {
+        commandFDT.Add(`4`, command_file_3)
+        if err := commandFDT.Close(`4`); err != nil {
             shell.HandleError("", err)
             return
         }
-  		command.Stdin = command_fdt.Get(`0`)
-  		command.Stdout = command_fdt.Get(`1`)
-  		command.Stderr = command_fdt.Get(`2`)
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
   		if err := command.Run(); err != nil {
  			shell.HandleError(commandName, err)
  			return
@@ -253,39 +253,39 @@ func Main(shell *runtime.Shell) {
   		var commandName = `git`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		command_fdt, err := shell.CloneFDT()
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer command_fdt.Destroy()
+  		defer commandFDT.Destroy()
         command_file_0, err := runtime.OpenStream(`output.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`0`, command_file_0)
+        commandFDT.Add(`0`, command_file_0)
         command_file_1, err := runtime.OpenStream(`errors.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`2`, command_file_1)
+        commandFDT.Add(`2`, command_file_1)
         command_file_2, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`3`, command_file_2)
+        commandFDT.Add(`3`, command_file_2)
         command_file_3, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`4`, command_file_3)
-  		command.Stdin = command_fdt.Get(`0`)
-  		command.Stdout = command_fdt.Get(`1`)
-  		command.Stderr = command_fdt.Get(`2`)
+        commandFDT.Add(`4`, command_file_3)
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
   		if err := command.Run(); err != nil {
  			shell.HandleError(commandName, err)
  			return
@@ -313,19 +313,19 @@ func Main(shell *runtime.Shell) {
   		var commandName = `git`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		command_fdt, err := shell.CloneFDT()
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer command_fdt.Destroy()
+  		defer commandFDT.Destroy()
         var command_file_0 = runtime.NewStringStream(`Foo`)
-        command_fdt.Add(`0`, command_file_0)
+        commandFDT.Add(`0`, command_file_0)
         var command_file_1 = runtime.NewStringStream(`Foo Bar`)
-        command_fdt.Add(`2`, command_file_1)
-  		command.Stdin = command_fdt.Get(`0`)
-  		command.Stdout = command_fdt.Get(`1`)
-  		command.Stderr = command_fdt.Get(`2`)
+        commandFDT.Add(`2`, command_file_1)
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
   		if err := command.Run(); err != nil {
  			shell.HandleError(commandName, err)
  			return
@@ -354,39 +354,39 @@ func Main(shell *runtime.Shell) {
   		var commandName = `git`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		command_fdt, err := shell.CloneFDT()
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer command_fdt.Destroy()
+  		defer commandFDT.Destroy()
         command_file_0, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
             shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`3`, command_file_0)
-        if err := command_fdt.Duplicate("0", `3`); err != nil {
+        commandFDT.Add(`3`, command_file_0)
+        if err := commandFDT.Duplicate("0", `3`); err != nil {
             shell.HandleError("", err)
             return
         }
-        if err := command_fdt.Close(`3`); err != nil {
+        if err := commandFDT.Close(`3`); err != nil {
             shell.HandleError("", err)
             return
         }
-        if err := command_fdt.Duplicate("2", `1`); err != nil {
+        if err := commandFDT.Duplicate("2", `1`); err != nil {
             shell.HandleError("", err)
             return
         }
         var command_file_3 = runtime.NewStringStream(`foobar`)
-        command_fdt.Add(`4`, command_file_3)
-        if err := command_fdt.Close(`4`); err != nil {
+        commandFDT.Add(`4`, command_file_3)
+        if err := commandFDT.Close(`4`); err != nil {
             shell.HandleError("", err)
             return
         }
-  		command.Stdin = command_fdt.Get(`0`)
-  		command.Stdout = command_fdt.Get(`1`)
-  		command.Stderr = command_fdt.Get(`2`)
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
   		if err := command.Run(); err != nil {
  			shell.HandleError(commandName, err)
  			return
@@ -413,27 +413,27 @@ func Main(shell *runtime.Shell) {
   		var commandName = `git`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		command_fdt, err := shell.CloneFDT()
+  		commandFDT, err := shell.CloneFDT()
   		if err != nil {
  			shell.HandleError("", err)
  			return
   		}
-  		defer command_fdt.Destroy()
+  		defer commandFDT.Destroy()
         command_file_0, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_RW)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`0`, command_file_0)
+        commandFDT.Add(`0`, command_file_0)
         command_file_1, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_RW)
         if err != nil {
         shell.HandleError("", err)
             return
         }
-        command_fdt.Add(`2`, command_file_1)
-  		command.Stdin = command_fdt.Get(`0`)
-  		command.Stdout = command_fdt.Get(`1`)
-  		command.Stderr = command_fdt.Get(`2`)
+        commandFDT.Add(`2`, command_file_1)
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
   		if err := command.Run(); err != nil {
  			shell.HandleError(commandName, err)
  			return
