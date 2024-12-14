@@ -77,7 +77,7 @@ func (c Concat) togo() string {
 	for i, ins := range c {
 		str += ins.togo()
 		if i < len(c)-1 {
-			str += "+\n"
+			str += "+"
 		}
 	}
 	return str

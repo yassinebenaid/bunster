@@ -222,3 +222,42 @@ func Main(shell *runtime.Shell) {
    	}()
 }
 #(ENDTEST)
+
+
+
+
+#(TEST: concatination)
+
+"$HOME/bin/cmd" $PWD:/path 'foo-''bar-'"baz-"boo
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+    func() {
+  		var commandName = shell.ReadVar("HOME")+`/bin/cmd`
+  		var arguments []string
+  		arguments = append(arguments, shell.ReadVar("PWD")+`:/path` )
+  		arguments = append(arguments, `foo-bar-baz-boo` )
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
+  		if err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+  		defer commandFDT.Destroy()
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+}
+#(ENDTEST)
