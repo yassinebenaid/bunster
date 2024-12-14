@@ -40,6 +40,8 @@ func (shell *Shell) ReadVar(name string) string {
 
 func (shell *Shell) ReadSpecialVar(name string) string {
 	switch name {
+	case "?":
+		return strconv.FormatInt(int64(shell.ExitCode), 10)
 	default:
 		index, err := strconv.ParseUint(name, 10, 64)
 		if err != nil {
