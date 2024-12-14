@@ -71,19 +71,13 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 	g.handleRedirections(buf, "command", cmd.Redirections, pc)
 
 	if pc != nil {
-		buf.add(ir.StartCommand{
-			Command: "command",
-			Name:    "commandName",
-		})
+		buf.add(ir.StartCommand("command"))
 		buf.add(ir.PushToPipelineWaitgroup{
 			Waitgroup: pc.waitgroup,
 			Command:   "command",
 		})
 	} else {
-		buf.add(ir.RunCommanOrFail{
-			Command: "command",
-			Name:    "commandName",
-		})
+		buf.add(ir.RunCommand("command"))
 	}
 }
 
