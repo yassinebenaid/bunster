@@ -119,9 +119,9 @@ const (
 	ESCAPED_CHAR     // characters preceded by '\'. ...
 	WORD             // Variable names, functions and other identifiers.
 	INT              // Integer numbers
-	FLOAT            //  float numbers
+	FLOAT            // float numbers
 	BLANK            // Spaces and tabs
-	NEWLINE          //  `\n`
+	NEWLINE          // `\n`
 	SPECIAL_VAR      // Special variables like $?, $#, $@, $*, $$, $!, $0, $1, $2, ...
 	OTHER            // anything else
 	EOF              // end of file
