@@ -39,3 +39,8 @@ key=value key2="value" command
 ```shell
 command | command2 | command3
 ```
+
+## Conditional Execution
+```shell
+command || command2 && command3
+```
