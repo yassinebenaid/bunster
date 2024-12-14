@@ -10,6 +10,7 @@ export default defineConfig({
     nav: [
       { text: "Documentation", link: "/quick-start" },
       { text: "Installation", link: "/installation" },
+      { text: "Maintainers", link: "/maintainers" },
     ],
     logo: "/logo.png",
     search: {
