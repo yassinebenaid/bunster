@@ -89,6 +89,12 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 		return ir.String(v)
 	case ast.Var:
 		return ir.ReadVar(v)
+	case ast.QuotedString:
+		var concat ir.Concat
+		for _, expr := range v {
+			concat = append(concat, g.handleExpression(expr))
+		}
+		return concat
 	default:
 		panic(fmt.Sprintf("unhandled expression type (%T)", expression))
 	}
