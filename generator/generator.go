@@ -254,38 +254,38 @@ type pipeContext struct {
 }
 
 func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
-	buf.add(ir.NewPipelineWaitgroup("pipeline_waitgroup"))
+	buf.add(ir.NewPipelineWaitgroup("pipelineWaitgroup"))
 
 	for i, cmd := range p {
 		if i < (len(p) - 1) { //last command doesn't need a pipe
 			buf.add(ir.NewPipe{
-				Writer: fmt.Sprintf("pipe_%d_writer", i+1),
-				Reader: fmt.Sprintf("pipe_%d_reader", i+1),
+				Writer: fmt.Sprintf("pipeWriter%d", i+1),
+				Reader: fmt.Sprintf("pipeReader%d", i+1),
 			})
 		}
 
 		var pc pipeContext
 		if i == 0 {
 			pc = pipeContext{
-				writer: fmt.Sprintf("pipe_%d_writer", i+1),
+				writer: fmt.Sprintf("pipeWriter%d", i+1),
 				stderr: cmd.Stderr,
 			}
 		} else if i == (len(p) - 1) {
 			pc = pipeContext{
-				reader: fmt.Sprintf("pipe_%d_reader", i),
+				reader: fmt.Sprintf("pipeReader%d", i),
 			}
 		} else {
 			pc = pipeContext{
-				writer: fmt.Sprintf("pipe_%d_writer", i+1),
-				reader: fmt.Sprintf("pipe_%d_reader", i),
+				writer: fmt.Sprintf("pipeWriter%d", i+1),
+				reader: fmt.Sprintf("pipeReader%d", i),
 				stderr: cmd.Stderr,
 			}
 		}
 
-		pc.waitgroup = "pipeline_waitgroup"
+		pc.waitgroup = "pipelineWaitgroup"
 		g.generate(buf, cmd.Command, &pc)
 	}
 
-	buf.add(ir.WaitPipelineWaitgroup("pipeline_waitgroup"))
+	buf.add(ir.WaitPipelineWaitgroup("pipelineWaitgroup"))
 
 }

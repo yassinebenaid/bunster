@@ -7,8 +7,8 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell) {
 	func() {
-		var pipeline_waitgroup runtime.PiplineWaitgroup
-		pipe_1_reader, pipe_1_writer, err := runtime.NewPipe()
+		var pipelineWaitgroup runtime.PiplineWaitgroup
+		pipeReader1, pipeWriter1, err := runtime.NewPipe()
 		if err != nil {
 			shell.HandleError("", err)
 			return
@@ -24,7 +24,7 @@ func Main(shell *runtime.Shell) {
 				return
 			}
 			defer commandFDT.Destroy()
-			commandFDT.Add(`1`, pipe_1_writer)
+			commandFDT.Add(`1`, pipeWriter1)
 			command.Stdin = commandFDT.Get(`0`)
 			command.Stdout = commandFDT.Get(`1`)
 			command.Stderr = commandFDT.Get(`2`)
@@ -32,7 +32,7 @@ func Main(shell *runtime.Shell) {
 				shell.HandleError(commandName, err)
 				return
 			}
-			pipeline_waitgroup = append(pipeline_waitgroup, runtime.PiplineWaitgroupItem{
+			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
 				Wait: command.Wait,
 			})
 		}()
@@ -47,7 +47,7 @@ func Main(shell *runtime.Shell) {
 				return
 			}
 			defer commandFDT.Destroy()
-			commandFDT.Add(`0`, pipe_1_reader)
+			commandFDT.Add(`0`, pipeReader1)
 			command.Stdin = commandFDT.Get(`0`)
 			command.Stdout = commandFDT.Get(`1`)
 			command.Stderr = commandFDT.Get(`2`)
@@ -55,15 +55,15 @@ func Main(shell *runtime.Shell) {
 				shell.HandleError(commandName, err)
 				return
 			}
-			pipeline_waitgroup = append(pipeline_waitgroup, runtime.PiplineWaitgroupItem{
+			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
 				Wait: command.Wait,
 			})
 		}()
-		for i, item := range pipeline_waitgroup {
+		for i, item := range pipelineWaitgroup {
 			if err := item.Wait(); err != nil {
 				shell.HandleError("", err)
 			}
-			if i < (len(pipeline_waitgroup) - 1) {
+			if i < (len(pipelineWaitgroup) - 1) {
 				shell.ExitCode = 0
 			}
 		}
@@ -88,8 +88,8 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell) {
 	func() {
-		var pipeline_waitgroup runtime.PiplineWaitgroup
-		pipe_1_reader, pipe_1_writer, err := runtime.NewPipe()
+		var pipelineWaitgroup runtime.PiplineWaitgroup
+		pipeReader1, pipeWriter1, err := runtime.NewPipe()
 		if err != nil {
 			shell.HandleError("", err)
 			return
@@ -105,7 +105,7 @@ func Main(shell *runtime.Shell) {
 				return
 			}
 			defer commandFDT.Destroy()
-			commandFDT.Add(`1`, pipe_1_writer)
+			commandFDT.Add(`1`, pipeWriter1)
 			command.Stdin = commandFDT.Get(`0`)
 			command.Stdout = commandFDT.Get(`1`)
 			command.Stderr = commandFDT.Get(`2`)
@@ -113,11 +113,11 @@ func Main(shell *runtime.Shell) {
 				shell.HandleError(commandName, err)
 				return
 			}
-			pipeline_waitgroup = append(pipeline_waitgroup, runtime.PiplineWaitgroupItem{
+			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
 				Wait: command.Wait,
 			})
 		}()
-		pipe_2_reader, pipe_2_writer, err := runtime.NewPipe()
+		pipeReader2, pipeWriter2, err := runtime.NewPipe()
 		if err != nil {
 			shell.HandleError("", err)
 			return
@@ -133,8 +133,8 @@ func Main(shell *runtime.Shell) {
 				return
 			}
 			defer commandFDT.Destroy()
-			commandFDT.Add(`1`, pipe_2_writer)
-			commandFDT.Add(`0`, pipe_1_reader)
+			commandFDT.Add(`1`, pipeWriter2)
+			commandFDT.Add(`0`, pipeReader1)
 			command.Stdin = commandFDT.Get(`0`)
 			command.Stdout = commandFDT.Get(`1`)
 			command.Stderr = commandFDT.Get(`2`)
@@ -142,11 +142,11 @@ func Main(shell *runtime.Shell) {
 				shell.HandleError(commandName, err)
 				return
 			}
-			pipeline_waitgroup = append(pipeline_waitgroup, runtime.PiplineWaitgroupItem{
+			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
 				Wait: command.Wait,
 			})
 		}()
-		pipe_3_reader, pipe_3_writer, err := runtime.NewPipe()
+		pipeReader3, pipeWriter3, err := runtime.NewPipe()
 		if err != nil {
 			shell.HandleError("", err)
 			return
@@ -163,8 +163,8 @@ func Main(shell *runtime.Shell) {
     			return
     		}
     		defer commandFDT.Destroy()
-    		commandFDT.Add(`1`, pipe_3_writer)
-			commandFDT.Add(`0`, pipe_2_reader)
+    		commandFDT.Add(`1`, pipeWriter3)
+			commandFDT.Add(`0`, pipeReader2)
     		command.Stdin = commandFDT.Get(`0`)
     		command.Stdout = commandFDT.Get(`1`)
     		command.Stderr = commandFDT.Get(`2`)
@@ -172,7 +172,7 @@ func Main(shell *runtime.Shell) {
     			shell.HandleError(commandName, err)
     			return
     		}
-    		pipeline_waitgroup = append(pipeline_waitgroup, runtime.PiplineWaitgroupItem{
+    		pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
     			Wait: command.Wait,
 		})
 		}()
@@ -187,7 +187,7 @@ func Main(shell *runtime.Shell) {
 				return
 			}
 			defer commandFDT.Destroy()
-			commandFDT.Add(`0`, pipe_3_reader)
+			commandFDT.Add(`0`, pipeReader3)
 			command.Stdin = commandFDT.Get(`0`)
 			command.Stdout = commandFDT.Get(`1`)
 			command.Stderr = commandFDT.Get(`2`)
@@ -195,15 +195,15 @@ func Main(shell *runtime.Shell) {
 				shell.HandleError(commandName, err)
 				return
 			}
-			pipeline_waitgroup = append(pipeline_waitgroup, runtime.PiplineWaitgroupItem{
+			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
 				Wait: command.Wait,
 			})
 		}()
-		for i, item := range pipeline_waitgroup {
+		for i, item := range pipelineWaitgroup {
 			if err := item.Wait(); err != nil {
 				shell.HandleError("", err)
 			}
-			if i < (len(pipeline_waitgroup) - 1) {
+			if i < (len(pipelineWaitgroup) - 1) {
 				shell.ExitCode = 0
 			}
 		}
@@ -223,8 +223,8 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell) {
 	func() {
-		var pipeline_waitgroup runtime.PiplineWaitgroup
-		pipe_1_reader, pipe_1_writer, err := runtime.NewPipe()
+		var pipelineWaitgroup runtime.PiplineWaitgroup
+		pipeReader1, pipeWriter1, err := runtime.NewPipe()
 		if err != nil {
 			shell.HandleError("", err)
 			return
@@ -240,8 +240,8 @@ func Main(shell *runtime.Shell) {
 				return
 			}
 			defer commandFDT.Destroy()
-			commandFDT.Add(`1`, pipe_1_writer)
-			commandFDT.Add(`2`, pipe_1_writer)
+			commandFDT.Add(`1`, pipeWriter1)
+			commandFDT.Add(`2`, pipeWriter1)
 			command.Stdin = commandFDT.Get(`0`)
 			command.Stdout = commandFDT.Get(`1`)
 			command.Stderr = commandFDT.Get(`2`)
@@ -249,7 +249,7 @@ func Main(shell *runtime.Shell) {
 				shell.HandleError(commandName, err)
 				return
 			}
-			pipeline_waitgroup = append(pipeline_waitgroup, runtime.PiplineWaitgroupItem{
+			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
 				Wait: command.Wait,
 			})
 		}()
@@ -264,7 +264,7 @@ func Main(shell *runtime.Shell) {
 				return
 			}
 			defer commandFDT.Destroy()
-			commandFDT.Add(`0`, pipe_1_reader)
+			commandFDT.Add(`0`, pipeReader1)
 			command.Stdin = commandFDT.Get(`0`)
 			command.Stdout = commandFDT.Get(`1`)
 			command.Stderr = commandFDT.Get(`2`)
@@ -272,15 +272,15 @@ func Main(shell *runtime.Shell) {
 				shell.HandleError(commandName, err)
 				return
 			}
-			pipeline_waitgroup = append(pipeline_waitgroup, runtime.PiplineWaitgroupItem{
+			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
 				Wait: command.Wait,
 			})
 		}()
-		for i, item := range pipeline_waitgroup {
+		for i, item := range pipelineWaitgroup {
 			if err := item.Wait(); err != nil {
 				shell.HandleError("", err)
 			}
-			if i < (len(pipeline_waitgroup) - 1) {
+			if i < (len(pipelineWaitgroup) - 1) {
 				shell.ExitCode = 0
 			}
 		}
