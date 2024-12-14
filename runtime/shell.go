@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"os"
 	"os/exec"
+	"syscall"
 )
 
 type Shell struct {
@@ -54,7 +55,9 @@ func (shell *Shell) CloneFDT() (FileDescriptorTable, error) {
 }
 
 func (shell *Shell) Command(name string, args ...string) *exec.Cmd {
-	return exec.Command(name, args...)
+	cmd := exec.Command(name, args...)
+	cmd.Env = syscall.Environ()
+	return cmd
 }
 
 func NewPipe() (Stream, Stream, error) {

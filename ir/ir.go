@@ -39,11 +39,11 @@ func (d Declare) togo() string {
 }
 
 type DeclareSlice struct {
-	Name, Type string
+	Name string
 }
 
 func (d DeclareSlice) togo() string {
-	return fmt.Sprintf("var %s []%s\n", d.Name, d.Type)
+	return fmt.Sprintf("var %s []string\n", d.Name)
 }
 
 type Set struct {
@@ -228,4 +228,14 @@ func (c Closure) togo() string {
 			%s
 		}()
 	`, body)
+}
+
+type SetCmdEnv struct {
+	Command string
+	Key     string
+	Value   Instruction
+}
+
+func (s SetCmdEnv) togo() string {
+	return fmt.Sprintf("%s.Env = append(%s.Env,`%s=` + %s)\n", s.Command, s.Command, s.Key, s.Value.togo())
 }
