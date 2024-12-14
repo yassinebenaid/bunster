@@ -14,7 +14,7 @@ func Main(shell *runtime.Shell) {
 		command.Env = append(command.Env, `key=`+`value`)
 		commandFDT, err := shell.CloneFDT()
 		if err != nil {
-			shell.HandleError("", err)
+			shell.HandleError(err)
 			return
 		}
 		defer commandFDT.Destroy()
@@ -22,7 +22,7 @@ func Main(shell *runtime.Shell) {
 		command.Stdout = commandFDT.Get(`1`)
 		command.Stderr = commandFDT.Get(`2`)
 		if err := command.Run(); err != nil {
-			shell.HandleError(commandName, err)
+			shell.HandleError(err)
 			return
 		}
 		shell.ExitCode = command.ProcessState.ExitCode()
@@ -55,7 +55,7 @@ func Main(shell *runtime.Shell) {
 		command.Env = append(command.Env, `key4=`+`value`)
 		commandFDT, err := shell.CloneFDT()
 		if err != nil {
-			shell.HandleError("", err)
+			shell.HandleError(err)
 			return
 		}
 		defer commandFDT.Destroy()
@@ -63,7 +63,7 @@ func Main(shell *runtime.Shell) {
 		command.Stdout = commandFDT.Get(`1`)
 		command.Stderr = commandFDT.Get(`2`)
 		if err := command.Run(); err != nil {
-			shell.HandleError(commandName, err)
+			shell.HandleError(err)
 			return
 		}
 		shell.ExitCode = command.ProcessState.ExitCode()
