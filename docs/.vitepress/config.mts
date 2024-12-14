@@ -42,4 +42,8 @@ export default defineConfig({
     ["link", { rel: "manifest", href: "/site.webmanifest" }],
     ["link", { rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
   ],
+  lastUpdated: true,
+  sitemap: {
+    hostname: "https://bunster.netlify.app",
+  },
 });
