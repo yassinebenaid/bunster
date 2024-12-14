@@ -11,12 +11,16 @@ export default defineConfig({
       { text: "Documentation", link: "/quick-start" },
       { text: "Installation", link: "/installation" },
     ],
-
+    logo: "/logo.png",
+    search: {
+      provider: "local",
+    },
     sidebar: [
       {
         items: [
           { text: "Quick Start", link: "/quick-start" },
           { text: "Installation", link: "/installation" },
+          { text: "Supported Features", link: "/supported-features" },
         ],
       },
     ],
@@ -28,6 +32,10 @@ export default defineConfig({
     footer: {
       message: "Released under the GPLv3 License.",
       copyright: "Copyright © 2024-present Yassine Benaid",
+    },
+    editLink: {
+      pattern:
+        "https://github.com/yassinebenaid/bunster/edit/master/docs/:path",
     },
   },
   head: [
