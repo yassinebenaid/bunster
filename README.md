@@ -29,7 +29,7 @@ Technically speaking, **Bunster** is not a complete compiler, But rather a **Tra
 your scripts everytime you run them.
 
 > [!WARNING]
-> This project is in its early phase of development and is not yet ready for production. Not all features are implemented yet. But, plenty of them are.[see what features are features so far](https://bunster.netlify.app/supported-features.html) such as simple command invokation, redirections, environment variables and more.
+> This project is in its early phase of development and is not yet ready for production. Not all features are implemented yet. But, plenty of them are. [see what features are features so far](https://bunster.netlify.app/supported-features.html).
 
 ### Versionning
 **Bunster** follows [SemVer](https://semver.org/) system for release versionning. On each `v0.x.0` release, You would expect adding support for new features (can be new shell feature, improvement in the build process, some custom features ...etc.) . On each `v0.N.x` release, you would expect bug fixes and documentation enhancments.
