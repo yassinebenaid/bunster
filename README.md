@@ -25,10 +25,11 @@ Technically speaking, **Bunster** is not a complete compiler, But rather a **Tra
 - **Different Shells support**: Bunster currently aims to be compatible `Bash` as a starting move. then other popular shells in future.
 - **Security**: as you may guess, humans cannot read machine code, so why not to compile your scripts to such format.
 - **Modules**: something shell scripts lack is a module system, people want to share their code to be used by others, but the infrastructure doesn't allow them. Well, **Bunster** introduces a module system that allow you to publish your scripts as a modules consumed by other users.
-- **Performance**: the shell (including bash, zsh ...etc) rely on forking to run your scripts, this means, if you have a script of 3 commands, the shell will have to fork it self 3 times to run each command. This allows the shell to play with file descriptors and other resouces freely. But adds a lot of performance overhead. **Bunster** runs your entire scripts in a single process. and uses [goroutines](https://go.dev/tour/concurrency/1) for background commands. **Bunster** even has its own file descripor system managed by it's runtime. this means less syscalls, thus, better performance.
+- **Performance**: You should't be concerned about performance that much, But at least scripts compiled by **Bunster** will not suffer to parse and interpret
+your scripts everytime you run them.
 
 > [!WARNING]
-> This project is in its early phase of development and is not yet ready for production. Not all features are implemented yet. But, plenty of them are already working. such as simple command invokation, redirections, environment variables and more.
+> This project is in its early phase of development and is not yet ready for production. Not all features are implemented yet. But, plenty of them are.[see what features are features so far](https://bunster.netlify.app/supported-features.html) such as simple command invokation, redirections, environment variables and more.
 
 ### Versionning
 **Bunster** follows [SemVer](https://semver.org/) system for release versionning. On each `v0.x.0` release, You would expect adding support for new features (can be new shell feature, improvement in the build process, some custom features ...etc.) . On each `v0.N.x` release, you would expect bug fixes and documentation enhancments.
