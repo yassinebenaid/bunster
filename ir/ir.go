@@ -39,11 +39,11 @@ func (d Declare) togo() string {
 }
 
 type DeclareSlice struct {
-	Name, Type string
+	Name string
 }
 
 func (d DeclareSlice) togo() string {
-	return fmt.Sprintf("var %s []%s\n", d.Name, d.Type)
+	return fmt.Sprintf("var %s []string\n", d.Name)
 }
 
 type Set struct {
