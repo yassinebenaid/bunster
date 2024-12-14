@@ -37,7 +37,7 @@ func Main(shell *runtime.Shell) {
 #(TEST: multi env var mutation)
 
 key1=value key2='value' key3="value" \
-key4=value cmd
+    key4=value cmd
 
 #(RESULT)
 package main
