@@ -17,40 +17,52 @@ Have you ever wished your shell scripts could be faster, more portable, and secu
 
 Unlike other tools, **Bunster** doesn’t just wrap your scripts in a binary—it compiles them down to efficient native machine code, leveraging the powerful Go toolchain. This ensures performance, portability, and robustness.
 
-Technically speaking, **Bunster** is not a complete compiler, But rather a **Transplier** that generates **GO** code out of your scripts. Then, opionally uses the **Go Toolchain** to compile the code to an executable program.
+Technically speaking, **Bunster** in fact is a `shell-to-Go` [Transplier](https://en.wikipedia.org/wiki/Source-to-source_compiler) that generates [Go](https://go.dev) source out of your scripts. Then, optionally uses the [Go Toolchain](https://go.dev/dl) to compile the code to an executable program.
 
-**Bunster** targets `bash` scripts in particular. The current syntax and features are all inherited from `bash`. other shells support will be added soon.
+**Bunster** targets `bash` scripts in particular. The current syntax and features are all inherited from `bash`. additional shells will be supported as soon as we relase v1.
 
-### Motivation
-- **Different Shells support**: Bunster currently aims to be compatible `Bash` as a starting move. then other popular shells in future.
-- **Security**: as you may guess, humans cannot read machine code, so why not to compile your scripts to such format.
-- **Modules**: something shell scripts lack is a module system, people want to share their code to be used by others, but the infrastructure doesn't allow them. Well, **Bunster** introduces a module system that allow you to publish your scripts as a modules consumed by other users.
-- **Performance**: You should't be concerned about performance that much, But at least scripts compiled by **Bunster** will not suffer to parse and interpret
-your scripts everytime you run them.
+### Promises
+
+In addition to the shell features, We aim to add several custom features to make shell scripts feel like any modern programming language. These features are either supported or are planned to be implemented in future. (_consider contributing to help us speed up the develpment cycle_)
+
+- **Different Shells support**: Bunster currently aims to be compatible `Bash` as a starting move. then additional shells in future.
+- **Modules**: something shell scripts lack is a module system, we aim to introduces a module system that allow you to publish and consume scripts as libraries.
+- **Static Asset Embedding**: This feature allows you to embed a file's content to a variable at build time. ([Go has one already](https://pkg.go.dev/embed))
+- **Password and Expiration Lock**: Surprisingly, some people have asked for this feature. Basically, It allows you to choose an expirity date at build time. the generated program will not work after that date. Also you can choose to lock the script using a password. whenever you try to run it, it prompts for the password.
 
 > [!WARNING]
-> This project is in its early phase of development and is not yet ready for production. Not all features are implemented yet. But, plenty of them are. [see what features are features so far](https://bunster.netlify.app/supported-features.html).
+> This project is in its early phase of development and is not yet ready for production. Not all features are implemented yet. But, plenty of them are. [see what features are implemented so far](https://bunster.netlify.app/supported-features.html).
 
 ### Versionning
-**Bunster** follows [SemVer](https://semver.org/) system for release versionning. On each `v0.x.0` release, You would expect adding support for new features (can be new shell feature, improvement in the build process, some custom features ...etc.) . On each `v0.N.x` release, you would expect bug fixes and documentation enhancments.
 
-Once we reach the `v1.0.0`, you must expect a +90% of compatibility with `bash`. A module system, a [static assets embedding capabilities](https://pkg.go.dev/embed) and a plenty of other features to make `shell` scripts feel like any other modern programming language.
+Bunster follows [SemVer](https://semver.org/) system for release versionning. On each minor release `v0.x.0`, You should expect adding new features. Code optimization and build improvements. On each patch release `v0.N.x`, you should expect bug fixes and/or other minor enhancements.
+
+Once we reach the stable release `v1.0.0`, you must expect your bash scripts to be fully compatible with Bunster (_there might be some caveates_). All features mentioned above to be implemeted unless the comunity agreed on skipping some of them.
 
 Adding support for additional shells is not planned until our first stable release `v1`. All regarding contributions will remain open until then.
 
 ### Installation
-Checkout the [documentation](https://bunster.netlify.app) for different ways of installation.
+
+Checkout the [documentation](https://bunster.netlify.app/installation) for different ways of installation.
 
 ### Contributing
-Thank you for considering contributing to the **Bunster** project! The contribution guide can be found in the [documentation](https://bunster.netlify.app).
+
+Thank you for considering contributing to the Bunster project! The contribution guide can be found in the [documentation](https://bunster.netlify.app).
+
+This project is developed and maintained by the public community, which includes you. Anything in this repository is subject to criticism. Including features, the implementation, the code style, the way we manage code reviews, The documentation and anything else in this regard.
+
+Hence, if you think that we're doing something wrong, or have a suggestion that can make this project better. Please consider openning an issue.
 
 ### Code Of Conduct
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://github.com/yassinebenaid/bunster/tree/master/CODE_OF_CONDUCT.md).
+
+In order to ensure that the Bunster community is welcoming to all, please review and abide by the [Code of Conduct](https://github.com/yassinebenaid/bunster/tree/master/CODE_OF_CONDUCT.md).
 
 ### Security
+
 If you discover a security vulnerability within Bunster, please send an e-mail to Yassine Benaid via yassinebenaide3@gmail.com. All security vulnerabilities will be promptly addressed.
 
 Plase check out our [Security Policy](https://github.com/yassinebenaid/bunster/tree/master/SECURITY.md) for more details.
 
 ### Licence
-The Bunster project is open-sourced software licensed under the [GPL3.0 license](https://www.gnu.org/licenses/gpl-3.0.en.html).
+
+The Bunster project is open-sourced software licensed under the [GPLv3 license](https://www.gnu.org/licenses/gpl-3.0.en.html).
