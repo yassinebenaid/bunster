@@ -4,6 +4,8 @@ type Word string
 
 type Var string
 
+type SpecialVar string
+
 type UnquotedString []Expression
 
 type QuotedString []Expression
@@ -24,6 +26,7 @@ type Negation struct {
 }
 
 func (Var) node()            {}
+func (SpecialVar) node()     {}
 func (Word) node()           {}
 func (QuotedString) node()   {}
 func (UnquotedString) node() {}
@@ -32,6 +35,7 @@ func (Binary) node()         {}
 func (Negation) node()       {}
 
 func (Var) expr()            {}
+func (SpecialVar) expr()     {}
 func (Word) expr()           {}
 func (QuotedString) expr()   {}
 func (UnquotedString) expr() {}
@@ -40,6 +44,7 @@ func (Binary) expr()         {}
 func (Negation) expr()       {}
 
 func (v Var) string() string          { return string(v) }
+func (v SpecialVar) string() string   { return string(v) }
 func (Word) string() string           { return "" }
 func (QuotedString) string() string   { return "" }
 func (UnquotedString) string() string { return "" }

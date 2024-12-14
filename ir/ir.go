@@ -86,13 +86,19 @@ func (c Concat) togo() string {
 type Literal string
 
 func (s Literal) togo() string {
-	return fmt.Sprintf(`%s`, s)
+	return string(s)
 }
 
 type ReadVar string
 
 func (rv ReadVar) togo() string {
 	return fmt.Sprintf("shell.ReadVar(%q)", rv)
+}
+
+type ReadSpecialVar string
+
+func (rv ReadSpecialVar) togo() string {
+	return fmt.Sprintf("shell.ReadSpecialVar(%q)", rv)
 }
 
 type InitCommand struct {

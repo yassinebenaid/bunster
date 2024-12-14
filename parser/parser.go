@@ -228,6 +228,8 @@ loop:
 			break loop
 		case token.SIMPLE_EXPANSION:
 			exprs = append(exprs, ast.Var(p.curr.Literal))
+		case token.SPECIAL_VAR:
+			exprs = append(exprs, ast.SpecialVar(p.curr.Literal))
 		case token.SINGLE_QUOTE:
 			exprs = append(exprs, p.parseLiteralString())
 		case token.DOUBLE_QUOTE:

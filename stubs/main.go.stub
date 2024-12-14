@@ -12,6 +12,8 @@ func main() {
 		Stdout: os.Stdout,
 		Stderr: os.Stderr,
 
+        Args: os.Args,
+
 		Main: Main,
 	}
 

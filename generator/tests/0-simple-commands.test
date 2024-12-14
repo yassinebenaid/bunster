@@ -261,3 +261,40 @@ func Main(shell *runtime.Shell) {
    	}()
 }
 #(ENDTEST)
+
+
+#(TEST: special variables)
+
+echo $1 $?
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+    func() {
+  		var commandName = `echo`
+  		var arguments []string
+  		arguments = append(arguments, shell.ReadSpecialVar("1"))
+  		arguments = append(arguments, shell.ReadSpecialVar("?"))
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
+  		if err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+  		defer commandFDT.Destroy()
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+}
+#(ENDTEST)

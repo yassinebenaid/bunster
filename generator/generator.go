@@ -140,6 +140,8 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 		return ir.String(v)
 	case ast.Var:
 		return ir.ReadVar(v)
+	case ast.SpecialVar:
+		return ir.ReadSpecialVar(v)
 	case ast.QuotedString:
 		var concat ir.Concat
 		for _, expr := range v {
