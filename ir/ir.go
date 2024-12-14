@@ -157,7 +157,7 @@ func (s SetCmdEnv) togo() string {
 
 type IfLastExitCode struct {
 	Zero bool
-	Body Instruction
+	Body []Instruction
 }
 
 func (i IfLastExitCode) togo() string {
@@ -166,9 +166,14 @@ func (i IfLastExitCode) togo() string {
 		condition = "shell.ExitCode != 0"
 	}
 
+	var body string
+	for _, ins := range i.Body {
+		body += ins.togo()
+	}
+
 	return fmt.Sprintf(
 		`if %s {
 			%s
 		}
-		`, condition, i.Body.togo())
+		`, condition, body)
 }
