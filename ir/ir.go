@@ -229,3 +229,13 @@ func (c Closure) togo() string {
 		}()
 	`, body)
 }
+
+type SetCmdEnv struct {
+	Command string
+	Key     string
+	Value   Instruction
+}
+
+func (s SetCmdEnv) togo() string {
+	return fmt.Sprintf("%s.Env = append(%s.Env,`%s=` + %s)\n", s.Command, s.Command, s.Key, s.Value.togo())
+}
