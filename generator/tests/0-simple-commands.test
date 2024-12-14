@@ -145,3 +145,80 @@ func Main(shell *runtime.Shell) {
    	}()
 }
 #(ENDTEST)
+
+
+
+#(TEST: multiple commands)
+
+cmd1
+cmd2; cmd3
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+    func() {
+  		var commandName = `cmd1`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
+  		if err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+  		defer commandFDT.Destroy()
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+    func() {
+  		var commandName = `cmd2`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
+  		if err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+  		defer commandFDT.Destroy()
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+    func() {
+  		var commandName = `cmd3`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		commandFDT, err := shell.CloneFDT()
+  		if err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+  		defer commandFDT.Destroy()
+  		command.Stdin = commandFDT.Get(`0`)
+  		command.Stdout = commandFDT.Get(`1`)
+  		command.Stderr = commandFDT.Get(`2`)
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+}
+#(ENDTEST)
