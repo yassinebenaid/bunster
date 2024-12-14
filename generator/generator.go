@@ -21,8 +21,7 @@ func Generate(script ast.Script) ir.Program {
 }
 
 type generator struct {
-	program  ir.Program
-	cmdCount int
+	program ir.Program
 }
 
 type InstructionBuffer []ir.Instruction
@@ -49,44 +48,41 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, pc
 }
 
 func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command, pc *pipeContext) {
-	id := g.cmdCount
-	g.cmdCount++
-
-	buf.add(ir.Declare{Name: fmt.Sprintf("cmd_%d_name", id), Value: g.handleExpression(cmd.Name)})
-	buf.add(ir.DeclareSlice{Name: fmt.Sprintf("cmd_%d_args", id)})
+	buf.add(ir.Declare{Name: "commandName", Value: g.handleExpression(cmd.Name)})
+	buf.add(ir.DeclareSlice{Name: "arguments"})
 
 	for _, arg := range cmd.Args {
-		buf.add(ir.Append{Name: fmt.Sprintf("cmd_%d_args", id), Value: g.handleExpression(arg)})
+		buf.add(ir.Append{Name: "arguments", Value: g.handleExpression(arg)})
 	}
 
 	buf.add(ir.Declare{
-		Name:  fmt.Sprintf("cmd_%d", id),
-		Value: ir.InitCommand{Name: fmt.Sprintf("cmd_%d_name", id), Args: fmt.Sprintf("cmd_%d_args", id)},
+		Name:  "command",
+		Value: ir.InitCommand{Name: "commandName", Args: "arguments"},
 	})
 
 	for _, env := range cmd.Env {
 		buf.add(ir.SetCmdEnv{
-			Command: fmt.Sprintf("cmd_%d", id),
+			Command: "command",
 			Key:     env.Name,
 			Value:   g.handleExpression(env.Value),
 		})
 	}
 
-	g.handleRedirections(buf, fmt.Sprintf("cmd_%d", id), cmd.Redirections, pc)
+	g.handleRedirections(buf, "command", cmd.Redirections, pc)
 
 	if pc != nil {
 		buf.add(ir.StartCommand{
-			Command: fmt.Sprintf("cmd_%d", id),
-			Name:    fmt.Sprintf("cmd_%d_name", id),
+			Command: "command",
+			Name:    "commandName",
 		})
 		buf.add(ir.PushToPipelineWaitgroup{
 			Waitgroup: pc.waitgroup,
-			Command:   fmt.Sprintf("cmd_%d", id),
+			Command:   "command",
 		})
 	} else {
 		buf.add(ir.RunCommanOrFail{
-			Command: fmt.Sprintf("cmd_%d", id),
-			Name:    fmt.Sprintf("cmd_%d_name", id),
+			Command: "command",
+			Name:    "commandName",
 		})
 	}
 }

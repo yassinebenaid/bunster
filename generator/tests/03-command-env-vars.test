@@ -7,25 +7,25 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell) {
 	func() {
-		var cmd_0_name = `cmd`
-		var cmd_0_args []string
-		cmd_0_args = append(cmd_0_args, `key=value`)
-		var cmd_0 = shell.Command(cmd_0_name, cmd_0_args...)
-		cmd_0.Env = append(cmd_0.Env, `key=`+`value`)
-		cmd_0_fdt, err := shell.CloneFDT()
+		var commandName = `cmd`
+		var arguments []string
+		arguments = append(arguments, `key=value`)
+		var command = shell.Command(commandName, arguments...)
+		command.Env = append(command.Env, `key=`+`value`)
+		command_fdt, err := shell.CloneFDT()
 		if err != nil {
 			shell.HandleError("", err)
 			return
 		}
-		defer cmd_0_fdt.Destroy()
-		cmd_0.Stdin = cmd_0_fdt.Get(`0`)
-		cmd_0.Stdout = cmd_0_fdt.Get(`1`)
-		cmd_0.Stderr = cmd_0_fdt.Get(`2`)
-		if err := cmd_0.Run(); err != nil {
-			shell.HandleError(cmd_0_name, err)
+		defer command_fdt.Destroy()
+		command.Stdin = command_fdt.Get(`0`)
+		command.Stdout = command_fdt.Get(`1`)
+		command.Stderr = command_fdt.Get(`2`)
+		if err := command.Run(); err != nil {
+			shell.HandleError(commandName, err)
 			return
 		}
-		shell.ExitCode = cmd_0.ProcessState.ExitCode()
+		shell.ExitCode = command.ProcessState.ExitCode()
 
 	}()
 }
@@ -46,27 +46,27 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell) {
 	func() {
-		var cmd_0_name = `cmd`
-		var cmd_0_args []string
-		var cmd_0 = shell.Command(cmd_0_name, cmd_0_args...)
-		cmd_0.Env = append(cmd_0.Env, `key1=`+`value`)
-		cmd_0.Env = append(cmd_0.Env, `key2=`+`value`)
-		cmd_0.Env = append(cmd_0.Env, `key3=`+`value`)
-		cmd_0.Env = append(cmd_0.Env, `key4=`+`value`)
-		cmd_0_fdt, err := shell.CloneFDT()
+		var commandName = `cmd`
+		var arguments []string
+		var command = shell.Command(commandName, arguments...)
+		command.Env = append(command.Env, `key1=`+`value`)
+		command.Env = append(command.Env, `key2=`+`value`)
+		command.Env = append(command.Env, `key3=`+`value`)
+		command.Env = append(command.Env, `key4=`+`value`)
+		command_fdt, err := shell.CloneFDT()
 		if err != nil {
 			shell.HandleError("", err)
 			return
 		}
-		defer cmd_0_fdt.Destroy()
-		cmd_0.Stdin = cmd_0_fdt.Get(`0`)
-		cmd_0.Stdout = cmd_0_fdt.Get(`1`)
-		cmd_0.Stderr = cmd_0_fdt.Get(`2`)
-		if err := cmd_0.Run(); err != nil {
-			shell.HandleError(cmd_0_name, err)
+		defer command_fdt.Destroy()
+		command.Stdin = command_fdt.Get(`0`)
+		command.Stdout = command_fdt.Get(`1`)
+		command.Stderr = command_fdt.Get(`2`)
+		if err := command.Run(); err != nil {
+			shell.HandleError(commandName, err)
 			return
 		}
-		shell.ExitCode = cmd_0.ProcessState.ExitCode()
+		shell.ExitCode = command.ProcessState.ExitCode()
 
 	}()
 }
