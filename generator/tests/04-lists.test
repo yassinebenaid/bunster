@@ -1,0 +1,454 @@
+#(TEST: list with "||" operator)
+
+command || command2 || command3
+
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+	func() {
+		var commandName = `command`
+		var arguments []string
+		var command = shell.Command(commandName, arguments...)
+		commandFDT, err := shell.CloneFDT()
+		if err != nil {
+			shell.HandleError(err)
+			return
+		}
+		defer commandFDT.Destroy()
+		command.Stdin = commandFDT.Get(`0`)
+		command.Stdout = commandFDT.Get(`1`)
+		command.Stderr = commandFDT.Get(`2`)
+		if err := command.Run(); err != nil {
+			shell.HandleError(err)
+			return
+		}
+		shell.ExitCode = command.ProcessState.ExitCode()
+
+	}()
+	if shell.ExitCode != 0 {
+		func() {
+			var commandName = `command2`
+			var arguments []string
+			var command = shell.Command(commandName, arguments...)
+			commandFDT, err := shell.CloneFDT()
+			if err != nil {
+				shell.HandleError(err)
+				return
+			}
+			defer commandFDT.Destroy()
+			command.Stdin = commandFDT.Get(`0`)
+			command.Stdout = commandFDT.Get(`1`)
+			command.Stderr = commandFDT.Get(`2`)
+			if err := command.Run(); err != nil {
+				shell.HandleError(err)
+				return
+			}
+			shell.ExitCode = command.ProcessState.ExitCode()
+
+		}()
+
+	}
+	if shell.ExitCode != 0 {
+		func() {
+			var commandName = `command3`
+			var arguments []string
+			var command = shell.Command(commandName, arguments...)
+			commandFDT, err := shell.CloneFDT()
+			if err != nil {
+				shell.HandleError(err)
+				return
+			}
+			defer commandFDT.Destroy()
+			command.Stdin = commandFDT.Get(`0`)
+			command.Stdout = commandFDT.Get(`1`)
+			command.Stderr = commandFDT.Get(`2`)
+			if err := command.Run(); err != nil {
+				shell.HandleError(err)
+				return
+			}
+			shell.ExitCode = command.ProcessState.ExitCode()
+
+		}()
+
+	}
+}
+
+#(ENDTEST)
+
+
+
+#(TEST: list with "&&" operator)
+
+command && command2 && command3
+
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+	func() {
+		var commandName = `command`
+		var arguments []string
+		var command = shell.Command(commandName, arguments...)
+		commandFDT, err := shell.CloneFDT()
+		if err != nil {
+			shell.HandleError(err)
+			return
+		}
+		defer commandFDT.Destroy()
+		command.Stdin = commandFDT.Get(`0`)
+		command.Stdout = commandFDT.Get(`1`)
+		command.Stderr = commandFDT.Get(`2`)
+		if err := command.Run(); err != nil {
+			shell.HandleError(err)
+			return
+		}
+		shell.ExitCode = command.ProcessState.ExitCode()
+
+	}()
+	if shell.ExitCode == 0 {
+		func() {
+			var commandName = `command2`
+			var arguments []string
+			var command = shell.Command(commandName, arguments...)
+			commandFDT, err := shell.CloneFDT()
+			if err != nil {
+				shell.HandleError(err)
+				return
+			}
+			defer commandFDT.Destroy()
+			command.Stdin = commandFDT.Get(`0`)
+			command.Stdout = commandFDT.Get(`1`)
+			command.Stderr = commandFDT.Get(`2`)
+			if err := command.Run(); err != nil {
+				shell.HandleError(err)
+				return
+			}
+			shell.ExitCode = command.ProcessState.ExitCode()
+
+		}()
+
+	}
+	if shell.ExitCode == 0 {
+		func() {
+			var commandName = `command3`
+			var arguments []string
+			var command = shell.Command(commandName, arguments...)
+			commandFDT, err := shell.CloneFDT()
+			if err != nil {
+				shell.HandleError(err)
+				return
+			}
+			defer commandFDT.Destroy()
+			command.Stdin = commandFDT.Get(`0`)
+			command.Stdout = commandFDT.Get(`1`)
+			command.Stderr = commandFDT.Get(`2`)
+			if err := command.Run(); err != nil {
+				shell.HandleError(err)
+				return
+			}
+			shell.ExitCode = command.ProcessState.ExitCode()
+
+		}()
+
+	}
+}
+
+#(ENDTEST)
+
+
+
+
+#(TEST: list with mixed "&&" and "||" operators)
+
+command && command2 || command3
+
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+	func() {
+		var commandName = `command`
+		var arguments []string
+		var command = shell.Command(commandName, arguments...)
+		commandFDT, err := shell.CloneFDT()
+		if err != nil {
+			shell.HandleError(err)
+			return
+		}
+		defer commandFDT.Destroy()
+		command.Stdin = commandFDT.Get(`0`)
+		command.Stdout = commandFDT.Get(`1`)
+		command.Stderr = commandFDT.Get(`2`)
+		if err := command.Run(); err != nil {
+			shell.HandleError(err)
+			return
+		}
+		shell.ExitCode = command.ProcessState.ExitCode()
+
+	}()
+	if shell.ExitCode == 0 {
+		func() {
+			var commandName = `command2`
+			var arguments []string
+			var command = shell.Command(commandName, arguments...)
+			commandFDT, err := shell.CloneFDT()
+			if err != nil {
+				shell.HandleError(err)
+				return
+			}
+			defer commandFDT.Destroy()
+			command.Stdin = commandFDT.Get(`0`)
+			command.Stdout = commandFDT.Get(`1`)
+			command.Stderr = commandFDT.Get(`2`)
+			if err := command.Run(); err != nil {
+				shell.HandleError(err)
+				return
+			}
+			shell.ExitCode = command.ProcessState.ExitCode()
+
+		}()
+
+	}
+	if shell.ExitCode != 0 {
+		func() {
+			var commandName = `command3`
+			var arguments []string
+			var command = shell.Command(commandName, arguments...)
+			commandFDT, err := shell.CloneFDT()
+			if err != nil {
+				shell.HandleError(err)
+				return
+			}
+			defer commandFDT.Destroy()
+			command.Stdin = commandFDT.Get(`0`)
+			command.Stdout = commandFDT.Get(`1`)
+			command.Stderr = commandFDT.Get(`2`)
+			if err := command.Run(); err != nil {
+				shell.HandleError(err)
+				return
+			}
+			shell.ExitCode = command.ProcessState.ExitCode()
+
+		}()
+
+	}
+}
+
+#(ENDTEST)
+
+
+
+
+#(TEST: lists of piplines)
+
+command | command2 ||
+    command3 |& command4 &&
+    command5 | command6
+
+
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+	func() {
+		var pipelineWaitgroup runtime.PiplineWaitgroup
+		pipeReader1, pipeWriter1, err := runtime.NewPipe()
+		if err != nil {
+			shell.HandleError(err)
+			return
+		}
+		func() {
+			var commandName = `command`
+			var arguments []string
+			var command = shell.Command(commandName, arguments...)
+			commandFDT, err := shell.CloneFDT()
+			if err != nil {
+				shell.HandleError(err)
+				return
+			}
+			defer commandFDT.Destroy()
+			commandFDT.Add(`1`, pipeWriter1)
+			command.Stdin = commandFDT.Get(`0`)
+			command.Stdout = commandFDT.Get(`1`)
+			command.Stderr = commandFDT.Get(`2`)
+			if err := command.Start(); err != nil {
+				shell.HandleError(err)
+				return
+			}
+			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
+				Wait: command.Wait,
+			})
+		}()
+		func() {
+			var commandName = `command2`
+			var arguments []string
+			var command = shell.Command(commandName, arguments...)
+			commandFDT, err := shell.CloneFDT()
+			if err != nil {
+				shell.HandleError(err)
+				return
+			}
+			defer commandFDT.Destroy()
+			commandFDT.Add(`0`, pipeReader1)
+			command.Stdin = commandFDT.Get(`0`)
+			command.Stdout = commandFDT.Get(`1`)
+			command.Stderr = commandFDT.Get(`2`)
+			if err := command.Start(); err != nil {
+				shell.HandleError(err)
+				return
+			}
+			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
+				Wait: command.Wait,
+			})
+		}()
+		for i, item := range pipelineWaitgroup {
+			if err := item.Wait(); err != nil {
+				shell.HandleError(err)
+			}
+			if i < (len(pipelineWaitgroup) - 1) {
+				shell.ExitCode = 0
+			}
+		}
+
+	}()
+	if shell.ExitCode != 0 {
+		func() {
+			var pipelineWaitgroup runtime.PiplineWaitgroup
+			pipeReader1, pipeWriter1, err := runtime.NewPipe()
+			if err != nil {
+				shell.HandleError(err)
+				return
+			}
+			func() {
+				var commandName = `command3`
+				var arguments []string
+				var command = shell.Command(commandName, arguments...)
+				commandFDT, err := shell.CloneFDT()
+				if err != nil {
+					shell.HandleError(err)
+					return
+				}
+				defer commandFDT.Destroy()
+				commandFDT.Add(`1`, pipeWriter1)
+				commandFDT.Add(`2`, pipeWriter1)
+				command.Stdin = commandFDT.Get(`0`)
+				command.Stdout = commandFDT.Get(`1`)
+				command.Stderr = commandFDT.Get(`2`)
+				if err := command.Start(); err != nil {
+					shell.HandleError(err)
+					return
+				}
+				pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
+					Wait: command.Wait,
+				})
+			}()
+			func() {
+				var commandName = `command4`
+				var arguments []string
+				var command = shell.Command(commandName, arguments...)
+				commandFDT, err := shell.CloneFDT()
+				if err != nil {
+					shell.HandleError(err)
+					return
+				}
+				defer commandFDT.Destroy()
+				commandFDT.Add(`0`, pipeReader1)
+				command.Stdin = commandFDT.Get(`0`)
+				command.Stdout = commandFDT.Get(`1`)
+				command.Stderr = commandFDT.Get(`2`)
+				if err := command.Start(); err != nil {
+					shell.HandleError(err)
+					return
+				}
+				pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
+					Wait: command.Wait,
+				})
+			}()
+			for i, item := range pipelineWaitgroup {
+				if err := item.Wait(); err != nil {
+					shell.HandleError(err)
+				}
+				if i < (len(pipelineWaitgroup) - 1) {
+					shell.ExitCode = 0
+				}
+			}
+
+		}()
+
+	}
+	if shell.ExitCode == 0 {
+		func() {
+			var pipelineWaitgroup runtime.PiplineWaitgroup
+			pipeReader1, pipeWriter1, err := runtime.NewPipe()
+			if err != nil {
+				shell.HandleError(err)
+				return
+			}
+			func() {
+				var commandName = `command5`
+				var arguments []string
+				var command = shell.Command(commandName, arguments...)
+				commandFDT, err := shell.CloneFDT()
+				if err != nil {
+					shell.HandleError(err)
+					return
+				}
+				defer commandFDT.Destroy()
+				commandFDT.Add(`1`, pipeWriter1)
+				command.Stdin = commandFDT.Get(`0`)
+				command.Stdout = commandFDT.Get(`1`)
+				command.Stderr = commandFDT.Get(`2`)
+				if err := command.Start(); err != nil {
+					shell.HandleError(err)
+					return
+				}
+				pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
+					Wait: command.Wait,
+				})
+			}()
+			func() {
+				var commandName = `command6`
+				var arguments []string
+				var command = shell.Command(commandName, arguments...)
+				commandFDT, err := shell.CloneFDT()
+				if err != nil {
+					shell.HandleError(err)
+					return
+				}
+				defer commandFDT.Destroy()
+				commandFDT.Add(`0`, pipeReader1)
+				command.Stdin = commandFDT.Get(`0`)
+				command.Stdout = commandFDT.Get(`1`)
+				command.Stderr = commandFDT.Get(`2`)
+				if err := command.Start(); err != nil {
+					shell.HandleError(err)
+					return
+				}
+				pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
+					Wait: command.Wait,
+				})
+			}()
+			for i, item := range pipelineWaitgroup {
+				if err := item.Wait(); err != nil {
+					shell.HandleError(err)
+				}
+				if i < (len(pipelineWaitgroup) - 1) {
+					shell.ExitCode = 0
+				}
+			}
+
+		}()
+
+	}
+}
+
+#(ENDTEST)

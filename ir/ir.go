@@ -154,3 +154,26 @@ type SetCmdEnv struct {
 func (s SetCmdEnv) togo() string {
 	return fmt.Sprintf("%s.Env = append(%s.Env,`%s=` + %s)\n", s.Command, s.Command, s.Key, s.Value.togo())
 }
+
+type IfLastExitCode struct {
+	Zero bool
+	Body []Instruction
+}
+
+func (i IfLastExitCode) togo() string {
+	var condition = "shell.ExitCode == 0"
+	if !i.Zero {
+		condition = "shell.ExitCode != 0"
+	}
+
+	var body string
+	for _, ins := range i.Body {
+		body += ins.togo()
+	}
+
+	return fmt.Sprintf(
+		`if %s {
+			%s
+		}
+		`, condition, body)
+}

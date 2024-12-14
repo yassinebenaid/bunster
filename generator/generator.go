@@ -44,7 +44,58 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, pc
 		*buf = append(*buf, ir.Closure{
 			Body: cmdbuf,
 		})
+	case ast.List:
+		g.handleList(buf, v)
 	}
+}
+
+func (g *generator) handleList(buf *InstructionBuffer, l ast.List) {
+	g.generate(buf, l.Left, nil)
+
+	var bodybuf InstructionBuffer
+	g.generate(&bodybuf, l.Right, nil)
+
+	buf.add(ir.IfLastExitCode{
+		Zero: l.Operator == "&&",
+		Body: bodybuf,
+	})
+}
+
+func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
+	buf.add(ir.NewPipelineWaitgroup("pipelineWaitgroup"))
+
+	for i, cmd := range p {
+		if i < (len(p) - 1) { //last command doesn't need a pipe
+			buf.add(ir.NewPipe{
+				Writer: fmt.Sprintf("pipeWriter%d", i+1),
+				Reader: fmt.Sprintf("pipeReader%d", i+1),
+			})
+		}
+
+		var pc pipeContext
+		if i == 0 {
+			pc = pipeContext{
+				writer: fmt.Sprintf("pipeWriter%d", i+1),
+				stderr: cmd.Stderr,
+			}
+		} else if i == (len(p) - 1) {
+			pc = pipeContext{
+				reader: fmt.Sprintf("pipeReader%d", i),
+			}
+		} else {
+			pc = pipeContext{
+				writer: fmt.Sprintf("pipeWriter%d", i+1),
+				reader: fmt.Sprintf("pipeReader%d", i),
+				stderr: cmd.Stderr,
+			}
+		}
+
+		pc.waitgroup = "pipelineWaitgroup"
+		g.generate(buf, cmd.Command, &pc)
+	}
+
+	buf.add(ir.WaitPipelineWaitgroup("pipelineWaitgroup"))
+
 }
 
 func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command, pc *pipeContext) {
@@ -257,41 +308,4 @@ type pipeContext struct {
 	reader    string
 	waitgroup string
 	stderr    bool
-}
-
-func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
-	buf.add(ir.NewPipelineWaitgroup("pipelineWaitgroup"))
-
-	for i, cmd := range p {
-		if i < (len(p) - 1) { //last command doesn't need a pipe
-			buf.add(ir.NewPipe{
-				Writer: fmt.Sprintf("pipeWriter%d", i+1),
-				Reader: fmt.Sprintf("pipeReader%d", i+1),
-			})
-		}
-
-		var pc pipeContext
-		if i == 0 {
-			pc = pipeContext{
-				writer: fmt.Sprintf("pipeWriter%d", i+1),
-				stderr: cmd.Stderr,
-			}
-		} else if i == (len(p) - 1) {
-			pc = pipeContext{
-				reader: fmt.Sprintf("pipeReader%d", i),
-			}
-		} else {
-			pc = pipeContext{
-				writer: fmt.Sprintf("pipeWriter%d", i+1),
-				reader: fmt.Sprintf("pipeReader%d", i),
-				stderr: cmd.Stderr,
-			}
-		}
-
-		pc.waitgroup = "pipelineWaitgroup"
-		g.generate(buf, cmd.Command, &pc)
-	}
-
-	buf.add(ir.WaitPipelineWaitgroup("pipelineWaitgroup"))
-
 }
