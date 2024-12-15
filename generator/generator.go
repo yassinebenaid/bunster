@@ -46,6 +46,9 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, pc
 		})
 	case ast.List:
 		g.handleList(buf, v)
+	case ast.ParameterAssignement:
+		g.handleParameterAssignment(buf, v)
+
 	}
 }
 
@@ -310,4 +313,13 @@ type pipeContext struct {
 	reader    string
 	waitgroup string
 	stderr    bool
+}
+
+func (g *generator) handleParameterAssignment(buf *InstructionBuffer, p ast.ParameterAssignement) {
+	for _, assignment := range p {
+		buf.add(ir.SetVar{
+			Key:   assignment.Name,
+			Value: g.handleExpression(assignment.Value),
+		})
+	}
 }
