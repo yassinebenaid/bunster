@@ -265,7 +265,7 @@ func Main(shell *runtime.Shell) {
 
 #(TEST: special variables)
 
-echo $1 $?
+echo $1 $? $$ $#
 
 #(RESULT)
 
@@ -279,6 +279,8 @@ func Main(shell *runtime.Shell) {
   		var arguments []string
   		arguments = append(arguments, shell.ReadSpecialVar("1"))
   		arguments = append(arguments, shell.ReadSpecialVar("?"))
+  		arguments = append(arguments, shell.ReadSpecialVar("$"))
+  		arguments = append(arguments, shell.ReadSpecialVar("#"))
   		var command = shell.Command(commandName, arguments...)
   		commandFDT, err := shell.CloneFDT()
   		if err != nil {
