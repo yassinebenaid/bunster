@@ -13,6 +13,8 @@ func Main(shell *runtime.Shell) {
 
 #(ENDTEST)
 
+
+
 #(TEST: longer parameter set)
 
 key1=value key2="value" key3='value'
@@ -34,6 +36,23 @@ func Main(shell *runtime.Shell) {
 	shell.SetVar("key4", shell.ReadVar("value"))
 	shell.SetVar("key5", `value`)
 	shell.SetVar("key6", `value`)
+}
+
+#(ENDTEST)
+
+
+#(TEST: zero parameter set)
+
+key1= key2=
+
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+	shell.SetVar("key1", ``)
+	shell.SetVar("key2", ``)
 }
 
 #(ENDTEST)

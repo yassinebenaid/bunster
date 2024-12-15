@@ -317,9 +317,14 @@ type pipeContext struct {
 
 func (g *generator) handleParameterAssignment(buf *InstructionBuffer, p ast.ParameterAssignement) {
 	for _, assignment := range p {
-		buf.add(ir.SetVar{
+		ins := ir.SetVar{
 			Key:   assignment.Name,
-			Value: g.handleExpression(assignment.Value),
-		})
+			Value: ir.String(""),
+		}
+		if assignment.Value != nil {
+			ins.Value = g.handleExpression(assignment.Value)
+		}
+
+		buf.add(ins)
 	}
 }
