@@ -46,6 +46,9 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, pc
 		})
 	case ast.List:
 		g.handleList(buf, v)
+	case ast.ParameterAssignement:
+		g.handleParameterAssignment(buf, v)
+
 	}
 }
 
@@ -140,6 +143,8 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 		return ir.String(v)
 	case ast.Var:
 		return ir.ReadVar(v)
+	case ast.SpecialVar:
+		return ir.ReadSpecialVar(v)
 	case ast.QuotedString:
 		var concat ir.Concat
 		for _, expr := range v {
@@ -308,4 +313,18 @@ type pipeContext struct {
 	reader    string
 	waitgroup string
 	stderr    bool
+}
+
+func (g *generator) handleParameterAssignment(buf *InstructionBuffer, p ast.ParameterAssignement) {
+	for _, assignment := range p {
+		ins := ir.SetVar{
+			Key:   assignment.Name,
+			Value: ir.String(""),
+		}
+		if assignment.Value != nil {
+			ins.Value = g.handleExpression(assignment.Value)
+		}
+
+		buf.add(ins)
+	}
 }

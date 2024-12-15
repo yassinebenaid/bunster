@@ -19,7 +19,6 @@ type Stream interface {
 	io.Reader
 	io.Writer
 	io.Closer
-	Fd() uintptr
 }
 
 func OpenStream(name string, flag int) (Stream, error) {

@@ -5,19 +5,25 @@ import (
 	"io/fs"
 	"os"
 	"os/exec"
+	"strconv"
+	"sync"
 	"syscall"
 )
 
 type Shell struct {
+	PID int
+
 	Stdin  Stream
 	Stdout Stream
 	Stderr Stream
 
 	ExitCode int
 
-	FDT FileDescriptorTable
-
 	Main func(*Shell)
+	Args []string
+	FDT  FileDescriptorTable
+
+	vars sync.Map
 }
 
 func (shell *Shell) Run() int {
@@ -32,7 +38,35 @@ func (shell *Shell) Run() int {
 }
 
 func (shell *Shell) ReadVar(name string) string {
+	value, ok := shell.vars.Load(name)
+	if ok {
+		return value.(string)
+	}
 	return os.Getenv(name)
+}
+
+func (shell *Shell) SetVar(name string, value string) {
+	shell.vars.Store(name, value)
+}
+
+func (shell *Shell) ReadSpecialVar(name string) string {
+	switch name {
+	case "$":
+		return strconv.FormatInt(int64(shell.PID), 10)
+	case "#":
+		return strconv.FormatInt(int64(len(shell.Args))-1, 10) // -1 to substract the argument index 0, which is the program name.
+	case "?":
+		return strconv.FormatInt(int64(shell.ExitCode), 10)
+	default:
+		index, err := strconv.ParseUint(name, 10, 64)
+		if err != nil {
+			return ""
+		}
+		if int(index) < len(shell.Args) {
+			return shell.Args[index]
+		}
+		return ""
+	}
 }
 
 func (shell *Shell) HandleError(err error) {

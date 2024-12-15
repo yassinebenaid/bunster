@@ -33,14 +33,12 @@ var testCases = []struct {
 		{"\n	\n \n ", nil},
 		{`git`, ast.Script{ast.Command{Name: ast.Word("git")}}},
 		{`foo bar baz`, ast.Script{
-
 			ast.Command{
 				Name: ast.Word("foo"),
 				Args: []ast.Expression{ast.Word("bar"), ast.Word("baz")},
 			},
 		}},
 		{`foo $bar $FOO_BAR_1234567890`, ast.Script{
-
 			ast.Command{
 				Name: ast.Word("foo"),
 				Args: []ast.Expression{
@@ -50,7 +48,6 @@ var testCases = []struct {
 			},
 		}},
 		{`/usr/bin/foo bar baz`, ast.Script{
-
 			ast.Command{
 				Name: ast.Word("/usr/bin/foo"),
 				Args: []ast.Expression{
@@ -60,19 +57,16 @@ var testCases = []struct {
 			},
 		}},
 		{`/usr/bin/foo-bar baz`, ast.Script{
-
 			ast.Command{
 				Name: ast.Word("/usr/bin/foo-bar"),
 				Args: []ast.Expression{ast.Word("baz")},
 			},
 		}},
 		{"cmd1 \n cmd2", ast.Script{
-
 			ast.Command{Name: ast.Word("cmd1")},
 			ast.Command{Name: ast.Word("cmd2")},
 		}},
 		{"cmd1\n cmd2\ncmd3\n cmd4 arg1 arg2\ncmd5", ast.Script{
-
 			ast.Command{Name: ast.Word("cmd1")},
 			ast.Command{Name: ast.Word("cmd2")},
 			ast.Command{Name: ast.Word("cmd3")},
@@ -80,12 +74,32 @@ var testCases = []struct {
 			ast.Command{Name: ast.Word("cmd5")},
 		}},
 		{"cmd1; cmd2;cmd3; cmd4 arg1 arg2;cmd5", ast.Script{
-
 			ast.Command{Name: ast.Word("cmd1")},
 			ast.Command{Name: ast.Word("cmd2")},
 			ast.Command{Name: ast.Word("cmd3")},
 			ast.Command{Name: ast.Word("cmd4"), Args: []ast.Expression{ast.Word("arg1"), ast.Word("arg2")}},
 			ast.Command{Name: ast.Word("cmd5")},
+		}},
+		{`$1 $$ $@ $? $# $! $* "$1$$$@$?$#$!$*"`, ast.Script{
+			ast.Command{
+				Name: ast.SpecialVar("1"),
+				Args: []ast.Expression{
+					ast.SpecialVar("$"),
+					ast.SpecialVar("@"),
+					ast.SpecialVar("?"),
+					ast.SpecialVar("#"),
+					ast.SpecialVar("!"),
+					ast.SpecialVar("*"),
+					ast.QuotedString{
+						ast.SpecialVar("1"),
+						ast.SpecialVar("$"),
+						ast.SpecialVar("@"),
+						ast.SpecialVar("?"),
+						ast.SpecialVar("#"),
+						ast.SpecialVar("!"),
+						ast.SpecialVar("*"),
+					},
+				}},
 		}},
 	}},
 
