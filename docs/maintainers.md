@@ -20,9 +20,9 @@ const members = [
 </script>
 
 # Maintainers
-**Bunster** is an open source project maintained and driven by the community, But we have a dedicated team
-that takes the final decision on contributions and feature requests. And keeps contact with the rest of the community to ensure a healthy and friendly
-environment for everyone.
+**Bunster** is an open source project driven by the public community, But we have a dedicated team
+that oversees the final decisions to ensure the project's direction aligns with its vision. The team also maintains open communication with the community
+to sustain a welcoming and collaborative environment for everyone.
 
 Say hello to our awesome team.
 

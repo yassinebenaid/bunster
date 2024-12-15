@@ -25,8 +25,8 @@ Technically speaking, **Bunster** in fact is a `shell-to-Go` [Transplier](https:
 
 In addition to the shell features, We aim to add several custom features to make shell scripts feel like any modern programming language. These features are either supported or are planned to be implemented in future. (_consider contributing to help us speed up the develpment cycle_)
 
-- **Different Shells support**: Bunster currently aims to be compatible `Bash` as a starting move. then additional shells in future.
-- **Modules**: something shell scripts lack is a module system, we aim to introduces a module system that allow you to publish and consume scripts as libraries.
+- **Different Shells support**: Bunster currently aims to be compatible with `bash` as a starting move. Then additional shells in future.
+- **Modules**: Something shell scripts lack is a module system, we aim to introduce a module system that allow you to publish and consume scripts as libraries.
 - **Static Asset Embedding**: This feature allows you to embed a file's content to a variable at build time. ([Go has one already](https://pkg.go.dev/embed))
 - **Password and Expiration Lock**: Surprisingly, some people have asked for this feature. Basically, It allows you to choose an expirity date at build time. the generated program will not work after that date. Also you can choose to lock the script using a password. whenever you try to run it, it prompts for the password.
 

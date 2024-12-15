@@ -8,6 +8,8 @@ import (
 func main() {
 
 	shell := runtime.Shell{
+        PID: os.Getpid(),
+
 		Stdin:  os.Stdin,
 		Stdout: os.Stdout,
 		Stderr: os.Stderr,
