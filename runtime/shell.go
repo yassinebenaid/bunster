@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"sync"
 	"syscall"
 )
 
@@ -16,13 +17,13 @@ type Shell struct {
 	Stdout Stream
 	Stderr Stream
 
-	Args []string
-
-	FDT FileDescriptorTable
-
 	ExitCode int
 
 	Main func(*Shell)
+	Args []string
+	FDT  FileDescriptorTable
+
+	vars sync.Map
 }
 
 func (shell *Shell) Run() int {
@@ -37,7 +38,15 @@ func (shell *Shell) Run() int {
 }
 
 func (shell *Shell) ReadVar(name string) string {
+	value, ok := shell.vars.Load(name)
+	if ok {
+		return value.(string)
+	}
 	return os.Getenv(name)
+}
+
+func (shell *Shell) SetVar(name string, value string) {
+	shell.vars.Store(name, value)
 }
 
 func (shell *Shell) ReadSpecialVar(name string) string {

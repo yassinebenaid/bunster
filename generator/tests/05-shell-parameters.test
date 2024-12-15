@@ -1,0 +1,58 @@
+#(TEST: simple parameter set)
+
+key=value
+
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+	shell.SetVar("key", `value`)
+}
+
+#(ENDTEST)
+
+
+
+#(TEST: longer parameter set)
+
+key1=value key2="value" key3='value'
+
+key4=$value
+
+key5=value \
+    key6=value
+
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+	shell.SetVar("key1", `value`)
+	shell.SetVar("key2", `value`)
+	shell.SetVar("key3", `value`)
+	shell.SetVar("key4", shell.ReadVar("value"))
+	shell.SetVar("key5", `value`)
+	shell.SetVar("key6", `value`)
+}
+
+#(ENDTEST)
+
+
+#(TEST: zero parameter set)
+
+key1= key2=
+
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell) {
+	shell.SetVar("key1", ``)
+	shell.SetVar("key2", ``)
+}
+
+#(ENDTEST)
