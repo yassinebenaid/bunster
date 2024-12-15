@@ -40,6 +40,8 @@ func (shell *Shell) ReadVar(name string) string {
 
 func (shell *Shell) ReadSpecialVar(name string) string {
 	switch name {
+	case "#":
+		return strconv.FormatInt(int64(len(shell.Args))-1, 10) // -1 to substract the argument index 0, which is the program name.
 	case "?":
 		return strconv.FormatInt(int64(shell.ExitCode), 10)
 	default:
