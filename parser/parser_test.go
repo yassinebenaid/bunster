@@ -80,7 +80,7 @@ var testCases = []struct {
 			ast.Command{Name: ast.Word("cmd4"), Args: []ast.Expression{ast.Word("arg1"), ast.Word("arg2")}},
 			ast.Command{Name: ast.Word("cmd5")},
 		}},
-		{"$1 $$ $@ $? $# $! $*", ast.Script{
+		{`$1 $$ $@ $? $# $! $* "$1$$$@$?$#$!$*"`, ast.Script{
 			ast.Command{
 				Name: ast.SpecialVar("1"),
 				Args: []ast.Expression{
@@ -90,6 +90,15 @@ var testCases = []struct {
 					ast.SpecialVar("#"),
 					ast.SpecialVar("!"),
 					ast.SpecialVar("*"),
+					ast.QuotedString{
+						ast.SpecialVar("1"),
+						ast.SpecialVar("$"),
+						ast.SpecialVar("@"),
+						ast.SpecialVar("?"),
+						ast.SpecialVar("#"),
+						ast.SpecialVar("!"),
+						ast.SpecialVar("*"),
+					},
 				}},
 		}},
 	}},

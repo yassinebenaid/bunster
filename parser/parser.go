@@ -296,6 +296,8 @@ loop:
 			exprs = append(exprs, ast.Word("\\"+p.curr.Literal))
 		case token.SIMPLE_EXPANSION:
 			exprs = append(exprs, ast.Var(p.curr.Literal))
+		case token.SPECIAL_VAR:
+			exprs = append(exprs, ast.SpecialVar(p.curr.Literal))
 		case token.DOLLAR_BRACE:
 			exprs = append(exprs, p.parseParameterExpansion())
 		case token.DOLLAR_PAREN:
