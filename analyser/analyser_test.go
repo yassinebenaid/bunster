@@ -23,7 +23,7 @@ var testCases = []testCase{
 	{`name=foo | cmd`, "semantic error: using shell parameters within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines. (line: 0, column: 0)"},
 }
 
-func TestParser(t *testing.T) {
+func TestErrors(t *testing.T) {
 	for i, tc := range testCases {
 		script, err := parser.Parse(
 			lexer.New([]byte(tc.input)),
