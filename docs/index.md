@@ -19,9 +19,9 @@ hero:
 features:
   - title: Native Program Generation
     details: |
-      Scripts compiled with Bunster are not just wrappers around your script, nor do they rely on any external shell on your system.
-  - title: Wite Once, Run Everywhere
+      Scripts compiled with Bunster are not just wrappers around your script, nor do they rely on any external shells on your system.
+  - title: Write Once, Run Everywhere
     details: Bunster offers static linking. Your scripts are compiled to a statically linked binary that runs on every machine.
   - title: Module System
-    details: Bunsters's module system makes it easy to shares your scripts as a versioned modules to be used by others.
+    details: Bunsters's module system makes it easy to shares and consume your scripts as libraries.
 ---
