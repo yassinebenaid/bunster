@@ -30,3 +30,6 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+     
+      - name: Lint
+        uses: golangci/golangci-lint-action@v6
