@@ -21,7 +21,7 @@ Technically speaking, **Bunster** in fact is a `shell-to-Go` [Transplier](https:
 
 **Bunster** targets `bash` scripts in particular. The current syntax and features are all inherited from `bash`. additional shells will be supported as soon as we relase v1.
 
-### Promises
+### Goals
 
 In addition to the shell features, We aim to add several custom features to make shell scripts feel like any modern programming language. These features are either supported or are planned to be implemented in future. (_consider contributing to help us speed up the develpment cycle_)
 
