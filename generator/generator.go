@@ -67,8 +67,8 @@ func (g *generator) handleList(buf *InstructionBuffer, l ast.List) {
 func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 	buf.add(ir.NewPipelineWaitgroup("pipelineWaitgroup"))
 
-	for i, cmd := range p {
-		if i < (len(p) - 1) { //last command doesn't need a pipe
+	for i, cmd := range p.Commands {
+		if i < (len(p.Commands) - 1) { //last command doesn't need a pipe
 			buf.add(ir.NewPipe{
 				Writer: fmt.Sprintf("pipeWriter%d", i+1),
 				Reader: fmt.Sprintf("pipeReader%d", i+1),
@@ -81,7 +81,7 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 				writer: fmt.Sprintf("pipeWriter%d", i+1),
 				stderr: cmd.Stderr,
 			}
-		} else if i == (len(p) - 1) {
+		} else if i == (len(p.Commands) - 1) {
 			pc = pipeContext{
 				reader: fmt.Sprintf("pipeReader%d", i),
 			}
@@ -316,7 +316,7 @@ type pipeContext struct {
 }
 
 func (g *generator) handleParameterAssignment(buf *InstructionBuffer, p ast.ParameterAssignement) {
-	for _, assignment := range p {
+	for _, assignment := range p.Assignements {
 		ins := ir.SetVar{
 			Key:   assignment.Name,
 			Value: ir.String(""),

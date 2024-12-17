@@ -49,7 +49,7 @@ var (
 )
 
 func (a *analyser) analysePipeline(p ast.Pipeline) {
-	for _, cmd := range p {
+	for _, cmd := range p.Commands {
 		switch cmd.Command.(type) {
 		case ast.ParameterAssignement:
 			a.report(ErrorUsingShellParametersWithinPipeline)
