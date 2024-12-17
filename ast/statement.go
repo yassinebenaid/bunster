@@ -1,6 +1,9 @@
 package ast
 
+import "github.com/yassinebenaid/bunster/token"
+
 type Node interface {
+	Token() token.Token
 	node()
 }
 
