@@ -53,16 +53,20 @@ var groupAndSubshellTests = []testCase{
 			Body: []ast.Statement{
 				ast.List{
 					Left: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd1")}},
-						{Command: ast.Command{Name: ast.Word("cmd2")}},
+						Commands: []ast.PipelineCommand{
+							{Command: ast.Command{Name: ast.Word("cmd1")}},
+							{Command: ast.Command{Name: ast.Word("cmd2")}},
+						},
 					},
 					Operator: "&&",
 					Right:    ast.Command{Name: ast.Word("cmd3")},
 				},
 				ast.List{
 					Left: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd1")}},
-						{Command: ast.Command{Name: ast.Word("cmd2")}},
+						Commands: []ast.PipelineCommand{
+							{Command: ast.Command{Name: ast.Word("cmd1")}},
+							{Command: ast.Command{Name: ast.Word("cmd2")}},
+						},
 					},
 					Operator: "&&",
 					Right:    ast.Command{Name: ast.Word("cmd3")},
@@ -74,18 +78,20 @@ var groupAndSubshellTests = []testCase{
 	{`{cmd; cmd;} | {cmd; cmd;}&& {cmd; cmd;}`, ast.Script{
 		ast.List{
 			Left: ast.Pipeline{
-				{Command: ast.Group{
-					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
-						ast.Command{Name: ast.Word("cmd")},
-					},
-				}},
-				{Command: ast.Group{
-					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
-						ast.Command{Name: ast.Word("cmd")},
-					},
-				}},
+				Commands: []ast.PipelineCommand{
+					{Command: ast.Group{
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+							ast.Command{Name: ast.Word("cmd")},
+						},
+					}},
+					{Command: ast.Group{
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+							ast.Command{Name: ast.Word("cmd")},
+						},
+					}},
+				},
 			},
 			Operator: "&&",
 			Right: ast.Group{
@@ -211,16 +217,20 @@ var groupAndSubshellTests = []testCase{
 			Body: []ast.Statement{
 				ast.List{
 					Left: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd1")}},
-						{Command: ast.Command{Name: ast.Word("cmd2")}},
+						Commands: []ast.PipelineCommand{
+							{Command: ast.Command{Name: ast.Word("cmd1")}},
+							{Command: ast.Command{Name: ast.Word("cmd2")}},
+						},
 					},
 					Operator: "&&",
 					Right:    ast.Command{Name: ast.Word("cmd3")},
 				},
 				ast.List{
 					Left: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd1")}},
-						{Command: ast.Command{Name: ast.Word("cmd2")}},
+						Commands: []ast.PipelineCommand{
+							{Command: ast.Command{Name: ast.Word("cmd1")}},
+							{Command: ast.Command{Name: ast.Word("cmd2")}},
+						},
 					},
 					Operator: "&&",
 					Right:    ast.Command{Name: ast.Word("cmd3")},
@@ -232,18 +242,20 @@ var groupAndSubshellTests = []testCase{
 	{`(cmd; cmd) | (cmd; cmd)&& (cmd; cmd)`, ast.Script{
 		ast.List{
 			Left: ast.Pipeline{
-				{Command: ast.SubShell{
-					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
-						ast.Command{Name: ast.Word("cmd")},
-					},
-				}},
-				{Command: ast.SubShell{
-					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
-						ast.Command{Name: ast.Word("cmd")},
-					},
-				}},
+				Commands: []ast.PipelineCommand{
+					{Command: ast.SubShell{
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+							ast.Command{Name: ast.Word("cmd")},
+						},
+					}},
+					{Command: ast.SubShell{
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+							ast.Command{Name: ast.Word("cmd")},
+						},
+					}},
+				},
 			},
 			Operator: "&&",
 			Right: ast.SubShell{

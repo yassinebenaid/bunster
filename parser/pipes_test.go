@@ -4,67 +4,72 @@ import "github.com/yassinebenaid/bunster/ast"
 
 var pipesTests = []testCase{
 	{` cmd | cmd2 |& cmd3 | cmd4 |& cmd5`, ast.Script{
-
 		ast.Pipeline{
-			{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
-			{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: true},
-			{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: false},
-			{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: true},
-			{Command: ast.Command{Name: ast.Word("cmd5")}, Stderr: false},
+			Commands: []ast.PipelineCommand{
+				{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
+				{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: true},
+				{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: false},
+				{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: true},
+				{Command: ast.Command{Name: ast.Word("cmd5")}, Stderr: false},
+			},
 		},
 	}},
 	{`cmd|cmd2|&cmd3|cmd4|&cmd5`, ast.Script{
-
 		ast.Pipeline{
-			{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
-			{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: true},
-			{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: false},
-			{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: true},
-			{Command: ast.Command{Name: ast.Word("cmd5")}, Stderr: false},
+			Commands: []ast.PipelineCommand{
+				{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
+				{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: true},
+				{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: false},
+				{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: true},
+				{Command: ast.Command{Name: ast.Word("cmd5")}, Stderr: false},
+			},
 		},
 	}},
 	{`cmd arg| cmd2 \|`, ast.Script{
-
 		ast.Pipeline{
-			{Command: ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg")}}, Stderr: false},
-			{Command: ast.Command{Name: ast.Word("cmd2"), Args: []ast.Expression{ast.Word("|")}}, Stderr: false},
+			Commands: []ast.PipelineCommand{
+				{Command: ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg")}}, Stderr: false},
+				{Command: ast.Command{Name: ast.Word("cmd2"), Args: []ast.Expression{ast.Word("|")}}, Stderr: false},
+			},
 		},
 	}},
 
 	{`cmd arg >foo 2>&1| cmd2 123 |&$var`, ast.Script{
-
 		ast.Pipeline{
-			{
-				Command: ast.Command{
-					Name: ast.Word("cmd"),
-					Args: []ast.Expression{ast.Word("arg")},
-					Redirections: []ast.Redirection{
-						{Src: "1", Method: ">", Dst: ast.Word("foo")},
-						{Src: "2", Method: ">&", Dst: ast.Word("1")},
+			Commands: []ast.PipelineCommand{
+				{
+					Command: ast.Command{
+						Name: ast.Word("cmd"),
+						Args: []ast.Expression{ast.Word("arg")},
+						Redirections: []ast.Redirection{
+							{Src: "1", Method: ">", Dst: ast.Word("foo")},
+							{Src: "2", Method: ">&", Dst: ast.Word("1")},
+						},
 					},
+					Stderr: false,
 				},
-				Stderr: false,
-			},
-			{
-				Command: ast.Command{
-					Name: ast.Word("cmd2"),
-					Args: []ast.Expression{ast.Word("123")},
+				{
+					Command: ast.Command{
+						Name: ast.Word("cmd2"),
+						Args: []ast.Expression{ast.Word("123")},
+					},
+					Stderr: true,
 				},
-				Stderr: true,
-			},
-			{
-				Command: ast.Command{
-					Name: ast.Var("var"),
+				{
+					Command: ast.Command{
+						Name: ast.Var("var"),
+					},
+					Stderr: false,
 				},
-				Stderr: false,
 			},
 		},
 	}},
 	{"cmd |\n\n\t cmd2", ast.Script{
-
 		ast.Pipeline{
-			{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
-			{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: false},
+			Commands: []ast.PipelineCommand{
+				{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
+				{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: false},
+			},
 		},
 	}},
 }

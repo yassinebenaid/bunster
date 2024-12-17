@@ -281,19 +281,23 @@ var testCases = []struct {
 		{` cmd | cmd2 |& cmd3 | cmd4 |& cmd5 foo& cmd | cmd2 |& cmd3 | cmd4 |& cmd5`, ast.Script{
 			ast.BackgroundConstruction{
 				Statement: ast.Pipeline{
+					Commands: []ast.PipelineCommand{
+						{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
+						{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: true},
+						{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: false},
+						{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: true},
+						{Command: ast.Command{Name: ast.Word("cmd5"), Args: []ast.Expression{ast.Word("foo")}}, Stderr: false},
+					},
+				},
+			},
+			ast.Pipeline{
+				Commands: []ast.PipelineCommand{
 					{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
 					{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: true},
 					{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: false},
 					{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: true},
-					{Command: ast.Command{Name: ast.Word("cmd5"), Args: []ast.Expression{ast.Word("foo")}}, Stderr: false},
+					{Command: ast.Command{Name: ast.Word("cmd5")}, Stderr: false},
 				},
-			},
-			ast.Pipeline{
-				{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
-				{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: true},
-				{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: false},
-				{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: true},
-				{Command: ast.Command{Name: ast.Word("cmd5")}, Stderr: false},
 			},
 		}},
 	}},

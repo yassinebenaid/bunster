@@ -50,16 +50,20 @@ var commandAndProcessSubstitutionTests = []testCase{
 			Name: ast.CommandSubstitution{
 				ast.List{
 					Left: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd1")}},
-						{Command: ast.Command{Name: ast.Word("cmd2")}},
+						Commands: []ast.PipelineCommand{
+							{Command: ast.Command{Name: ast.Word("cmd1")}},
+							{Command: ast.Command{Name: ast.Word("cmd2")}},
+						},
 					},
 					Operator: "&&",
 					Right:    ast.Command{Name: ast.Word("cmd3")},
 				},
 				ast.List{
 					Left: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd1")}},
-						{Command: ast.Command{Name: ast.Word("cmd2")}},
+						Commands: []ast.PipelineCommand{
+							{Command: ast.Command{Name: ast.Word("cmd1")}},
+							{Command: ast.Command{Name: ast.Word("cmd2")}},
+						},
 					},
 					Operator: "&&",
 					Right:    ast.Command{Name: ast.Word("cmd3")},
@@ -70,22 +74,24 @@ var commandAndProcessSubstitutionTests = []testCase{
 	{`$(cmd; cmd) arg | $(cmd; cmd)&& $(cmd; cmd)`, ast.Script{
 		ast.List{
 			Left: ast.Pipeline{
-				{
-					Command: ast.Command{
-						Name: ast.CommandSubstitution{
-							ast.Command{Name: ast.Word("cmd")},
-							ast.Command{Name: ast.Word("cmd")},
-						},
-						Args: []ast.Expression{
-							ast.Word("arg"),
+				Commands: []ast.PipelineCommand{
+					{
+						Command: ast.Command{
+							Name: ast.CommandSubstitution{
+								ast.Command{Name: ast.Word("cmd")},
+								ast.Command{Name: ast.Word("cmd")},
+							},
+							Args: []ast.Expression{
+								ast.Word("arg"),
+							},
 						},
 					},
-				},
-				{
-					Command: ast.Command{
-						Name: ast.CommandSubstitution{
-							ast.Command{Name: ast.Word("cmd")},
-							ast.Command{Name: ast.Word("cmd")},
+					{
+						Command: ast.Command{
+							Name: ast.CommandSubstitution{
+								ast.Command{Name: ast.Word("cmd")},
+								ast.Command{Name: ast.Word("cmd")},
+							},
 						},
 					},
 				},
@@ -203,16 +209,20 @@ var commandAndProcessSubstitutionTests = []testCase{
 				Body: []ast.Statement{
 					ast.List{
 						Left: ast.Pipeline{
-							{Command: ast.Command{Name: ast.Word("cmd1")}},
-							{Command: ast.Command{Name: ast.Word("cmd2")}},
+							Commands: []ast.PipelineCommand{
+								{Command: ast.Command{Name: ast.Word("cmd1")}},
+								{Command: ast.Command{Name: ast.Word("cmd2")}},
+							},
 						},
 						Operator: "&&",
 						Right:    ast.Command{Name: ast.Word("cmd3")},
 					},
 					ast.List{
 						Left: ast.Pipeline{
-							{Command: ast.Command{Name: ast.Word("cmd1")}},
-							{Command: ast.Command{Name: ast.Word("cmd2")}},
+							Commands: []ast.PipelineCommand{
+								{Command: ast.Command{Name: ast.Word("cmd1")}},
+								{Command: ast.Command{Name: ast.Word("cmd2")}},
+							},
 						},
 						Operator: "&&",
 						Right:    ast.Command{Name: ast.Word("cmd3")},
@@ -225,28 +235,30 @@ var commandAndProcessSubstitutionTests = []testCase{
 	{`<(cmd; cmd) arg | <(cmd; cmd)&& <(cmd; cmd)`, ast.Script{
 		ast.List{
 			Left: ast.Pipeline{
-				{
-					Command: ast.Command{
-						Name: ast.ProcessSubstitution{
-							Body: []ast.Statement{
-								ast.Command{Name: ast.Word("cmd")},
-								ast.Command{Name: ast.Word("cmd")},
+				Commands: []ast.PipelineCommand{
+					{
+						Command: ast.Command{
+							Name: ast.ProcessSubstitution{
+								Body: []ast.Statement{
+									ast.Command{Name: ast.Word("cmd")},
+									ast.Command{Name: ast.Word("cmd")},
+								},
+								Direction: '<',
 							},
-							Direction: '<',
-						},
-						Args: []ast.Expression{
-							ast.Word("arg"),
+							Args: []ast.Expression{
+								ast.Word("arg"),
+							},
 						},
 					},
-				},
-				{
-					Command: ast.Command{
-						Name: ast.ProcessSubstitution{
-							Body: []ast.Statement{
-								ast.Command{Name: ast.Word("cmd")},
-								ast.Command{Name: ast.Word("cmd")},
+					{
+						Command: ast.Command{
+							Name: ast.ProcessSubstitution{
+								Body: []ast.Statement{
+									ast.Command{Name: ast.Word("cmd")},
+									ast.Command{Name: ast.Word("cmd")},
+								},
+								Direction: '<',
 							},
-							Direction: '<',
 						},
 					},
 				},
@@ -361,16 +373,20 @@ var commandAndProcessSubstitutionTests = []testCase{
 				Body: []ast.Statement{
 					ast.List{
 						Left: ast.Pipeline{
-							{Command: ast.Command{Name: ast.Word("cmd1")}},
-							{Command: ast.Command{Name: ast.Word("cmd2")}},
+							Commands: []ast.PipelineCommand{
+								{Command: ast.Command{Name: ast.Word("cmd1")}},
+								{Command: ast.Command{Name: ast.Word("cmd2")}},
+							},
 						},
 						Operator: "&&",
 						Right:    ast.Command{Name: ast.Word("cmd3")},
 					},
 					ast.List{
 						Left: ast.Pipeline{
-							{Command: ast.Command{Name: ast.Word("cmd1")}},
-							{Command: ast.Command{Name: ast.Word("cmd2")}},
+							Commands: []ast.PipelineCommand{
+								{Command: ast.Command{Name: ast.Word("cmd1")}},
+								{Command: ast.Command{Name: ast.Word("cmd2")}},
+							},
 						},
 						Operator: "&&",
 						Right:    ast.Command{Name: ast.Word("cmd3")},
@@ -383,28 +399,30 @@ var commandAndProcessSubstitutionTests = []testCase{
 	{`>(cmd; cmd) arg | >(cmd; cmd)&& >(cmd; cmd)`, ast.Script{
 		ast.List{
 			Left: ast.Pipeline{
-				{
-					Command: ast.Command{
-						Name: ast.ProcessSubstitution{
-							Body: []ast.Statement{
-								ast.Command{Name: ast.Word("cmd")},
-								ast.Command{Name: ast.Word("cmd")},
+				Commands: []ast.PipelineCommand{
+					{
+						Command: ast.Command{
+							Name: ast.ProcessSubstitution{
+								Body: []ast.Statement{
+									ast.Command{Name: ast.Word("cmd")},
+									ast.Command{Name: ast.Word("cmd")},
+								},
+								Direction: '>',
 							},
-							Direction: '>',
-						},
-						Args: []ast.Expression{
-							ast.Word("arg"),
+							Args: []ast.Expression{
+								ast.Word("arg"),
+							},
 						},
 					},
-				},
-				{
-					Command: ast.Command{
-						Name: ast.ProcessSubstitution{
-							Body: []ast.Statement{
-								ast.Command{Name: ast.Word("cmd")},
-								ast.Command{Name: ast.Word("cmd")},
+					{
+						Command: ast.Command{
+							Name: ast.ProcessSubstitution{
+								Body: []ast.Statement{
+									ast.Command{Name: ast.Word("cmd")},
+									ast.Command{Name: ast.Word("cmd")},
+								},
+								Direction: '>',
 							},
-							Direction: '>',
 						},
 					},
 				},

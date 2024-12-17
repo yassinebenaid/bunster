@@ -91,10 +91,10 @@ func (p *parser) parseCommandList() ast.Statement {
 	var left ast.Statement
 	pipe := p.parsePipline()
 
-	if pipe == nil {
+	if pipe.Commands == nil {
 		return nil
-	} else if len(pipe) == 1 {
-		left = pipe[0].Command
+	} else if len(pipe.Commands) == 1 {
+		left = pipe.Commands[0].Command
 	} else {
 		left = pipe
 	}
@@ -108,10 +108,10 @@ func (p *parser) parseCommandList() ast.Statement {
 
 		var right ast.Statement
 		rightPipe := p.parsePipline()
-		if rightPipe == nil {
+		if rightPipe.Commands == nil {
 			return nil
-		} else if len(rightPipe) == 1 {
-			right = rightPipe[0].Command
+		} else if len(rightPipe.Commands) == 1 {
+			right = rightPipe.Commands[0].Command
 		} else {
 			right = rightPipe
 		}
@@ -135,16 +135,16 @@ func (p *parser) parsePipline() ast.Pipeline {
 
 	cmd := p.parseCommand()
 	if cmd == nil {
-		return nil
+		return pipeline
 	}
-	pipeline = append(pipeline, ast.PipelineCommand{Command: cmd})
+	pipeline.Commands = append(pipeline.Commands, ast.PipelineCommand{Command: cmd})
 
 	for i := 0; ; i++ {
 		if p.curr.Type != token.PIPE && p.curr.Type != token.PIPE_AMPERSAND {
 			break
 		}
 		var pipe ast.PipelineCommand
-		pipeline[i].Stderr = p.curr.Type == token.PIPE_AMPERSAND
+		pipeline.Commands[i].Stderr = p.curr.Type == token.PIPE_AMPERSAND
 
 		p.proceed()
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
@@ -153,9 +153,9 @@ func (p *parser) parsePipline() ast.Pipeline {
 
 		pipe.Command = p.parseCommand()
 		if pipe.Command == nil {
-			return nil
+			return pipeline
 		}
-		pipeline = append(pipeline, pipe)
+		pipeline.Commands = append(pipeline.Commands, pipe)
 	}
 
 	return pipeline
@@ -171,7 +171,7 @@ func (p *parser) parseCommand() ast.Statement {
 	}
 
 	env := p.parseAssignement()
-	if env != nil && (p.isControlToken() || p.curr.Type == token.EOF) {
+	if env.Assignements != nil && (p.isControlToken() || p.curr.Type == token.EOF) {
 		return env
 	}
 
@@ -181,7 +181,7 @@ func (p *parser) parseCommand() ast.Statement {
 		p.error("expected a valid command name, found `%s`", p.curr)
 		return nil
 	}
-	cmd.Env = env
+	cmd.Env = env.Assignements
 
 	if p.curr.Type == token.BLANK {
 		p.proceed()

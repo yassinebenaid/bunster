@@ -51,8 +51,10 @@ var loopsTests = []testCase{
 			Head: []ast.Statement{
 				ast.List{
 					Left: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd1")}},
-						{Command: ast.Command{Name: ast.Word("cmd2")}},
+						Commands: []ast.PipelineCommand{
+							{Command: ast.Command{Name: ast.Word("cmd1")}},
+							{Command: ast.Command{Name: ast.Word("cmd2")}},
+						},
 					},
 					Operator: "&&",
 					Right:    ast.Command{Name: ast.Word("cmd3")},
@@ -78,58 +80,7 @@ var loopsTests = []testCase{
 			Head: []ast.Statement{
 				ast.List{
 					Left: ast.Pipeline{
-						{
-							Command: ast.Command{
-								Name: ast.Word("cmd"),
-								Args: []ast.Expression{ast.Word("arg")},
-								Redirections: []ast.Redirection{
-									{Src: "1", Method: ">", Dst: ast.Word("foo")},
-									{Src: "0", Method: "<<<", Dst: ast.Word("foo bar")},
-								},
-							},
-							Stderr: false,
-						},
-						{
-							Command: ast.Command{
-								Name: ast.Word("cmd2"),
-								Args: []ast.Expression{ast.Word("foo bar baz")},
-								Redirections: []ast.Redirection{
-									{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
-								},
-							},
-							Stderr: false,
-						},
-					},
-					Operator: "&&",
-					Right: ast.Pipeline{
-						{
-							Command: ast.Command{
-								Name: ast.Word("cmd"),
-								Args: []ast.Expression{ast.Var("var")},
-								Redirections: []ast.Redirection{
-									{Src: "1", Method: ">", Dst: ast.Word("foo")},
-									{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
-								},
-							},
-							Stderr: true,
-						},
-						{
-							Command: ast.Command{
-								Name: ast.Word("cmd2"),
-								Args: []ast.Expression{ast.Word("foo bar baz")},
-								Redirections: []ast.Redirection{
-									{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
-								},
-							},
-							Stderr: false,
-						},
-					},
-				},
-			},
-			Body: []ast.Statement{
-				ast.BackgroundConstruction{
-					Statement: ast.List{
-						Left: ast.Pipeline{
+						Commands: []ast.PipelineCommand{
 							{
 								Command: ast.Command{
 									Name: ast.Word("cmd"),
@@ -152,8 +103,10 @@ var loopsTests = []testCase{
 								Stderr: false,
 							},
 						},
-						Operator: "&&",
-						Right: ast.Pipeline{
+					},
+					Operator: "&&",
+					Right: ast.Pipeline{
+						Commands: []ast.PipelineCommand{
 							{
 								Command: ast.Command{
 									Name: ast.Word("cmd"),
@@ -174,6 +127,63 @@ var loopsTests = []testCase{
 									},
 								},
 								Stderr: false,
+							},
+						},
+					},
+				},
+			},
+			Body: []ast.Statement{
+				ast.BackgroundConstruction{
+					Statement: ast.List{
+						Left: ast.Pipeline{
+							Commands: []ast.PipelineCommand{
+								{
+									Command: ast.Command{
+										Name: ast.Word("cmd"),
+										Args: []ast.Expression{ast.Word("arg")},
+										Redirections: []ast.Redirection{
+											{Src: "1", Method: ">", Dst: ast.Word("foo")},
+											{Src: "0", Method: "<<<", Dst: ast.Word("foo bar")},
+										},
+									},
+									Stderr: false,
+								},
+								{
+									Command: ast.Command{
+										Name: ast.Word("cmd2"),
+										Args: []ast.Expression{ast.Word("foo bar baz")},
+										Redirections: []ast.Redirection{
+											{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+										},
+									},
+									Stderr: false,
+								},
+							},
+						},
+						Operator: "&&",
+						Right: ast.Pipeline{
+							Commands: []ast.PipelineCommand{
+								{
+									Command: ast.Command{
+										Name: ast.Word("cmd"),
+										Args: []ast.Expression{ast.Var("var")},
+										Redirections: []ast.Redirection{
+											{Src: "1", Method: ">", Dst: ast.Word("foo")},
+											{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
+										},
+									},
+									Stderr: true,
+								},
+								{
+									Command: ast.Command{
+										Name: ast.Word("cmd2"),
+										Args: []ast.Expression{ast.Word("foo bar baz")},
+										Redirections: []ast.Redirection{
+											{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+										},
+									},
+									Stderr: false,
+								},
 							},
 						},
 					},
@@ -206,34 +216,36 @@ var loopsTests = []testCase{
 	}},
 	{`while cmd; do echo "foo"; done | while cmd; do echo "foo"; done |& while cmd; do echo "foo"; done `, ast.Script{
 		ast.Pipeline{
-			ast.PipelineCommand{
-				Command: ast.Loop{
-					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
-					},
-					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
-					},
-				},
-			},
-			ast.PipelineCommand{
-				Command: ast.Loop{
-					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
-					},
-					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+			Commands: []ast.PipelineCommand{
+				{
+					Command: ast.Loop{
+						Head: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						},
 					},
 				},
-				Stderr: true,
-			},
-			ast.PipelineCommand{
-				Command: ast.Loop{
-					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+				{
+					Command: ast.Loop{
+						Head: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						},
 					},
-					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+					Stderr: true,
+				},
+				{
+					Command: ast.Loop{
+						Head: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						},
 					},
 				},
 			},
@@ -404,8 +416,10 @@ var loopsTests = []testCase{
 			Head: []ast.Statement{
 				ast.List{
 					Left: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd1")}},
-						{Command: ast.Command{Name: ast.Word("cmd2")}},
+						Commands: []ast.PipelineCommand{
+							{Command: ast.Command{Name: ast.Word("cmd1")}},
+							{Command: ast.Command{Name: ast.Word("cmd2")}},
+						},
 					},
 					Operator: "&&",
 					Right:    ast.Command{Name: ast.Word("cmd3")},
@@ -432,58 +446,7 @@ var loopsTests = []testCase{
 			Head: []ast.Statement{
 				ast.List{
 					Left: ast.Pipeline{
-						{
-							Command: ast.Command{
-								Name: ast.Word("cmd"),
-								Args: []ast.Expression{ast.Word("arg")},
-								Redirections: []ast.Redirection{
-									{Src: "1", Method: ">", Dst: ast.Word("foo")},
-									{Src: "0", Method: "<<<", Dst: ast.Word("foo bar")},
-								},
-							},
-							Stderr: false,
-						},
-						{
-							Command: ast.Command{
-								Name: ast.Word("cmd2"),
-								Args: []ast.Expression{ast.Word("foo bar baz")},
-								Redirections: []ast.Redirection{
-									{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
-								},
-							},
-							Stderr: false,
-						},
-					},
-					Operator: "&&",
-					Right: ast.Pipeline{
-						{
-							Command: ast.Command{
-								Name: ast.Word("cmd"),
-								Args: []ast.Expression{ast.Var("var")},
-								Redirections: []ast.Redirection{
-									{Src: "1", Method: ">", Dst: ast.Word("foo")},
-									{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
-								},
-							},
-							Stderr: true,
-						},
-						{
-							Command: ast.Command{
-								Name: ast.Word("cmd2"),
-								Args: []ast.Expression{ast.Word("foo bar baz")},
-								Redirections: []ast.Redirection{
-									{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
-								},
-							},
-							Stderr: false,
-						},
-					},
-				},
-			},
-			Body: []ast.Statement{
-				ast.BackgroundConstruction{
-					Statement: ast.List{
-						Left: ast.Pipeline{
+						Commands: []ast.PipelineCommand{
 							{
 								Command: ast.Command{
 									Name: ast.Word("cmd"),
@@ -506,8 +469,10 @@ var loopsTests = []testCase{
 								Stderr: false,
 							},
 						},
-						Operator: "&&",
-						Right: ast.Pipeline{
+					},
+					Operator: "&&",
+					Right: ast.Pipeline{
+						Commands: []ast.PipelineCommand{
 							{
 								Command: ast.Command{
 									Name: ast.Word("cmd"),
@@ -528,6 +493,63 @@ var loopsTests = []testCase{
 									},
 								},
 								Stderr: false,
+							},
+						},
+					},
+				},
+			},
+			Body: []ast.Statement{
+				ast.BackgroundConstruction{
+					Statement: ast.List{
+						Left: ast.Pipeline{
+							Commands: []ast.PipelineCommand{
+								{
+									Command: ast.Command{
+										Name: ast.Word("cmd"),
+										Args: []ast.Expression{ast.Word("arg")},
+										Redirections: []ast.Redirection{
+											{Src: "1", Method: ">", Dst: ast.Word("foo")},
+											{Src: "0", Method: "<<<", Dst: ast.Word("foo bar")},
+										},
+									},
+									Stderr: false,
+								},
+								{
+									Command: ast.Command{
+										Name: ast.Word("cmd2"),
+										Args: []ast.Expression{ast.Word("foo bar baz")},
+										Redirections: []ast.Redirection{
+											{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+										},
+									},
+									Stderr: false,
+								},
+							},
+						},
+						Operator: "&&",
+						Right: ast.Pipeline{
+							Commands: []ast.PipelineCommand{
+								{
+									Command: ast.Command{
+										Name: ast.Word("cmd"),
+										Args: []ast.Expression{ast.Var("var")},
+										Redirections: []ast.Redirection{
+											{Src: "1", Method: ">", Dst: ast.Word("foo")},
+											{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
+										},
+									},
+									Stderr: true,
+								},
+								{
+									Command: ast.Command{
+										Name: ast.Word("cmd2"),
+										Args: []ast.Expression{ast.Word("foo bar baz")},
+										Redirections: []ast.Redirection{
+											{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
+										},
+									},
+									Stderr: false,
+								},
 							},
 						},
 					},
@@ -562,37 +584,39 @@ var loopsTests = []testCase{
 	}},
 	{`until cmd; do echo "foo"; done | until cmd; do echo "foo"; done |& until cmd; do echo "foo"; done `, ast.Script{
 		ast.Pipeline{
-			ast.PipelineCommand{
-				Command: ast.Loop{
-					Negate: true,
-					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
-					},
-					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
-					},
-				},
-			},
-			ast.PipelineCommand{
-				Command: ast.Loop{
-					Negate: true,
-					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
-					},
-					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+			Commands: []ast.PipelineCommand{
+				{
+					Command: ast.Loop{
+						Negate: true,
+						Head: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						},
 					},
 				},
-				Stderr: true,
-			},
-			ast.PipelineCommand{
-				Command: ast.Loop{
-					Negate: true,
-					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+				{
+					Command: ast.Loop{
+						Negate: true,
+						Head: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						},
 					},
-					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+					Stderr: true,
+				},
+				{
+					Command: ast.Loop{
+						Negate: true,
+						Head: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+						},
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						},
 					},
 				},
 			},
@@ -772,20 +796,22 @@ var loopsTests = []testCase{
 	}},
 	{`for varname do cmd; done | cmd |& for varname do cmd; done`, ast.Script{
 		ast.Pipeline{
-			{
-				Command: ast.RangeLoop{
-					Var: "varname",
-					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+			Commands: []ast.PipelineCommand{
+				{
+					Command: ast.RangeLoop{
+						Var: "varname",
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+						},
 					},
 				},
-			},
-			{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: true},
-			{
-				Command: ast.RangeLoop{
-					Var: "varname",
-					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+				{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: true},
+				{
+					Command: ast.RangeLoop{
+						Var: "varname",
+						Body: []ast.Statement{
+							ast.Command{Name: ast.Word("cmd")},
+						},
 					},
 				},
 			},

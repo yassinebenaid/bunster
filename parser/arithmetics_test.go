@@ -451,12 +451,14 @@ var arithmeticsTests = []testCase{
 	{`(( x )) | (( x ))&& (( x ))`, ast.Script{
 		ast.List{
 			Left: ast.Pipeline{
-				{Command: ast.ArithmeticCommand{
-					Arithmetic: ast.Arithmetic{ast.Var("x")},
-				}},
-				{Command: ast.ArithmeticCommand{
-					Arithmetic: ast.Arithmetic{ast.Var("x")},
-				}},
+				Commands: []ast.PipelineCommand{
+					{Command: ast.ArithmeticCommand{
+						Arithmetic: ast.Arithmetic{ast.Var("x")},
+					}},
+					{Command: ast.ArithmeticCommand{
+						Arithmetic: ast.Arithmetic{ast.Var("x")},
+					}},
+				},
 			},
 			Operator: "&&",
 			Right: ast.ArithmeticCommand{

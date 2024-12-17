@@ -2,6 +2,8 @@ package ast
 
 import (
 	"strings"
+
+	"github.com/yassinebenaid/bunster/token"
 )
 
 type Number string
@@ -9,6 +11,7 @@ type Number string
 type Arithmetic []Expression
 
 type ArithmeticCommand struct {
+	Token token.Token
 	Arithmetic
 	Redirections []Redirection
 }
@@ -40,6 +43,8 @@ func (PostIncDecArithmetic) node() {}
 func (PreIncDecArithmetic) node()  {}
 func (BitFlip) node()              {}
 func (Conditional) node()          {}
+
+func (a ArithmeticCommand) GetToken() token.Token { return a.Token }
 
 func (Number) expr()               {}
 func (Arithmetic) expr()           {}

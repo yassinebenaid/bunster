@@ -261,9 +261,11 @@ var conditionalsTests = []testCase{
 	{`[[ str ]]|[[ str ]] |& [[ str ]]
 	`, ast.Script{
 		ast.Pipeline{
-			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}},
-			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}, Stderr: true},
-			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}},
+			Commands: []ast.PipelineCommand{
+				{Command: ast.Test{Expr: ast.Word("str")}},
+				{Command: ast.Test{Expr: ast.Word("str")}, Stderr: true},
+				{Command: ast.Test{Expr: ast.Word("str")}},
+			},
 		},
 	}},
 	{`[[ str ]] >output.txt <input.txt 2>error.txt >&3 \
@@ -524,9 +526,11 @@ var conditionalsTests = []testCase{
 	{`[ str ]|[ str ] |& [ str ]
 	`, ast.Script{
 		ast.Pipeline{
-			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}},
-			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}, Stderr: true},
-			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}},
+			Commands: []ast.PipelineCommand{
+				{Command: ast.Test{Expr: ast.Word("str")}},
+				{Command: ast.Test{Expr: ast.Word("str")}, Stderr: true},
+				{Command: ast.Test{Expr: ast.Word("str")}},
+			},
 		},
 	}},
 	{`[ str ] >output.txt <input.txt 2>error.txt >&3 \
@@ -786,9 +790,11 @@ var conditionalsTests = []testCase{
 	{`test str|test str |& test str
 	`, ast.Script{
 		ast.Pipeline{
-			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}},
-			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}, Stderr: true},
-			ast.PipelineCommand{Command: ast.Test{Expr: ast.Word("str")}},
+			Commands: []ast.PipelineCommand{
+				{Command: ast.Test{Expr: ast.Word("str")}},
+				{Command: ast.Test{Expr: ast.Word("str")}, Stderr: true},
+				{Command: ast.Test{Expr: ast.Word("str")}},
+			},
 		},
 	}},
 	{`test str>output.txt <input.txt 2>error.txt >&3 \
