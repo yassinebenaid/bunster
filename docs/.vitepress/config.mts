@@ -22,6 +22,7 @@ export default defineConfig({
           { text: "Quick Start", link: "/quick-start" },
           { text: "Installation", link: "/installation" },
           { text: "Supported Features", link: "/supported-features" },
+          { text: "Usage", link: "/usage" },
         ],
       },
     ],
