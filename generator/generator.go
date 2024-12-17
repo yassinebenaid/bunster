@@ -316,6 +316,8 @@ type pipeContext struct {
 }
 
 func (g *generator) handleParameterAssignment(buf *InstructionBuffer, p ast.ParameterAssignement) {
+	buf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
+
 	for _, assignment := range p.Assignements {
 		ins := ir.SetVar{
 			Key:   assignment.Name,
