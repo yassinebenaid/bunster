@@ -8,7 +8,7 @@ import (
 func (g *generator) handleGroup(buf *InstructionBuffer, group ast.Group, pc *pipeContext) {
 	var cmdbuf InstructionBuffer
 
-	g.handleRedirections(&cmdbuf, "group", group.Redirections, nil)
+	g.handleRedirections(&cmdbuf, "group", group.Redirections, pc)
 
 	for _, cmd := range group.Body {
 		g.generate(&cmdbuf, cmd, nil)
