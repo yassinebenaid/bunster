@@ -33,11 +33,7 @@ func (ib *InstructionBuffer) add(ins ir.Instruction) {
 func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, pc *pipeContext) {
 	switch v := statement.(type) {
 	case ast.Command:
-		var cmdbuf InstructionBuffer
-		g.handleSimpleCommand(&cmdbuf, v, pc)
-		*buf = append(*buf, ir.Closure{
-			Body: cmdbuf,
-		})
+		g.handleSimpleCommand(buf, v, pc)
 	case ast.Pipeline:
 		var cmdbuf InstructionBuffer
 		g.handlePipeline(&cmdbuf, v)
@@ -102,37 +98,43 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 }
 
 func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command, pc *pipeContext) {
-	buf.add(ir.Declare{Name: "commandName", Value: g.handleExpression(cmd.Name)})
-	buf.add(ir.DeclareSlice{Name: "arguments"})
+	var cmdbuf InstructionBuffer
+
+	cmdbuf.add(ir.Declare{Name: "commandName", Value: g.handleExpression(cmd.Name)})
+	cmdbuf.add(ir.DeclareSlice{Name: "arguments"})
 
 	for _, arg := range cmd.Args {
-		buf.add(ir.Append{Name: "arguments", Value: g.handleExpression(arg)})
+		cmdbuf.add(ir.Append{Name: "arguments", Value: g.handleExpression(arg)})
 	}
 
-	buf.add(ir.Declare{
+	cmdbuf.add(ir.Declare{
 		Name:  "command",
 		Value: ir.InitCommand{Name: "commandName", Args: "arguments"},
 	})
 
 	for _, env := range cmd.Env {
-		buf.add(ir.SetCmdEnv{
+		cmdbuf.add(ir.SetCmdEnv{
 			Command: "command",
 			Key:     env.Name,
 			Value:   g.handleExpression(env.Value),
 		})
 	}
 
-	g.handleRedirections(buf, "command", cmd.Redirections, pc)
+	g.handleRedirections(&cmdbuf, "command", cmd.Redirections, pc)
 
 	if pc != nil {
-		buf.add(ir.StartCommand("command"))
-		buf.add(ir.PushToPipelineWaitgroup{
+		cmdbuf.add(ir.StartCommand("command"))
+		cmdbuf.add(ir.PushToPipelineWaitgroup{
 			Waitgroup: pc.waitgroup,
 			Command:   "command",
 		})
 	} else {
-		buf.add(ir.RunCommand("command"))
+		cmdbuf.add(ir.RunCommand("command"))
 	}
+
+	*buf = append(*buf, ir.Closure{
+		Body: cmdbuf,
+	})
 }
 
 func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
