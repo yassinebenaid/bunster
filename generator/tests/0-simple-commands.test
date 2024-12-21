@@ -7,7 +7,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 }
 #(ENDTEST)
 
@@ -23,7 +23,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 }
 #(ENDTEST)
 
@@ -40,7 +40,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
   		var commandName = `git`
   		var arguments []string
@@ -76,7 +76,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
   		var commandName = `cmd`
   		var arguments []string
@@ -118,7 +118,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
   		var commandName = `cmd`
   		var arguments []string
@@ -159,7 +159,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
   		var commandName = `cmd1`
   		var arguments []string
@@ -236,7 +236,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
   		var commandName = shell.ReadVar("HOME")+`/bin/cmd`
   		var arguments []string
@@ -273,7 +273,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
   		var commandName = `echo`
   		var arguments []string

@@ -7,7 +7,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		var commandName = `command`
 		var arguments []string
@@ -89,7 +89,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		var commandName = `command`
 		var arguments []string
@@ -172,7 +172,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		var commandName = `command`
 		var arguments []string
@@ -258,7 +258,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		var pipelineWaitgroup runtime.PiplineWaitgroup
 		pipeReader1, pipeWriter1, err := runtime.NewPipe()
