@@ -19,20 +19,19 @@ type Shell struct {
 
 	ExitCode int
 
-	Main func(*Shell)
+	Main func(*Shell, *FileDescriptorTable)
 	Args []string
-	FDT  FileDescriptorTable
 
 	vars sync.Map
 }
 
 func (shell *Shell) Run() int {
-	shell.FDT = make(FileDescriptorTable)
-	shell.FDT.Add("0", shell.Stdin)
-	shell.FDT.Add("1", shell.Stdout)
-	shell.FDT.Add("2", shell.Stderr)
+	fdt := make(FileDescriptorTable)
+	fdt.Add("0", shell.Stdin)
+	fdt.Add("1", shell.Stdout)
+	fdt.Add("2", shell.Stderr)
 
-	shell.Main(shell)
+	shell.Main(shell, &fdt)
 
 	return shell.ExitCode
 }
@@ -82,10 +81,6 @@ func (shell *Shell) HandleError(err error) {
 	default:
 		fmt.Fprintln(shell.Stderr, err)
 	}
-}
-
-func (shell *Shell) CloneFDT() (FileDescriptorTable, error) {
-	return shell.FDT.clone()
 }
 
 func (shell *Shell) Command(name string, args ...string) *exec.Cmd {
