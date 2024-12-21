@@ -185,6 +185,7 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 		switch redirection.Method {
 		case ">", ">|":
 			buf.add(ir.OpenStream{
+				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_WRITE,
@@ -196,6 +197,7 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 			})
 		case ">>":
 			buf.add(ir.OpenStream{
+				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_APPEND,
@@ -207,6 +209,7 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 			})
 		case "&>":
 			buf.add(ir.OpenStream{
+				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_WRITE,
@@ -223,6 +226,7 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 			})
 		case "&>>":
 			buf.add(ir.OpenStream{
+				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_APPEND,
@@ -259,6 +263,7 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 			}
 		case "<":
 			buf.add(ir.OpenStream{
+				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_READ,
@@ -282,6 +287,7 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 			})
 		case "<>":
 			buf.add(ir.OpenStream{
+				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_RW,
@@ -316,6 +322,7 @@ type pipeContext struct {
 }
 
 func (g *generator) handleParameterAssignment(buf *InstructionBuffer, p ast.ParameterAssignement) {
+	buf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
 	for _, assignment := range p {
 		ins := ir.SetVar{
 			Key:   assignment.Name,
