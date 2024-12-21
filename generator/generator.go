@@ -166,21 +166,20 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 }
 
 func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redirections []ast.Redirection, pc *pipeContext) {
-	var fdt = name + "FDT"
-	buf.add(ir.CloneFDT(fdt))
+	buf.add(ir.CloneFDT{})
 
 	// if we're inside a pipline, we need to connect the pipe to the command.(before any other redirection)
 	if pc != nil {
 		if pc.writer != "" {
-			buf.add(ir.AddStream{FDT: fdt, Fd: "1", StreamName: pc.writer})
+			buf.add(ir.AddStream{Fd: "1", StreamName: pc.writer})
 
 			if pc.stderr {
-				buf.add(ir.AddStream{FDT: fdt, Fd: "2", StreamName: pc.writer})
+				buf.add(ir.AddStream{Fd: "2", StreamName: pc.writer})
 			}
 		}
 
 		if pc.reader != "" {
-			buf.add(ir.AddStream{FDT: fdt, Fd: "0", StreamName: pc.reader})
+			buf.add(ir.AddStream{Fd: "0", StreamName: pc.reader})
 		}
 	}
 
@@ -188,91 +187,76 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 		switch redirection.Method {
 		case ">", ">|":
 			buf.add(ir.OpenStream{
-				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_WRITE,
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         redirection.Src,
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		case ">>":
 			buf.add(ir.OpenStream{
-				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_APPEND,
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         redirection.Src,
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		case "&>":
 			buf.add(ir.OpenStream{
-				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_WRITE,
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         "1",
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         "2",
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		case "&>>":
 			buf.add(ir.OpenStream{
-				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_APPEND,
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         "1",
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         "2",
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		case ">&", "<&":
 			if redirection.Dst == nil && redirection.Close {
 				buf.add(ir.CloseStream{
-					FDT: fdt,
-					Fd:  ir.String(redirection.Src),
+					Fd: ir.String(redirection.Src),
 				})
 			} else {
 				buf.add(ir.DuplicateStream{
-					FDT: fdt,
 					Old: redirection.Src,
 					New: g.handleExpression(redirection.Dst),
 				})
 
 				if redirection.Close {
 					buf.add(ir.CloseStream{
-						FDT: fdt,
-						Fd:  g.handleExpression(redirection.Dst),
+						Fd: g.handleExpression(redirection.Dst),
 					})
 				}
 			}
 		case "<":
 			buf.add(ir.OpenStream{
-				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_READ,
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         redirection.Src,
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
@@ -284,19 +268,16 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 				},
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         redirection.Src,
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		case "<>":
 			buf.add(ir.OpenStream{
-				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_RW,
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         redirection.Src,
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
@@ -305,15 +286,15 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 
 	buf.add(ir.Set{
 		Name:  fmt.Sprintf("%s.Stdin", name),
-		Value: ir.GetStream{FDT: fdt, Fd: ir.String("0")},
+		Value: ir.GetStream{Fd: ir.String("0")},
 	})
 	buf.add(ir.Set{
 		Name:  fmt.Sprintf("%s.Stdout", name),
-		Value: ir.GetStream{FDT: fdt, Fd: ir.String("1")},
+		Value: ir.GetStream{Fd: ir.String("1")},
 	})
 	buf.add(ir.Set{
 		Name:  fmt.Sprintf("%s.Stderr", name),
-		Value: ir.GetStream{FDT: fdt, Fd: ir.String("2")},
+		Value: ir.GetStream{Fd: ir.String("2")},
 	})
 }
 

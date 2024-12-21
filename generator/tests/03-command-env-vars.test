@@ -12,15 +12,15 @@ func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
 		arguments = append(arguments, `key=value`)
 		var command = shell.Command(commandName, arguments...)
 		command.Env = append(command.Env, `key=`+`value`)
-		commandFDT, err := streamManager.Clone()
+		streamManager, err := streamManager.Clone()
 		if err != nil {
 			shell.HandleError(err)
 			return
 		}
-		defer commandFDT.Destroy()
-		command.Stdin = commandFDT.Get(`0`)
-		command.Stdout = commandFDT.Get(`1`)
-		command.Stderr = commandFDT.Get(`2`)
+		defer streamManager.Destroy()
+		command.Stdin = streamManager.Get(`0`)
+		command.Stdout = streamManager.Get(`1`)
+		command.Stderr = streamManager.Get(`2`)
 		if err := command.Run(); err != nil {
 			shell.HandleError(err)
 			return
@@ -53,15 +53,15 @@ func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
 		command.Env = append(command.Env, `key2=`+`value`)
 		command.Env = append(command.Env, `key3=`+`value`)
 		command.Env = append(command.Env, `key4=`+`value`)
-		commandFDT, err := streamManager.Clone()
+		streamManager, err := streamManager.Clone()
 		if err != nil {
 			shell.HandleError(err)
 			return
 		}
-		defer commandFDT.Destroy()
-		command.Stdin = commandFDT.Get(`0`)
-		command.Stdout = commandFDT.Get(`1`)
-		command.Stderr = commandFDT.Get(`2`)
+		defer streamManager.Destroy()
+		command.Stdin = streamManager.Get(`0`)
+		command.Stdout = streamManager.Get(`1`)
+		command.Stderr = streamManager.Get(`2`)
 		if err := command.Run(); err != nil {
 			shell.HandleError(err)
 			return

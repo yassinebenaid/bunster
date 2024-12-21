@@ -45,15 +45,15 @@ func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
   		var commandName = `git`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		commandFDT, err := streamManager.Clone()
+  		streamManager, err := streamManager.Clone()
   		if err != nil {
  			shell.HandleError(err)
  			return
   		}
-  		defer commandFDT.Destroy()
-  		command.Stdin = commandFDT.Get(`0`)
-  		command.Stdout = commandFDT.Get(`1`)
-  		command.Stderr = commandFDT.Get(`2`)
+  		defer streamManager.Destroy()
+  		command.Stdin = streamManager.Get(`0`)
+  		command.Stdout = streamManager.Get(`1`)
+  		command.Stderr = streamManager.Get(`2`)
   		if err := command.Run(); err != nil {
  			shell.HandleError(err)
  			return
@@ -85,15 +85,15 @@ func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
         arguments = append(arguments, `arg 3`)
         arguments = append(arguments, shell.ReadVar("ARG3"))
   		var command = shell.Command(commandName, arguments...)
-  		commandFDT, err := streamManager.Clone()
+  		streamManager, err := streamManager.Clone()
   		if err != nil {
  			shell.HandleError(err)
  			return
   		}
-  		defer commandFDT.Destroy()
-  		command.Stdin = commandFDT.Get(`0`)
-  		command.Stdout = commandFDT.Get(`1`)
-  		command.Stderr = commandFDT.Get(`2`)
+  		defer streamManager.Destroy()
+  		command.Stdin = streamManager.Get(`0`)
+  		command.Stdout = streamManager.Get(`1`)
+  		command.Stderr = streamManager.Get(`2`)
   		if err := command.Run(); err != nil {
  			shell.HandleError(err)
  			return
@@ -127,15 +127,15 @@ func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
         arguments = append(arguments, `--option=value`)
         arguments = append(arguments, `-o`)
   		var command = shell.Command(commandName, arguments...)
-  		commandFDT, err := streamManager.Clone()
+  		streamManager, err := streamManager.Clone()
   		if err != nil {
  			shell.HandleError(err)
  			return
   		}
-  		defer commandFDT.Destroy()
-  		command.Stdin = commandFDT.Get(`0`)
-  		command.Stdout = commandFDT.Get(`1`)
-  		command.Stderr = commandFDT.Get(`2`)
+  		defer streamManager.Destroy()
+  		command.Stdin = streamManager.Get(`0`)
+  		command.Stdout = streamManager.Get(`1`)
+  		command.Stderr = streamManager.Get(`2`)
   		if err := command.Run(); err != nil {
  			shell.HandleError(err)
  			return
@@ -164,15 +164,15 @@ func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
   		var commandName = `cmd1`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		commandFDT, err := streamManager.Clone()
+  		streamManager, err := streamManager.Clone()
   		if err != nil {
  			shell.HandleError(err)
  			return
   		}
-  		defer commandFDT.Destroy()
-  		command.Stdin = commandFDT.Get(`0`)
-  		command.Stdout = commandFDT.Get(`1`)
-  		command.Stderr = commandFDT.Get(`2`)
+  		defer streamManager.Destroy()
+  		command.Stdin = streamManager.Get(`0`)
+  		command.Stdout = streamManager.Get(`1`)
+  		command.Stderr = streamManager.Get(`2`)
   		if err := command.Run(); err != nil {
  			shell.HandleError(err)
  			return
@@ -184,15 +184,15 @@ func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
   		var commandName = `cmd2`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		commandFDT, err := streamManager.Clone()
+  		streamManager, err := streamManager.Clone()
   		if err != nil {
  			shell.HandleError(err)
  			return
   		}
-  		defer commandFDT.Destroy()
-  		command.Stdin = commandFDT.Get(`0`)
-  		command.Stdout = commandFDT.Get(`1`)
-  		command.Stderr = commandFDT.Get(`2`)
+  		defer streamManager.Destroy()
+  		command.Stdin = streamManager.Get(`0`)
+  		command.Stdout = streamManager.Get(`1`)
+  		command.Stderr = streamManager.Get(`2`)
   		if err := command.Run(); err != nil {
  			shell.HandleError(err)
  			return
@@ -204,15 +204,15 @@ func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
   		var commandName = `cmd3`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		commandFDT, err := streamManager.Clone()
+  		streamManager, err := streamManager.Clone()
   		if err != nil {
  			shell.HandleError(err)
  			return
   		}
-  		defer commandFDT.Destroy()
-  		command.Stdin = commandFDT.Get(`0`)
-  		command.Stdout = commandFDT.Get(`1`)
-  		command.Stderr = commandFDT.Get(`2`)
+  		defer streamManager.Destroy()
+  		command.Stdin = streamManager.Get(`0`)
+  		command.Stdout = streamManager.Get(`1`)
+  		command.Stderr = streamManager.Get(`2`)
   		if err := command.Run(); err != nil {
  			shell.HandleError(err)
  			return
@@ -243,15 +243,15 @@ func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
   		arguments = append(arguments, shell.ReadVar("PWD")+`:/path` )
   		arguments = append(arguments, `foo-bar-baz-boo` )
   		var command = shell.Command(commandName, arguments...)
-  		commandFDT, err := streamManager.Clone()
+  		streamManager, err := streamManager.Clone()
   		if err != nil {
  			shell.HandleError(err)
  			return
   		}
-  		defer commandFDT.Destroy()
-  		command.Stdin = commandFDT.Get(`0`)
-  		command.Stdout = commandFDT.Get(`1`)
-  		command.Stderr = commandFDT.Get(`2`)
+  		defer streamManager.Destroy()
+  		command.Stdin = streamManager.Get(`0`)
+  		command.Stdout = streamManager.Get(`1`)
+  		command.Stderr = streamManager.Get(`2`)
   		if err := command.Run(); err != nil {
  			shell.HandleError(err)
  			return
@@ -282,15 +282,15 @@ func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
   		arguments = append(arguments, shell.ReadSpecialVar("$"))
   		arguments = append(arguments, shell.ReadSpecialVar("#"))
   		var command = shell.Command(commandName, arguments...)
-  		commandFDT, err := streamManager.Clone()
+  		streamManager, err := streamManager.Clone()
   		if err != nil {
  			shell.HandleError(err)
  			return
   		}
-  		defer commandFDT.Destroy()
-  		command.Stdin = commandFDT.Get(`0`)
-  		command.Stdout = commandFDT.Get(`1`)
-  		command.Stderr = commandFDT.Get(`2`)
+  		defer streamManager.Destroy()
+  		command.Stdin = streamManager.Get(`0`)
+  		command.Stdout = streamManager.Get(`1`)
+  		command.Stderr = streamManager.Get(`2`)
   		if err := command.Run(); err != nil {
  			shell.HandleError(err)
  			return
