@@ -90,7 +90,13 @@ func (fdt FileDescriptorTable) Duplicate(newfd, oldfd string) error {
 	if stream, ok := fdt[oldfd]; !ok {
 		return fmt.Errorf("trying to duplicate bad file descriptor: %s", oldfd)
 	} else {
+		// when trying to duplicate a file descriptor to it self (eg: 3>&3 ), we just return.
+		if newfd == oldfd {
+			return nil
+		}
+
 		// If the new fd is already open, we need to close it. otherwise, Its handler will be lost and leak. and remain open forever.
+		// for example: "3<file.txt 3<&0", we don't explicitly close 3. Thus, it is going to remain open forever, unless we implicitly close it here.
 		if fdt[newfd] != nil {
 			_ = fdt[newfd].Close() // error here is not important.
 		}
