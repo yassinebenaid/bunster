@@ -32,15 +32,16 @@ func (ib *InstructionBuffer) add(ins ir.Instruction) {
 
 func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, pc *pipeContext) {
 	switch v := statement.(type) {
-	case ast.Command:
-		g.handleSimpleCommand(buf, v, pc)
-	case ast.Pipeline:
-		g.handlePipeline(buf, v)
 	case ast.List:
 		g.handleList(buf, v)
+	case ast.Pipeline:
+		g.handlePipeline(buf, v)
+	case ast.Command:
+		g.handleSimpleCommand(buf, v, pc)
 	case ast.ParameterAssignement:
 		g.handleParameterAssignment(buf, v)
-
+	case ast.Group:
+		g.handleGroup(buf, v, pc)
 	}
 }
 
