@@ -122,6 +122,18 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 	}
 
 	g.handleRedirections(&cmdbuf, "command", cmd.Redirections, pc)
+	cmdbuf.add(ir.Set{
+		Name:  "command.Stdin",
+		Value: ir.GetStream{Fd: ir.String("0")},
+	})
+	cmdbuf.add(ir.Set{
+		Name:  "command.Stdout",
+		Value: ir.GetStream{Fd: ir.String("1")},
+	})
+	cmdbuf.add(ir.Set{
+		Name:  "command.Stderr",
+		Value: ir.GetStream{Fd: ir.String("2")},
+	})
 
 	if pc != nil {
 		cmdbuf.add(ir.StartCommand("command"))
@@ -283,19 +295,6 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 			})
 		}
 	}
-
-	buf.add(ir.Set{
-		Name:  fmt.Sprintf("%s.Stdin", name),
-		Value: ir.GetStream{Fd: ir.String("0")},
-	})
-	buf.add(ir.Set{
-		Name:  fmt.Sprintf("%s.Stdout", name),
-		Value: ir.GetStream{Fd: ir.String("1")},
-	})
-	buf.add(ir.Set{
-		Name:  fmt.Sprintf("%s.Stderr", name),
-		Value: ir.GetStream{Fd: ir.String("2")},
-	})
 }
 
 type pipeContext struct {
