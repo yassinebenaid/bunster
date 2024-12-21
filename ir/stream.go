@@ -12,6 +12,7 @@ const (
 )
 
 type OpenStream struct {
+	FDT    string
 	Name   string
 	Target Instruction
 	Mode   string
@@ -19,12 +20,12 @@ type OpenStream struct {
 
 func (of OpenStream) togo() string {
 	return fmt.Sprintf(
-		`%s, err := runtime.OpenStream(%s, runtime.%s)
+		`%s, err := %s.OpenStream(%s, runtime.%s)
 		if err != nil {
 			shell.HandleError(err)
 			return
 		}
-		`, of.Name, of.Target.togo(), of.Mode)
+		`, of.Name, of.FDT, of.Target.togo(), of.Mode)
 }
 
 type NewStringStream struct {

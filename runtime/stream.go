@@ -21,10 +21,6 @@ type Stream interface {
 	io.Closer
 }
 
-func OpenStream(name string, flag int) (Stream, error) {
-	return os.OpenFile(name, flag, 0644)
-}
-
 type stringStream struct {
 	buf *bytes.Buffer
 }
@@ -55,6 +51,10 @@ func NewStringStream(s string) Stream {
 }
 
 type FileDescriptorTable map[string]Stream
+
+func (FileDescriptorTable) OpenStream(name string, flag int) (Stream, error) {
+	return os.OpenFile(name, flag, 0644)
+}
 
 func (fdt FileDescriptorTable) Add(fd string, stream Stream) {
 	// If this stream is already open, we need to close it. otherwise, Its handler will be lost and leak.

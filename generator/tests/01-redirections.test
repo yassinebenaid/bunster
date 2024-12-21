@@ -21,25 +21,25 @@ func Main(shell *runtime.Shell) {
  			return
   		}
   		defer commandFDT.Destroy()
-        command_file_0, err := runtime.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
+        command_file_0, err := commandFDT.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError(err)
             return
         }
         commandFDT.Add(`1`, command_file_0)
-        command_file_1, err := runtime.OpenStream(`errors.txt`, runtime.STREAM_FLAG_WRITE)
+        command_file_1, err := commandFDT.OpenStream(`errors.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError(err)
             return
         }
         commandFDT.Add(`2`, command_file_1)
-        command_file_2, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
+        command_file_2, err := commandFDT.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError(err)
             return
         }
         commandFDT.Add(`3`, command_file_2)
-        command_file_3, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
+        command_file_3, err := commandFDT.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError(err)
             return
@@ -82,25 +82,25 @@ func Main(shell *runtime.Shell) {
  			return
   		}
   		defer commandFDT.Destroy()
-        command_file_0, err := runtime.OpenStream(`output.txt`, runtime.STREAM_FLAG_APPEND)
+        command_file_0, err := commandFDT.OpenStream(`output.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError(err)
             return
         }
         commandFDT.Add(`1`, command_file_0)
-        command_file_1, err := runtime.OpenStream(`errors.txt`, runtime.STREAM_FLAG_APPEND)
+        command_file_1, err := commandFDT.OpenStream(`errors.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError(err)
             return
         }
         commandFDT.Add(`2`, command_file_1)
-        command_file_2, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
+        command_file_2, err := commandFDT.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError(err)
             return
         }
         commandFDT.Add(`3`, command_file_2)
-        command_file_3, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
+        command_file_3, err := commandFDT.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError(err)
             return
@@ -142,14 +142,14 @@ func Main(shell *runtime.Shell) {
  			return
   		}
   		defer commandFDT.Destroy()
-        command_file_0, err := runtime.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
+        command_file_0, err := commandFDT.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError(err)
             return
         }
         commandFDT.Add(`1`, command_file_0)
         commandFDT.Add(`2`, command_file_0)
-        command_file_1, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
+        command_file_1, err := commandFDT.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError(err)
             return
@@ -194,7 +194,7 @@ func Main(shell *runtime.Shell) {
  			return
   		}
   		defer commandFDT.Destroy()
-        command_file_0, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
+        command_file_0, err := commandFDT.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
             shell.HandleError(err)
             return
@@ -212,7 +212,7 @@ func Main(shell *runtime.Shell) {
             shell.HandleError(err)
             return
         }
-        command_file_3, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
+        command_file_3, err := commandFDT.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
             shell.HandleError(err)
             return
@@ -259,25 +259,25 @@ func Main(shell *runtime.Shell) {
  			return
   		}
   		defer commandFDT.Destroy()
-        command_file_0, err := runtime.OpenStream(`output.txt`, runtime.STREAM_FLAG_READ)
+        command_file_0, err := commandFDT.OpenStream(`output.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError(err)
             return
         }
         commandFDT.Add(`0`, command_file_0)
-        command_file_1, err := runtime.OpenStream(`errors.txt`, runtime.STREAM_FLAG_READ)
+        command_file_1, err := commandFDT.OpenStream(`errors.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError(err)
             return
         }
         commandFDT.Add(`2`, command_file_1)
-        command_file_2, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
+        command_file_2, err := commandFDT.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError(err)
             return
         }
         commandFDT.Add(`3`, command_file_2)
-        command_file_3, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
+        command_file_3, err := commandFDT.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError(err)
             return
@@ -360,7 +360,7 @@ func Main(shell *runtime.Shell) {
  			return
   		}
   		defer commandFDT.Destroy()
-        command_file_0, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
+        command_file_0, err := commandFDT.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
             shell.HandleError(err)
             return
@@ -419,13 +419,13 @@ func Main(shell *runtime.Shell) {
  			return
   		}
   		defer commandFDT.Destroy()
-        command_file_0, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_RW)
+        command_file_0, err := commandFDT.OpenStream(`file.txt`, runtime.STREAM_FLAG_RW)
         if err != nil {
         shell.HandleError(err)
             return
         }
         commandFDT.Add(`0`, command_file_0)
-        command_file_1, err := runtime.OpenStream(`file.txt`, runtime.STREAM_FLAG_RW)
+        command_file_1, err := commandFDT.OpenStream(`file.txt`, runtime.STREAM_FLAG_RW)
         if err != nil {
         shell.HandleError(err)
             return
