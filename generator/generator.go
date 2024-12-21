@@ -35,11 +35,7 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, pc
 	case ast.Command:
 		g.handleSimpleCommand(buf, v, pc)
 	case ast.Pipeline:
-		var cmdbuf InstructionBuffer
-		g.handlePipeline(&cmdbuf, v)
-		*buf = append(*buf, ir.Closure{
-			Body: cmdbuf,
-		})
+		g.handlePipeline(buf, v)
 	case ast.List:
 		g.handleList(buf, v)
 	case ast.ParameterAssignement:
@@ -61,11 +57,12 @@ func (g *generator) handleList(buf *InstructionBuffer, l ast.List) {
 }
 
 func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
-	buf.add(ir.NewPipelineWaitgroup("pipelineWaitgroup"))
+	var cmdbuf InstructionBuffer
+	cmdbuf.add(ir.NewPipelineWaitgroup("pipelineWaitgroup"))
 
 	for i, cmd := range p {
 		if i < (len(p) - 1) { //last command doesn't need a pipe
-			buf.add(ir.NewPipe{
+			cmdbuf.add(ir.NewPipe{
 				Writer: fmt.Sprintf("pipeWriter%d", i+1),
 				Reader: fmt.Sprintf("pipeReader%d", i+1),
 			})
@@ -90,11 +87,14 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 		}
 
 		pc.waitgroup = "pipelineWaitgroup"
-		g.generate(buf, cmd.Command, &pc)
+		g.generate(&cmdbuf, cmd.Command, &pc)
 	}
 
-	buf.add(ir.WaitPipelineWaitgroup("pipelineWaitgroup"))
+	cmdbuf.add(ir.WaitPipelineWaitgroup("pipelineWaitgroup"))
 
+	*buf = append(*buf, ir.Closure{
+		Body: cmdbuf,
+	})
 }
 
 func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command, pc *pipeContext) {
