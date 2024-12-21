@@ -19,23 +19,23 @@ type Shell struct {
 
 	ExitCode int
 
-	Main func(*Shell, *FileDescriptorTable)
+	Main func(*Shell, *StreamManager)
 	Args []string
 
 	vars sync.Map
 }
 
 func (shell *Shell) Run() int {
-	fdt := FileDescriptorTable{
+	streamManager := &StreamManager{
 		mappings: map[string]Stream{
 			"0": shell.Stdin,
 			"1": shell.Stdout,
 			"2": shell.Stderr,
 		},
 	}
-	defer fdt.Destroy()
+	defer streamManager.Destroy()
 
-	shell.Main(shell, &fdt)
+	shell.Main(shell, streamManager)
 
 	return shell.ExitCode
 }

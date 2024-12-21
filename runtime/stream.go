@@ -50,12 +50,12 @@ func NewStringStream(s string) Stream {
 	return &stringStream{buf: bytes.NewBufferString(s)}
 }
 
-type FileDescriptorTable struct {
+type StreamManager struct {
 	mappings map[string]Stream
 	cleaners []func() error
 }
 
-func (fdt *FileDescriptorTable) OpenStream(name string, flag int) (Stream, error) {
+func (fdt *StreamManager) OpenStream(name string, flag int) (Stream, error) {
 	switch name {
 	case "/dev/stdin":
 		return fdt.Get("0"), nil
@@ -68,7 +68,7 @@ func (fdt *FileDescriptorTable) OpenStream(name string, flag int) (Stream, error
 	}
 }
 
-func (fdt *FileDescriptorTable) Add(fd string, stream Stream) {
+func (fdt *StreamManager) Add(fd string, stream Stream) {
 	// If this stream is already open, we need to close it. otherwise, Its handler will be lost and leak.
 	// This is related to pipelines in particular. when instantiating a new pipeline, we add its ends to the FDT. but if
 	// a redirection happened afterwards, it will cause the pipline handler to be lost and kept open.
@@ -79,7 +79,7 @@ func (fdt *FileDescriptorTable) Add(fd string, stream Stream) {
 	fdt.mappings[fd] = stream
 }
 
-func (fdt *FileDescriptorTable) Get(fd string) Stream {
+func (fdt *StreamManager) Get(fd string) Stream {
 	stream, ok := fdt.mappings[fd]
 	if !ok {
 		// I'm not sure if we need to handle this case because we only use this function
@@ -89,7 +89,7 @@ func (fdt *FileDescriptorTable) Get(fd string) Stream {
 	return stream
 }
 
-func (fdt *FileDescriptorTable) Duplicate(newfd, oldfd string) error {
+func (fdt *StreamManager) Duplicate(newfd, oldfd string) error {
 	if stream, ok := fdt.mappings[oldfd]; !ok {
 		return fmt.Errorf("trying to duplicate bad file descriptor: %s", oldfd)
 	} else {
@@ -126,7 +126,7 @@ func (fdt *FileDescriptorTable) Duplicate(newfd, oldfd string) error {
 	}
 }
 
-func (fdt *FileDescriptorTable) Close(fd string) error {
+func (fdt *StreamManager) Close(fd string) error {
 	if stream, ok := fdt.mappings[fd]; !ok {
 		return fmt.Errorf("trying to close bad file descriptor: %s", fd)
 	} else {
@@ -134,7 +134,7 @@ func (fdt *FileDescriptorTable) Close(fd string) error {
 	}
 }
 
-func (fdt *FileDescriptorTable) Destroy() {
+func (fdt *StreamManager) Destroy() {
 	for _, cleanup := range fdt.cleaners {
 		cleanup()
 	}
@@ -143,7 +143,7 @@ func (fdt *FileDescriptorTable) Destroy() {
 	}
 }
 
-func (fdt *FileDescriptorTable) Clone() (*FileDescriptorTable, error) {
+func (fdt *StreamManager) Clone() (*StreamManager, error) {
 	clone := make(map[string]Stream, len(fdt.mappings))
 
 	for fd, stream := range fdt.mappings {
@@ -152,13 +152,13 @@ func (fdt *FileDescriptorTable) Clone() (*FileDescriptorTable, error) {
 			newbuf := &bytes.Buffer{}
 			_, err := io.Copy(newbuf, stream)
 			if err != nil {
-				return nil, fmt.Errorf("failure when trying to inherit the FileDescriptorTable, failed to duplicate file descriptor '%s', %w", fd, err)
+				return nil, fmt.Errorf("failure when trying to inherit the StreamManager, failed to duplicate file descriptor '%s', %w", fd, err)
 			}
 			clone[fd] = &stringStream{buf: newbuf}
 		case *os.File:
 			dupFd, err := syscall.Dup(int(stream.Fd()))
 			if err != nil {
-				return nil, fmt.Errorf("failure when trying to inherit the FileDescriptorTable, failed to duplicate file descriptor '%s', %w", fd, err)
+				return nil, fmt.Errorf("failure when trying to inherit the StreamManager, failed to duplicate file descriptor '%s', %w", fd, err)
 			}
 			clone[fd] = os.NewFile(uintptr(dupFd), stream.Name())
 		default:
@@ -166,5 +166,5 @@ func (fdt *FileDescriptorTable) Clone() (*FileDescriptorTable, error) {
 		}
 	}
 
-	return &FileDescriptorTable{mappings: clone}, nil
+	return &StreamManager{mappings: clone}, nil
 }

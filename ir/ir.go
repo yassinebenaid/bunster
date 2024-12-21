@@ -18,7 +18,7 @@ func (p Program) String() string {
 
 		import "bunster-build/runtime"
 
-		func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
+		func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		`
 
 	for _, in := range p.Instructions {
