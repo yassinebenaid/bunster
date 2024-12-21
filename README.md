@@ -8,7 +8,6 @@
 <div align="center">
 
 [![CI](https://github.com/yassinebenaid/bunster/actions/workflows/ci.yml/badge.svg)](https://github.com/yassinebenaid/bunster/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/yassinebenaid/bunster/graph/badge.svg?token=56Vp2OyU5t)](https://codecov.io/gh/yassinebenaid/bunster)
 [![Documentation](https://img.shields.io/badge/Documentation-e57884?logo=BookStack&logoColor=9c2e5c)](https://bunster.netlify.app)
 
 </div>
