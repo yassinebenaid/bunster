@@ -26,10 +26,14 @@ type Shell struct {
 }
 
 func (shell *Shell) Run() int {
-	fdt := make(FileDescriptorTable)
-	fdt.Add("0", shell.Stdin)
-	fdt.Add("1", shell.Stdout)
-	fdt.Add("2", shell.Stderr)
+	fdt := FileDescriptorTable{
+		mappings: map[string]Stream{
+			"0": shell.Stdin,
+			"1": shell.Stdout,
+			"2": shell.Stderr,
+		},
+	}
+	defer fdt.Destroy()
 
 	shell.Main(shell, &fdt)
 
