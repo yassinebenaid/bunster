@@ -10,12 +10,12 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell) {
+func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
     func() {
   		var commandName = `git`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		commandFDT, err := shell.CloneFDT()
+  		commandFDT, err := streamManager.Clone()
   		if err != nil {
  			shell.HandleError(err)
  			return
@@ -71,12 +71,12 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell) {
+func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
     func() {
   		var commandName = `git`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		commandFDT, err := shell.CloneFDT()
+  		commandFDT, err := streamManager.Clone()
   		if err != nil {
  			shell.HandleError(err)
  			return
@@ -131,12 +131,12 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell) {
+func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
     func() {
   		var commandName = `git`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		commandFDT, err := shell.CloneFDT()
+  		commandFDT, err := streamManager.Clone()
   		if err != nil {
  			shell.HandleError(err)
  			return
@@ -183,12 +183,12 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell) {
+func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
     func() {
   		var commandName = `git`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		commandFDT, err := shell.CloneFDT()
+  		commandFDT, err := streamManager.Clone()
   		if err != nil {
  			shell.HandleError(err)
  			return
@@ -248,12 +248,12 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell) {
+func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
     func() {
   		var commandName = `git`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		commandFDT, err := shell.CloneFDT()
+  		commandFDT, err := streamManager.Clone()
   		if err != nil {
  			shell.HandleError(err)
  			return
@@ -308,12 +308,12 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell) {
+func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
     func() {
   		var commandName = `git`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		commandFDT, err := shell.CloneFDT()
+  		commandFDT, err := streamManager.Clone()
   		if err != nil {
  			shell.HandleError(err)
  			return
@@ -349,12 +349,12 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell) {
+func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
     func() {
   		var commandName = `git`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		commandFDT, err := shell.CloneFDT()
+  		commandFDT, err := streamManager.Clone()
   		if err != nil {
  			shell.HandleError(err)
  			return
@@ -408,12 +408,12 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell) {
+func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
     func() {
   		var commandName = `git`
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
-  		commandFDT, err := shell.CloneFDT()
+  		commandFDT, err := streamManager.Clone()
   		if err != nil {
  			shell.HandleError(err)
  			return

@@ -7,7 +7,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell) {
+func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
     shell.ExitCode = 0
 	shell.SetVar("key", `value`)
 }
@@ -30,7 +30,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell) {
+func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
     shell.ExitCode = 0
 	shell.SetVar("key1", `value`)
 	shell.SetVar("key2", `value`)
@@ -54,7 +54,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell) {
+func Main(shell *runtime.Shell, streamManager *runtime.FileDescriptorTable) {
     shell.ExitCode = 0
 	shell.SetVar("key1", ``)
 	shell.SetVar("key2", ``)

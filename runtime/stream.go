@@ -137,7 +137,7 @@ func (fdt FileDescriptorTable) Destroy() {
 	}
 }
 
-func (fdt FileDescriptorTable) clone() (FileDescriptorTable, error) {
+func (fdt FileDescriptorTable) Clone() (FileDescriptorTable, error) {
 	clone := make(FileDescriptorTable, len(fdt))
 
 	for fd, stream := range fdt {

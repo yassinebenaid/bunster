@@ -40,7 +40,7 @@ type CloneFDT string
 
 func (c CloneFDT) togo() string {
 	return fmt.Sprintf(
-		`%s, err := shell.CloneFDT()
+		`%s, err := streamManager.Clone()
 		if err != nil {
 			shell.HandleError(err)
 			return
