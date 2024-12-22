@@ -143,21 +143,26 @@ func (r StartCommand) togo() string {
 }
 
 type Closure struct {
-	Body []Instruction
+	Async bool
+	Body  []Instruction
 }
 
 func (c Closure) togo() string {
 	var body string
+	var keyword string
+	if c.Async {
+		keyword = "go"
+	}
 
 	for _, ins := range c.Body {
 		body += ins.togo()
 	}
 
 	return fmt.Sprintf(
-		`func(){
+		`%s func(){
 			%s
 		}()
-	`, body)
+	`, keyword, body)
 }
 
 type SetCmdEnv struct {

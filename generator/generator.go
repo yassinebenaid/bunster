@@ -121,7 +121,7 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 		})
 	}
 
-	g.handleRedirections(&cmdbuf, "command", cmd.Redirections, pc)
+	g.handleRedirections(&cmdbuf, "command", cmd.Redirections, pc, false)
 	cmdbuf.add(ir.Set{
 		Name:  "command.Stdin",
 		Value: ir.GetStream{Fd: ir.String("0")},
@@ -177,8 +177,8 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 	}
 }
 
-func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redirections []ast.Redirection, pc *pipeContext) {
-	buf.add(ir.CloneFDT{})
+func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redirections []ast.Redirection, pc *pipeContext, nd bool) {
+	buf.add(ir.CloneFDT{ND: nd})
 
 	// if we're inside a pipline, we need to connect the pipe to the command.(before any other redirection)
 	if pc != nil {

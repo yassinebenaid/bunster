@@ -35,17 +35,23 @@ func (of NewStringStream) togo() string {
 	return fmt.Sprintf("runtime.NewStringStream(%s)", of.Target.togo())
 }
 
-type CloneFDT struct{}
+type CloneFDT struct {
+	ND bool
+}
 
-func (CloneFDT) togo() string {
+func (c CloneFDT) togo() string {
+	var d = "defer streamManager.Destroy()\n"
+	if c.ND {
+		d = ""
+	}
 	return fmt.Sprintf(
 		`streamManager, err := streamManager.Clone()
 		if err != nil {
 			shell.HandleError(err)
 			return
 		}
-		defer streamManager.Destroy()
-		`)
+		%s
+		`, d)
 }
 
 type AddStream struct {
