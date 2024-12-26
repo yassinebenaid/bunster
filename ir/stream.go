@@ -45,11 +45,7 @@ func (c CloneFDT) togo() string {
 		d = ""
 	}
 	return fmt.Sprintf(
-		`streamManager, err := streamManager.Clone()
-		if err != nil {
-			shell.HandleError(err)
-			return
-		}
+		`streamManager := streamManager.Clone()
 		%s
 		`, d)
 }

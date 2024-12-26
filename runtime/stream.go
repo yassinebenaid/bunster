@@ -142,9 +142,9 @@ func (sm *StreamManager) Destroy() {
 	}
 }
 
-func (sm *StreamManager) Clone() (*StreamManager, error) {
+func (sm *StreamManager) Clone() *StreamManager {
 	return &StreamManager{
 		parent:   sm,
 		mappings: make(map[string]Stream),
-	}, nil
+	}
 }
