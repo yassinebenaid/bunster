@@ -51,6 +51,7 @@ func NewStringStream(s string) Stream {
 }
 
 type StreamManager struct {
+	parent   *StreamManager
 	mappings map[string]Stream
 	cleaners []func() error
 }
@@ -81,16 +82,14 @@ func (fdt *StreamManager) Add(fd string, stream Stream) {
 
 func (fdt *StreamManager) Get(fd string) Stream {
 	stream, ok := fdt.mappings[fd]
-	if !ok {
-		// I'm not sure if we need to handle this case because we only use this function
-		// to read 0, 1 and 2 file descriptors. Which are always available.
-		panic("FIXME: an error handler is needed here.")
+	if !ok && fdt.parent != nil {
+		return fdt.parent.Get(fd)
 	}
 	return stream
 }
 
 func (fdt *StreamManager) Duplicate(newfd, oldfd string) error {
-	if stream, ok := fdt.mappings[oldfd]; !ok {
+	if stream := fdt.Get(oldfd); stream == nil {
 		return fmt.Errorf("trying to duplicate bad file descriptor: %s", oldfd)
 	} else {
 		// when trying to duplicate a file descriptor to it self (eg: 3>&3 ), we just return.
@@ -144,27 +143,8 @@ func (fdt *StreamManager) Destroy() {
 }
 
 func (fdt *StreamManager) Clone() (*StreamManager, error) {
-	clone := make(map[string]Stream, len(fdt.mappings))
-
-	for fd, stream := range fdt.mappings {
-		switch stream := stream.(type) {
-		case *stringStream:
-			newbuf := &bytes.Buffer{}
-			_, err := io.Copy(newbuf, stream)
-			if err != nil {
-				return nil, fmt.Errorf("failure when trying to inherit the StreamManager, failed to duplicate file descriptor '%s', %w", fd, err)
-			}
-			clone[fd] = &stringStream{buf: newbuf}
-		case *os.File:
-			dupFd, err := syscall.Dup(int(stream.Fd()))
-			if err != nil {
-				return nil, fmt.Errorf("failure when trying to inherit the StreamManager, failed to duplicate file descriptor '%s', %w", fd, err)
-			}
-			clone[fd] = os.NewFile(uintptr(dupFd), stream.Name())
-		default:
-			panic(fmt.Sprintf("failed to clone FDT, unhandled stream type: %T (%s)", stream, fd))
-		}
-	}
-
-	return &StreamManager{mappings: clone}, nil
+	return &StreamManager{
+		parent:   fdt,
+		mappings: make(map[string]Stream),
+	}, nil
 }

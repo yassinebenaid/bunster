@@ -27,12 +27,11 @@ type Shell struct {
 
 func (shell *Shell) Run() int {
 	streamManager := &StreamManager{
-		mappings: map[string]Stream{
-			"0": shell.Stdin,
-			"1": shell.Stdout,
-			"2": shell.Stderr,
-		},
+		mappings: make(map[string]Stream),
 	}
+	streamManager.Add("0", shell.Stdin)
+	streamManager.Add("1", shell.Stdout)
+	streamManager.Add("2", shell.Stderr)
 	defer streamManager.Destroy()
 
 	shell.Main(shell, streamManager)
