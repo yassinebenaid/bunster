@@ -114,7 +114,7 @@ func (sm *StreamManager) Get(fd string) (Stream, error) {
 	return stream, nil
 }
 
-func (sm *StreamManager) Duplicate(newfd, oldfd string, close bool) error {
+func (sm *StreamManager) Duplicate(newfd, oldfd string) error {
 	if stream, ok := sm.mappings[oldfd]; !ok {
 		return fmt.Errorf("trying to duplicate bad file descriptor: %s", oldfd)
 	} else {
@@ -123,11 +123,14 @@ func (sm *StreamManager) Duplicate(newfd, oldfd string, close bool) error {
 			return nil
 		}
 
-		sm.mappings[newfd] = &proxyStream{
-			original: stream,
+		var duplicated = stream
+
+		if v, ok := stream.(*proxyStream); ok {
+			duplicated = v.original
 		}
-		if close {
-			sm.mappings[oldfd].Close()
+
+		sm.mappings[newfd] = &proxyStream{
+			original: duplicated,
 		}
 
 		return nil
