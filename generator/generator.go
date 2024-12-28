@@ -122,17 +122,17 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 	}
 
 	g.handleRedirections(&cmdbuf, "command", cmd.Redirections, pc, false)
-	cmdbuf.add(ir.Set{
-		Name:  "command.Stdin",
-		Value: ir.GetStream{Fd: ir.String("0")},
+	cmdbuf.add(ir.SetStream{
+		Name: "command.Stdin",
+		Fd:   ir.String("0"),
 	})
-	cmdbuf.add(ir.Set{
-		Name:  "command.Stdout",
-		Value: ir.GetStream{Fd: ir.String("1")},
+	cmdbuf.add(ir.SetStream{
+		Name: "command.Stdout",
+		Fd:   ir.String("1"),
 	})
-	cmdbuf.add(ir.Set{
-		Name:  "command.Stderr",
-		Value: ir.GetStream{Fd: ir.String("2")},
+	cmdbuf.add(ir.SetStream{
+		Name: "command.Stderr",
+		Fd:   ir.String("2"),
 	})
 
 	if pc != nil {

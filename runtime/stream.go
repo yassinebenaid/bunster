@@ -64,11 +64,16 @@ func (s *proxyStream) Close() error {
 func (s *proxyStream) Read(p []byte) (n int, err error) { return 0, nil }
 
 func (s *proxyStream) Write(p []byte) (n int, err error) { return 0, nil }
-func (s *proxyStream) getOriginal() Stream {
+func (s *proxyStream) getOriginal() (Stream, error) {
+	if s.closed {
+		return nil, fmt.Errorf("file descriptor is closed")
+	}
+
 	if o, ok := s.original.(*proxyStream); ok {
 		return o.getOriginal()
 	}
-	return s.original
+
+	return s.original, nil
 }
 
 type StreamManager struct {
@@ -77,12 +82,12 @@ type StreamManager struct {
 
 func (sm *StreamManager) OpenStream(name string, flag int) (Stream, error) {
 	switch name {
-	case "/dev/stdin":
-		return sm.Get("0"), nil
-	case "/dev/stdout":
-		return sm.Get("1"), nil
-	case "/dev/stderr":
-		return sm.Get("2"), nil
+	// case "/dev/stdin":
+	// 	return sm.Get("0"), nil
+	// case "/dev/stdout":
+	// 	return sm.Get("1"), nil
+	// case "/dev/stderr":
+	// 	return sm.Get("2"), nil
 	default:
 		return os.OpenFile(name, flag, 0644)
 	}
@@ -99,19 +104,21 @@ func (sm *StreamManager) Add(fd string, stream Stream) {
 	sm.mappings[fd] = stream
 }
 
-func (sm *StreamManager) Get(fd string) Stream {
+func (sm *StreamManager) Get(fd string) (Stream, error) {
 	stream, ok := sm.mappings[fd]
 	if !ok {
-		panic("TODO: see what to do here")
+		return nil, fmt.Errorf("file descriptor %q is not open", fd)
 	}
+
 	if p, ok := stream.(*proxyStream); ok {
-		if p.closed {
-			fmt.Println("error: closed (todo)")
-			return nil
+		if o, err := p.getOriginal(); err != nil {
+			return nil, fmt.Errorf("bad file descriptor %q, %w", fd, err)
+		} else {
+			return o, nil
 		}
-		return p.getOriginal()
 	}
-	return stream
+
+	return stream, nil
 }
 
 func (sm *StreamManager) Duplicate(newfd, oldfd string) error {

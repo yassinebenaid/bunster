@@ -59,12 +59,19 @@ func (as AddStream) togo() string {
 	return fmt.Sprintf("streamManager.Add(`%s`, %s)\n", as.Fd, as.StreamName)
 }
 
-type GetStream struct {
-	Fd Instruction
+type SetStream struct {
+	Name string
+	Fd   Instruction
 }
 
-func (as GetStream) togo() string {
-	return fmt.Sprintf(`streamManager.Get(%s)`, as.Fd.togo())
+func (as SetStream) togo() string {
+	return fmt.Sprintf(`
+		if stream, err := streamManager.Get(%s); err != nil{
+			shell.HandleError(err)
+		}else{
+			%s = stream
+		}
+		`, as.Fd.togo(), as.Name)
 }
 
 type DuplicateStream struct {
