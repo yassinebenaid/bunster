@@ -75,17 +75,18 @@ func (as SetStream) togo() string {
 }
 
 type DuplicateStream struct {
-	Old string
-	New Instruction
+	Old   string
+	New   Instruction
+	Close bool
 }
 
 func (as DuplicateStream) togo() string {
 	return fmt.Sprintf(
-		`if err := streamManager.Duplicate("%s", %s); err != nil {
+		`if err := streamManager.Duplicate("%s", %s, %t); err != nil {
 			shell.HandleError(err)
 			return
 		}
-	`, as.Old, as.New.togo())
+	`, as.Old, as.New.togo(), as.Close)
 }
 
 type CloseStream struct {

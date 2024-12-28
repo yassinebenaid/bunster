@@ -252,15 +252,10 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 				})
 			} else {
 				buf.add(ir.DuplicateStream{
-					Old: redirection.Src,
-					New: g.handleExpression(redirection.Dst),
+					Old:   redirection.Src,
+					New:   g.handleExpression(redirection.Dst),
+					Close: redirection.Close,
 				})
-
-				if redirection.Close {
-					buf.add(ir.CloseStream{
-						Fd: g.handleExpression(redirection.Dst),
-					})
-				}
 			}
 		case "<":
 			buf.add(ir.OpenStream{
