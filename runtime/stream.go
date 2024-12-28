@@ -44,8 +44,6 @@ func (s *stringStream) Write(p []byte) (n int, err error) {
 	return 0, fmt.Errorf("bad file descriptor, cannot write to read only stream")
 }
 
-func (*stringStream) Fd() uintptr { return 0 }
-
 func NewStringStream(s string) Stream {
 	return &stringStream{buf: bytes.NewBufferString(s)}
 }
