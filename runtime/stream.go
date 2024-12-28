@@ -124,6 +124,12 @@ func (sm *StreamManager) Duplicate(newfd, oldfd string) error {
 			return nil
 		}
 
+		// If the new fd is already open, we need to close it. otherwise, Its handler will be lost and leak. and remain open forever.
+		// for example: "3<file.txt 3<&0", we don't explicitly close 3. Thus, it is going to remain open forever, unless we implicitly close it here.
+		if sm.mappings[newfd] != nil {
+			sm.mappings[newfd].Close()
+		}
+
 		switch stream := stream.(type) {
 		case *stringStream:
 			newbuf := &bytes.Buffer{}
