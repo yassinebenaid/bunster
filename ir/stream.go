@@ -46,8 +46,7 @@ func (c CloneFDT) togo() string {
 	}
 	return fmt.Sprintf(
 		`streamManager := streamManager.Clone()
-		%s
-		`, d)
+		%s`, d)
 }
 
 type AddStream struct {
@@ -65,8 +64,8 @@ type SetStream struct {
 }
 
 func (as SetStream) togo() string {
-	return fmt.Sprintf(`
-		if stream, err := streamManager.Get(%s); err != nil{
+	return fmt.Sprintf(
+		`if stream, err := streamManager.Get(%s); err != nil{
 			shell.HandleError(err)
 		}else{
 			%s = stream
