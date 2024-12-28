@@ -130,13 +130,6 @@ func (sm *StreamManager) Duplicate(newfd, oldfd string) error {
 		}
 
 		switch stream := stream.(type) {
-		case *stringStream:
-			newbuf := &bytes.Buffer{}
-			_, err := io.Copy(newbuf, stream)
-			if err != nil {
-				return fmt.Errorf("failed to duplicate file descriptor '%s', %w", oldfd, err)
-			}
-			sm.mappings[newfd] = &stringStream{buf: newbuf}
 		case *os.File:
 			dupFd, err := syscall.Dup(int(stream.Fd()))
 			if err != nil {
