@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"syscall"
 )
 
 const (
@@ -123,14 +124,26 @@ func (sm *StreamManager) Duplicate(newfd, oldfd string) error {
 			return nil
 		}
 
-		var duplicated = stream
-
-		if v, ok := stream.(*proxyStream); ok {
-			duplicated = v.original
-		}
-
-		sm.mappings[newfd] = &proxyStream{
-			original: duplicated,
+		switch stream := stream.(type) {
+		case *stringStream:
+			newbuf := &bytes.Buffer{}
+			_, err := io.Copy(newbuf, stream)
+			if err != nil {
+				return fmt.Errorf("failed to duplicate file descriptor '%s', %w", oldfd, err)
+			}
+			sm.mappings[newfd] = &stringStream{buf: newbuf}
+		case *os.File:
+			dupFd, err := syscall.Dup(int(stream.Fd()))
+			if err != nil {
+				return fmt.Errorf("failed to duplicate file descriptor '%s', %w", oldfd, err)
+			}
+			sm.mappings[newfd] = os.NewFile(uintptr(dupFd), stream.Name())
+		case *proxyStream:
+			sm.mappings[newfd] = &proxyStream{
+				original: stream.original,
+			}
+		default:
+			panic(fmt.Sprintf("failed to clone (%s), unhandled stream type: %T", oldfd, stream))
 		}
 
 		return nil
