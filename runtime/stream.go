@@ -48,10 +48,31 @@ func NewStringStream(s string) Stream {
 	return &stringStream{buf: bytes.NewBufferString(s)}
 }
 
+type proxyStream struct {
+	original Stream
+	closed   bool
+}
+
+func (s *proxyStream) Close() error {
+	if s.closed {
+		return fmt.Errorf("cannot close closed stream")
+	}
+	s.closed = true
+	return nil
+}
+
+func (s *proxyStream) Read(p []byte) (n int, err error) { return 0, nil }
+
+func (s *proxyStream) Write(p []byte) (n int, err error) { return 0, nil }
+func (s *proxyStream) getOriginal() Stream {
+	if o, ok := s.original.(*proxyStream); ok {
+		return o.getOriginal()
+	}
+	return s.original
+}
+
 type StreamManager struct {
-	parent   *StreamManager
 	mappings map[string]Stream
-	cleaners []func() error
 }
 
 func (sm *StreamManager) OpenStream(name string, flag int) (Stream, error) {
@@ -72,7 +93,7 @@ func (sm *StreamManager) Add(fd string, stream Stream) {
 	// This is related to pipelines in particular. when instantiating a new pipeline, we add its ends to the FDT. but if
 	// a redirection happened afterwards, it will cause the pipline handler to be lost and kept open.
 	if sm.mappings[fd] != nil {
-		sm.cleaners = append(sm.cleaners, sm.mappings[fd].Close)
+		sm.mappings[fd].Close()
 	}
 
 	sm.mappings[fd] = stream
@@ -80,14 +101,21 @@ func (sm *StreamManager) Add(fd string, stream Stream) {
 
 func (sm *StreamManager) Get(fd string) Stream {
 	stream, ok := sm.mappings[fd]
-	if !ok && sm.parent != nil {
-		return sm.parent.Get(fd)
+	if !ok {
+		panic("TODO: see what to do here")
+	}
+	if p, ok := stream.(*proxyStream); ok {
+		if p.closed {
+			fmt.Println("error: closed (todo)")
+			return nil
+		}
+		return p.getOriginal()
 	}
 	return stream
 }
 
 func (sm *StreamManager) Duplicate(newfd, oldfd string) error {
-	if stream := sm.Get(oldfd); stream == nil {
+	if stream, ok := sm.mappings[oldfd]; !ok {
 		return fmt.Errorf("trying to duplicate bad file descriptor: %s", oldfd)
 	} else {
 		// when trying to duplicate a file descriptor to it self (eg: 3>&3 ), we just return.
@@ -98,7 +126,7 @@ func (sm *StreamManager) Duplicate(newfd, oldfd string) error {
 		// If the new fd is already open, we need to close it. otherwise, Its handler will be lost and leak. and remain open forever.
 		// for example: "3<file.txt 3<&0", we don't explicitly close 3. Thus, it is going to remain open forever, unless we implicitly close it here.
 		if sm.mappings[newfd] != nil {
-			sm.cleaners = append(sm.cleaners, sm.mappings[newfd].Close)
+			sm.mappings[newfd].Close()
 		}
 
 		switch stream := stream.(type) {
@@ -115,6 +143,10 @@ func (sm *StreamManager) Duplicate(newfd, oldfd string) error {
 				return fmt.Errorf("failed to duplicate file descriptor '%s', %w", oldfd, err)
 			}
 			sm.mappings[newfd] = os.NewFile(uintptr(dupFd), stream.Name())
+		case *proxyStream:
+			sm.mappings[newfd] = &proxyStream{
+				original: stream,
+			}
 		default:
 			panic(fmt.Sprintf("failed to clone (%s), unhandled stream type: %T", oldfd, stream))
 		}
@@ -132,17 +164,20 @@ func (sm *StreamManager) Close(fd string) error {
 }
 
 func (sm *StreamManager) Destroy() {
-	for _, cleanup := range sm.cleaners {
-		cleanup()
-	}
 	for _, stream := range sm.mappings {
 		stream.Close()
 	}
 }
 
 func (sm *StreamManager) Clone() *StreamManager {
-	return &StreamManager{
-		parent:   sm,
+	clone := &StreamManager{
 		mappings: make(map[string]Stream),
 	}
+
+	for fd, stream := range sm.mappings {
+		clone.mappings[fd] = &proxyStream{
+			original: stream,
+		}
+	}
+	return clone
 }
