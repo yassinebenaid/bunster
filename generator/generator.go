@@ -32,23 +32,16 @@ func (ib *InstructionBuffer) add(ins ir.Instruction) {
 
 func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, pc *pipeContext) {
 	switch v := statement.(type) {
-	case ast.Command:
-		var cmdbuf InstructionBuffer
-		g.handleSimpleCommand(&cmdbuf, v, pc)
-		*buf = append(*buf, ir.Closure{
-			Body: cmdbuf,
-		})
-	case ast.Pipeline:
-		var cmdbuf InstructionBuffer
-		g.handlePipeline(&cmdbuf, v)
-		*buf = append(*buf, ir.Closure{
-			Body: cmdbuf,
-		})
 	case ast.List:
 		g.handleList(buf, v)
+	case ast.Pipeline:
+		g.handlePipeline(buf, v)
+	case ast.Command:
+		g.handleSimpleCommand(buf, v, pc)
 	case ast.ParameterAssignement:
 		g.handleParameterAssignment(buf, v)
-
+	case ast.Group:
+		g.handleGroup(buf, v, pc)
 	}
 }
 
@@ -65,11 +58,12 @@ func (g *generator) handleList(buf *InstructionBuffer, l ast.List) {
 }
 
 func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
-	buf.add(ir.NewPipelineWaitgroup("pipelineWaitgroup"))
+	var cmdbuf InstructionBuffer
+	cmdbuf.add(ir.NewPipelineWaitgroup("pipelineWaitgroup"))
 
 	for i, cmd := range p {
 		if i < (len(p) - 1) { //last command doesn't need a pipe
-			buf.add(ir.NewPipe{
+			cmdbuf.add(ir.NewPipe{
 				Writer: fmt.Sprintf("pipeWriter%d", i+1),
 				Reader: fmt.Sprintf("pipeReader%d", i+1),
 			})
@@ -94,45 +88,66 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 		}
 
 		pc.waitgroup = "pipelineWaitgroup"
-		g.generate(buf, cmd.Command, &pc)
+		g.generate(&cmdbuf, cmd.Command, &pc)
 	}
 
-	buf.add(ir.WaitPipelineWaitgroup("pipelineWaitgroup"))
+	cmdbuf.add(ir.WaitPipelineWaitgroup("pipelineWaitgroup"))
 
+	*buf = append(*buf, ir.Closure{
+		Body: cmdbuf,
+	})
 }
 
 func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command, pc *pipeContext) {
-	buf.add(ir.Declare{Name: "commandName", Value: g.handleExpression(cmd.Name)})
-	buf.add(ir.DeclareSlice{Name: "arguments"})
+	var cmdbuf InstructionBuffer
+
+	cmdbuf.add(ir.Declare{Name: "commandName", Value: g.handleExpression(cmd.Name)})
+	cmdbuf.add(ir.DeclareSlice{Name: "arguments"})
 
 	for _, arg := range cmd.Args {
-		buf.add(ir.Append{Name: "arguments", Value: g.handleExpression(arg)})
+		cmdbuf.add(ir.Append{Name: "arguments", Value: g.handleExpression(arg)})
 	}
 
-	buf.add(ir.Declare{
+	cmdbuf.add(ir.Declare{
 		Name:  "command",
 		Value: ir.InitCommand{Name: "commandName", Args: "arguments"},
 	})
 
 	for _, env := range cmd.Env {
-		buf.add(ir.SetCmdEnv{
+		cmdbuf.add(ir.SetCmdEnv{
 			Command: "command",
 			Key:     env.Name,
 			Value:   g.handleExpression(env.Value),
 		})
 	}
 
-	g.handleRedirections(buf, "command", cmd.Redirections, pc)
+	g.handleRedirections(&cmdbuf, "command", cmd.Redirections, pc, false)
+	cmdbuf.add(ir.SetStream{
+		Name: "command.Stdin",
+		Fd:   ir.String("0"),
+	})
+	cmdbuf.add(ir.SetStream{
+		Name: "command.Stdout",
+		Fd:   ir.String("1"),
+	})
+	cmdbuf.add(ir.SetStream{
+		Name: "command.Stderr",
+		Fd:   ir.String("2"),
+	})
 
 	if pc != nil {
-		buf.add(ir.StartCommand("command"))
-		buf.add(ir.PushToPipelineWaitgroup{
+		cmdbuf.add(ir.StartCommand("command"))
+		cmdbuf.add(ir.PushToPipelineWaitgroup{
 			Waitgroup: pc.waitgroup,
 			Command:   "command",
 		})
 	} else {
-		buf.add(ir.RunCommand("command"))
+		cmdbuf.add(ir.RunCommand("command"))
 	}
+
+	*buf = append(*buf, ir.Closure{
+		Body: cmdbuf,
+	})
 }
 
 func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
@@ -162,22 +177,21 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 	}
 }
 
-func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redirections []ast.Redirection, pc *pipeContext) {
-	var fdt = name + "FDT"
-	buf.add(ir.CloneFDT(fdt))
+func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redirections []ast.Redirection, pc *pipeContext, nd bool) {
+	buf.add(ir.CloneFDT{ND: nd})
 
 	// if we're inside a pipline, we need to connect the pipe to the command.(before any other redirection)
 	if pc != nil {
 		if pc.writer != "" {
-			buf.add(ir.AddStream{FDT: fdt, Fd: "1", StreamName: pc.writer})
+			buf.add(ir.AddStream{Fd: "1", StreamName: pc.writer})
 
 			if pc.stderr {
-				buf.add(ir.AddStream{FDT: fdt, Fd: "2", StreamName: pc.writer})
+				buf.add(ir.AddStream{Fd: "2", StreamName: pc.writer})
 			}
 		}
 
 		if pc.reader != "" {
-			buf.add(ir.AddStream{FDT: fdt, Fd: "0", StreamName: pc.reader})
+			buf.add(ir.AddStream{Fd: "0", StreamName: pc.reader})
 		}
 	}
 
@@ -185,91 +199,75 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 		switch redirection.Method {
 		case ">", ">|":
 			buf.add(ir.OpenStream{
-				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_WRITE,
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         redirection.Src,
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		case ">>":
 			buf.add(ir.OpenStream{
-				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_APPEND,
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         redirection.Src,
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		case "&>":
 			buf.add(ir.OpenStream{
-				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_WRITE,
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         "1",
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         "2",
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		case "&>>":
 			buf.add(ir.OpenStream{
-				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_APPEND,
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         "1",
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         "2",
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		case ">&", "<&":
 			if redirection.Dst == nil && redirection.Close {
 				buf.add(ir.CloseStream{
-					FDT: fdt,
-					Fd:  ir.String(redirection.Src),
+					Fd: ir.String(redirection.Src),
 				})
 			} else {
 				buf.add(ir.DuplicateStream{
-					FDT: fdt,
 					Old: redirection.Src,
 					New: g.handleExpression(redirection.Dst),
 				})
-
 				if redirection.Close {
 					buf.add(ir.CloseStream{
-						FDT: fdt,
-						Fd:  g.handleExpression(redirection.Dst),
+						Fd: g.handleExpression(redirection.Dst),
 					})
 				}
 			}
 		case "<":
 			buf.add(ir.OpenStream{
-				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_READ,
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         redirection.Src,
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
@@ -281,37 +279,21 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 				},
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         redirection.Src,
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		case "<>":
 			buf.add(ir.OpenStream{
-				FDT:    fdt,
 				Name:   fmt.Sprintf("%s_file_%d", name, i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_RW,
 			})
 			buf.add(ir.AddStream{
-				FDT:        fdt,
 				Fd:         redirection.Src,
 				StreamName: fmt.Sprintf("%s_file_%d", name, i),
 			})
 		}
 	}
-
-	buf.add(ir.Set{
-		Name:  fmt.Sprintf("%s.Stdin", name),
-		Value: ir.GetStream{FDT: fdt, Fd: ir.String("0")},
-	})
-	buf.add(ir.Set{
-		Name:  fmt.Sprintf("%s.Stdout", name),
-		Value: ir.GetStream{FDT: fdt, Fd: ir.String("1")},
-	})
-	buf.add(ir.Set{
-		Name:  fmt.Sprintf("%s.Stderr", name),
-		Value: ir.GetStream{FDT: fdt, Fd: ir.String("2")},
-	})
 }
 
 type pipeContext struct {

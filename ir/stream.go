@@ -12,7 +12,6 @@ const (
 )
 
 type OpenStream struct {
-	FDT    string
 	Name   string
 	Target Instruction
 	Mode   string
@@ -20,12 +19,12 @@ type OpenStream struct {
 
 func (of OpenStream) togo() string {
 	return fmt.Sprintf(
-		`%s, err := %s.OpenStream(%s, runtime.%s)
+		`%s, err := streamManager.OpenStream(%s, runtime.%s)
 		if err != nil {
 			shell.HandleError(err)
 			return
 		}
-		`, of.Name, of.FDT, of.Target.togo(), of.Mode)
+		`, of.Name, of.Target.togo(), of.Mode)
 }
 
 type NewStringStream struct {
@@ -36,63 +35,67 @@ func (of NewStringStream) togo() string {
 	return fmt.Sprintf("runtime.NewStringStream(%s)", of.Target.togo())
 }
 
-type CloneFDT string
+type CloneFDT struct {
+	ND bool
+}
 
 func (c CloneFDT) togo() string {
+	var d = "defer streamManager.Destroy()\n"
+	if c.ND {
+		d = ""
+	}
 	return fmt.Sprintf(
-		`%s, err := shell.CloneFDT()
-		if err != nil {
-			shell.HandleError(err)
-			return
-		}
-		defer %s.Destroy()
-		`, c, c)
+		`streamManager := streamManager.Clone()
+		%s`, d)
 }
 
 type AddStream struct {
-	FDT        string
 	Fd         string
 	StreamName string
 }
 
 func (as AddStream) togo() string {
-	return fmt.Sprintf("%s.Add(`%s`, %s)\n", as.FDT, as.Fd, as.StreamName)
+	return fmt.Sprintf("streamManager.Add(`%s`, %s)\n", as.Fd, as.StreamName)
 }
 
-type GetStream struct {
-	FDT string
-	Fd  Instruction
+type SetStream struct {
+	Name string
+	Fd   Instruction
 }
 
-func (as GetStream) togo() string {
-	return fmt.Sprintf(`%s.Get(%s)`, as.FDT, as.Fd.togo())
+func (as SetStream) togo() string {
+	return fmt.Sprintf(
+		`if stream, err := streamManager.Get(%s); err != nil{
+			shell.HandleError(err)
+		}else{
+			%s = stream
+		}
+		`, as.Fd.togo(), as.Name)
 }
 
 type DuplicateStream struct {
-	FDT string
 	Old string
 	New Instruction
 }
 
 func (as DuplicateStream) togo() string {
 	return fmt.Sprintf(
-		`if err := %s.Duplicate("%s", %s); err != nil {
+		`if err := streamManager.Duplicate("%s", %s); err != nil {
 			shell.HandleError(err)
 			return
 		}
-	`, as.FDT, as.Old, as.New.togo())
+	`, as.Old, as.New.togo())
 }
 
 type CloseStream struct {
-	FDT string
-	Fd  Instruction
+	Fd Instruction
 }
 
 func (c CloseStream) togo() string {
 	return fmt.Sprintf(
-		`if err := %s.Close(%s); err != nil {
+		`if err := streamManager.Close(%s); err != nil {
 			shell.HandleError(err)
 			return
 		}
-	`, c.FDT, c.Fd.togo())
+	`, c.Fd.togo())
 }

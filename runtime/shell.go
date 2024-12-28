@@ -19,20 +19,22 @@ type Shell struct {
 
 	ExitCode int
 
-	Main func(*Shell)
+	Main func(*Shell, *StreamManager)
 	Args []string
-	FDT  FileDescriptorTable
 
 	vars sync.Map
 }
 
 func (shell *Shell) Run() int {
-	shell.FDT = make(FileDescriptorTable)
-	shell.FDT.Add("0", shell.Stdin)
-	shell.FDT.Add("1", shell.Stdout)
-	shell.FDT.Add("2", shell.Stderr)
+	streamManager := &StreamManager{
+		mappings: make(map[string]Stream),
+	}
+	streamManager.Add("0", shell.Stdin)
+	streamManager.Add("1", shell.Stdout)
+	streamManager.Add("2", shell.Stderr)
+	defer streamManager.Destroy()
 
-	shell.Main(shell)
+	shell.Main(shell, streamManager)
 
 	return shell.ExitCode
 }
@@ -82,10 +84,6 @@ func (shell *Shell) HandleError(err error) {
 	default:
 		fmt.Fprintln(shell.Stderr, err)
 	}
-}
-
-func (shell *Shell) CloneFDT() (FileDescriptorTable, error) {
-	return shell.FDT.clone()
 }
 
 func (shell *Shell) Command(name string, args ...string) *exec.Cmd {
