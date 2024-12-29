@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 	"syscall"
 )
 
@@ -51,8 +52,12 @@ func (s *Buffer) Write(p []byte) (n int, err error) {
 	return s.buf.Write(p)
 }
 
-func (s *Buffer) String() string {
-	return s.buf.String()
+func (s *Buffer) String(trim_leading_newline bool) string {
+	v := s.buf.String()
+	if trim_leading_newline {
+		return strings.TrimRight(v, "\n")
+	}
+	return v
 }
 
 func NewBuffer(s string, readonly bool) *Buffer {
