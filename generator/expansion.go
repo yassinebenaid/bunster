@@ -11,6 +11,12 @@ func (g *generator) handleCommandSubstitution(statements ast.CommandSubstitution
 	// var b bytes.Buffer
 
 	cmdbuf.add(ir.CloneFDT{})
+	cmdbuf.add(ir.Declare{
+		Name:  "stdout",
+		Value: ir.NewBuffer{Value: ir.String("")},
+	})
+
+	cmdbuf.add(ir.Literal("return stdout.String()"))
 
 	return ir.ExpressionClosure(cmdbuf)
 }

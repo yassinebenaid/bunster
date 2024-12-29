@@ -51,6 +51,10 @@ func (s *Buffer) Write(p []byte) (n int, err error) {
 	return s.buf.Write(p)
 }
 
+func (s *Buffer) String() string {
+	return s.buf.String()
+}
+
 func NewBuffer(s string, readonly bool) *Buffer {
 	return &Buffer{
 		buf:      bytes.NewBufferString(s),
