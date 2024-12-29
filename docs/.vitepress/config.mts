@@ -1,12 +1,10 @@
 import { defineConfig } from "vitepress";
 
-// https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "Bunster",
   description:
     "Compile shell scripts to native self-contained executable programs",
   themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Documentation", link: "/quick-start" },
       { text: "Installation", link: "/installation" },
@@ -47,5 +45,21 @@ export default defineConfig({
   lastUpdated: true,
   sitemap: {
     hostname: "https://bunster.netlify.app",
+  },
+  cleanUrls: true,
+
+  // we set the canonical url
+  transformPageData(pageData) {
+    const canonicalUrl =
+      `https://bunster.netlify.app/${pageData.relativePath}`.replace(
+        /\.md$/,
+        "",
+      );
+
+    pageData.frontmatter.head ??= [];
+    pageData.frontmatter.head.push([
+      "link",
+      { rel: "canonical", href: canonicalUrl },
+    ]);
   },
 });

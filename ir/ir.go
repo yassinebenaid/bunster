@@ -18,7 +18,7 @@ func (p Program) String() string {
 
 		import "bunster-build/runtime"
 
-		func Main(shell *runtime.Shell) {
+		func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		`
 
 	for _, in := range p.Instructions {
@@ -27,6 +27,12 @@ func (p Program) String() string {
 
 	str += `}`
 	return str
+}
+
+type CloneShell struct{}
+
+func (c CloneShell) togo() string {
+	return fmt.Sprintf("shell := shell.Clone()\n")
 }
 
 type Declare struct {
@@ -143,21 +149,41 @@ func (r StartCommand) togo() string {
 }
 
 type Closure struct {
-	Body []Instruction
+	Async bool
+	Body  []Instruction
 }
 
 func (c Closure) togo() string {
 	var body string
+	var keyword string
+	if c.Async {
+		keyword = "go"
+	}
 
 	for _, ins := range c.Body {
 		body += ins.togo()
 	}
 
 	return fmt.Sprintf(
-		`func(){
+		`%s func(){
 			%s
 		}()
-	`, body)
+	`, keyword, body)
+}
+
+type ExpressionClosure []Instruction
+
+func (c ExpressionClosure) togo() string {
+	var body string
+
+	for _, ins := range c {
+		body += ins.togo()
+	}
+
+	return fmt.Sprintf(
+		`func() string {
+			%s
+		}()`, body)
 }
 
 type SetCmdEnv struct {

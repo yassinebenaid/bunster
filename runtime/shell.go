@@ -11,28 +11,27 @@ import (
 )
 
 type Shell struct {
-	PID int
-
-	Stdin  Stream
-	Stdout Stream
-	Stderr Stream
-
+	parent   *Shell
+	PID      int
+	Stdin    Stream
+	Stdout   Stream
+	Stderr   Stream
 	ExitCode int
-
-	Main func(*Shell)
-	Args []string
-	FDT  FileDescriptorTable
-
-	vars sync.Map
+	Main     func(*Shell, *StreamManager)
+	Args     []string
+	vars     sync.Map
 }
 
 func (shell *Shell) Run() int {
-	shell.FDT = make(FileDescriptorTable)
-	shell.FDT.Add("0", shell.Stdin)
-	shell.FDT.Add("1", shell.Stdout)
-	shell.FDT.Add("2", shell.Stderr)
+	streamManager := &StreamManager{
+		mappings: make(map[string]Stream),
+	}
+	streamManager.Add("0", shell.Stdin)
+	streamManager.Add("1", shell.Stdout)
+	streamManager.Add("2", shell.Stderr)
+	defer streamManager.Destroy()
 
-	shell.Main(shell)
+	shell.Main(shell, streamManager)
 
 	return shell.ExitCode
 }
@@ -41,6 +40,9 @@ func (shell *Shell) ReadVar(name string) string {
 	value, ok := shell.vars.Load(name)
 	if ok {
 		return value.(string)
+	}
+	if shell.parent != nil {
+		return shell.parent.ReadVar(name)
 	}
 	return os.Getenv(name)
 }
@@ -54,7 +56,7 @@ func (shell *Shell) ReadSpecialVar(name string) string {
 	case "$":
 		return strconv.FormatInt(int64(shell.PID), 10)
 	case "#":
-		return strconv.FormatInt(int64(len(shell.Args))-1, 10) // -1 to substract the argument index 0, which is the program name.
+		return strconv.FormatInt(int64(len(shell.Args)), 10)
 	case "?":
 		return strconv.FormatInt(int64(shell.ExitCode), 10)
 	default:
@@ -84,18 +86,22 @@ func (shell *Shell) HandleError(err error) {
 	}
 }
 
-func (shell *Shell) CloneFDT() (FileDescriptorTable, error) {
-	return shell.FDT.clone()
-}
-
 func (shell *Shell) Command(name string, args ...string) *exec.Cmd {
 	cmd := exec.Command(name, args...)
 	cmd.Env = syscall.Environ()
 	return cmd
 }
 
-func NewPipe() (Stream, Stream, error) {
-	return os.Pipe()
+func (shell *Shell) Clone() *Shell {
+	return &Shell{
+		parent:   shell,
+		PID:      shell.PID,
+		Stdin:    shell.Stdin,
+		Stdout:   shell.Stdout,
+		Stderr:   shell.Stderr,
+		ExitCode: shell.ExitCode,
+		Args:     shell.Args,
+	}
 }
 
 type PiplineWaitgroupItem struct {

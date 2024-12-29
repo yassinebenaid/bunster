@@ -5,7 +5,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell) {
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		var pipelineWaitgroup runtime.PiplineWaitgroup
 		pipeReader1, pipeWriter1, err := runtime.NewPipe()
@@ -18,16 +18,24 @@ func Main(shell *runtime.Shell) {
 			var arguments []string
 			arguments = append(arguments, `file.txt`)
 			var command = shell.Command(commandName, arguments...)
-			commandFDT, err := shell.CloneFDT()
-			if err != nil {
-				shell.HandleError(err)
-				return
-			}
-			defer commandFDT.Destroy()
-			commandFDT.Add(`1`, pipeWriter1)
-			command.Stdin = commandFDT.Get(`0`)
-			command.Stdout = commandFDT.Get(`1`)
-			command.Stderr = commandFDT.Get(`2`)
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			streamManager.Add(`1`, pipeWriter1)
+			if stream, err := streamManager.Get(`0`); err != nil {
+            shell.HandleError(err)
+            } else {
+                command.Stdin = stream
+            }
+            if stream, err := streamManager.Get(`1`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdout = stream
+            }
+            if stream, err := streamManager.Get(`2`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stderr = stream
+            }
 			if err := command.Start(); err != nil {
 				shell.HandleError(err)
 				return
@@ -41,16 +49,24 @@ func Main(shell *runtime.Shell) {
 			var arguments []string
 			arguments = append(arguments, `foobar`)
 			var command = shell.Command(commandName, arguments...)
-			commandFDT, err := shell.CloneFDT()
-			if err != nil {
-				shell.HandleError(err)
-				return
-			}
-			defer commandFDT.Destroy()
-			commandFDT.Add(`0`, pipeReader1)
-			command.Stdin = commandFDT.Get(`0`)
-			command.Stdout = commandFDT.Get(`1`)
-			command.Stderr = commandFDT.Get(`2`)
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			streamManager.Add(`0`, pipeReader1)
+			if stream, err := streamManager.Get(`0`); err != nil {
+            shell.HandleError(err)
+            } else {
+                command.Stdin = stream
+            }
+            if stream, err := streamManager.Get(`1`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdout = stream
+            }
+            if stream, err := streamManager.Get(`2`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stderr = stream
+            }
 			if err := command.Start(); err != nil {
 				shell.HandleError(err)
 				return
@@ -86,7 +102,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell) {
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		var pipelineWaitgroup runtime.PiplineWaitgroup
 		pipeReader1, pipeWriter1, err := runtime.NewPipe()
@@ -99,16 +115,24 @@ func Main(shell *runtime.Shell) {
 			var arguments []string
 			arguments = append(arguments, `file.txt`)
 			var command = shell.Command(commandName, arguments...)
-			commandFDT, err := shell.CloneFDT()
-			if err != nil {
-				shell.HandleError(err)
-				return
-			}
-			defer commandFDT.Destroy()
-			commandFDT.Add(`1`, pipeWriter1)
-			command.Stdin = commandFDT.Get(`0`)
-			command.Stdout = commandFDT.Get(`1`)
-			command.Stderr = commandFDT.Get(`2`)
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			streamManager.Add(`1`, pipeWriter1)
+			if stream, err := streamManager.Get(`0`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdin = stream
+            }
+            if stream, err := streamManager.Get(`1`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdout = stream
+            }
+            if stream, err := streamManager.Get(`2`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stderr = stream
+            }
 			if err := command.Start(); err != nil {
 				shell.HandleError(err)
 				return
@@ -127,17 +151,25 @@ func Main(shell *runtime.Shell) {
 			var arguments []string
 			arguments = append(arguments, `foobar`)
 			var command = shell.Command(commandName, arguments...)
-			commandFDT, err := shell.CloneFDT()
-			if err != nil {
-				shell.HandleError(err)
-				return
-			}
-			defer commandFDT.Destroy()
-			commandFDT.Add(`1`, pipeWriter2)
-			commandFDT.Add(`0`, pipeReader1)
-			command.Stdin = commandFDT.Get(`0`)
-			command.Stdout = commandFDT.Get(`1`)
-			command.Stderr = commandFDT.Get(`2`)
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			streamManager.Add(`1`, pipeWriter2)
+			streamManager.Add(`0`, pipeReader1)
+			if stream, err := streamManager.Get(`0`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdin = stream
+            }
+            if stream, err := streamManager.Get(`1`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdout = stream
+            }
+            if stream, err := streamManager.Get(`2`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stderr = stream
+            }
 			if err := command.Start(); err != nil {
 				shell.HandleError(err)
 				return
@@ -157,17 +189,25 @@ func Main(shell *runtime.Shell) {
             arguments = append(arguments, `[o]+`)
             arguments = append(arguments, `o`)
     		var command = shell.Command(commandName, arguments...)
-    		commandFDT, err := shell.CloneFDT()
-    		if err != nil {
-    			shell.HandleError(err)
-    			return
-    		}
-    		defer commandFDT.Destroy()
-    		commandFDT.Add(`1`, pipeWriter3)
-			commandFDT.Add(`0`, pipeReader2)
-    		command.Stdin = commandFDT.Get(`0`)
-    		command.Stdout = commandFDT.Get(`1`)
-    		command.Stderr = commandFDT.Get(`2`)
+    		streamManager := streamManager.Clone()
+    		defer streamManager.Destroy()
+    		streamManager.Add(`1`, pipeWriter3)
+			streamManager.Add(`0`, pipeReader2)
+        	if stream, err := streamManager.Get(`0`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdin = stream
+            }
+            if stream, err := streamManager.Get(`1`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdout = stream
+            }
+            if stream, err := streamManager.Get(`2`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stderr = stream
+            }
     		if err := command.Start(); err != nil {
     			shell.HandleError(err)
     			return
@@ -181,16 +221,24 @@ func Main(shell *runtime.Shell) {
 			var arguments []string
 			arguments = append(arguments, `, `)
 			var command = shell.Command(commandName, arguments...)
-			commandFDT, err := shell.CloneFDT()
-			if err != nil {
-				shell.HandleError(err)
-				return
-			}
-			defer commandFDT.Destroy()
-			commandFDT.Add(`0`, pipeReader3)
-			command.Stdin = commandFDT.Get(`0`)
-			command.Stdout = commandFDT.Get(`1`)
-			command.Stderr = commandFDT.Get(`2`)
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			streamManager.Add(`0`, pipeReader3)
+			if stream, err := streamManager.Get(`0`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdin = stream
+            }
+            if stream, err := streamManager.Get(`1`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdout = stream
+            }
+            if stream, err := streamManager.Get(`2`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stderr = stream
+            }
 			if err := command.Start(); err != nil {
 				shell.HandleError(err)
 				return
@@ -221,7 +269,7 @@ package main
 
 import "bunster-build/runtime"
 
-func Main(shell *runtime.Shell) {
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		var pipelineWaitgroup runtime.PiplineWaitgroup
 		pipeReader1, pipeWriter1, err := runtime.NewPipe()
@@ -234,17 +282,25 @@ func Main(shell *runtime.Shell) {
 			var arguments []string
 			arguments = append(arguments, `file.txt`)
 			var command = shell.Command(commandName, arguments...)
-			commandFDT, err := shell.CloneFDT()
-			if err != nil {
-				shell.HandleError(err)
-				return
-			}
-			defer commandFDT.Destroy()
-			commandFDT.Add(`1`, pipeWriter1)
-			commandFDT.Add(`2`, pipeWriter1)
-			command.Stdin = commandFDT.Get(`0`)
-			command.Stdout = commandFDT.Get(`1`)
-			command.Stderr = commandFDT.Get(`2`)
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			streamManager.Add(`1`, pipeWriter1)
+			streamManager.Add(`2`, pipeWriter1)
+			if stream, err := streamManager.Get(`0`); err != nil {
+            shell.HandleError(err)
+            } else {
+                command.Stdin = stream
+            }
+            if stream, err := streamManager.Get(`1`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdout = stream
+            }
+            if stream, err := streamManager.Get(`2`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stderr = stream
+            }
 			if err := command.Start(); err != nil {
 				shell.HandleError(err)
 				return
@@ -258,16 +314,24 @@ func Main(shell *runtime.Shell) {
 			var arguments []string
 			arguments = append(arguments, `foobar`)
 			var command = shell.Command(commandName, arguments...)
-			commandFDT, err := shell.CloneFDT()
-			if err != nil {
-				shell.HandleError(err)
-				return
-			}
-			defer commandFDT.Destroy()
-			commandFDT.Add(`0`, pipeReader1)
-			command.Stdin = commandFDT.Get(`0`)
-			command.Stdout = commandFDT.Get(`1`)
-			command.Stderr = commandFDT.Get(`2`)
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			streamManager.Add(`0`, pipeReader1)
+			if stream, err := streamManager.Get(`0`); err != nil {
+            shell.HandleError(err)
+            } else {
+                command.Stdin = stream
+            }
+            if stream, err := streamManager.Get(`1`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdout = stream
+            }
+            if stream, err := streamManager.Get(`2`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stderr = stream
+            }
 			if err := command.Start(); err != nil {
 				shell.HandleError(err)
 				return
