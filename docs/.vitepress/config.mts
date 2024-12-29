@@ -47,4 +47,19 @@ export default defineConfig({
     hostname: "https://bunster.netlify.app",
   },
   cleanUrls: true,
+
+  // we set the canonical url
+  transformPageData(pageData) {
+    const canonicalUrl =
+      `https://bunster.netlify.app/${pageData.relativePath}`.replace(
+        /\.md$/,
+        "",
+      );
+
+    pageData.frontmatter.head ??= [];
+    pageData.frontmatter.head.push([
+      "link",
+      { rel: "canonical", href: canonicalUrl },
+    ]);
+  },
 });
