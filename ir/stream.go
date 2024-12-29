@@ -27,12 +27,13 @@ func (of OpenStream) togo() string {
 		`, of.Name, of.Target.togo(), of.Mode)
 }
 
-type NewStringStream struct {
-	Target Instruction
+type NewBuffer struct {
+	Value    Instruction
+	Readonly bool
 }
 
-func (of NewStringStream) togo() string {
-	return fmt.Sprintf("runtime.NewStringStream(%s)", of.Target.togo())
+func (of NewBuffer) togo() string {
+	return fmt.Sprintf("runtime.NewBuffer(%s, %t)", of.Value.togo(), of.Readonly)
 }
 
 type CloneFDT struct {

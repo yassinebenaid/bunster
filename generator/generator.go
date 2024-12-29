@@ -172,6 +172,8 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 			concat = append(concat, g.handleExpression(expr))
 		}
 		return concat
+	case ast.CommandSubstitution:
+		return g.handleCommandSubstitution(v)
 	default:
 		panic(fmt.Sprintf("unhandled expression type (%T)", expression))
 	}
@@ -274,8 +276,9 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 		case "<<<":
 			buf.add(ir.Declare{
 				Name: fmt.Sprintf("%s_file_%d", name, i),
-				Value: ir.NewStringStream{
-					Target: g.handleExpression(redirection.Dst),
+				Value: ir.NewBuffer{
+					Readonly: true,
+					Value:    g.handleExpression(redirection.Dst),
 				},
 			})
 			buf.add(ir.AddStream{

@@ -29,6 +29,12 @@ func (p Program) String() string {
 	return str
 }
 
+type CloneShell struct{}
+
+func (c CloneShell) togo() string {
+	return fmt.Sprintf("shell := shell.Clone()\n")
+}
+
 type Declare struct {
 	Name  string
 	Value Instruction
@@ -163,6 +169,21 @@ func (c Closure) togo() string {
 			%s
 		}()
 	`, keyword, body)
+}
+
+type ExpressionClosure []Instruction
+
+func (c ExpressionClosure) togo() string {
+	var body string
+
+	for _, ins := range c {
+		body += ins.togo()
+	}
+
+	return fmt.Sprintf(
+		`func() string {
+			%s
+		}()`, body)
 }
 
 type SetCmdEnv struct {
