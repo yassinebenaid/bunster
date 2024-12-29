@@ -9,3 +9,4 @@ as work-in-progress and as not-yet-supported.
 - [Pipelines](https://www.gnu.org/software/bash/manual/bash.html#Pipelines)
 - [Conditional Execution](https://www.gnu.org/software/bash/manual/bash.html#Lists)
 - [Group Compound](https://www.gnu.org/software/bash/manual/bash.html#index-_007b)
+- [Command Substituion](https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html)
