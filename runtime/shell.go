@@ -11,18 +11,15 @@ import (
 )
 
 type Shell struct {
-	PID int
-
-	Stdin  Stream
-	Stdout Stream
-	Stderr Stream
-
+	parent   *Shell
+	PID      int
+	Stdin    Stream
+	Stdout   Stream
+	Stderr   Stream
 	ExitCode int
-
-	Main func(*Shell, *StreamManager)
-	Args []string
-
-	vars sync.Map
+	Main     func(*Shell, *StreamManager)
+	Args     []string
+	vars     sync.Map
 }
 
 func (shell *Shell) Run() int {
@@ -44,6 +41,9 @@ func (shell *Shell) ReadVar(name string) string {
 	if ok {
 		return value.(string)
 	}
+	if shell.parent != nil {
+		return shell.parent.ReadVar(name)
+	}
 	return os.Getenv(name)
 }
 
@@ -56,7 +56,7 @@ func (shell *Shell) ReadSpecialVar(name string) string {
 	case "$":
 		return strconv.FormatInt(int64(shell.PID), 10)
 	case "#":
-		return strconv.FormatInt(int64(len(shell.Args))-1, 10) // -1 to substract the argument index 0, which is the program name.
+		return strconv.FormatInt(int64(len(shell.Args)), 10)
 	case "?":
 		return strconv.FormatInt(int64(shell.ExitCode), 10)
 	default:
@@ -92,8 +92,16 @@ func (shell *Shell) Command(name string, args ...string) *exec.Cmd {
 	return cmd
 }
 
-func NewPipe() (Stream, Stream, error) {
-	return os.Pipe()
+func (shell *Shell) Clone() *Shell {
+	return &Shell{
+		parent:   shell,
+		PID:      shell.PID,
+		Stdin:    shell.Stdin,
+		Stdout:   shell.Stdout,
+		Stderr:   shell.Stderr,
+		ExitCode: shell.ExitCode,
+		Args:     shell.Args,
+	}
 }
 
 type PiplineWaitgroupItem struct {

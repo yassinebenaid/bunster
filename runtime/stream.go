@@ -201,3 +201,7 @@ func (sm *StreamManager) Clone() *StreamManager {
 	}
 	return clone
 }
+
+func NewPipe() (Stream, Stream, error) {
+	return os.Pipe()
+}

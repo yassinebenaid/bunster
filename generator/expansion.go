@@ -9,6 +9,7 @@ func (g *generator) handleCommandSubstitution(statements ast.CommandSubstitution
 	var cmdbuf InstructionBuffer
 
 	cmdbuf.add(ir.CloneFDT{})
+	cmdbuf.add(ir.CloneShell{})
 	cmdbuf.add(ir.Declare{
 		Name:  "stdout",
 		Value: ir.NewBuffer{Value: ir.String("")},

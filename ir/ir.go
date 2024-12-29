@@ -29,6 +29,12 @@ func (p Program) String() string {
 	return str
 }
 
+type CloneShell struct{}
+
+func (c CloneShell) togo() string {
+	return fmt.Sprintf("shell := shell.Clone()\n")
+}
+
 type Declare struct {
 	Name  string
 	Value Instruction
