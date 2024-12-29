@@ -22,7 +22,8 @@ type Stream interface {
 }
 
 type Buffer struct {
-	buf *bytes.Buffer
+	buf      *bytes.Buffer
+	readonly bool
 }
 
 func (s *Buffer) Close() error {
@@ -44,11 +45,17 @@ func (s *Buffer) Write(p []byte) (n int, err error) {
 	if s.buf == nil {
 		return 0, fmt.Errorf("bad file descriptor, cannot write to closed stream")
 	}
+	if s.readonly {
+		return 0, fmt.Errorf("bad file descriptor, cannot write to read-only stream")
+	}
 	return s.buf.Write(p)
 }
 
-func NewStringStream(s string) Stream {
-	return &Buffer{buf: bytes.NewBufferString(s)}
+func NewBuffer(s string, readonly bool) *Buffer {
+	return &Buffer{
+		buf:      bytes.NewBufferString(s),
+		readonly: readonly,
+	}
 }
 
 type proxyStream struct {
@@ -140,7 +147,7 @@ func (sm *StreamManager) Duplicate(newfd, oldfd string) error {
 			if err != nil {
 				return fmt.Errorf("failed to duplicate file descriptor '%s', %w", oldfd, err)
 			}
-			sm.mappings[newfd] = &Buffer{buf: newbuf}
+			sm.mappings[newfd] = &Buffer{buf: newbuf, readonly: stream.readonly}
 		case *os.File:
 			dupFd, err := syscall.Dup(int(stream.Fd()))
 			if err != nil {
