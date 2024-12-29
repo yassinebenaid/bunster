@@ -172,6 +172,8 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 			concat = append(concat, g.handleExpression(expr))
 		}
 		return concat
+	case ast.CommandSubstitution:
+		return g.handleCommandSubstitution(v)
 	default:
 		panic(fmt.Sprintf("unhandled expression type (%T)", expression))
 	}

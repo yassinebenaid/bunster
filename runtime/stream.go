@@ -21,11 +21,11 @@ type Stream interface {
 	io.Closer
 }
 
-type stringStream struct {
+type Buffer struct {
 	buf *bytes.Buffer
 }
 
-func (s *stringStream) Close() error {
+func (s *Buffer) Close() error {
 	if s.buf == nil {
 		return fmt.Errorf("cannot close closed stream")
 	}
@@ -33,19 +33,22 @@ func (s *stringStream) Close() error {
 	return nil
 }
 
-func (s *stringStream) Read(p []byte) (n int, err error) {
+func (s *Buffer) Read(p []byte) (n int, err error) {
 	if s.buf == nil {
 		return 0, fmt.Errorf("bad file descriptor, cannot read from closed stream")
 	}
 	return s.buf.Read(p)
 }
 
-func (s *stringStream) Write(p []byte) (n int, err error) {
-	return 0, fmt.Errorf("bad file descriptor, cannot write to read only stream")
+func (s *Buffer) Write(p []byte) (n int, err error) {
+	if s.buf == nil {
+		return 0, fmt.Errorf("bad file descriptor, cannot write to closed stream")
+	}
+	return s.buf.Write(p)
 }
 
 func NewStringStream(s string) Stream {
-	return &stringStream{buf: bytes.NewBufferString(s)}
+	return &Buffer{buf: bytes.NewBufferString(s)}
 }
 
 type proxyStream struct {
@@ -131,13 +134,13 @@ func (sm *StreamManager) Duplicate(newfd, oldfd string) error {
 		}
 
 		switch stream := stream.(type) {
-		case *stringStream:
+		case *Buffer:
 			newbuf := &bytes.Buffer{}
 			_, err := io.Copy(newbuf, stream)
 			if err != nil {
 				return fmt.Errorf("failed to duplicate file descriptor '%s', %w", oldfd, err)
 			}
-			sm.mappings[newfd] = &stringStream{buf: newbuf}
+			sm.mappings[newfd] = &Buffer{buf: newbuf}
 		case *os.File:
 			dupFd, err := syscall.Dup(int(stream.Fd()))
 			if err != nil {

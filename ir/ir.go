@@ -165,6 +165,21 @@ func (c Closure) togo() string {
 	`, keyword, body)
 }
 
+type ExpressionClosure []Instruction
+
+func (c ExpressionClosure) togo() string {
+	var body string
+
+	for _, ins := range c {
+		body += ins.togo()
+	}
+
+	return fmt.Sprintf(
+		`func() string {
+			%s
+		}()`, body)
+}
+
 type SetCmdEnv struct {
 	Command string
 	Key     string
