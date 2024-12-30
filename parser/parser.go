@@ -139,12 +139,12 @@ func (p *parser) parsePipline() ast.Pipeline {
 	}
 	pipeline = append(pipeline, ast.PipelineCommand{Command: cmd})
 
-	for {
+	for i := 0; ; i++ {
 		if p.curr.Type != token.PIPE && p.curr.Type != token.PIPE_AMPERSAND {
 			break
 		}
 		var pipe ast.PipelineCommand
-		pipe.Stderr = p.curr.Type == token.PIPE_AMPERSAND
+		pipeline[i].Stderr = p.curr.Type == token.PIPE_AMPERSAND
 
 		p.proceed()
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
@@ -228,6 +228,8 @@ loop:
 			break loop
 		case token.SIMPLE_EXPANSION:
 			exprs = append(exprs, ast.Var(p.curr.Literal))
+		case token.SPECIAL_VAR:
+			exprs = append(exprs, ast.SpecialVar(p.curr.Literal))
 		case token.SINGLE_QUOTE:
 			exprs = append(exprs, p.parseLiteralString())
 		case token.DOUBLE_QUOTE:
@@ -294,6 +296,8 @@ loop:
 			exprs = append(exprs, ast.Word("\\"+p.curr.Literal))
 		case token.SIMPLE_EXPANSION:
 			exprs = append(exprs, ast.Var(p.curr.Literal))
+		case token.SPECIAL_VAR:
+			exprs = append(exprs, ast.SpecialVar(p.curr.Literal))
 		case token.DOLLAR_BRACE:
 			exprs = append(exprs, p.parseParameterExpansion())
 		case token.DOLLAR_PAREN:

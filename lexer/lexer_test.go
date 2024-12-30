@@ -166,7 +166,7 @@ func TestLexer(t *testing.T) {
 			{Type: token.SPECIAL_VAR, Literal: "1", Line: 1, Position: 1},
 			{Type: token.WORD, Literal: "something", Line: 1, Position: 3},
 		}},
-		{`$$ $@ $? $# $! $_ $*`, []token.Token{
+		{`$$ $@ $? $# $! $*`, []token.Token{
 			{Type: token.SPECIAL_VAR, Literal: "$", Line: 1, Position: 1},
 			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 3},
 			{Type: token.SPECIAL_VAR, Literal: "@", Line: 1, Position: 4},
@@ -177,9 +177,7 @@ func TestLexer(t *testing.T) {
 			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 12},
 			{Type: token.SPECIAL_VAR, Literal: "!", Line: 1, Position: 13},
 			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 15},
-			{Type: token.SPECIAL_VAR, Literal: "_", Line: 1, Position: 16},
-			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 18},
-			{Type: token.SPECIAL_VAR, Literal: "*", Line: 1, Position: 19},
+			{Type: token.SPECIAL_VAR, Literal: "*", Line: 1, Position: 16},
 		}},
 		// Simple expansion
 		{`$variable_name $variable-name $concatinated$VAIABLE$VAR_0987654321`, []token.Token{

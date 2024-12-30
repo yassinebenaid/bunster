@@ -298,7 +298,7 @@ switch_beginning:
 		tok.Type, tok.Literal = token.DOUBLE_QUOTE, string(l.curr)
 	case l.curr == '$':
 		switch l.next {
-		case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '$', '#', '_', '*', '@', '?', '!':
+		case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '$', '#', '*', '@', '?', '!':
 			l.proceed()
 			tok.Type, tok.Literal = token.SPECIAL_VAR, string(l.curr)
 		case '{':

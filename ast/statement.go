@@ -143,7 +143,6 @@ func (Function) node()            {}
 func (Test) node()                {}
 
 // Expressions
-func (Redirection) expr()         {}
 func (CommandSubstitution) expr() {}
 func (ProcessSubstitution) expr() {}
 

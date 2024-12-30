@@ -111,7 +111,7 @@ var loopsTests = []testCase{
 									{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
 								},
 							},
-							Stderr: false,
+							Stderr: true,
 						},
 						{
 							Command: ast.Command{
@@ -121,7 +121,7 @@ var loopsTests = []testCase{
 									{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 								},
 							},
-							Stderr: true,
+							Stderr: false,
 						},
 					},
 				},
@@ -163,7 +163,7 @@ var loopsTests = []testCase{
 										{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
 									},
 								},
-								Stderr: false,
+								Stderr: true,
 							},
 							{
 								Command: ast.Command{
@@ -173,7 +173,7 @@ var loopsTests = []testCase{
 										{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 									},
 								},
-								Stderr: true,
+								Stderr: false,
 							},
 						},
 					},
@@ -225,9 +225,9 @@ var loopsTests = []testCase{
 						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
+				Stderr: true,
 			},
 			ast.PipelineCommand{
-				Stderr: true,
 				Command: ast.Loop{
 					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
@@ -465,7 +465,7 @@ var loopsTests = []testCase{
 									{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
 								},
 							},
-							Stderr: false,
+							Stderr: true,
 						},
 						{
 							Command: ast.Command{
@@ -475,7 +475,7 @@ var loopsTests = []testCase{
 									{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 								},
 							},
-							Stderr: true,
+							Stderr: false,
 						},
 					},
 				},
@@ -517,7 +517,7 @@ var loopsTests = []testCase{
 										{Src: "3", Method: "<<<", Dst: ast.Word("foo bar")},
 									},
 								},
-								Stderr: false,
+								Stderr: true,
 							},
 							{
 								Command: ast.Command{
@@ -527,7 +527,7 @@ var loopsTests = []testCase{
 										{Src: "0", Method: "<", Dst: ast.Word("input.txt")},
 									},
 								},
-								Stderr: true,
+								Stderr: false,
 							},
 						},
 					},
@@ -583,9 +583,9 @@ var loopsTests = []testCase{
 						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
+				Stderr: true,
 			},
 			ast.PipelineCommand{
-				Stderr: true,
 				Command: ast.Loop{
 					Negate: true,
 					Head: []ast.Statement{
@@ -780,9 +780,8 @@ var loopsTests = []testCase{
 					},
 				},
 			},
-			{Command: ast.Command{Name: ast.Word("cmd")}},
+			{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: true},
 			{
-				Stderr: true,
 				Command: ast.RangeLoop{
 					Var: "varname",
 					Body: []ast.Statement{

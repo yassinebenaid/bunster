@@ -218,7 +218,7 @@ func (p *parser) parseParameterExpansion() ast.Expression {
 
 func (p *parser) parseExpansionOperandExpression(stopAt token.TokenType) ast.Expression {
 	var exprs []ast.Expression
-
+	// TODO: handle special variables in parameter expansion
 loop:
 	for {
 		switch p.curr.Type {

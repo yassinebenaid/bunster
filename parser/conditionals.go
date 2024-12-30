@@ -348,6 +348,7 @@ func (p *parser) parsePosixConditionalBinaryOperator() string {
 
 func (p *parser) parsePatternExpression() ast.Expression {
 	var exprs []ast.Expression
+	// TODO: handle special variables in test commands
 
 loop:
 	for {

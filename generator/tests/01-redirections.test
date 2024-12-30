@@ -1,0 +1,509 @@
+
+
+#(TEST: output redirection)
+
+git >output.txt 2>|errors.txt 3>'file.txt' 4>"file.txt"
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    func() {
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		streamManager := streamManager.Clone()
+  		defer streamManager.Destroy()
+        command_file_0, err := streamManager.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
+        if err != nil {
+        shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`1`, command_file_0)
+        command_file_1, err := streamManager.OpenStream(`errors.txt`, runtime.STREAM_FLAG_WRITE)
+        if err != nil {
+        shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`2`, command_file_1)
+        command_file_2, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
+        if err != nil {
+        shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`3`, command_file_2)
+        command_file_3, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
+        if err != nil {
+        shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`4`, command_file_3)
+  		if stream, err := streamManager.Get(`0`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stdin = stream
+        }
+        if stream, err := streamManager.Get(`1`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stdout = stream
+        }
+        if stream, err := streamManager.Get(`2`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stderr = stream
+        }
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+}
+#(ENDTEST)
+
+
+
+
+#(TEST: output appending redirection)
+
+git >>output.txt 2>>errors.txt 3>>'file.txt' 4>>"file.txt"
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    func() {
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		streamManager := streamManager.Clone()
+  		defer streamManager.Destroy()
+        command_file_0, err := streamManager.OpenStream(`output.txt`, runtime.STREAM_FLAG_APPEND)
+        if err != nil {
+        shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`1`, command_file_0)
+        command_file_1, err := streamManager.OpenStream(`errors.txt`, runtime.STREAM_FLAG_APPEND)
+        if err != nil {
+        shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`2`, command_file_1)
+        command_file_2, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
+        if err != nil {
+        shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`3`, command_file_2)
+        command_file_3, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
+        if err != nil {
+        shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`4`, command_file_3)
+  		if stream, err := streamManager.Get(`0`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stdin = stream
+        }
+        if stream, err := streamManager.Get(`1`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stdout = stream
+        }
+        if stream, err := streamManager.Get(`2`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stderr = stream
+        }
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+}
+#(ENDTEST)
+
+
+
+#(TEST: all output redirection)
+
+git &>output.txt &>>'file.txt'
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    func() {
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		streamManager := streamManager.Clone()
+  		defer streamManager.Destroy()
+        command_file_0, err := streamManager.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
+        if err != nil {
+        shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`1`, command_file_0)
+        streamManager.Add(`2`, command_file_0)
+        command_file_1, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
+        if err != nil {
+        shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`1`, command_file_1)
+        streamManager.Add(`2`, command_file_1)
+  		if stream, err := streamManager.Get(`0`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stdin = stream
+        }
+        if stream, err := streamManager.Get(`1`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stdout = stream
+        }
+        if stream, err := streamManager.Get(`2`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stderr = stream
+        }
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+}
+#(ENDTEST)
+
+
+
+
+
+#(TEST: output file descriptor duplication and closing)
+
+git 3>file.txt >&3- 2>&1  4>>file.txt 4>&-
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    func() {
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		streamManager := streamManager.Clone()
+  		defer streamManager.Destroy()
+        command_file_0, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
+        if err != nil {
+            shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`3`, command_file_0)
+        if err := streamManager.Duplicate("1", `3`); err != nil {
+            shell.HandleError(err)
+            return
+        }
+        if err := streamManager.Close(`3`); err != nil {
+            shell.HandleError(err)
+            return
+        }
+        if err := streamManager.Duplicate("2", `1`); err != nil {
+            shell.HandleError(err)
+            return
+        }
+        command_file_3, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
+        if err != nil {
+            shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`4`, command_file_3)
+        if err := streamManager.Close(`4`); err != nil {
+            shell.HandleError(err)
+            return
+        }
+  		if stream, err := streamManager.Get(`0`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stdin = stream
+        }
+        if stream, err := streamManager.Get(`1`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stdout = stream
+        }
+        if stream, err := streamManager.Get(`2`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stderr = stream
+        }
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+}
+#(ENDTEST)
+
+
+
+
+#(TEST: input redirection)
+
+git <output.txt 2<errors.txt 3<'file.txt' 4<"file.txt"
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    func() {
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		streamManager := streamManager.Clone()
+  		defer streamManager.Destroy()
+        command_file_0, err := streamManager.OpenStream(`output.txt`, runtime.STREAM_FLAG_READ)
+        if err != nil {
+        shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`0`, command_file_0)
+        command_file_1, err := streamManager.OpenStream(`errors.txt`, runtime.STREAM_FLAG_READ)
+        if err != nil {
+        shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`2`, command_file_1)
+        command_file_2, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
+        if err != nil {
+        shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`3`, command_file_2)
+        command_file_3, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
+        if err != nil {
+        shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`4`, command_file_3)
+  		if stream, err := streamManager.Get(`0`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stdin = stream
+        }
+        if stream, err := streamManager.Get(`1`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stdout = stream
+        }
+        if stream, err := streamManager.Get(`2`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stderr = stream
+        }
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+}
+#(ENDTEST)
+
+
+
+#(TEST: here string input redirection)
+
+git <<< Foo 2<<< 'Foo Bar'
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    func() {
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		streamManager := streamManager.Clone()
+  		defer streamManager.Destroy()
+        var command_file_0 = runtime.NewBuffer(`Foo`, true)
+        streamManager.Add(`0`, command_file_0)
+        var command_file_1 = runtime.NewBuffer(`Foo Bar`, true)
+        streamManager.Add(`2`, command_file_1)
+  		if stream, err := streamManager.Get(`0`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stdin = stream
+        }
+        if stream, err := streamManager.Get(`1`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stdout = stream
+        }
+        if stream, err := streamManager.Get(`2`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stderr = stream
+        }
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+}
+#(ENDTEST)
+
+
+
+
+#(TEST: output file descriptor duplication and closing)
+
+git 3<file.txt <&3- 2<&1  4<<<foobar 4<&-
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    func() {
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		streamManager := streamManager.Clone()
+  		defer streamManager.Destroy()
+        command_file_0, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
+        if err != nil {
+            shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`3`, command_file_0)
+        if err := streamManager.Duplicate("0", `3`); err != nil {
+            shell.HandleError(err)
+            return
+        }
+        if err := streamManager.Close(`3`); err != nil {
+            shell.HandleError(err)
+            return
+        }
+        if err := streamManager.Duplicate("2", `1`); err != nil {
+            shell.HandleError(err)
+            return
+        }
+        var command_file_3 = runtime.NewBuffer(`foobar`, true)
+        streamManager.Add(`4`, command_file_3)
+        if err := streamManager.Close(`4`); err != nil {
+            shell.HandleError(err)
+            return
+        }
+  		if stream, err := streamManager.Get(`0`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stdin = stream
+        }
+        if stream, err := streamManager.Get(`1`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stdout = stream
+        }
+        if stream, err := streamManager.Get(`2`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stderr = stream
+        }
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+}
+#(ENDTEST)
+
+
+#(TEST: output redirection)
+
+git <>file.txt 2<>file.txt
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    func() {
+  		var commandName = `git`
+  		var arguments []string
+  		var command = shell.Command(commandName, arguments...)
+  		streamManager := streamManager.Clone()
+  		defer streamManager.Destroy()
+        command_file_0, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_RW)
+        if err != nil {
+        shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`0`, command_file_0)
+        command_file_1, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_RW)
+        if err != nil {
+        shell.HandleError(err)
+            return
+        }
+        streamManager.Add(`2`, command_file_1)
+  		if stream, err := streamManager.Get(`0`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stdin = stream
+        }
+        if stream, err := streamManager.Get(`1`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stdout = stream
+        }
+        if stream, err := streamManager.Get(`2`); err != nil {
+            shell.HandleError(err)
+        } else {
+            command.Stderr = stream
+        }
+  		if err := command.Run(); err != nil {
+ 			shell.HandleError(err)
+ 			return
+  		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+   	}()
+}
+#(ENDTEST)

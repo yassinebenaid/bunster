@@ -1,0 +1,355 @@
+#(TEST: simple pipeline)
+cat file.txt | grep foobar
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		var pipelineWaitgroup runtime.PiplineWaitgroup
+		pipeReader1, pipeWriter1, err := runtime.NewPipe()
+		if err != nil {
+			shell.HandleError(err)
+			return
+		}
+		func() {
+			var commandName = `cat`
+			var arguments []string
+			arguments = append(arguments, `file.txt`)
+			var command = shell.Command(commandName, arguments...)
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			streamManager.Add(`1`, pipeWriter1)
+			if stream, err := streamManager.Get(`0`); err != nil {
+            shell.HandleError(err)
+            } else {
+                command.Stdin = stream
+            }
+            if stream, err := streamManager.Get(`1`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdout = stream
+            }
+            if stream, err := streamManager.Get(`2`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stderr = stream
+            }
+			if err := command.Start(); err != nil {
+				shell.HandleError(err)
+				return
+			}
+			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
+				Wait: command.Wait,
+			})
+		}()
+		func() {
+			var commandName = `grep`
+			var arguments []string
+			arguments = append(arguments, `foobar`)
+			var command = shell.Command(commandName, arguments...)
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			streamManager.Add(`0`, pipeReader1)
+			if stream, err := streamManager.Get(`0`); err != nil {
+            shell.HandleError(err)
+            } else {
+                command.Stdin = stream
+            }
+            if stream, err := streamManager.Get(`1`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdout = stream
+            }
+            if stream, err := streamManager.Get(`2`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stderr = stream
+            }
+			if err := command.Start(); err != nil {
+				shell.HandleError(err)
+				return
+			}
+			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
+				Wait: command.Wait,
+			})
+		}()
+		for i, item := range pipelineWaitgroup {
+			if err := item.Wait(); err != nil {
+				shell.HandleError(err)
+			}
+			if i < (len(pipelineWaitgroup) - 1) {
+				shell.ExitCode = 0
+			}
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+
+#(TEST: longer pipeline)
+
+cat file.txt |
+    grep foobar |
+    strep "[o]+" "o" |
+    strjoin ', '
+
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		var pipelineWaitgroup runtime.PiplineWaitgroup
+		pipeReader1, pipeWriter1, err := runtime.NewPipe()
+		if err != nil {
+			shell.HandleError(err)
+			return
+		}
+		func() {
+			var commandName = `cat`
+			var arguments []string
+			arguments = append(arguments, `file.txt`)
+			var command = shell.Command(commandName, arguments...)
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			streamManager.Add(`1`, pipeWriter1)
+			if stream, err := streamManager.Get(`0`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdin = stream
+            }
+            if stream, err := streamManager.Get(`1`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdout = stream
+            }
+            if stream, err := streamManager.Get(`2`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stderr = stream
+            }
+			if err := command.Start(); err != nil {
+				shell.HandleError(err)
+				return
+			}
+			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
+				Wait: command.Wait,
+			})
+		}()
+		pipeReader2, pipeWriter2, err := runtime.NewPipe()
+		if err != nil {
+			shell.HandleError(err)
+			return
+		}
+		func() {
+			var commandName = `grep`
+			var arguments []string
+			arguments = append(arguments, `foobar`)
+			var command = shell.Command(commandName, arguments...)
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			streamManager.Add(`1`, pipeWriter2)
+			streamManager.Add(`0`, pipeReader1)
+			if stream, err := streamManager.Get(`0`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdin = stream
+            }
+            if stream, err := streamManager.Get(`1`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdout = stream
+            }
+            if stream, err := streamManager.Get(`2`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stderr = stream
+            }
+			if err := command.Start(); err != nil {
+				shell.HandleError(err)
+				return
+			}
+			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
+				Wait: command.Wait,
+			})
+		}()
+		pipeReader3, pipeWriter3, err := runtime.NewPipe()
+		if err != nil {
+			shell.HandleError(err)
+			return
+		}
+		func() {
+    		var commandName = `strep`
+    		var arguments []string
+            arguments = append(arguments, `[o]+`)
+            arguments = append(arguments, `o`)
+    		var command = shell.Command(commandName, arguments...)
+    		streamManager := streamManager.Clone()
+    		defer streamManager.Destroy()
+    		streamManager.Add(`1`, pipeWriter3)
+			streamManager.Add(`0`, pipeReader2)
+        	if stream, err := streamManager.Get(`0`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdin = stream
+            }
+            if stream, err := streamManager.Get(`1`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdout = stream
+            }
+            if stream, err := streamManager.Get(`2`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stderr = stream
+            }
+    		if err := command.Start(); err != nil {
+    			shell.HandleError(err)
+    			return
+    		}
+    		pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
+    			Wait: command.Wait,
+		})
+		}()
+			func() {
+			var commandName = `strjoin`
+			var arguments []string
+			arguments = append(arguments, `, `)
+			var command = shell.Command(commandName, arguments...)
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			streamManager.Add(`0`, pipeReader3)
+			if stream, err := streamManager.Get(`0`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdin = stream
+            }
+            if stream, err := streamManager.Get(`1`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdout = stream
+            }
+            if stream, err := streamManager.Get(`2`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stderr = stream
+            }
+			if err := command.Start(); err != nil {
+				shell.HandleError(err)
+				return
+			}
+			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
+				Wait: command.Wait,
+			})
+		}()
+		for i, item := range pipelineWaitgroup {
+			if err := item.Wait(); err != nil {
+				shell.HandleError(err)
+			}
+			if i < (len(pipelineWaitgroup) - 1) {
+				shell.ExitCode = 0
+			}
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+
+#(TEST: pipeline that redirects stderr as well)
+cat file.txt |& grep foobar
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		var pipelineWaitgroup runtime.PiplineWaitgroup
+		pipeReader1, pipeWriter1, err := runtime.NewPipe()
+		if err != nil {
+			shell.HandleError(err)
+			return
+		}
+		func() {
+			var commandName = `cat`
+			var arguments []string
+			arguments = append(arguments, `file.txt`)
+			var command = shell.Command(commandName, arguments...)
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			streamManager.Add(`1`, pipeWriter1)
+			streamManager.Add(`2`, pipeWriter1)
+			if stream, err := streamManager.Get(`0`); err != nil {
+            shell.HandleError(err)
+            } else {
+                command.Stdin = stream
+            }
+            if stream, err := streamManager.Get(`1`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdout = stream
+            }
+            if stream, err := streamManager.Get(`2`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stderr = stream
+            }
+			if err := command.Start(); err != nil {
+				shell.HandleError(err)
+				return
+			}
+			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
+				Wait: command.Wait,
+			})
+		}()
+		func() {
+			var commandName = `grep`
+			var arguments []string
+			arguments = append(arguments, `foobar`)
+			var command = shell.Command(commandName, arguments...)
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			streamManager.Add(`0`, pipeReader1)
+			if stream, err := streamManager.Get(`0`); err != nil {
+            shell.HandleError(err)
+            } else {
+                command.Stdin = stream
+            }
+            if stream, err := streamManager.Get(`1`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stdout = stream
+            }
+            if stream, err := streamManager.Get(`2`); err != nil {
+                shell.HandleError(err)
+            } else {
+                command.Stderr = stream
+            }
+			if err := command.Start(); err != nil {
+				shell.HandleError(err)
+				return
+			}
+			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
+				Wait: command.Wait,
+			})
+		}()
+		for i, item := range pipelineWaitgroup {
+			if err := item.Wait(); err != nil {
+				shell.HandleError(err)
+			}
+			if i < (len(pipelineWaitgroup) - 1) {
+				shell.ExitCode = 0
+			}
+		}
+
+	}()
+}
+
+#(ENDTEST)
