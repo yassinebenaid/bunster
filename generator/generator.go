@@ -20,7 +20,7 @@ func Generate(script ast.Script) ir.Program {
 	}
 }
 
-type generator struct {}
+type generator struct{}
 
 type InstructionBuffer []ir.Instruction
 
@@ -40,6 +40,8 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, pc
 		g.handleParameterAssignment(buf, v)
 	case ast.Group:
 		g.handleGroup(buf, v, pc)
+	default:
+		panic(fmt.Sprintf("unhandled statement type (%T)", statement))
 	}
 }
 
