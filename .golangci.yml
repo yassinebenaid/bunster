@@ -1,5 +1,6 @@
 linters:
   disable-all: true
   enable:
-    - errcheck
+    - errcheck # Errcheck is a program for checking for unchecked errors in Go code.
+    - ineffassign # Detects when assignments to existing variables are not used.
   disable:
