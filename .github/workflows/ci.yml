@@ -25,3 +25,19 @@ jobs:
 
       - name: Test
         run: go test -race -cover ./...
+ 
+      - name: Lint
+        uses: golangci/golangci-lint-action@v6
+  
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.22
+ 
+      - name: Run golangci linters
+        uses: golangci/golangci-lint-action@v6

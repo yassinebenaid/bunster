@@ -1,0 +1,9 @@
+linters:
+  disable-all: true
+  enable:
+    - errcheck # Errcheck is a program for checking for unchecked errors in Go code.
+    - ineffassign # Detects when assignments to existing variables are not used.
+    - govet # Vet examines Go source code and reports suspicious constructs.
+    - staticcheck # It's a set of rules from staticcheck.dev
+    - unused # Checks Go code for unused constants, variables, functions and types.
+  disable:

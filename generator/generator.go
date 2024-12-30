@@ -20,9 +20,7 @@ func Generate(script ast.Script) ir.Program {
 	}
 }
 
-type generator struct {
-	program ir.Program
-}
+type generator struct {}
 
 type InstructionBuffer []ir.Instruction
 
