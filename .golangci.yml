@@ -1,5 +1,5 @@
 linters:
   disable-all: true
   enable:
-    - wsl
+    - errcheck
   disable:
