@@ -6,4 +6,9 @@ linters:
     - govet # Vet examines Go source code and reports suspicious constructs.
     - staticcheck # It's a set of rules from staticcheck.dev
     - unused # Checks Go code for unused constants, variables, functions and types.
+    - asasalint # Check for pass []any as any in variadic func(...any).
+    - asciicheck # Checks that all code identifiers does not have non-ASCII symbols in the name.
+    - bidichk # Checks for dangerous unicode character sequences.	
+    - decorder # heck declaration order and count of types, constants, variables and functions.
+    - errname # Checks that sentinel errors are prefixed with the Err and error types are suffixed with the Error.
   disable:
