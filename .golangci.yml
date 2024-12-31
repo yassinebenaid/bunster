@@ -10,4 +10,5 @@ linters:
     - asciicheck # Checks that all code identifiers does not have non-ASCII symbols in the name.
     - bidichk # Checks for dangerous unicode character sequences.	
     - decorder # heck declaration order and count of types, constants, variables and functions.
+    - errname # Checks that sentinel errors are prefixed with the Err and error types are suffixed with the Error.
   disable:
