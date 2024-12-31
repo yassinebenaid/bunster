@@ -7,4 +7,5 @@ linters:
     - staticcheck # It's a set of rules from staticcheck.dev
     - unused # Checks Go code for unused constants, variables, functions and types.
     - asasalint # Check for pass []any as any in variadic func(...any).
+    - asciicheck # Checks that all code identifiers does not have non-ASCII symbols in the name.
   disable:
