@@ -104,7 +104,7 @@ var groupAndSubshellTests = []testCase{
 		},
 	}},
 	{`{cmd;} >output.txt <input.txt 2>error.txt >&3 \
-		 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6`, ast.Script{
+		 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6 >&-`, ast.Script{
 		ast.Group{
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
@@ -121,6 +121,7 @@ var groupAndSubshellTests = []testCase{
 				{Method: "&>>", Dst: ast.Word("all.txt")},
 				{Src: "0", Method: "<&", Dst: ast.Word("4")},
 				{Src: "5", Method: "<&", Dst: ast.Word("6")},
+				{Src: "1", Method: ">&", Close: true},
 			},
 		},
 	}},

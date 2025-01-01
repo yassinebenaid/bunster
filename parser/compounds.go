@@ -616,6 +616,9 @@ loop:
 			p.proceed()
 		case p.isRedirectionToken():
 			p.HandleRedirection(&group.Redirections)
+			if !p.isRedirectionToken() && !p.isControlToken() {
+				p.proceed()
+			}
 		default:
 			break loop
 		}
