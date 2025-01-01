@@ -21,7 +21,7 @@ func (p NewPipe) togo() string {
 type NewPipelineWaitgroup string
 
 func (p NewPipelineWaitgroup) togo() string {
-	return fmt.Sprintf("var %s runtime.PiplineWaitgroup\n", p)
+	return fmt.Sprintf("var %s []func() error\n", p)
 }
 
 type PushToPipelineWaitgroup struct {

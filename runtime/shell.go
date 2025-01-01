@@ -103,7 +103,3 @@ func (shell *Shell) Clone() *Shell {
 		Args:     shell.Args,
 	}
 }
-
-type PiplineWaitgroupItem func() error
-
-type PiplineWaitgroup []PiplineWaitgroupItem
