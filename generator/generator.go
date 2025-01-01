@@ -187,10 +187,10 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 	// if we're inside a pipline, we need to connect the pipe to the command.(before any other redirection)
 	if pc != nil {
 		if pc.writer != "" {
-			buf.add(ir.AddStream{Fd: "1", StreamName: pc.writer})
+			buf.add(ir.AddStream{Fd: "1", StreamName: pc.writer, Proxy: true})
 
 			if pc.stderr {
-				buf.add(ir.AddStream{Fd: "2", StreamName: pc.writer})
+				buf.add(ir.AddStream{Fd: "2", StreamName: pc.writer, Proxy: true})
 			}
 		}
 

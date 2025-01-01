@@ -1,6 +1,8 @@
 package generator
 
 import (
+	"fmt"
+
 	"github.com/yassinebenaid/bunster/ast"
 	"github.com/yassinebenaid/bunster/ir"
 )
@@ -16,14 +18,15 @@ func (g *generator) handleGroup(buf *InstructionBuffer, group ast.Group, pc *pip
 		}
 	} else {
 		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)"))
-		cmdbuf.add(ir.Literal(`
+		cmdbuf.add(ir.Literal(fmt.Sprintf(`
 			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
 				Wait: func()error{
 					<-done
+					%s.Close()
 					return nil
 				},
 			})
-		`))
+		`, pc.writer)))
 
 		var go_routing InstructionBuffer
 		go_routing.add(ir.Literal("defer streamManager.Destroy()\n"))
