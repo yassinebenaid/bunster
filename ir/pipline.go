@@ -25,15 +25,12 @@ func (p NewPipelineWaitgroup) togo() string {
 }
 
 type PushToPipelineWaitgroup struct {
-	Command   string
 	Waitgroup string
+	Value     Instruction
 }
 
 func (p PushToPipelineWaitgroup) togo() string {
-	return fmt.Sprintf(
-		`%s = append(%s, %s.Wait)`,
-		p.Waitgroup, p.Waitgroup, p.Command,
-	)
+	return fmt.Sprintf("%s = append(%s, %s)\n", p.Waitgroup, p.Waitgroup, p.Value.togo())
 }
 
 type WaitPipelineWaitgroup string

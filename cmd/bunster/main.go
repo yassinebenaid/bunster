@@ -13,20 +13,21 @@ import (
 
 func main() {
 	app := cli.Command{
-		Name: "bunster",
+		Name:  "bunster",
+		Usage: "compile shell script to self-contained executable programs",
 		Commands: []*cli.Command{
 			{
-				Name:        "ast",
-				Description: "Print the script ast",
-				Action:      astCMD,
+				Name:   "ast",
+				Usage:  "Print the script ast",
+				Action: astCMD,
 				Flags: []cli.Flag{
 					&cli.BoolFlag{Name: "no-ansi", Aliases: []string{"n"}},
 				},
 			},
 			{
-				Name:        "build",
-				Description: "Build a script",
-				Action:      buildCMD,
+				Name:   "build",
+				Usage:  "Build a script",
+				Action: buildCMD,
 				Flags: []cli.Flag{
 					&cli.StringFlag{Name: "o", Required: true},
 					&cli.StringFlag{Name: "build-space"},

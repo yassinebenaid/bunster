@@ -365,6 +365,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				return
 			}
 			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+
 		}()
 		func() {
 			var commandName = `command2`
@@ -393,6 +394,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				return
 			}
 			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+
 		}()
 		for i, wait := range pipelineWaitgroup {
 			if err := wait(); err != nil {
@@ -440,6 +442,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					return
 				}
 				pipelineWaitgroup = append(pipelineWaitgroup,command.Wait)
+
 			}()
 			func() {
 				var commandName = `command4`
@@ -468,6 +471,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					return
 				}
 				pipelineWaitgroup = append(pipelineWaitgroup,command.Wait)
+
 			}()
 			for i, wait := range pipelineWaitgroup {
 				if err := wait(); err != nil {
@@ -516,6 +520,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					return
 				}
 				pipelineWaitgroup = append(pipelineWaitgroup,command.Wait)
+
 			}()
 			func() {
 				var commandName = `command6`
@@ -544,6 +549,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					return
 				}
 				pipelineWaitgroup = append(pipelineWaitgroup,command.Wait)
+
 			}()
 			for i, wait := range pipelineWaitgroup {
 				if err := wait(); err != nil {

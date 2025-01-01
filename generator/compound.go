@@ -8,21 +8,23 @@ import (
 func (g *generator) handleGroup(buf *InstructionBuffer, group ast.Group, pc *pipeContext) {
 	var cmdbuf InstructionBuffer
 
-	g.handleRedirections(&cmdbuf, "group", group.Redirections, pc, true)
+	cmdbuf.add(ir.CloneStreamManager{})
+	g.handleRedirections(&cmdbuf, group.Redirections, pc)
 
 	if pc == nil {
 		for _, cmd := range group.Body {
 			g.generate(&cmdbuf, cmd, nil)
 		}
 	} else {
-		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)"))
-		cmdbuf.add(ir.Literal(`
-			pipelineWaitgroup = append(pipelineWaitgroup,  func() error {
+		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
+		cmdbuf.add(ir.PushToPipelineWaitgroup{
+			Waitgroup: pc.waitgroup,
+			Value: ir.Literal(`func() error {
 				<-done
-				streamManager.Destroy()
+			 	streamManager.Destroy()
 				return nil
-			})
-		`))
+			}`),
+		})
 
 		var go_routing InstructionBuffer
 		for _, cmd := range group.Body {
@@ -44,22 +46,23 @@ func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell
 	var cmdbuf InstructionBuffer
 
 	cmdbuf.add(ir.CloneShell{})
-
-	g.handleRedirections(&cmdbuf, "subshell", subshell.Redirections, pc, true)
+	cmdbuf.add(ir.CloneStreamManager{})
+	g.handleRedirections(&cmdbuf, subshell.Redirections, pc)
 
 	if pc == nil {
 		for _, cmd := range subshell.Body {
 			g.generate(&cmdbuf, cmd, nil)
 		}
 	} else {
-		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)"))
-		cmdbuf.add(ir.Literal(`
-			pipelineWaitgroup = append(pipelineWaitgroup,  func() error {
+		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
+		cmdbuf.add(ir.PushToPipelineWaitgroup{
+			Waitgroup: pc.waitgroup,
+			Value: ir.Literal(`func() error {
 				<-done
-				streamManager.Destroy()
+			 	streamManager.Destroy()
 				return nil
-			})
-		`))
+			}`),
+		})
 
 		var go_routing InstructionBuffer
 		for _, cmd := range subshell.Body {
