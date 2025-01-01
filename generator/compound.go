@@ -1,8 +1,6 @@
 package generator
 
 import (
-	"fmt"
-
 	"github.com/yassinebenaid/bunster/ast"
 	"github.com/yassinebenaid/bunster/ir"
 )
@@ -18,13 +16,13 @@ func (g *generator) handleGroup(buf *InstructionBuffer, group ast.Group, pc *pip
 		}
 	} else {
 		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)"))
-		cmdbuf.add(ir.Literal(fmt.Sprintf(`
+		cmdbuf.add(ir.Literal(`
 			pipelineWaitgroup = append(pipelineWaitgroup,  func() error {
 				<-done
-				%s.Close()
+				streamManager.Destroy()
 				return nil
 			})
-		`, pc.writer)))
+		`))
 
 		var go_routing InstructionBuffer
 		go_routing.add(ir.Literal("defer streamManager.Destroy()\n"))
@@ -56,16 +54,15 @@ func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell
 		}
 	} else {
 		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)"))
-		cmdbuf.add(ir.Literal(fmt.Sprintf(`
+		cmdbuf.add(ir.Literal(`
 			pipelineWaitgroup = append(pipelineWaitgroup,  func() error {
 				<-done
-				%s.Close()
+				streamManager.Destroy()
 				return nil
 			})
-		`, pc.writer)))
+		`))
 
 		var go_routing InstructionBuffer
-		go_routing.add(ir.Literal("defer streamManager.Destroy()\n"))
 		for _, cmd := range subshell.Body {
 			g.generate(&go_routing, cmd, nil)
 		}

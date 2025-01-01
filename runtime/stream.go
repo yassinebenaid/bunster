@@ -97,6 +97,7 @@ func (s *proxyStream) getOriginal() (Stream, error) {
 
 type StreamManager struct {
 	mappings map[string]Stream
+	proxied  []Stream
 }
 
 func (sm *StreamManager) OpenStream(name string, flag int) (Stream, error) {
@@ -115,6 +116,7 @@ func (sm *StreamManager) Add(fd string, stream Stream, proxy bool) {
 	}
 
 	if proxy {
+		sm.proxied = append(sm.proxied, stream)
 		stream = &proxyStream{original: stream}
 	}
 
@@ -188,6 +190,9 @@ func (sm *StreamManager) Close(fd string) error {
 }
 
 func (sm *StreamManager) Destroy() {
+	for _, stream := range sm.proxied {
+		stream.Close()
+	}
 	for _, stream := range sm.mappings {
 		stream.Close()
 	}
