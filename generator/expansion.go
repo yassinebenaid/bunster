@@ -8,19 +8,19 @@ import (
 func (g *generator) handleCommandSubstitution(statements ast.CommandSubstitution) ir.Instruction {
 	var cmdbuf InstructionBuffer
 
-	cmdbuf.add(ir.CloneFDT{})
+	cmdbuf.add(ir.CloneStreamManager{})
 	cmdbuf.add(ir.CloneShell{})
 	cmdbuf.add(ir.Declare{
-		Name:  "stdout",
+		Name:  "buffer",
 		Value: ir.NewBuffer{Value: ir.String("")},
 	})
-	cmdbuf.add(ir.AddStream{Fd: "1", StreamName: "stdout"})
+	cmdbuf.add(ir.AddStream{Fd: "1", StreamName: "buffer"})
 
 	for _, statement := range statements {
 		g.generate(&cmdbuf, statement, nil)
 	}
 
-	cmdbuf.add(ir.Literal("return stdout.String(true)"))
+	cmdbuf.add(ir.Literal("return buffer.String(true)"))
 
 	return ir.ExpressionClosure(cmdbuf)
 }

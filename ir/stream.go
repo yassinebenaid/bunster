@@ -36,11 +36,11 @@ func (of NewBuffer) togo() string {
 	return fmt.Sprintf("runtime.NewBuffer(%s, %t)", of.Value.togo(), of.Readonly)
 }
 
-type CloneFDT struct {
+type CloneStreamManager struct {
 	ND bool
 }
 
-func (c CloneFDT) togo() string {
+func (c CloneStreamManager) togo() string {
 	var d = "defer streamManager.Destroy()\n"
 	if c.ND {
 		d = ""
