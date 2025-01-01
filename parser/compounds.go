@@ -609,20 +609,7 @@ func (p *parser) parseGroup() ast.Statement {
 
 	p.proceed()
 
-loop:
-	for {
-		switch {
-		case p.curr.Type == token.BLANK:
-			p.proceed()
-		case p.isRedirectionToken():
-			p.HandleRedirection(&group.Redirections)
-			if !p.isRedirectionToken() && !p.isControlToken() {
-				p.proceed()
-			}
-		default:
-			break loop
-		}
-	}
+	p.parseCompoundRedirections(&group.Redirections)
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
@@ -671,17 +658,7 @@ func (p *parser) parseSubShell() ast.Statement {
 
 	p.proceed()
 
-loop:
-	for {
-		switch {
-		case p.curr.Type == token.BLANK:
-			p.proceed()
-		case p.isRedirectionToken():
-			p.HandleRedirection(&shell.Redirections)
-		default:
-			break loop
-		}
-	}
+	p.parseCompoundRedirections(&shell.Redirections)
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
@@ -725,4 +702,20 @@ loop:
 	}
 
 	return arth
+}
+
+func (p *parser) parseCompoundRedirections(r *[]ast.Redirection) {
+	for {
+		switch {
+		case p.curr.Type == token.BLANK:
+			p.proceed()
+		case p.isRedirectionToken():
+			p.HandleRedirection(r)
+			if !p.isRedirectionToken() && !p.isControlToken() {
+				p.proceed()
+			}
+		default:
+			return
+		}
+	}
 }
