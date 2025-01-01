@@ -123,7 +123,7 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 		})
 	}
 
-	g.handleRedirections(&cmdbuf, "command", cmd.Redirections, pc, false)
+	g.handleRedirections(&cmdbuf, cmd.Redirections, pc, false)
 	cmdbuf.add(ir.SetStream{
 		Name: "command.Stdin",
 		Fd:   ir.String("0"),
@@ -181,7 +181,7 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 	}
 }
 
-func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redirections []ast.Redirection, pc *pipeContext, nd bool) {
+func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []ast.Redirection, pc *pipeContext, nd bool) {
 	buf.add(ir.CloneFDT{ND: nd})
 
 	// if we're inside a pipline, we need to connect the pipe to the command.(before any other redirection)
@@ -203,51 +203,51 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 		switch redirection.Method {
 		case ">", ">|":
 			buf.add(ir.OpenStream{
-				Name:   fmt.Sprintf("%s_file_%d", name, i),
+				Name:   fmt.Sprintf("stream%d", i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_WRITE,
 			})
 			buf.add(ir.AddStream{
 				Fd:         redirection.Src,
-				StreamName: fmt.Sprintf("%s_file_%d", name, i),
+				StreamName: fmt.Sprintf("stream%d", i),
 			})
 		case ">>":
 			buf.add(ir.OpenStream{
-				Name:   fmt.Sprintf("%s_file_%d", name, i),
+				Name:   fmt.Sprintf("stream%d", i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_APPEND,
 			})
 			buf.add(ir.AddStream{
 				Fd:         redirection.Src,
-				StreamName: fmt.Sprintf("%s_file_%d", name, i),
+				StreamName: fmt.Sprintf("stream%d", i),
 			})
 		case "&>":
 			buf.add(ir.OpenStream{
-				Name:   fmt.Sprintf("%s_file_%d", name, i),
+				Name:   fmt.Sprintf("stream%d", i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_WRITE,
 			})
 			buf.add(ir.AddStream{
 				Fd:         "1",
-				StreamName: fmt.Sprintf("%s_file_%d", name, i),
+				StreamName: fmt.Sprintf("stream%d", i),
 			})
 			buf.add(ir.AddStream{
 				Fd:         "2",
-				StreamName: fmt.Sprintf("%s_file_%d", name, i),
+				StreamName: fmt.Sprintf("stream%d", i),
 			})
 		case "&>>":
 			buf.add(ir.OpenStream{
-				Name:   fmt.Sprintf("%s_file_%d", name, i),
+				Name:   fmt.Sprintf("stream%d", i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_APPEND,
 			})
 			buf.add(ir.AddStream{
 				Fd:         "1",
-				StreamName: fmt.Sprintf("%s_file_%d", name, i),
+				StreamName: fmt.Sprintf("stream%d", i),
 			})
 			buf.add(ir.AddStream{
 				Fd:         "2",
-				StreamName: fmt.Sprintf("%s_file_%d", name, i),
+				StreamName: fmt.Sprintf("stream%d", i),
 			})
 		case ">&", "<&":
 			if redirection.Dst == nil && redirection.Close {
@@ -267,17 +267,17 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 			}
 		case "<":
 			buf.add(ir.OpenStream{
-				Name:   fmt.Sprintf("%s_file_%d", name, i),
+				Name:   fmt.Sprintf("stream%d", i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_READ,
 			})
 			buf.add(ir.AddStream{
 				Fd:         redirection.Src,
-				StreamName: fmt.Sprintf("%s_file_%d", name, i),
+				StreamName: fmt.Sprintf("stream%d", i),
 			})
 		case "<<<":
 			buf.add(ir.Declare{
-				Name: fmt.Sprintf("%s_file_%d", name, i),
+				Name: fmt.Sprintf("stream%d", i),
 				Value: ir.NewBuffer{
 					Readonly: true,
 					Value:    g.handleExpression(redirection.Dst),
@@ -285,17 +285,17 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, name string, redi
 			})
 			buf.add(ir.AddStream{
 				Fd:         redirection.Src,
-				StreamName: fmt.Sprintf("%s_file_%d", name, i),
+				StreamName: fmt.Sprintf("stream%d", i),
 			})
 		case "<>":
 			buf.add(ir.OpenStream{
-				Name:   fmt.Sprintf("%s_file_%d", name, i),
+				Name:   fmt.Sprintf("stream%d", i),
 				Target: g.handleExpression(redirection.Dst),
 				Mode:   ir.FLAG_RW,
 			})
 			buf.add(ir.AddStream{
 				Fd:         redirection.Src,
-				StreamName: fmt.Sprintf("%s_file_%d", name, i),
+				StreamName: fmt.Sprintf("stream%d", i),
 			})
 		}
 	}

@@ -8,7 +8,7 @@ import (
 func (g *generator) handleGroup(buf *InstructionBuffer, group ast.Group, pc *pipeContext) {
 	var cmdbuf InstructionBuffer
 
-	g.handleRedirections(&cmdbuf, "group", group.Redirections, pc, true)
+	g.handleRedirections(&cmdbuf, group.Redirections, pc, true)
 
 	if pc == nil {
 		for _, cmd := range group.Body {
@@ -45,7 +45,7 @@ func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell
 
 	cmdbuf.add(ir.CloneShell{})
 
-	g.handleRedirections(&cmdbuf, "subshell", subshell.Redirections, pc, true)
+	g.handleRedirections(&cmdbuf, subshell.Redirections, pc, true)
 
 	if pc == nil {
 		for _, cmd := range subshell.Body {
