@@ -1,4 +1,4 @@
-#(TEST: simple group)
+#(TEST: simple command substitution)
 
 $( command )
 
@@ -15,7 +15,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			defer streamManager.Destroy()
 			shell := shell.Clone()
 			var stdout = runtime.NewBuffer(``, false)
-			streamManager.Add(`1`, stdout)
+			streamManager.Add(`1`, stdout, false)
 			func() {
 				var commandName = `command`
 				var arguments []string
@@ -77,7 +77,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 #(ENDTEST)
 
 
-#(TEST: simple group)
+#(TEST: command substitution concatinated)
 
 "/path/$( program )"
 
@@ -93,7 +93,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			defer streamManager.Destroy()
 			shell := shell.Clone()
 			var stdout = runtime.NewBuffer(``, false)
-			streamManager.Add(`1`, stdout)
+			streamManager.Add(`1`, stdout, false)
 			func() {
 				var commandName = `program`
 				var arguments []string
@@ -155,7 +155,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 #(ENDTEST)
 
 
-#(TEST: simple group)
+#(TEST: command substituion as argument)
 
 cmd $( subcommand )
 
@@ -174,7 +174,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			defer streamManager.Destroy()
 			shell := shell.Clone()
 			var stdout = runtime.NewBuffer(``, false)
-			streamManager.Add(`1`, stdout)
+			streamManager.Add(`1`, stdout, false)
 			func() {
 				var commandName = `subcommand`
 				var arguments []string

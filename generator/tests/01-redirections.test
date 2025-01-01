@@ -22,25 +22,25 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
         shell.HandleError(err)
             return
         }
-        streamManager.Add(`1`, command_file_0)
+        streamManager.Add(`1`, command_file_0, false)
         command_file_1, err := streamManager.OpenStream(`errors.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError(err)
             return
         }
-        streamManager.Add(`2`, command_file_1)
+        streamManager.Add(`2`, command_file_1, false)
         command_file_2, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError(err)
             return
         }
-        streamManager.Add(`3`, command_file_2)
+        streamManager.Add(`3`, command_file_2, false)
         command_file_3, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError(err)
             return
         }
-        streamManager.Add(`4`, command_file_3)
+        streamManager.Add(`4`, command_file_3, false)
   		if stream, err := streamManager.Get(`0`); err != nil {
             shell.HandleError(err)
         } else {
@@ -91,25 +91,25 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
         shell.HandleError(err)
             return
         }
-        streamManager.Add(`1`, command_file_0)
+        streamManager.Add(`1`, command_file_0, false)
         command_file_1, err := streamManager.OpenStream(`errors.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError(err)
             return
         }
-        streamManager.Add(`2`, command_file_1)
+        streamManager.Add(`2`, command_file_1, false)
         command_file_2, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError(err)
             return
         }
-        streamManager.Add(`3`, command_file_2)
+        streamManager.Add(`3`, command_file_2, false)
         command_file_3, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError(err)
             return
         }
-        streamManager.Add(`4`, command_file_3)
+        streamManager.Add(`4`, command_file_3, false)
   		if stream, err := streamManager.Get(`0`); err != nil {
             shell.HandleError(err)
         } else {
@@ -159,15 +159,15 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
         shell.HandleError(err)
             return
         }
-        streamManager.Add(`1`, command_file_0)
-        streamManager.Add(`2`, command_file_0)
+        streamManager.Add(`1`, command_file_0, false)
+        streamManager.Add(`2`, command_file_0, false)
         command_file_1, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError(err)
             return
         }
-        streamManager.Add(`1`, command_file_1)
-        streamManager.Add(`2`, command_file_1)
+        streamManager.Add(`1`, command_file_1, false)
+        streamManager.Add(`2`, command_file_1, false)
   		if stream, err := streamManager.Get(`0`); err != nil {
             shell.HandleError(err)
         } else {
@@ -219,7 +219,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
             shell.HandleError(err)
             return
         }
-        streamManager.Add(`3`, command_file_0)
+        streamManager.Add(`3`, command_file_0, false)
         if err := streamManager.Duplicate("1", `3`); err != nil {
             shell.HandleError(err)
             return
@@ -237,7 +237,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
             shell.HandleError(err)
             return
         }
-        streamManager.Add(`4`, command_file_3)
+        streamManager.Add(`4`, command_file_3, false)
         if err := streamManager.Close(`4`); err != nil {
             shell.HandleError(err)
             return
@@ -292,25 +292,25 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
         shell.HandleError(err)
             return
         }
-        streamManager.Add(`0`, command_file_0)
+        streamManager.Add(`0`, command_file_0, false)
         command_file_1, err := streamManager.OpenStream(`errors.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError(err)
             return
         }
-        streamManager.Add(`2`, command_file_1)
+        streamManager.Add(`2`, command_file_1, false)
         command_file_2, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError(err)
             return
         }
-        streamManager.Add(`3`, command_file_2)
+        streamManager.Add(`3`, command_file_2, false)
         command_file_3, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError(err)
             return
         }
-        streamManager.Add(`4`, command_file_3)
+        streamManager.Add(`4`, command_file_3, false)
   		if stream, err := streamManager.Get(`0`); err != nil {
             shell.HandleError(err)
         } else {
@@ -356,9 +356,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
   		streamManager := streamManager.Clone()
   		defer streamManager.Destroy()
         var command_file_0 = runtime.NewBuffer(`Foo`, true)
-        streamManager.Add(`0`, command_file_0)
+        streamManager.Add(`0`, command_file_0, false)
         var command_file_1 = runtime.NewBuffer(`Foo Bar`, true)
-        streamManager.Add(`2`, command_file_1)
+        streamManager.Add(`2`, command_file_1, false)
   		if stream, err := streamManager.Get(`0`); err != nil {
             shell.HandleError(err)
         } else {
@@ -409,7 +409,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
             shell.HandleError(err)
             return
         }
-        streamManager.Add(`3`, command_file_0)
+        streamManager.Add(`3`, command_file_0, false)
         if err := streamManager.Duplicate("0", `3`); err != nil {
             shell.HandleError(err)
             return
@@ -423,7 +423,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
             return
         }
         var command_file_3 = runtime.NewBuffer(`foobar`, true)
-        streamManager.Add(`4`, command_file_3)
+        streamManager.Add(`4`, command_file_3, false)
         if err := streamManager.Close(`4`); err != nil {
             shell.HandleError(err)
             return
@@ -476,13 +476,13 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
         shell.HandleError(err)
             return
         }
-        streamManager.Add(`0`, command_file_0)
+        streamManager.Add(`0`, command_file_0, false)
         command_file_1, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_RW)
         if err != nil {
         shell.HandleError(err)
             return
         }
-        streamManager.Add(`2`, command_file_1)
+        streamManager.Add(`2`, command_file_1, false)
   		if stream, err := streamManager.Get(`0`); err != nil {
             shell.HandleError(err)
         } else {

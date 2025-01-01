@@ -25,7 +25,6 @@ func (g *generator) handleGroup(buf *InstructionBuffer, group ast.Group, pc *pip
 		`))
 
 		var go_routing InstructionBuffer
-		go_routing.add(ir.Literal("defer streamManager.Destroy()\n"))
 		for _, cmd := range group.Body {
 			g.generate(&go_routing, cmd, nil)
 		}
