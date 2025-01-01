@@ -125,24 +125,15 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 
 	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: true})
 	g.handleRedirections(&cmdbuf, cmd.Redirections, pc)
-	cmdbuf.add(ir.SetStream{
-		Name: "command.Stdin",
-		Fd:   ir.String("0"),
-	})
-	cmdbuf.add(ir.SetStream{
-		Name: "command.Stdout",
-		Fd:   ir.String("1"),
-	})
-	cmdbuf.add(ir.SetStream{
-		Name: "command.Stderr",
-		Fd:   ir.String("2"),
-	})
+	cmdbuf.add(ir.SetStream{Name: "command.Stdin", Fd: ir.String("0")})
+	cmdbuf.add(ir.SetStream{Name: "command.Stdout", Fd: ir.String("1")})
+	cmdbuf.add(ir.SetStream{Name: "command.Stderr", Fd: ir.String("2")})
 
 	if pc != nil {
 		cmdbuf.add(ir.StartCommand("command"))
 		cmdbuf.add(ir.PushToPipelineWaitgroup{
 			Waitgroup: pc.waitgroup,
-			Command:   "command",
+			Value:     ir.Literal("command.Wait"),
 		})
 	} else {
 		cmdbuf.add(ir.RunCommand("command"))

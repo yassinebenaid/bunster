@@ -43,6 +43,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				return
 			}
 			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+
 		}()
 		func() {
 			var commandName = `grep`
@@ -72,6 +73,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				return
 			}
 			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+
 		}()
 		for i, wait := range pipelineWaitgroup {
 			if err := wait(); err != nil {
@@ -136,6 +138,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				return
 			}
 			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+
 		}()
 		pipeReader2, pipeWriter2, err := runtime.NewPipe()
 		if err != nil {
@@ -171,6 +174,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				return
 			}
 			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+
 		}()
 		pipeReader3, pipeWriter3, err := runtime.NewPipe()
 		if err != nil {
@@ -207,6 +211,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     			return
     		}
     		pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+
 		}()
 			func() {
 			var commandName = `strjoin`
@@ -236,6 +241,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				return
 			}
 			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+
 		}()
 		for i, wait := range pipelineWaitgroup {
 			if err := wait(); err != nil {
@@ -296,6 +302,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				return
 			}
 			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+
 		}()
 		func() {
 			var commandName = `grep`
@@ -325,6 +332,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				return
 			}
 			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+
 		}()
 		for i, wait := range pipelineWaitgroup {
 			if err := wait(); err != nil {
