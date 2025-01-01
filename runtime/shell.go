@@ -104,7 +104,6 @@ func (shell *Shell) Clone() *Shell {
 	}
 }
 
-type PiplineWaitgroupItem struct {
-	Wait func() error
-}
+type PiplineWaitgroupItem func() error
+
 type PiplineWaitgroup []PiplineWaitgroupItem

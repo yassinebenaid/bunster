@@ -31,9 +31,7 @@ type PushToPipelineWaitgroup struct {
 
 func (p PushToPipelineWaitgroup) togo() string {
 	return fmt.Sprintf(
-		`%s = append(%s, runtime.PiplineWaitgroupItem{
-			Wait: %s.Wait,
-		})`,
+		`%s = append(%s, %s.Wait)`,
 		p.Waitgroup, p.Waitgroup, p.Command,
 	)
 }
@@ -42,8 +40,8 @@ type WaitPipelineWaitgroup string
 
 func (w WaitPipelineWaitgroup) togo() string {
 	return fmt.Sprintf(
-		`for i, item := range %s {
-			if err := item.Wait(); err != nil {
+		`for i, wait := range %s {
+			if err := wait(); err != nil {
 				shell.HandleError(err)
 			}
 			if i < (len(%s) - 1){
