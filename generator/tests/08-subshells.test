@@ -98,18 +98,18 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 	    shell := shell.Clone()
 		streamManager := streamManager.Clone()
-		subshell_file_0, err := streamManager.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
+		stream0, err := streamManager.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
 		if err != nil {
 			shell.HandleError(err)
 			return
 		}
-		streamManager.Add(`1`, subshell_file_0, false)
-		subshell_file_1, err := streamManager.OpenStream(`input.txt`, runtime.STREAM_FLAG_READ)
+		streamManager.Add(`1`, stream0, false)
+		stream1, err := streamManager.OpenStream(`input.txt`, runtime.STREAM_FLAG_READ)
 		if err != nil {
 			shell.HandleError(err)
 			return
 		}
-		streamManager.Add(`0`, subshell_file_1, false)
+		streamManager.Add(`0`, stream1, false)
 		func() {
 			var commandName = `echo`
 			var arguments []string
