@@ -17,16 +17,14 @@ func (g *generator) handleGroup(buf *InstructionBuffer, group ast.Group, pc *pip
 	} else {
 		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)"))
 		cmdbuf.add(ir.Literal(`
-			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
-				Wait: func()error{
-					<-done
-					return nil
-				},
+			pipelineWaitgroup = append(pipelineWaitgroup,  func() error {
+				<-done
+				streamManager.Destroy()
+				return nil
 			})
 		`))
 
 		var go_routing InstructionBuffer
-		go_routing.add(ir.Literal("defer streamManager.Destroy()\n"))
 		for _, cmd := range group.Body {
 			g.generate(&go_routing, cmd, nil)
 		}
@@ -56,16 +54,14 @@ func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell
 	} else {
 		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)"))
 		cmdbuf.add(ir.Literal(`
-			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
-				Wait: func()error{
-					<-done
-					return nil
-				},
+			pipelineWaitgroup = append(pipelineWaitgroup,  func() error {
+				<-done
+				streamManager.Destroy()
+				return nil
 			})
 		`))
 
 		var go_routing InstructionBuffer
-		go_routing.add(ir.Literal("defer streamManager.Destroy()\n"))
 		for _, cmd := range subshell.Body {
 			g.generate(&go_routing, cmd, nil)
 		}

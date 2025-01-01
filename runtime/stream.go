@@ -97,6 +97,7 @@ func (s *proxyStream) getOriginal() (Stream, error) {
 
 type StreamManager struct {
 	mappings map[string]Stream
+	proxied  []Stream
 }
 
 func (sm *StreamManager) OpenStream(name string, flag int) (Stream, error) {
@@ -106,12 +107,17 @@ func (sm *StreamManager) OpenStream(name string, flag int) (Stream, error) {
 	}
 }
 
-func (sm *StreamManager) Add(fd string, stream Stream) {
+func (sm *StreamManager) Add(fd string, stream Stream, proxy bool) {
 	// If this stream is already open, we need to close it. otherwise, Its handler will be lost and leak.
 	// This is related to pipelines in particular. when instantiating a new pipeline, we add its ends to the FDT. but if
 	// a redirection happened afterwards, it will cause the pipline handler to be lost and kept open.
 	if sm.mappings[fd] != nil {
 		sm.mappings[fd].Close()
+	}
+
+	if proxy {
+		sm.proxied = append(sm.proxied, stream)
+		stream = &proxyStream{original: stream}
 	}
 
 	sm.mappings[fd] = stream
@@ -184,6 +190,9 @@ func (sm *StreamManager) Close(fd string) error {
 }
 
 func (sm *StreamManager) Destroy() {
+	for _, stream := range sm.proxied {
+		stream.Close()
+	}
 	for _, stream := range sm.mappings {
 		stream.Close()
 	}
