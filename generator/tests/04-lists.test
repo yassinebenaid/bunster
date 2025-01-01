@@ -332,7 +332,7 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
-		var pipelineWaitgroup runtime.PiplineWaitgroup
+		var pipelineWaitgroup []func() error
 		pipeReader1, pipeWriter1, err := runtime.NewPipe()
 		if err != nil {
 			shell.HandleError(err)
@@ -344,7 +344,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
-			streamManager.Add(`1`, pipeWriter1)
+			streamManager.Add(`1`, pipeWriter1, true)
 			if stream, err := streamManager.Get(`0`); err != nil {
                 shell.HandleError(err)
             } else {
@@ -364,9 +364,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.HandleError(err)
 				return
 			}
-			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
-				Wait: command.Wait,
-			})
+			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
 		}()
 		func() {
 			var commandName = `command2`
@@ -374,7 +372,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
-			streamManager.Add(`0`, pipeReader1)
+			streamManager.Add(`0`, pipeReader1, false)
 			if stream, err := streamManager.Get(`0`); err != nil {
                 shell.HandleError(err)
             } else {
@@ -394,12 +392,10 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.HandleError(err)
 				return
 			}
-			pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
-				Wait: command.Wait,
-			})
+			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
 		}()
-		for i, item := range pipelineWaitgroup {
-			if err := item.Wait(); err != nil {
+		for i, wait := range pipelineWaitgroup {
+			if err := wait(); err != nil {
 				shell.HandleError(err)
 			}
 			if i < (len(pipelineWaitgroup) - 1) {
@@ -410,7 +406,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	}()
 	if shell.ExitCode != 0 {
 		func() {
-			var pipelineWaitgroup runtime.PiplineWaitgroup
+			var pipelineWaitgroup []func() error
 			pipeReader1, pipeWriter1, err := runtime.NewPipe()
 			if err != nil {
 				shell.HandleError(err)
@@ -422,8 +418,8 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
-				streamManager.Add(`1`, pipeWriter1)
-				streamManager.Add(`2`, pipeWriter1)
+				streamManager.Add(`1`, pipeWriter1, true)
+				streamManager.Add(`2`, pipeWriter1, true)
     			if stream, err := streamManager.Get(`0`); err != nil {
                     shell.HandleError(err)
                 } else {
@@ -443,9 +439,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					shell.HandleError(err)
 					return
 				}
-				pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
-					Wait: command.Wait,
-				})
+				pipelineWaitgroup = append(pipelineWaitgroup,command.Wait)
 			}()
 			func() {
 				var commandName = `command4`
@@ -453,7 +447,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
-				streamManager.Add(`0`, pipeReader1)
+				streamManager.Add(`0`, pipeReader1, false)
     			if stream, err := streamManager.Get(`0`); err != nil {
                     shell.HandleError(err)
                 } else {
@@ -473,12 +467,10 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					shell.HandleError(err)
 					return
 				}
-				pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
-					Wait: command.Wait,
-				})
+				pipelineWaitgroup = append(pipelineWaitgroup,command.Wait)
 			}()
-			for i, item := range pipelineWaitgroup {
-				if err := item.Wait(); err != nil {
+			for i, wait := range pipelineWaitgroup {
+				if err := wait(); err != nil {
 					shell.HandleError(err)
 				}
 				if i < (len(pipelineWaitgroup) - 1) {
@@ -491,7 +483,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	}
 	if shell.ExitCode == 0 {
 		func() {
-			var pipelineWaitgroup runtime.PiplineWaitgroup
+			var pipelineWaitgroup []func() error
 			pipeReader1, pipeWriter1, err := runtime.NewPipe()
 			if err != nil {
 				shell.HandleError(err)
@@ -503,7 +495,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
-				streamManager.Add(`1`, pipeWriter1)
+				streamManager.Add(`1`, pipeWriter1, true)
     			if stream, err := streamManager.Get(`0`); err != nil {
                     shell.HandleError(err)
                 } else {
@@ -523,9 +515,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					shell.HandleError(err)
 					return
 				}
-				pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
-					Wait: command.Wait,
-				})
+				pipelineWaitgroup = append(pipelineWaitgroup,command.Wait)
 			}()
 			func() {
 				var commandName = `command6`
@@ -533,7 +523,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
-				streamManager.Add(`0`, pipeReader1)
+				streamManager.Add(`0`, pipeReader1, false)
     			if stream, err := streamManager.Get(`0`); err != nil {
                     shell.HandleError(err)
                 } else {
@@ -553,12 +543,10 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					shell.HandleError(err)
 					return
 				}
-				pipelineWaitgroup = append(pipelineWaitgroup, runtime.PiplineWaitgroupItem{
-					Wait: command.Wait,
-				})
+				pipelineWaitgroup = append(pipelineWaitgroup,command.Wait)
 			}()
-			for i, item := range pipelineWaitgroup {
-				if err := item.Wait(); err != nil {
+			for i, wait := range pipelineWaitgroup {
+				if err := wait(); err != nil {
 					shell.HandleError(err)
 				}
 				if i < (len(pipelineWaitgroup) - 1) {
