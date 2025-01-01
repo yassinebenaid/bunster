@@ -37,17 +37,15 @@ func (of NewBuffer) togo() string {
 }
 
 type CloneStreamManager struct {
-	ND bool
+	DeferDestroy bool
 }
 
 func (c CloneStreamManager) togo() string {
-	var d = "defer streamManager.Destroy()\n"
-	if c.ND {
-		d = ""
+	var deferDestroy string
+	if c.DeferDestroy {
+		deferDestroy = "defer streamManager.Destroy()\n"
 	}
-	return fmt.Sprintf(
-		`streamManager := streamManager.Clone()
-		%s`, d)
+	return fmt.Sprintf("streamManager := streamManager.Clone() \n %s", deferDestroy)
 }
 
 type AddStream struct {

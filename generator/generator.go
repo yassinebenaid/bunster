@@ -123,7 +123,7 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 		})
 	}
 
-	cmdbuf.add(ir.CloneStreamManager{ND: false})
+	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: true})
 	g.handleRedirections(&cmdbuf, cmd.Redirections, pc)
 	cmdbuf.add(ir.SetStream{
 		Name: "command.Stdin",
