@@ -8,5 +8,5 @@ as work-in-progress and as not-yet-supported.
 - [Passing shell parameters as environment to commands](https://www.gnu.org/software/bash/manual/bash.html#Environment)
 - [Pipelines](https://www.gnu.org/software/bash/manual/bash.html#Pipelines)
 - [Conditional Execution](https://www.gnu.org/software/bash/manual/bash.html#Lists)
-- [Group Compound](https://www.gnu.org/software/bash/manual/bash.html#index-_007b)
+- [Command Grouping](https://www.gnu.org/software/bash/manual/html_node/Command-Grouping.html)
 - [Command Substituion](https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html)

@@ -30,7 +30,7 @@ In addition to the shell features, We aim to add several custom features to make
 - **Password and Expiration Lock**: Surprisingly, some people have asked for this feature. Basically, It allows you to choose an expirity date at build time. the generated program will not work after that date. Also you can choose to lock the script using a password. whenever you try to run it, it prompts for the password.
 
 > [!WARNING]
-> This project is in its early phase of development and is not yet ready for production. Not all features are implemented yet. But, plenty of them are. [see what features are implemented so far](https://bunster.netlify.app/supported-features.html).
+> This project is in its early stages of development, and is not yet ready for production. Not all features are implemented yet. But, plenty of them are. [see what features are implemented so far](https://bunster.netlify.app/supported-features.html).
 
 ### Versionning
 

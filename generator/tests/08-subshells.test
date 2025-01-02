@@ -1,9 +1,9 @@
-#(TEST: simple group)
+#(TEST: simple subshell)
 
-{
+(
     echo foo
     echo bar
-}
+)
 
 #(RESULT)
 
@@ -13,6 +13,7 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
+	    shell := shell.Clone()
 		streamManager := streamManager.Clone()
 		func() {
 			var commandName = `echo`
@@ -80,12 +81,12 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 
 
-#(TEST: redirections on groups)
+#(TEST: redirections on subshells)
 
-{
+(
     echo foo
     echo bar
-} >output.txt <input.txt
+) >output.txt <input.txt
 
 #(RESULT)
 
@@ -95,6 +96,7 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
+	    shell := shell.Clone()
 		streamManager := streamManager.Clone()
 		stream0, err := streamManager.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
 		if err != nil {
@@ -174,12 +176,12 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 
 
-#(TEST: groups containing piplines and lists)
+#(TEST: subshells containing piplines and lists)
 
-{
+(
     echo foo | cat \
     && echo bar | cat
-}
+)
 
 #(RESULT)
 package main
@@ -188,6 +190,7 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
+	    shell := shell.Clone()
 		streamManager := streamManager.Clone()
 		func() {
 			var pipelineWaitgroup []func() error
@@ -352,17 +355,17 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 
 
-#(TEST: nested groups)
+#(TEST: nested subshells)
 
-{
-    {
+(
+    (
         echo foo
-    }
+    )
 
-     {
+    (
         echo bar
-    }
-}
+    )
+)
 
 #(RESULT)
 
@@ -372,8 +375,10 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
+	    shell := shell.Clone()
 		streamManager := streamManager.Clone()
 		func() {
+		    shell := shell.Clone()
 			streamManager := streamManager.Clone()
 			func() {
 				var commandName = `echo`
@@ -407,6 +412,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 		}()
 		func() {
+		    shell := shell.Clone()
 			streamManager := streamManager.Clone()
 			func() {
 				var commandName = `echo`
@@ -447,9 +453,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 
 
-#(TEST: groups within pipeline)
+#(TEST: subshells within pipeline)
 
-{ echo foo;  } | { cat;  }
+( echo foo; ) | ( cat; )
 
 #(RESULT)
 
@@ -466,12 +472,13 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			return
 		}
 		func() {
+		    shell := shell.Clone()
 			streamManager := streamManager.Clone()
 			streamManager.Add(`1`, pipeWriter1, true)
 			var done = make(chan struct{}, 1)
 			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
 				<-done
-                streamManager.Destroy()
+				streamManager.Destroy()
 				return nil
 			})
 			go func() {
@@ -510,6 +517,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 		}()
 		func() {
+		    shell := shell.Clone()
 			streamManager := streamManager.Clone()
 			streamManager.Add(`0`, pipeReader1, false)
 			var done = make(chan struct{}, 1)

@@ -420,7 +420,7 @@ func TestParserErrorHandling(t *testing.T) {
 			)
 
 			if err == nil {
-				t.Fatalf("\nGroup: %s\nCase#%d: Expected Error, got nil\n", group.label, i)
+				t.Fatalf("\nGroup: %sCase: %sInput: %s\nGot nil where an error is expected\n", dump(group.label), dump(i), dump(tc.input))
 			}
 
 			if err.Error() != tc.err {

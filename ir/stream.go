@@ -36,27 +36,26 @@ func (of NewBuffer) togo() string {
 	return fmt.Sprintf("runtime.NewBuffer(%s, %t)", of.Value.togo(), of.Readonly)
 }
 
-type CloneFDT struct {
-	ND bool
+type CloneStreamManager struct {
+	DeferDestroy bool
 }
 
-func (c CloneFDT) togo() string {
-	var d = "defer streamManager.Destroy()\n"
-	if c.ND {
-		d = ""
+func (c CloneStreamManager) togo() string {
+	var deferDestroy string
+	if c.DeferDestroy {
+		deferDestroy = "defer streamManager.Destroy()\n"
 	}
-	return fmt.Sprintf(
-		`streamManager := streamManager.Clone()
-		%s`, d)
+	return fmt.Sprintf("streamManager := streamManager.Clone() \n %s", deferDestroy)
 }
 
 type AddStream struct {
 	Fd         string
 	StreamName string
+	Proxy      bool
 }
 
 func (as AddStream) togo() string {
-	return fmt.Sprintf("streamManager.Add(`%s`, %s)\n", as.Fd, as.StreamName)
+	return fmt.Sprintf("streamManager.Add(`%s`, %s, %t)\n", as.Fd, as.StreamName, as.Proxy)
 }
 
 type SetStream struct {

@@ -21,29 +21,24 @@ func (p NewPipe) togo() string {
 type NewPipelineWaitgroup string
 
 func (p NewPipelineWaitgroup) togo() string {
-	return fmt.Sprintf("var %s runtime.PiplineWaitgroup\n", p)
+	return fmt.Sprintf("var %s []func() error\n", p)
 }
 
 type PushToPipelineWaitgroup struct {
-	Command   string
 	Waitgroup string
+	Value     Instruction
 }
 
 func (p PushToPipelineWaitgroup) togo() string {
-	return fmt.Sprintf(
-		`%s = append(%s, runtime.PiplineWaitgroupItem{
-			Wait: %s.Wait,
-		})`,
-		p.Waitgroup, p.Waitgroup, p.Command,
-	)
+	return fmt.Sprintf("%s = append(%s, %s)\n", p.Waitgroup, p.Waitgroup, p.Value.togo())
 }
 
 type WaitPipelineWaitgroup string
 
 func (w WaitPipelineWaitgroup) togo() string {
 	return fmt.Sprintf(
-		`for i, item := range %s {
-			if err := item.Wait(); err != nil {
+		`for i, wait := range %s {
+			if err := wait(); err != nil {
 				shell.HandleError(err)
 			}
 			if i < (len(%s) - 1){
