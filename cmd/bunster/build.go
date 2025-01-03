@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"io/fs"
 	"os"
 	"os/exec"
@@ -17,6 +18,9 @@ import (
 
 func buildCMD(_ context.Context, cmd *cli.Command) error {
 	filename := cmd.Args().Get(0)
+	if filename == "" {
+		return fmt.Errorf("failname is reqired")
+	}
 	v, err := os.ReadFile(filename)
 	if err != nil {
 		return err
@@ -33,12 +37,12 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 
 	program := generator.Generate(script)
 
-	wd, err := os.MkdirTemp(cmd.String("build-space"), "bunster-build-*")
+	wd, err := os.MkdirTemp("", "bunster-build-*")
 	if err != nil {
 		return err
 	}
 
-	err = os.WriteFile(wd+"/program.go", []byte(program.String()), 0666)
+	err = os.WriteFile(path.Join(wd, "program.go"), []byte(program.String()), 0666)
 	if err != nil {
 		return err
 	}
