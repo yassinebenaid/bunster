@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"io/fs"
 	"os"
 	"os/exec"
@@ -17,6 +18,9 @@ import (
 
 func buildCMD(_ context.Context, cmd *cli.Command) error {
 	filename := cmd.Args().Get(0)
+	if filename == "" {
+		return fmt.Errorf("failname is reqired")
+	}
 	v, err := os.ReadFile(filename)
 	if err != nil {
 		return err

@@ -11,5 +11,8 @@ build:
 compile: build
 	@./bin/bunster build script.test.bash -o ./bin/script
 
+generate: build
+	@./bin/bunster generate script.test.bash -o ./bunster-build
+
 dump-ast: build
 	@./bin/bunster ast script.test.bash

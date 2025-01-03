@@ -32,6 +32,14 @@ func main() {
 					&cli.StringFlag{Name: "o", Required: true},
 				},
 			},
+			{
+				Name:   "generate",
+				Usage:  "Generate the Go module out of a script",
+				Action: geneateCMD,
+				Flags: []cli.Flag{
+					&cli.StringFlag{Name: "o", Required: true},
+				},
+			},
 		},
 	}
 
