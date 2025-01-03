@@ -36,7 +36,7 @@ In addition to the shell features, We aim to add several custom features to make
 
 Bunster follows [SemVer](https://semver.org/) system for release versionning. On each minor release `v0.x.0`, You should expect adding new features. Code optimization and build improvements. On each patch release `v0.N.x`, you should expect bug fixes and/or other minor enhancements.
 
-Once we reach the stable release `v1.0.0`, you must expect your bash scripts to be fully compatible with Bunster (_there might be some caveates_). All features mentioned above to be implemeted unless the comunity agreed on skipping some of them.
+Once we reach the stable release `v1.0.0`, you must expect your bash scripts to be fully compatible with Bunster (_there might be some caveats_). All features mentioned above to be implemeted unless the comunity agreed on skipping some of them.
 
 Adding support for additional shells is not planned until our first stable release `v1`. All regarding contributions will remain open until then.
 
