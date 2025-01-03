@@ -30,7 +30,6 @@ func main() {
 				Action: buildCMD,
 				Flags: []cli.Flag{
 					&cli.StringFlag{Name: "o", Required: true},
-					&cli.StringFlag{Name: "build-space"},
 				},
 			},
 		},

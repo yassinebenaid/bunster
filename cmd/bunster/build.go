@@ -33,12 +33,12 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 
 	program := generator.Generate(script)
 
-	wd, err := os.MkdirTemp(cmd.String("build-space"), "bunster-build-*")
+	wd, err := os.MkdirTemp("", "bunster-build-*")
 	if err != nil {
 		return err
 	}
 
-	err = os.WriteFile(wd+"/program.go", []byte(program.String()), 0666)
+	err = os.WriteFile(path.Join(wd, "program.go"), []byte(program.String()), 0666)
 	if err != nil {
 		return err
 	}
