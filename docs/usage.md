@@ -6,6 +6,7 @@ _script.sh_:
 echo "Hello World"
 ```
 
+## Build
 To build this script, simply run:
 
 ```shell
@@ -20,3 +21,13 @@ Now you can run it
 ./my-program
 # Output: Hello World
 ```
+
+## Generate
+
+If you want to only generate the Go code, but not compile it:
+
+```shell
+bunster generate script.sh -o my-module
+```
+
+This will create a directory program named `my-module` in which the Go source is generated.
