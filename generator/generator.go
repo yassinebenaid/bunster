@@ -20,7 +20,9 @@ func Generate(script ast.Script) ir.Program {
 	}
 }
 
-type generator struct{}
+type generator struct {
+	expressionsCount int
+}
 
 type InstructionBuffer []ir.Instruction
 
@@ -103,11 +105,11 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command, pc *pipeContext) {
 	var cmdbuf InstructionBuffer
 
-	cmdbuf.add(ir.Declare{Name: "commandName", Value: g.handleExpression(cmd.Name)})
+	cmdbuf.add(ir.Declare{Name: "commandName", Value: g.handleExpression(&cmdbuf, cmd.Name)})
 	cmdbuf.add(ir.DeclareSlice{Name: "arguments"})
 
 	for _, arg := range cmd.Args {
-		cmdbuf.add(ir.Append{Name: "arguments", Value: g.handleExpression(arg)})
+		cmdbuf.add(ir.Append{Name: "arguments", Value: g.handleExpression(&cmdbuf, arg)})
 	}
 
 	cmdbuf.add(ir.Declare{
@@ -119,7 +121,7 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 		cmdbuf.add(ir.SetCmdEnv{
 			Command: "command",
 			Key:     env.Name,
-			Value:   g.handleExpression(env.Value),
+			Value:   g.handleExpression(&cmdbuf, env.Value),
 		})
 	}
 
@@ -144,7 +146,8 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 	})
 }
 
-func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
+func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expression) ir.Instruction {
+	g.expressionsCount++
 	switch v := expression.(type) {
 	case ast.Word:
 		return ir.String(v)
@@ -157,17 +160,17 @@ func (g *generator) handleExpression(expression ast.Expression) ir.Instruction {
 	case ast.QuotedString:
 		var concat ir.Concat
 		for _, expr := range v {
-			concat = append(concat, g.handleExpression(expr))
+			concat = append(concat, g.handleExpression(buf, expr))
 		}
 		return concat
 	case ast.UnquotedString:
 		var concat ir.Concat
 		for _, expr := range v {
-			concat = append(concat, g.handleExpression(expr))
+			concat = append(concat, g.handleExpression(buf, expr))
 		}
 		return concat
 	case ast.CommandSubstitution:
-		return g.handleCommandSubstitution(v)
+		return g.handleCommandSubstitution(buf, v)
 	default:
 		panic(fmt.Sprintf("unhandled expression type (%T)", expression))
 	}
@@ -195,7 +198,7 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []as
 		case ">", ">|":
 			buf.add(ir.OpenStream{
 				Name:   fmt.Sprintf("stream%d", i),
-				Target: g.handleExpression(redirection.Dst),
+				Target: g.handleExpression(buf, redirection.Dst),
 				Mode:   ir.FLAG_WRITE,
 			})
 			buf.add(ir.AddStream{
@@ -205,7 +208,7 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []as
 		case ">>":
 			buf.add(ir.OpenStream{
 				Name:   fmt.Sprintf("stream%d", i),
-				Target: g.handleExpression(redirection.Dst),
+				Target: g.handleExpression(buf, redirection.Dst),
 				Mode:   ir.FLAG_APPEND,
 			})
 			buf.add(ir.AddStream{
@@ -215,7 +218,7 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []as
 		case "&>":
 			buf.add(ir.OpenStream{
 				Name:   fmt.Sprintf("stream%d", i),
-				Target: g.handleExpression(redirection.Dst),
+				Target: g.handleExpression(buf, redirection.Dst),
 				Mode:   ir.FLAG_WRITE,
 			})
 			buf.add(ir.AddStream{
@@ -229,7 +232,7 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []as
 		case "&>>":
 			buf.add(ir.OpenStream{
 				Name:   fmt.Sprintf("stream%d", i),
-				Target: g.handleExpression(redirection.Dst),
+				Target: g.handleExpression(buf, redirection.Dst),
 				Mode:   ir.FLAG_APPEND,
 			})
 			buf.add(ir.AddStream{
@@ -248,18 +251,18 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []as
 			} else {
 				buf.add(ir.DuplicateStream{
 					Old: redirection.Src,
-					New: g.handleExpression(redirection.Dst),
+					New: g.handleExpression(buf, redirection.Dst),
 				})
 				if redirection.Close {
 					buf.add(ir.CloseStream{
-						Fd: g.handleExpression(redirection.Dst),
+						Fd: g.handleExpression(buf, redirection.Dst),
 					})
 				}
 			}
 		case "<":
 			buf.add(ir.OpenStream{
 				Name:   fmt.Sprintf("stream%d", i),
-				Target: g.handleExpression(redirection.Dst),
+				Target: g.handleExpression(buf, redirection.Dst),
 				Mode:   ir.FLAG_READ,
 			})
 			buf.add(ir.AddStream{
@@ -271,7 +274,7 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []as
 				Name: fmt.Sprintf("stream%d", i),
 				Value: ir.NewBuffer{
 					Readonly: true,
-					Value:    g.handleExpression(redirection.Dst),
+					Value:    g.handleExpression(buf, redirection.Dst),
 				},
 			})
 			buf.add(ir.AddStream{
@@ -281,7 +284,7 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []as
 		case "<>":
 			buf.add(ir.OpenStream{
 				Name:   fmt.Sprintf("stream%d", i),
-				Target: g.handleExpression(redirection.Dst),
+				Target: g.handleExpression(buf, redirection.Dst),
 				Mode:   ir.FLAG_RW,
 			})
 			buf.add(ir.AddStream{
@@ -307,7 +310,7 @@ func (g *generator) handleParameterAssignment(buf *InstructionBuffer, p ast.Para
 			Value: ir.String(""),
 		}
 		if assignment.Value != nil {
-			ins.Value = g.handleExpression(assignment.Value)
+			ins.Value = g.handleExpression(buf, assignment.Value)
 		}
 
 		buf.add(ins)

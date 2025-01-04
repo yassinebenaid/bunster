@@ -10,7 +10,7 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
-		var commandName = func() string {
+		expr2, exitCode := func() (string, int) {
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
 			shell := shell.Clone()
@@ -44,8 +44,13 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.ExitCode = command.ProcessState.ExitCode()
 
 			}()
-			return buffer.String(true)
+			return buffer.String(true), shell.ExitCode
 		}()
+		if exitCode != 0 {
+		    shell.ExitCode = exitCode
+			return
+		}
+		var commandName = expr2
 		var arguments []string
 		var command = shell.Command(commandName, arguments...)
 		streamManager := streamManager.Clone()
@@ -88,7 +93,7 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
-		var commandName = `/path/` + func() string {
+		expr4, exitCode := func() (string, int) {
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
 			shell := shell.Clone()
@@ -122,8 +127,13 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.ExitCode = command.ProcessState.ExitCode()
 
 			}()
-			return buffer.String(true)
+			return buffer.String(true), shell.ExitCode
 		}()
+		if exitCode != 0 {
+		    shell.ExitCode = exitCode
+			return
+		}
+		var commandName = `/path/` + expr4
 		var arguments []string
 		var command = shell.Command(commandName, arguments...)
 		streamManager := streamManager.Clone()
@@ -169,7 +179,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		var commandName = `cmd`
 		var arguments []string
-		arguments = append(arguments, func() string {
+		expr3, exitCode := func() (string, int) {
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
 			shell := shell.Clone()
@@ -203,8 +213,13 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.ExitCode = command.ProcessState.ExitCode()
 
 			}()
-			return buffer.String(true)
-		}())
+			return buffer.String(true), shell.ExitCode
+		}()
+		if exitCode != 0 {
+		    shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, expr3)
 		var command = shell.Command(commandName, arguments...)
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()

@@ -1,11 +1,13 @@
 package generator
 
 import (
+	"fmt"
+
 	"github.com/yassinebenaid/bunster/ast"
 	"github.com/yassinebenaid/bunster/ir"
 )
 
-func (g *generator) handleCommandSubstitution(statements ast.CommandSubstitution) ir.Instruction {
+func (g *generator) handleCommandSubstitution(buf *InstructionBuffer, statements ast.CommandSubstitution) ir.Instruction {
 	var cmdbuf InstructionBuffer
 
 	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: true})
@@ -20,7 +22,13 @@ func (g *generator) handleCommandSubstitution(statements ast.CommandSubstitution
 		g.generate(&cmdbuf, statement, nil)
 	}
 
-	cmdbuf.add(ir.Literal("return buffer.String(true)"))
+	cmdbuf.add(ir.Literal("return buffer.String(true), shell.ExitCode"))
 
-	return ir.ExpressionClosure(cmdbuf)
+	name := fmt.Sprintf("expr%d", g.expressionsCount)
+	buf.add(ir.ExpressionClosure{
+		Body: cmdbuf,
+		Name: name,
+	})
+
+	return ir.Literal(name)
 }

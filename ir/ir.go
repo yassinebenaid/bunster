@@ -171,19 +171,27 @@ func (c Closure) togo() string {
 	`, keyword, body)
 }
 
-type ExpressionClosure []Instruction
+type ExpressionClosure struct {
+	Body []Instruction
+	Name string
+}
 
 func (c ExpressionClosure) togo() string {
 	var body string
 
-	for _, ins := range c {
+	for _, ins := range c.Body {
 		body += ins.togo()
 	}
 
 	return fmt.Sprintf(
-		`func() string {
+		`%s, exitCode := func() (string, int) {
 			%s
-		}()`, body)
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		`, c.Name, body)
 }
 
 type SetCmdEnv struct {
