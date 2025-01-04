@@ -100,6 +100,12 @@ type StreamManager struct {
 	proxied  []Stream
 }
 
+func NewStreamManager() *StreamManager {
+	return &StreamManager{
+		mappings: make(map[string]Stream),
+	}
+}
+
 func (sm *StreamManager) OpenStream(name string, flag int) (Stream, error) {
 	switch name {
 	default:

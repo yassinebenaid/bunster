@@ -1,32 +1,10 @@
 package runtime_test
 
 import (
-	"bytes"
-	"fmt"
 	"testing"
 
 	"github.com/yassinebenaid/bunster/runtime"
 )
-
-type testStream struct {
-	closed bool
-	buf    bytes.Buffer
-}
-
-func (ts *testStream) Read(b []byte) (int, error) {
-	return ts.Read(b)
-}
-
-func (ts *testStream) Write(b []byte) (int, error) {
-	return ts.Write(b)
-}
-
-func (ts *testStream) Close() error {
-	if ts.closed {
-		return fmt.Errorf("closing closed stream")
-	}
-	return nil
-}
 
 func TestShell_Run(t *testing.T) {
 	shell := runtime.Shell{
