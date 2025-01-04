@@ -1,17 +1,15 @@
-package runtime_test
+package runtime
 
 import (
 	"testing"
-
-	"github.com/yassinebenaid/bunster/runtime"
 )
 
 func TestShell_Run(t *testing.T) {
-	shell := runtime.Shell{
+	shell := Shell{
 		Stdin:  &testStream{},
 		Stdout: &testStream{},
 		Stderr: &testStream{},
-		Main: func(s *runtime.Shell, sm *runtime.StreamManager) {
+		Main: func(s *Shell, sm *StreamManager) {
 
 			s.ExitCode = 123
 		},
