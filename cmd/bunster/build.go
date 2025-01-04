@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"strings"
 
 	"github.com/urfave/cli/v3"
 	"github.com/yassinebenaid/bunster"
@@ -82,6 +83,10 @@ func cloneRuntime(dst string) error {
 
 		if d.IsDir() {
 			return os.MkdirAll(path.Join(dst, dpath), 0766)
+		}
+
+		if strings.HasSuffix(dpath, "_test.go") {
+			return nil
 		}
 
 		content, err := bunster.RuntimeFS.ReadFile(dpath)
