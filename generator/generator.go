@@ -20,7 +20,9 @@ func Generate(script ast.Script) ir.Program {
 	}
 }
 
-type generator struct{}
+type generator struct {
+	expressionsCount int
+}
 
 type InstructionBuffer []ir.Instruction
 
@@ -145,6 +147,7 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 }
 
 func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expression) ir.Instruction {
+	g.expressionsCount++
 	switch v := expression.(type) {
 	case ast.Word:
 		return ir.String(v)
@@ -157,13 +160,13 @@ func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expr
 	case ast.QuotedString:
 		var concat ir.Concat
 		for _, expr := range v {
-			concat = append(concat, g.handleExpression(nil, expr))
+			concat = append(concat, g.handleExpression(buf, expr))
 		}
 		return concat
 	case ast.UnquotedString:
 		var concat ir.Concat
 		for _, expr := range v {
-			concat = append(concat, g.handleExpression(nil, expr))
+			concat = append(concat, g.handleExpression(buf, expr))
 		}
 		return concat
 	case ast.CommandSubstitution:

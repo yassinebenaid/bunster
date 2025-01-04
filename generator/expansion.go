@@ -1,6 +1,8 @@
 package generator
 
 import (
+	"fmt"
+
 	"github.com/yassinebenaid/bunster/ast"
 	"github.com/yassinebenaid/bunster/ir"
 )
@@ -22,10 +24,11 @@ func (g *generator) handleCommandSubstitution(buf *InstructionBuffer, statements
 
 	cmdbuf.add(ir.Literal("return buffer.String(true), shell.ExitCode"))
 
+	name := fmt.Sprintf("expr%d", g.expressionsCount)
 	buf.add(ir.ExpressionClosure{
 		Body: cmdbuf,
-		Name: "commandSubstitionExpression",
+		Name: name,
 	})
 
-	return ir.Literal("commandSubstitionExpression")
+	return ir.Literal(name)
 }
