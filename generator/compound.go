@@ -97,9 +97,37 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, pc *pipeContex
 	cmdbuf.add(ir.If{
 		Condition: ir.Literal("condition"),
 		Body:      body,
+		Alternate: g.handleElif(cond.Elifs),
 	})
 
 	*buf = append(*buf, ir.Closure{
 		Body: cmdbuf,
 	})
+}
+
+func (g *generator) handleElif(elifs []ast.Elif) []ir.Instruction {
+	if len(elifs) == 0 {
+		return nil
+	}
+
+	var cmdbuf InstructionBuffer
+
+	for _, statement := range elifs[0].Head {
+		g.generate(&cmdbuf, statement, nil)
+		cmdbuf.add(ir.Set{Name: "condition", Value: ir.Literal("shell.ExitCode == 0")})
+		cmdbuf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
+	}
+
+	var body InstructionBuffer
+	for _, statement := range elifs[0].Body {
+		g.generate(&body, statement, nil)
+	}
+	cmdbuf.add(ir.If{
+		Condition: ir.Literal("condition"),
+		Body:      body,
+		Alternate: g.handleElif(elifs[1:]),
+	})
+
+	return cmdbuf
+
 }

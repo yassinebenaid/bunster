@@ -240,11 +240,12 @@ func (i If) togo() string {
 	}
 
 	if len(i.Alternate) > 0 {
+		cond += "} else {"
 
 		for _, ins := range i.Alternate {
 			cond += ins.togo()
 		}
 	}
 
-	return cond + "}"
+	return cond + "}\n"
 }
