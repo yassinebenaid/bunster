@@ -79,3 +79,24 @@ func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell
 		Body: cmdbuf,
 	})
 }
+
+func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, pc *pipeContext) {
+	var cmdbuf InstructionBuffer
+
+	for _, statement := range cond.Head {
+		g.generate(&cmdbuf, statement, nil)
+	}
+
+	var body InstructionBuffer
+	for _, statement := range cond.Body {
+		g.generate(&body, statement, nil)
+	}
+	cmdbuf.add(ir.IfLastExitCode{
+		Zero: true,
+		Body: body,
+	})
+
+	*buf = append(*buf, ir.Closure{
+		Body: cmdbuf,
+	})
+}

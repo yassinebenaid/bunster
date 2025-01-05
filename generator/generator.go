@@ -44,6 +44,8 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, pc
 		g.handleGroup(buf, v, pc)
 	case ast.SubShell:
 		g.handleSubshell(buf, v, pc)
+	case ast.If:
+		g.handleIf(buf, v, pc)
 	default:
 		panic(fmt.Sprintf("unhandled statement type (%T)", statement))
 	}
