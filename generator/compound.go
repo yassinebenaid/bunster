@@ -82,6 +82,9 @@ func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell
 
 func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, pc *pipeContext) {
 	var cmdbuf InstructionBuffer
+
+	g.handleRedirections(&cmdbuf, cond.Redirections, pc)
+
 	cmdbuf.add(ir.Declare{Name: "condition", Value: ir.Literal("false")})
 
 	for _, statement := range cond.Head {
