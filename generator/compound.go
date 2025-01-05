@@ -82,6 +82,7 @@ func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell
 
 func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, pc *pipeContext) {
 	var cmdbuf InstructionBuffer
+	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: pc == nil})
 
 	g.handleRedirections(&cmdbuf, cond.Redirections, pc)
 
