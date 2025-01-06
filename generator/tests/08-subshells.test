@@ -15,6 +15,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 	    shell := shell.Clone()
 		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
 		func() {
 			var commandName = `echo`
 			var arguments []string
@@ -98,6 +99,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 	    shell := shell.Clone()
 		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
 		stream0, err := streamManager.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
 		if err != nil {
 			shell.HandleError(err)
@@ -192,6 +194,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 	    shell := shell.Clone()
 		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
 		func() {
 			var pipelineWaitgroup []func() error
 			pipeReader1, pipeWriter1, err := runtime.NewPipe()
@@ -377,9 +380,11 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 	    shell := shell.Clone()
 		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
 		func() {
 		    shell := shell.Clone()
 			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
 			func() {
 				var commandName = `echo`
 				var arguments []string
@@ -414,6 +419,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		func() {
 		    shell := shell.Clone()
 			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
 			func() {
 				var commandName = `echo`
 				var arguments []string
