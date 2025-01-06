@@ -10,3 +10,4 @@ as work-in-progress and as not-yet-supported.
 - [Conditional Execution](https://www.gnu.org/software/bash/manual/bash.html#Lists)
 - [Command Grouping](https://www.gnu.org/software/bash/manual/html_node/Command-Grouping.html)
 - [Command Substituion](https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html)
+- [`if` command](https://www.gnu.org/software/bash/manual/html_node/Conditional-Constructs.html#index-if)

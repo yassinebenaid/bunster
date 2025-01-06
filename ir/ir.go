@@ -226,3 +226,26 @@ func (i IfLastExitCode) togo() string {
 		}
 		`, condition, body)
 }
+
+type If struct {
+	Condition Instruction
+	Body      []Instruction
+	Alternate []Instruction
+}
+
+func (i If) togo() string {
+	cond := fmt.Sprintf("if %s {\n", i.Condition)
+	for _, ins := range i.Body {
+		cond += ins.togo()
+	}
+
+	if len(i.Alternate) > 0 {
+		cond += "} else {"
+
+		for _, ins := range i.Alternate {
+			cond += ins.togo()
+		}
+	}
+
+	return cond + "}\n"
+}
