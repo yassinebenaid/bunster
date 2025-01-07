@@ -86,23 +86,45 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, pc *pipeContex
 
 	g.handleRedirections(&cmdbuf, cond.Redirections, pc)
 
-	cmdbuf.add(ir.Declare{Name: "condition", Value: ir.Literal("false")})
+	var innerBuf InstructionBuffer
+
+	innerBuf.add(ir.Declare{Name: "condition", Value: ir.Literal("false")})
 
 	for _, statement := range cond.Head {
-		g.generate(&cmdbuf, statement, nil)
-		cmdbuf.add(ir.Set{Name: "condition", Value: ir.Literal("shell.ExitCode == 0")})
-		cmdbuf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
+		g.generate(&innerBuf, statement, nil)
+		innerBuf.add(ir.Set{Name: "condition", Value: ir.Literal("shell.ExitCode == 0")})
+		innerBuf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
 	}
 
 	var body InstructionBuffer
 	for _, statement := range cond.Body {
 		g.generate(&body, statement, nil)
 	}
-	cmdbuf.add(ir.If{
+	innerBuf.add(ir.If{
 		Condition: ir.Literal("condition"),
 		Body:      body,
 		Alternate: g.handleElif(cond.Elifs),
 	})
+
+	if pc == nil {
+		cmdbuf = append(cmdbuf, innerBuf...)
+	} else {
+		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
+		cmdbuf.add(ir.PushToPipelineWaitgroup{
+			Waitgroup: pc.waitgroup,
+			Value: ir.Literal(`func() error {
+				<-done
+			 	streamManager.Destroy()
+				return nil
+			}`),
+		})
+
+		innerBuf.add(ir.Literal("done<-struct{}{}\n"))
+		cmdbuf.add(ir.Closure{
+			Async: true,
+			Body:  innerBuf,
+		})
+	}
 
 	*buf = append(*buf, ir.Closure{
 		Body: cmdbuf,
