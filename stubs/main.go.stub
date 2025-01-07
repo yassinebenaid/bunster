@@ -14,7 +14,7 @@ func main() {
 		Stdout: os.Stdout,
 		Stderr: os.Stderr,
 
-        Args: os.Args[1:],
+        Args: os.Args,
 
 		Main: Main,
 	}

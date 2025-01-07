@@ -64,7 +64,7 @@ func (shell *Shell) ReadSpecialVar(name string) string {
 		if err != nil {
 			return ""
 		}
-		if int(index) < len(shell.Args) {
+		if index < uint64(len(shell.Args)) {
 			return shell.Args[index]
 		}
 		return ""
