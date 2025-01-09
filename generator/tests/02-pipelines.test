@@ -21,7 +21,6 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			arguments = append(arguments, `file.txt`)
 			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
-			defer streamManager.Destroy()
 			streamManager.Add(`1`, pipeWriter1, true)
 			if stream, err := streamManager.Get(`0`); err != nil {
             shell.HandleError(err)
@@ -42,7 +41,10 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.HandleError(err)
 				return
 			}
-			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+			pipelineWaitgroup = append(pipelineWaitgroup, func() error{
+			     defer streamManager.Destroy()
+			     return command.Wait()
+			})
 
 		}()
 		func() {
@@ -51,7 +53,6 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			arguments = append(arguments, `foobar`)
 			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
-			defer streamManager.Destroy()
 			streamManager.Add(`0`, pipeReader1, false)
 			if stream, err := streamManager.Get(`0`); err != nil {
             shell.HandleError(err)
@@ -72,7 +73,10 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.HandleError(err)
 				return
 			}
-			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+			pipelineWaitgroup = append(pipelineWaitgroup, func() error{
+			     defer streamManager.Destroy()
+			     return command.Wait()
+			})
 
 		}()
 		for i, wait := range pipelineWaitgroup {
@@ -116,7 +120,6 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			arguments = append(arguments, `file.txt`)
 			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
-			defer streamManager.Destroy()
 			streamManager.Add(`1`, pipeWriter1, true)
 			if stream, err := streamManager.Get(`0`); err != nil {
                 shell.HandleError(err)
@@ -137,7 +140,10 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.HandleError(err)
 				return
 			}
-			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+			pipelineWaitgroup = append(pipelineWaitgroup, func() error{
+			     defer streamManager.Destroy()
+			     return command.Wait()
+			})
 
 		}()
 		pipeReader2, pipeWriter2, err := runtime.NewPipe()
@@ -151,7 +157,6 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			arguments = append(arguments, `foobar`)
 			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
-			defer streamManager.Destroy()
 			streamManager.Add(`1`, pipeWriter2, true)
 			streamManager.Add(`0`, pipeReader1, false)
 			if stream, err := streamManager.Get(`0`); err != nil {
@@ -173,7 +178,10 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.HandleError(err)
 				return
 			}
-			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+			pipelineWaitgroup = append(pipelineWaitgroup, func() error{
+			     defer streamManager.Destroy()
+			     return command.Wait()
+			})
 
 		}()
 		pipeReader3, pipeWriter3, err := runtime.NewPipe()
@@ -188,7 +196,6 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
             arguments = append(arguments, `o`)
     		var command = shell.Command(commandName, arguments...)
     		streamManager := streamManager.Clone()
-    		defer streamManager.Destroy()
     		streamManager.Add(`1`, pipeWriter3, true)
 			streamManager.Add(`0`, pipeReader2, false)
         	if stream, err := streamManager.Get(`0`); err != nil {
@@ -210,7 +217,10 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     			shell.HandleError(err)
     			return
     		}
-    		pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+			pipelineWaitgroup = append(pipelineWaitgroup, func() error{
+			     defer streamManager.Destroy()
+			     return command.Wait()
+			})
 
 		}()
 			func() {
@@ -219,7 +229,6 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			arguments = append(arguments, `, `)
 			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
-			defer streamManager.Destroy()
 			streamManager.Add(`0`, pipeReader3, false)
 			if stream, err := streamManager.Get(`0`); err != nil {
                 shell.HandleError(err)
@@ -240,7 +249,10 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.HandleError(err)
 				return
 			}
-			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+			pipelineWaitgroup = append(pipelineWaitgroup, func() error{
+			     defer streamManager.Destroy()
+			     return command.Wait()
+			})
 
 		}()
 		for i, wait := range pipelineWaitgroup {
@@ -279,7 +291,6 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			arguments = append(arguments, `file.txt`)
 			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
-			defer streamManager.Destroy()
 			streamManager.Add(`1`, pipeWriter1, true)
 			streamManager.Add(`2`, pipeWriter1, true)
 			if stream, err := streamManager.Get(`0`); err != nil {
@@ -301,7 +312,10 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.HandleError(err)
 				return
 			}
-			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+			pipelineWaitgroup = append(pipelineWaitgroup, func() error{
+			     defer streamManager.Destroy()
+			     return command.Wait()
+			})
 
 		}()
 		func() {
@@ -310,7 +324,6 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			arguments = append(arguments, `foobar`)
 			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
-			defer streamManager.Destroy()
 			streamManager.Add(`0`, pipeReader1, false)
 			if stream, err := streamManager.Get(`0`); err != nil {
             shell.HandleError(err)
@@ -331,7 +344,10 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.HandleError(err)
 				return
 			}
-			pipelineWaitgroup = append(pipelineWaitgroup, command.Wait)
+			pipelineWaitgroup = append(pipelineWaitgroup, func() error{
+			     defer streamManager.Destroy()
+			     return command.Wait()
+			})
 
 		}()
 		for i, wait := range pipelineWaitgroup {
