@@ -127,7 +127,7 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 		})
 	}
 
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: true})
+	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: pc == nil})
 	g.handleRedirections(&cmdbuf, cmd.Redirections, pc)
 	cmdbuf.add(ir.SetStream{Name: "command.Stdin", Fd: ir.String("0")})
 	cmdbuf.add(ir.SetStream{Name: "command.Stdout", Fd: ir.String("1")})
@@ -137,7 +137,10 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 		cmdbuf.add(ir.StartCommand("command"))
 		cmdbuf.add(ir.PushToPipelineWaitgroup{
 			Waitgroup: pc.waitgroup,
-			Value:     ir.Literal("command.Wait"),
+			Value: ir.Literal(`func() error {
+			 	defer streamManager.Destroy()
+				return command.Wait()
+			}`),
 		})
 	} else {
 		cmdbuf.add(ir.RunCommand("command"))
