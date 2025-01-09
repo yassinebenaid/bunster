@@ -87,9 +87,7 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, pc *pipeContex
 	g.handleRedirections(&cmdbuf, cond.Redirections, pc)
 
 	var innerBuf InstructionBuffer
-
 	innerBuf.add(ir.Declare{Name: "condition", Value: ir.Literal("false")})
-
 	for _, statement := range cond.Head {
 		g.generate(&innerBuf, statement, nil)
 		innerBuf.add(ir.Set{Name: "condition", Value: ir.Literal("shell.ExitCode == 0")})
@@ -106,6 +104,14 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, pc *pipeContex
 		Alternate: g.handleElif(cond.Elifs),
 	})
 
+	if cond.Alternate != nil {
+		var alt InstructionBuffer
+		for _, statement := range cond.Alternate {
+			g.generate(&alt, statement, nil)
+		}
+		innerBuf.add(ir.If{Condition: ir.Literal("!condition"), Body: alt})
+	}
+
 	if pc == nil {
 		cmdbuf = append(cmdbuf, innerBuf...)
 	} else {
@@ -120,15 +126,10 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, pc *pipeContex
 		})
 
 		innerBuf.add(ir.Literal("done<-struct{}{}\n"))
-		cmdbuf.add(ir.Closure{
-			Async: true,
-			Body:  innerBuf,
-		})
+		cmdbuf.add(ir.Closure{Async: true, Body: innerBuf})
 	}
 
-	*buf = append(*buf, ir.Closure{
-		Body: cmdbuf,
-	})
+	*buf = append(*buf, ir.Closure{Body: cmdbuf})
 }
 
 func (g *generator) handleElif(elifs []ast.Elif) []ir.Instruction {
