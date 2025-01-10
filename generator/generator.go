@@ -279,7 +279,10 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []as
 				Name: fmt.Sprintf("stream%d", i),
 				Value: ir.NewBuffer{
 					Readonly: true,
-					Value:    g.handleExpression(buf, redirection.Dst),
+					Value: ir.Concat{
+						g.handleExpression(buf, redirection.Dst),
+						ir.String("\n"),
+					},
 				},
 			})
 			buf.add(ir.AddStream{
