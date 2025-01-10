@@ -81,6 +81,7 @@ func (as SetStream) togo() string {
 	return fmt.Sprintf(
 		`if stream, err := streamManager.Get(%s); err != nil{
 			shell.HandleError(err)
+			return
 		}else{
 			%s = stream
 		}
