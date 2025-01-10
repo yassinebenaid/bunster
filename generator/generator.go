@@ -275,15 +275,16 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []as
 				StreamName: fmt.Sprintf("stream%d", i),
 			})
 		case "<<<":
-			buf.add(ir.Declare{
-				Name: fmt.Sprintf("stream%d", i),
-				Value: ir.NewBuffer{
-					Readonly: true,
-					Value: ir.Concat{
-						g.handleExpression(buf, redirection.Dst),
-						ir.String("\n"),
-					},
+			buf.add(ir.NewPipeBuffer{
+				Value: ir.Concat{
+					g.handleExpression(buf, redirection.Dst),
+					ir.String("\n"),
 				},
+				Name: fmt.Sprintf("buffer%d", i),
+			})
+			buf.add(ir.Declare{
+				Name:  fmt.Sprintf("stream%d", i),
+				Value: ir.Literal(fmt.Sprintf("buffer%d", i)),
 			})
 			buf.add(ir.AddStream{
 				Fd:         redirection.Src,

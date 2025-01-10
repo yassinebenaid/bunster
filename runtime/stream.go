@@ -214,3 +214,17 @@ func (sm *StreamManager) Clone() *StreamManager {
 func NewPipe() (Stream, Stream, error) {
 	return os.Pipe()
 }
+
+func NewBufferedStream(s string) (Stream, error) {
+	r, w, err := os.Pipe()
+	if err != nil {
+		return nil, fmt.Errorf("failed to create buffered stream, %w", err)
+	}
+
+	go func() {
+		_, _ = w.Write([]byte(s))
+		_ = w.Close()
+	}()
+
+	return r, nil
+}
