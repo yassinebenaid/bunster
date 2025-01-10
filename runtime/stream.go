@@ -222,8 +222,8 @@ func NewBufferedStream(s string) (Stream, error) {
 	}
 
 	go func() {
-		w.Write([]byte(s))
-		w.Close()
+		_, _ = w.Write([]byte(s))
+		_ = w.Close()
 	}()
 
 	return r, nil
