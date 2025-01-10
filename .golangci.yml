@@ -11,5 +11,5 @@ linters:
     - bidichk # Checks for dangerous unicode character sequences.	
     - decorder # heck declaration order and count of types, constants, variables and functions.
     - errname # Checks that sentinel errors are prefixed with the Err and error types are suffixed with the Error.
-    - errorlint # Errorlint is a linter for that can be used to find code that will cause problems with the error wrapping scheme introduced in Go 1.13.
+    - gofmt  # Gofmt checks whether code was gofmt-ed. By default this tool runs with -s option to check for code simplification.
   disable:
