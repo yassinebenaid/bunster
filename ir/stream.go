@@ -28,12 +28,26 @@ func (of OpenStream) togo() string {
 }
 
 type NewBuffer struct {
-	Value    Instruction
-	Readonly bool
+	Value Instruction
 }
 
-func (of NewBuffer) togo() string {
-	return fmt.Sprintf("runtime.NewBuffer(%s, %t)", of.Value.togo(), of.Readonly)
+func (b NewBuffer) togo() string {
+	return fmt.Sprintf("runtime.NewBuffer(%s, false)", b.Value.togo())
+}
+
+type NewPipeBuffer struct {
+	Value Instruction
+	Name  string
+}
+
+func (b NewPipeBuffer) togo() string {
+	return fmt.Sprintf(
+		`%s, err := runtime.NewBufferedStream(%s)
+		if err != nil {
+			shell.HandleError(err)
+			return
+		}
+		`, b.Name, b.Value.togo())
 }
 
 type CloneStreamManager struct {
