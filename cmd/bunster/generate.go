@@ -44,7 +44,7 @@ func geneateCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	err = os.WriteFile(path.Join(workdir, "program.go"), []byte(program.String()), 0666)
+	err = os.WriteFile(path.Join(workdir, "program.go"), []byte(program.String()), 0600)
 	if err != nil {
 		return err
 	}
