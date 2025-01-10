@@ -43,7 +43,7 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	err = os.WriteFile(path.Join(wd, "program.go"), []byte(program.String()), 0666)
+	err = os.WriteFile(path.Join(wd, "program.go"), []byte(program.String()), 0600)
 	if err != nil {
 		return err
 	}
@@ -94,16 +94,16 @@ func cloneRuntime(dst string) error {
 			return err
 		}
 
-		return os.WriteFile(path.Join(dst, dpath), content, 0644)
+		return os.WriteFile(path.Join(dst, dpath), content, 0600)
 	})
 }
 
 func cloneStubs(dst string) error {
-	if err := os.WriteFile(path.Join(dst, "main.go"), bunster.MainGoStub, 0644); err != nil {
+	if err := os.WriteFile(path.Join(dst, "main.go"), bunster.MainGoStub, 0600); err != nil {
 		return err
 	}
 
-	if err := os.WriteFile(path.Join(dst, "go.mod"), bunster.GoModStub, 0644); err != nil {
+	if err := os.WriteFile(path.Join(dst, "go.mod"), bunster.GoModStub, 0600); err != nil {
 		return err
 	}
 
