@@ -12,4 +12,5 @@ linters:
     - decorder # heck declaration order and count of types, constants, variables and functions.
     - errname # Checks that sentinel errors are prefixed with the Err and error types are suffixed with the Error.
     - gofmt  # Gofmt checks whether code was gofmt-ed. By default this tool runs with -s option to check for code simplification.
+    - gosec # Inspects source code for security problems.	
   disable:
