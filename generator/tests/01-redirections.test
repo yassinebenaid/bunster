@@ -355,9 +355,21 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
   		var command = shell.Command(commandName, arguments...)
   		streamManager := streamManager.Clone()
   		defer streamManager.Destroy()
-        var stream0 = runtime.NewBuffer(`Foo`, true)
+        buffer0, err := runtime.NewBufferedStream(`Foo` + `
+`)
+        if err != nil {
+            shell.HandleError(err)
+            return
+        }
+        var stream0 = buffer0
         streamManager.Add(`0`, stream0, false)
-        var stream1 = runtime.NewBuffer(`Foo Bar`, true)
+        buffer1, err := runtime.NewBufferedStream(`Foo Bar` + `
+`)
+        if err != nil {
+            shell.HandleError(err)
+            return
+        }
+        var stream1 = buffer1
         streamManager.Add(`2`, stream1, false)
   		if stream, err := streamManager.Get(`0`); err != nil {
             shell.HandleError(err)
@@ -422,7 +434,13 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
             shell.HandleError(err)
             return
         }
-        var stream3 = runtime.NewBuffer(`foobar`, true)
+        buffer3, err := runtime.NewBufferedStream(`foobar` + `
+`)
+        if err != nil {
+            shell.HandleError(err)
+            return
+        }
+        var stream3 = buffer3
         streamManager.Add(`4`, stream3, false)
         if err := streamManager.Close(`4`); err != nil {
             shell.HandleError(err)
