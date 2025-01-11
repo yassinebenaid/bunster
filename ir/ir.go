@@ -249,3 +249,17 @@ func (i If) togo() string {
 
 	return cond + "}\n"
 }
+
+type Loop struct {
+	Condition Instruction
+	Body      []Instruction
+}
+
+func (i Loop) togo() string {
+	cond := fmt.Sprintf("for %s {\n", i.Condition)
+	for _, ins := range i.Body {
+		cond += ins.togo()
+	}
+
+	return cond + "}\n"
+}

@@ -158,3 +158,46 @@ func (g *generator) handleElif(elifs []ast.Elif) []ir.Instruction {
 	return cmdbuf
 
 }
+
+func (g *generator) handleLoop(buf *InstructionBuffer, cond ast.Loop, pc *pipeContext) {
+	var cmdbuf InstructionBuffer
+	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: pc == nil})
+
+	g.handleRedirections(&cmdbuf, cond.Redirections, pc)
+
+	var innerBuf InstructionBuffer
+	innerBuf.add(ir.Declare{Name: "condition", Value: ir.Literal("false")})
+	for _, statement := range cond.Head {
+		g.generate(&innerBuf, statement, nil)
+		innerBuf.add(ir.Set{Name: "condition", Value: ir.Literal("shell.ExitCode == 0")})
+		innerBuf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
+	}
+
+	var body InstructionBuffer
+	for _, statement := range cond.Body {
+		g.generate(&body, statement, nil)
+	}
+	innerBuf.add(ir.Loop{
+		Condition: ir.Literal("condition"),
+		Body:      body,
+	})
+
+	if pc == nil {
+		cmdbuf = append(cmdbuf, innerBuf...)
+	} else {
+		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
+		cmdbuf.add(ir.PushToPipelineWaitgroup{
+			Waitgroup: pc.waitgroup,
+			Value: ir.Literal(`func() error {
+				<-done
+			 	streamManager.Destroy()
+				return nil
+			}`),
+		})
+
+		innerBuf.add(ir.Literal("done<-struct{}{}\n"))
+		cmdbuf.add(ir.Closure{Async: true, Body: innerBuf})
+	}
+
+	*buf = append(*buf, ir.Closure{Body: cmdbuf})
+}

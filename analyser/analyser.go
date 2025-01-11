@@ -93,6 +93,20 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.analyseExpression(pa.Value)
 			}
 		}
+	case ast.Loop:
+		for _, s := range v.Head {
+			a.analyseStatement(s)
+		}
+		for _, s := range v.Body {
+			a.analyseStatement(s)
+		}
+		for _, r := range v.Redirections {
+			if r.Dst != nil {
+				a.analyseExpression(r.Dst)
+			}
+		}
+	case ast.Break:
+	// TODO
 	case ast.Pipeline:
 		a.analysePipeline(v)
 	default:
