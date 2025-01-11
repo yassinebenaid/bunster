@@ -25,12 +25,8 @@ func (p *parser) getCompoundParser() func() ast.Statement {
 		return p.parseTestCommand
 	case token.LEFT_BRACKET, token.TEST:
 		return p.parsePosixTestCommand
-	case token.THEN, token.ELIF, token.ELSE, token.FI, token.DO, token.DONE, token.ESAC:
-		p.error("`%s` is a reserved keyword, cannot be used a command name", p.curr)
-		fallthrough
-	default:
-		return nil
 	}
+	return nil
 }
 
 func (p *parser) parseWhileLoop() ast.Statement {
