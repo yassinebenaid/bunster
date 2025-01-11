@@ -38,7 +38,9 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.analyseExpression(r.Dst)
 			}
 		}
-
+		for _, ass := range v.Env {
+			a.analyseExpression(ass.Value)
+		}
 	case ast.List, ast.If, ast.SubShell, ast.Group, ast.ParameterAssignement:
 	case ast.Pipeline:
 		a.analysePipeline(v)
