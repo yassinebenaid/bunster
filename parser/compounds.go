@@ -30,6 +30,8 @@ func (p *parser) getCompoundParser() func() ast.Statement {
 }
 
 func (p *parser) parseWhileLoop() ast.Statement {
+	p.loopLevel++
+
 	var loop ast.Loop
 	loopKeyword := p.curr.Literal
 	loop.Negate = p.curr.Type == token.UNTIL
@@ -95,6 +97,8 @@ func (p *parser) parseWhileLoop() ast.Statement {
 		p.error("unexpected token `%s`", p.curr)
 		return nil
 	}
+
+	p.loopLevel--
 
 	return loop
 }

@@ -31,6 +31,8 @@ type parser struct {
 	next2 token.Token
 	next3 token.Token
 	Error *ParserError
+
+	loopLevel int
 }
 
 type ParserError struct {

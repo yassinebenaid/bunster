@@ -7,6 +7,8 @@ import (
 
 func (p *parser) getBuiltinParser() func() ast.Statement {
 	switch p.curr.Type {
+	case token.BREAK:
+		return p.parseBreak
 	case token.FUNCTION:
 		return p.parseFunction
 	case token.THEN, token.ELIF, token.ELSE, token.FI, token.DO, token.DONE, token.ESAC:
@@ -59,4 +61,12 @@ func (p *parser) parseFunction() ast.Statement {
 	}
 
 	return ast.Function{Name: string(name), Command: compound()}
+}
+
+func (p *parser) parseBreak() ast.Statement {
+	p.proceed()
+	if p.loopLevel == 0 {
+		p.error("the `break` keyword cannot be used outside loops")
+	}
+	return ast.Break(p.loopLevel)
 }

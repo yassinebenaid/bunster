@@ -958,6 +958,14 @@ var loopsTests = []testCase{
 			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
 		},
 	}},
+
+	// Break
+	{`while true;do break;done`, ast.Script{
+		ast.Loop{
+			Head: []ast.Statement{ast.Command{Name: ast.Word("true")}},
+			Body: []ast.Statement{ast.Break(1)},
+		},
+	}},
 }
 
 var loopsErrorHandlingCases = []errorHandlingTestCase{
