@@ -28,9 +28,28 @@ func (a *analyser) analyse() {
 
 func (a *analyser) analyseStatement(s ast.Statement) {
 	switch v := s.(type) {
-	case ast.Command, ast.List, ast.If, ast.SubShell, ast.Group, ast.ParameterAssignement:
+	case ast.Command:
+		a.analyseExpression(v.Name)
+		for _, arg := range v.Args {
+			a.analyseExpression(arg)
+		}
+		for _, r := range v.Redirections {
+			if r.Dst != nil {
+				a.analyseExpression(r.Dst)
+			}
+		}
+
+	case ast.List, ast.If, ast.SubShell, ast.Group, ast.ParameterAssignement:
 	case ast.Pipeline:
 		a.analysePipeline(v)
+	default:
+		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
+	}
+}
+
+func (a *analyser) analyseExpression(s ast.Expression) {
+	switch v := s.(type) {
+	case ast.Word, ast.Var, ast.CommandSubstitution, ast.QuotedString, ast.UnquotedString, ast.SpecialVar, ast.Number:
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
