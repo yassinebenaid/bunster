@@ -162,10 +162,6 @@ func (p *parser) parsePipline() ast.Pipeline {
 }
 
 func (p *parser) parseCommand() ast.Statement {
-	if p.curr.Type == token.FUNCTION {
-		return p.parseFunction()
-	}
-
 	if builtin := p.getBuiltinParser(); builtin != nil {
 		return builtin()
 	}
