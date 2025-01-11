@@ -28,24 +28,97 @@ func (a *analyser) analyse() {
 
 func (a *analyser) analyseStatement(s ast.Statement) {
 	switch v := s.(type) {
+	case ast.Command:
+		a.analyseExpression(v.Name)
+		for _, arg := range v.Args {
+			a.analyseExpression(arg)
+		}
+		for _, r := range v.Redirections {
+			if r.Dst != nil {
+				a.analyseExpression(r.Dst)
+			}
+		}
+		for _, env := range v.Env {
+			if env.Value != nil {
+				a.analyseExpression(env.Value)
+			}
+		}
+	case ast.List:
+		a.analyseStatement(v.Left)
+		a.analyseStatement(v.Right)
+	case ast.If:
+		for _, s := range v.Head {
+			a.analyseStatement(s)
+		}
+		for _, s := range v.Body {
+			a.analyseStatement(s)
+		}
+		for _, elif := range v.Elifs {
+			for _, s := range elif.Head {
+				a.analyseStatement(s)
+			}
+			for _, s := range elif.Body {
+				a.analyseStatement(s)
+			}
+		}
+		for _, s := range v.Alternate {
+			a.analyseStatement(s)
+		}
+		for _, r := range v.Redirections {
+			if r.Dst != nil {
+				a.analyseExpression(r.Dst)
+			}
+		}
+	case ast.SubShell:
+		for _, s := range v.Body {
+			a.analyseStatement(s)
+		}
+		for _, r := range v.Redirections {
+			if r.Dst != nil {
+				a.analyseExpression(r.Dst)
+			}
+		}
+	case ast.Group:
+		for _, s := range v.Body {
+			a.analyseStatement(s)
+		}
+		for _, r := range v.Redirections {
+			if r.Dst != nil {
+				a.analyseExpression(r.Dst)
+			}
+		}
+	case ast.ParameterAssignement:
+		for _, pa := range v {
+			if pa.Value != nil {
+				a.analyseExpression(pa.Value)
+			}
+		}
 	case ast.Pipeline:
 		a.analysePipeline(v)
+	default:
+		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
+	}
+}
+
+func (a *analyser) analyseExpression(s ast.Expression) {
+	switch v := s.(type) {
+	case ast.Word, ast.Var, ast.CommandSubstitution, ast.QuotedString, ast.UnquotedString, ast.SpecialVar, ast.Number:
+	default:
+		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
 }
 
 type SemanticError struct {
 	Line, Position int
-	Err            analysisError
+	Err            string
 }
 
 func (s SemanticError) Error() string {
 	return fmt.Sprintf("semantic error: %s. (line: %d, column: %d)", s.Err, s.Line, s.Position)
 }
 
-type analysisError string
-
 var (
-	ErrorUsingShellParametersWithinPipeline analysisError = "using shell parameters within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
+	ErrorUsingShellParametersWithinPipeline = "using shell parameters within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
 )
 
 func (a *analyser) analysePipeline(p ast.Pipeline) {
@@ -53,11 +126,13 @@ func (a *analyser) analysePipeline(p ast.Pipeline) {
 		switch cmd.Command.(type) {
 		case ast.ParameterAssignement:
 			a.report(ErrorUsingShellParametersWithinPipeline)
+		default:
+			a.analyseStatement(cmd.Command)
 		}
 	}
 }
 
-func (a *analyser) report(err analysisError) {
+func (a *analyser) report(err string) {
 	a.errors = append(a.errors, SemanticError{
 		Err: err,
 	})

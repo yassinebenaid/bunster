@@ -47,7 +47,7 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, pc
 	case ast.If:
 		g.handleIf(buf, v, pc)
 	default:
-		panic(fmt.Sprintf("unhandled statement type (%T)", statement))
+		panic(fmt.Sprintf("Unsupported statement: %T", v))
 	}
 }
 
@@ -177,7 +177,7 @@ func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expr
 	case ast.CommandSubstitution:
 		return g.handleCommandSubstitution(buf, v)
 	default:
-		panic(fmt.Sprintf("unhandled expression type (%T)", expression))
+		panic(fmt.Sprintf("Unsupported expression: %T", v))
 	}
 }
 
