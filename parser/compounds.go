@@ -5,8 +5,6 @@ import (
 	"github.com/yassinebenaid/bunster/token"
 )
 
-// TODO: use the g.parseCompoundRedirection() in other compounds
-
 func (p *parser) getCompoundParser() func() ast.Statement {
 	switch p.curr.Type {
 	case token.WHILE, token.UNTIL:
