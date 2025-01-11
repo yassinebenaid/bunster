@@ -95,17 +95,7 @@ func (p *parser) parseWhileLoop() ast.Statement {
 
 	p.proceed()
 
-loop:
-	for {
-		switch {
-		case p.curr.Type == token.BLANK:
-			p.proceed()
-		case p.isRedirectionToken():
-			p.HandleRedirection(&loop.Redirections)
-		default:
-			break loop
-		}
-	}
+	p.parseCompoundRedirections(&loop.Redirections)
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
@@ -238,17 +228,7 @@ func (p *parser) parseForLoop() ast.Statement {
 
 	p.proceed()
 
-loop:
-	for {
-		switch {
-		case p.curr.Type == token.BLANK:
-			p.proceed()
-		case p.isRedirectionToken():
-			p.HandleRedirection(&loopRedirections)
-		default:
-			break loop
-		}
-	}
+	p.parseCompoundRedirections(&loopRedirections)
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
@@ -412,17 +392,7 @@ func (p *parser) parseIf() ast.Statement {
 
 	p.proceed()
 
-loop:
-	for {
-		switch {
-		case p.curr.Type == token.BLANK:
-			p.proceed()
-		case p.isRedirectionToken():
-			p.HandleRedirection(&cond.Redirections)
-		default:
-			break loop
-		}
-	}
+	p.parseCompoundRedirections(&cond.Redirections)
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
@@ -550,17 +520,7 @@ func (p *parser) parseCase() ast.Statement {
 	}
 	p.proceed()
 
-loop:
-	for {
-		switch {
-		case p.curr.Type == token.BLANK:
-			p.proceed()
-		case p.isRedirectionToken():
-			p.HandleRedirection(&stmt.Redirections)
-		default:
-			break loop
-		}
-	}
+	p.parseCompoundRedirections(&stmt.Redirections)
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
