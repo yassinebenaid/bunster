@@ -46,6 +46,10 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, pc
 		g.handleSubshell(buf, v, pc)
 	case ast.If:
 		g.handleIf(buf, v, pc)
+	case ast.Break:
+		g.handleBreak(buf, v)
+	case ast.Loop:
+		g.handleLoop(buf, v, pc)
 	default:
 		panic(fmt.Sprintf("Unsupported statement: %T", v))
 	}

@@ -62,6 +62,8 @@ type RangeLoop struct {
 	Redirections []Redirection
 }
 
+type Break int
+
 type For struct {
 	Head         ForHead
 	Body         []Statement
@@ -141,6 +143,7 @@ func (ProcessSubstitution) node() {}
 func (For) node()                 {}
 func (Function) node()            {}
 func (Test) node()                {}
+func (Break) node()               {}
 
 // Expressions
 func (CommandSubstitution) expr() {}
@@ -162,3 +165,4 @@ func (SubShell) stmt()  {}
 func (For) stmt()       {}
 func (Function) stmt()  {}
 func (Test) stmt()      {}
+func (Break) stmt()     {}

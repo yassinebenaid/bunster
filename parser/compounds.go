@@ -5,8 +5,6 @@ import (
 	"github.com/yassinebenaid/bunster/token"
 )
 
-// TODO: use the g.parseCompoundRedirection() in other compounds
-
 func (p *parser) getCompoundParser() func() ast.Statement {
 	switch p.curr.Type {
 	case token.WHILE, token.UNTIL:
@@ -27,15 +25,13 @@ func (p *parser) getCompoundParser() func() ast.Statement {
 		return p.parseTestCommand
 	case token.LEFT_BRACKET, token.TEST:
 		return p.parsePosixTestCommand
-	case token.THEN, token.ELIF, token.ELSE, token.FI, token.DO, token.DONE, token.ESAC:
-		p.error("`%s` is a reserved keyword, cannot be used a command name", p.curr)
-		fallthrough
-	default:
-		return nil
 	}
+	return nil
 }
 
 func (p *parser) parseWhileLoop() ast.Statement {
+	p.loopLevel++
+
 	var loop ast.Loop
 	loopKeyword := p.curr.Literal
 	loop.Negate = p.curr.Type == token.UNTIL
@@ -101,6 +97,8 @@ func (p *parser) parseWhileLoop() ast.Statement {
 		p.error("unexpected token `%s`", p.curr)
 		return nil
 	}
+
+	p.loopLevel--
 
 	return loop
 }

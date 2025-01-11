@@ -31,6 +31,8 @@ type parser struct {
 	next2 token.Token
 	next3 token.Token
 	Error *ParserError
+
+	loopLevel int
 }
 
 type ParserError struct {
@@ -162,8 +164,8 @@ func (p *parser) parsePipline() ast.Pipeline {
 }
 
 func (p *parser) parseCommand() ast.Statement {
-	if p.curr.Type == token.FUNCTION {
-		return p.parseFunction()
+	if builtin := p.getBuiltinParser(); builtin != nil {
+		return builtin()
 	}
 
 	if compound := p.getCompoundParser(); compound != nil {
@@ -317,52 +319,6 @@ loop:
 	}
 
 	return concat(exprs, true)
-}
-
-func (p *parser) parseFunction() ast.Statement {
-	p.proceed()
-	if p.curr.Type == token.BLANK {
-		p.proceed()
-	}
-
-	nameExpr := p.parseExpression()
-	if nameExpr == nil {
-		p.error("function name is required")
-		return nil
-	}
-
-	name, ok := nameExpr.(ast.Word)
-	if !ok {
-		p.error("invalid function name was supplied")
-		return nil
-	}
-	if p.curr.Type == token.BLANK {
-		p.proceed()
-	}
-
-	if p.curr.Type == token.LEFT_PAREN {
-		p.proceed()
-		if p.curr.Type == token.BLANK {
-			p.proceed()
-		}
-		if p.curr.Type != token.RIGHT_PAREN {
-			p.error("expected `)`, found `%s`", p.curr)
-			return nil
-		}
-		p.proceed()
-	}
-
-	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
-		p.proceed()
-	}
-
-	compound := p.getCompoundParser()
-	if compound == nil {
-		p.error("function body is expected to be a compound command, found `%s`", p.curr)
-		return nil
-	}
-
-	return ast.Function{Name: string(name), Command: compound()}
 }
 
 func (p *parser) parseNakedFunction(nameExpr ast.Expression) ast.Statement {
