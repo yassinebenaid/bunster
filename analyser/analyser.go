@@ -38,10 +38,61 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.analyseExpression(r.Dst)
 			}
 		}
-		for _, ass := range v.Env {
-			a.analyseExpression(ass.Value)
+		for _, env := range v.Env {
+			if env.Value != nil {
+				a.analyseExpression(env.Value)
+			}
 		}
-	case ast.List, ast.If, ast.SubShell, ast.Group, ast.ParameterAssignement:
+	case ast.List:
+		a.analyseStatement(v.Left)
+		a.analyseStatement(v.Right)
+	case ast.If:
+		for _, s := range v.Head {
+			a.analyseStatement(s)
+		}
+		for _, s := range v.Body {
+			a.analyseStatement(s)
+		}
+		for _, elif := range v.Elifs {
+			for _, s := range elif.Head {
+				a.analyseStatement(s)
+			}
+			for _, s := range elif.Body {
+				a.analyseStatement(s)
+			}
+		}
+		for _, s := range v.Alternate {
+			a.analyseStatement(s)
+		}
+		for _, r := range v.Redirections {
+			if r.Dst != nil {
+				a.analyseExpression(r.Dst)
+			}
+		}
+	case ast.SubShell:
+		for _, s := range v.Body {
+			a.analyseStatement(s)
+		}
+		for _, r := range v.Redirections {
+			if r.Dst != nil {
+				a.analyseExpression(r.Dst)
+			}
+		}
+	case ast.Group:
+		for _, s := range v.Body {
+			a.analyseStatement(s)
+		}
+		for _, r := range v.Redirections {
+			if r.Dst != nil {
+				a.analyseExpression(r.Dst)
+			}
+		}
+	case ast.ParameterAssignement:
+		for _, pa := range v {
+			if pa.Value != nil {
+				a.analyseExpression(pa.Value)
+			}
+		}
 	case ast.Pipeline:
 		a.analysePipeline(v)
 	default:
@@ -75,6 +126,8 @@ func (a *analyser) analysePipeline(p ast.Pipeline) {
 		switch cmd.Command.(type) {
 		case ast.ParameterAssignement:
 			a.report(ErrorUsingShellParametersWithinPipeline)
+		default:
+			a.analyseStatement(cmd.Command)
 		}
 	}
 }
