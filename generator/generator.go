@@ -46,8 +46,6 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, pc
 		g.handleSubshell(buf, v, pc)
 	case ast.If:
 		g.handleIf(buf, v, pc)
-	default:
-		panic(fmt.Sprintf("unhandled statement type (%T)", statement))
 	}
 }
 
@@ -176,9 +174,9 @@ func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expr
 		return concat
 	case ast.CommandSubstitution:
 		return g.handleCommandSubstitution(buf, v)
-	default:
-		panic(fmt.Sprintf("unhandled expression type (%T)", expression))
 	}
+
+	return nil
 }
 
 func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []ast.Redirection, pc *pipeContext) {

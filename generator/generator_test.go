@@ -9,6 +9,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/yassinebenaid/bunster/analyser"
 	"github.com/yassinebenaid/bunster/generator"
 	"github.com/yassinebenaid/bunster/lexer"
 	"github.com/yassinebenaid/bunster/parser"
@@ -42,6 +43,10 @@ func TestGenerator(t *testing.T) {
 			for i, test := range tests {
 				script, err := parser.Parse(lexer.New([]byte(test.Input)))
 				if err != nil {
+					t.Fatalf("\nTest: %sError: %s", dump(test.Label), dump(err.Error()))
+				}
+
+				if err := analyser.Analyse(script); err != nil {
 					t.Fatalf("\nTest: %sError: %s", dump(test.Label), dump(err.Error()))
 				}
 

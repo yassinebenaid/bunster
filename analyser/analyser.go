@@ -28,24 +28,25 @@ func (a *analyser) analyse() {
 
 func (a *analyser) analyseStatement(s ast.Statement) {
 	switch v := s.(type) {
+	case ast.Command, ast.List, ast.If, ast.SubShell, ast.Group, ast.ParameterAssignement:
 	case ast.Pipeline:
 		a.analysePipeline(v)
+	default:
+		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
 }
 
 type SemanticError struct {
 	Line, Position int
-	Err            analysisError
+	Err            string
 }
 
 func (s SemanticError) Error() string {
 	return fmt.Sprintf("semantic error: %s. (line: %d, column: %d)", s.Err, s.Line, s.Position)
 }
 
-type analysisError string
-
 var (
-	ErrorUsingShellParametersWithinPipeline analysisError = "using shell parameters within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
+	ErrorUsingShellParametersWithinPipeline = "using shell parameters within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
 )
 
 func (a *analyser) analysePipeline(p ast.Pipeline) {
@@ -57,7 +58,7 @@ func (a *analyser) analysePipeline(p ast.Pipeline) {
 	}
 }
 
-func (a *analyser) report(err analysisError) {
+func (a *analyser) report(err string) {
 	a.errors = append(a.errors, SemanticError{
 		Err: err,
 	})
