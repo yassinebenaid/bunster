@@ -68,5 +68,5 @@ func (p *parser) parseBreak() ast.Statement {
 		p.error("the `break` keyword cannot be used outside loops")
 	}
 	p.proceed()
-	return ast.Break(p.loopLevel)
+	return ast.Break(1)
 }
