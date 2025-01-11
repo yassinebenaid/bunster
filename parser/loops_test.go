@@ -981,6 +981,30 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
+	{`until true;do break;done`, ast.Script{
+		ast.Loop{
+			Negate: true,
+			Head:   []ast.Statement{ast.Command{Name: ast.Word("true")}},
+			Body:   []ast.Statement{ast.Break(1)},
+		},
+	}},
+	{`until true; do
+		until true; do
+	 		break
+		done
+	done`, ast.Script{
+		ast.Loop{
+			Negate: true,
+			Head:   []ast.Statement{ast.Command{Name: ast.Word("true")}},
+			Body: []ast.Statement{
+				ast.Loop{
+					Negate: true,
+					Head:   []ast.Statement{ast.Command{Name: ast.Word("true")}},
+					Body:   []ast.Statement{ast.Break(1)},
+				},
+			},
+		},
+	}},
 }
 
 var loopsErrorHandlingCases = []errorHandlingTestCase{
