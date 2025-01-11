@@ -64,9 +64,9 @@ func (p *parser) parseFunction() ast.Statement {
 }
 
 func (p *parser) parseBreak() ast.Statement {
-	p.proceed()
 	if p.loopLevel == 0 {
 		p.error("the `break` keyword cannot be used outside loops")
 	}
+	p.proceed()
 	return ast.Break(p.loopLevel)
 }
