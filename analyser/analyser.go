@@ -106,7 +106,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			}
 		}
 	case ast.Break:
-	// TODO
+		a.report(fmt.Sprintf("Bunster does not support the `break` keyword yet"))
 	case ast.Pipeline:
 		a.analysePipeline(v)
 	default:

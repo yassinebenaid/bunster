@@ -159,26 +159,30 @@ func (g *generator) handleElif(elifs []ast.Elif) []ir.Instruction {
 
 }
 
-func (g *generator) handleLoop(buf *InstructionBuffer, cond ast.Loop, pc *pipeContext) {
+func (g *generator) handleLoop(buf *InstructionBuffer, loop ast.Loop, pc *pipeContext) {
 	var cmdbuf InstructionBuffer
 	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: pc == nil})
 
-	g.handleRedirections(&cmdbuf, cond.Redirections, pc)
+	g.handleRedirections(&cmdbuf, loop.Redirections, pc)
 
 	var innerBuf InstructionBuffer
 	innerBuf.add(ir.Declare{Name: "condition", Value: ir.Literal("false")})
-	for _, statement := range cond.Head {
+	for _, statement := range loop.Head {
 		g.generate(&innerBuf, statement, nil)
 		innerBuf.add(ir.Set{Name: "condition", Value: ir.Literal("shell.ExitCode == 0")})
 		innerBuf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
 	}
 
 	var body InstructionBuffer
-	for _, statement := range cond.Body {
+	for _, statement := range loop.Body {
 		g.generate(&body, statement, nil)
 	}
+	condition := ir.Literal("condition")
+	if loop.Negate {
+		condition = ir.Literal("! condition")
+	}
 	innerBuf.add(ir.Loop{
-		Condition: ir.Literal("condition"),
+		Condition: condition,
 		Body:      body,
 	})
 
