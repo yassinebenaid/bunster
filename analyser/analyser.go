@@ -98,6 +98,9 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			a.analyseStatement(s)
 		}
 		for _, s := range v.Body {
+			if _, ok := s.(ast.Break); ok {
+				continue
+			}
 			a.analyseStatement(s)
 		}
 		for _, r := range v.Redirections {
@@ -106,7 +109,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			}
 		}
 	case ast.Break:
-		a.report(fmt.Sprintf("Bunster does not support the `break` keyword yet"))
+		a.report(fmt.Sprintf("The `break` keyword cannot be used here"))
 	case ast.Pipeline:
 		a.analysePipeline(v)
 	default:
