@@ -18,6 +18,7 @@ func Analyse(s ast.Script) error {
 type analyser struct {
 	script ast.Script
 	errors []error
+	stack  []ast.Statement
 }
 
 func (a *analyser) analyse() {
@@ -27,6 +28,8 @@ func (a *analyser) analyse() {
 }
 
 func (a *analyser) analyseStatement(s ast.Statement) {
+	a.stack = append(a.stack, s)
+
 	switch v := s.(type) {
 	case ast.Command:
 		a.analyseExpression(v.Name)
@@ -98,9 +101,6 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			a.analyseStatement(s)
 		}
 		for _, s := range v.Body {
-			if _, ok := s.(ast.Break); ok {
-				continue
-			}
 			a.analyseStatement(s)
 		}
 		for _, r := range v.Redirections {
@@ -109,17 +109,45 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			}
 		}
 	case ast.Break:
-		a.report(fmt.Sprintf("The `break` keyword cannot be used here"))
+		var withinLoop bool
+	loop:
+		for i := len(a.stack) - 1; i >= 0; i-- {
+			switch a.stack[i].(type) {
+			case ast.Loop:
+				withinLoop = true
+				break loop
+			case ast.If, ast.Break:
+			default:
+				a.report(fmt.Sprintf("The `break` keyword cannot be used here"))
+			}
+		}
+		if !withinLoop {
+			a.report(fmt.Sprintf("The `break` keyword cannot be used here"))
+		}
 	case ast.Pipeline:
 		a.analysePipeline(v)
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
+
+	a.stack = a.stack[:len(a.stack)-1]
 }
 
 func (a *analyser) analyseExpression(s ast.Expression) {
 	switch v := s.(type) {
-	case ast.Word, ast.Var, ast.CommandSubstitution, ast.QuotedString, ast.UnquotedString, ast.SpecialVar, ast.Number:
+	case ast.Word, ast.Var, ast.SpecialVar, ast.Number:
+	case ast.CommandSubstitution:
+		for _, s := range v {
+			a.analyseStatement(s)
+		}
+	case ast.UnquotedString:
+		for _, exp := range v {
+			a.analyseExpression(exp)
+		}
+	case ast.QuotedString:
+		for _, exp := range v {
+			a.analyseExpression(exp)
+		}
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
