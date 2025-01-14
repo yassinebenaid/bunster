@@ -104,7 +104,7 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, ctx *context) 
 
 	if ctx.pipe == nil {
 		cmdbuf = append(cmdbuf, innerBuf...)
-		*buf = append(*buf, ir.Closure(cmdbuf))
+		*buf = append(*buf, ir.Scope(cmdbuf))
 		return
 	}
 
