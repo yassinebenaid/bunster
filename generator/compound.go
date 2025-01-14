@@ -165,24 +165,30 @@ func (g *generator) handleLoop(buf *InstructionBuffer, loop ast.Loop, ctx *conte
 
 	g.handleRedirections(&cmdbuf, loop.Redirections, ctx)
 
-	var innerBuf InstructionBuffer
-	innerBuf.add(ir.Declare{Name: "condition", Value: ir.Literal("false")})
+	var innerBuf, body InstructionBuffer
+
 	for _, statement := range loop.Head {
-		g.generate(&innerBuf, statement, &context{})
-		innerBuf.add(ir.Set{Name: "condition", Value: ir.Literal("shell.ExitCode == 0")})
-		innerBuf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
+		g.generate(&body, statement, &context{})
+		body.add(ir.Declare{Name: "condition", Value: ir.Literal("shell.ExitCode == 0")})
+		body.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
+
+		condition := ir.Literal("! condition")
+		if loop.Negate {
+			condition = ir.Literal("condition")
+		}
+		body.add(ir.If{
+			Condition: condition,
+			Body: []ir.Instruction{
+				ir.Literal("break\n"),
+			},
+		})
 	}
 
-	var body InstructionBuffer
 	for _, statement := range loop.Body {
 		g.generate(&body, statement, &context{})
 	}
-	condition := ir.Literal("condition")
-	if loop.Negate {
-		condition = ir.Literal("! condition")
-	}
 	innerBuf.add(ir.Loop{
-		Condition: condition,
+		Condition: ir.Literal(""),
 		Body:      body,
 	})
 
