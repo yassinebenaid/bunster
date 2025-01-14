@@ -31,15 +31,10 @@ func (g *generator) handleGroup(buf *InstructionBuffer, group ast.Group, ctx *co
 			g.generate(&go_routing, cmd, &context{})
 		}
 		go_routing.add(ir.Literal("done<-struct{}{}\n"))
-		cmdbuf.add(ir.Closure{
-			Async: true,
-			Body:  go_routing,
-		})
+		cmdbuf.add(ir.Gorouting(go_routing))
 	}
 
-	*buf = append(*buf, ir.Closure{
-		Body: cmdbuf,
-	})
+	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
 func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell, ctx *context) {
@@ -69,15 +64,10 @@ func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell
 			g.generate(&go_routing, cmd, &context{})
 		}
 		go_routing.add(ir.Literal("done<-struct{}{}\n"))
-		cmdbuf.add(ir.Closure{
-			Async: true,
-			Body:  go_routing,
-		})
+		cmdbuf.add(ir.Gorouting(go_routing))
 	}
 
-	*buf = append(*buf, ir.Closure{
-		Body: cmdbuf,
-	})
+	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
 func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, ctx *context) {
@@ -126,10 +116,10 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, ctx *context) 
 		})
 
 		innerBuf.add(ir.Literal("done<-struct{}{}\n"))
-		cmdbuf.add(ir.Closure{Async: true, Body: innerBuf})
+		cmdbuf.add(ir.Gorouting(innerBuf))
 	}
 
-	*buf = append(*buf, ir.Closure{Body: cmdbuf})
+	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
 func (g *generator) handleElif(elifs []ast.Elif) []ir.Instruction {
@@ -206,8 +196,8 @@ func (g *generator) handleLoop(buf *InstructionBuffer, loop ast.Loop, ctx *conte
 		})
 
 		innerBuf.add(ir.Literal("done<-struct{}{}\n"))
-		cmdbuf.add(ir.Closure{Async: true, Body: innerBuf})
+		cmdbuf.add(ir.Gorouting(innerBuf))
 	}
 
-	*buf = append(*buf, ir.Closure{Body: cmdbuf})
+	*buf = append(*buf, ir.Closure(cmdbuf))
 }

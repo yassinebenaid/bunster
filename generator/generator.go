@@ -114,9 +114,7 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 
 	cmdbuf.add(ir.WaitPipelineWaitgroup("pipelineWaitgroup"))
 
-	*buf = append(*buf, ir.Closure{
-		Body: cmdbuf,
-	})
+	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
 func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command, ctx *context) {
@@ -161,9 +159,7 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 		cmdbuf.add(ir.RunCommand("command"))
 	}
 
-	*buf = append(*buf, ir.Closure{
-		Body: cmdbuf,
-	})
+	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
 func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expression) ir.Instruction {
