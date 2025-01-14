@@ -5,20 +5,20 @@ import (
 	"github.com/yassinebenaid/bunster/ir"
 )
 
-func (g *generator) handleGroup(buf *InstructionBuffer, group ast.Group, pc *pipeContext) {
+func (g *generator) handleGroup(buf *InstructionBuffer, group ast.Group, ctx *context) {
 	var cmdbuf InstructionBuffer
 
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: pc == nil})
-	g.handleRedirections(&cmdbuf, group.Redirections, pc)
+	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
+	g.handleRedirections(&cmdbuf, group.Redirections, ctx)
 
-	if pc == nil {
+	if ctx.pipe == nil {
 		for _, cmd := range group.Body {
-			g.generate(&cmdbuf, cmd, nil)
+			g.generate(&cmdbuf, cmd, &context{})
 		}
 	} else {
 		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
 		cmdbuf.add(ir.PushToPipelineWaitgroup{
-			Waitgroup: pc.waitgroup,
+			Waitgroup: ctx.pipe.waitgroup,
 			Value: ir.Literal(`func() error {
 				<-done
 			 	streamManager.Destroy()
@@ -28,7 +28,7 @@ func (g *generator) handleGroup(buf *InstructionBuffer, group ast.Group, pc *pip
 
 		var go_routing InstructionBuffer
 		for _, cmd := range group.Body {
-			g.generate(&go_routing, cmd, nil)
+			g.generate(&go_routing, cmd, &context{})
 		}
 		go_routing.add(ir.Literal("done<-struct{}{}\n"))
 		cmdbuf.add(ir.Closure{
@@ -42,21 +42,21 @@ func (g *generator) handleGroup(buf *InstructionBuffer, group ast.Group, pc *pip
 	})
 }
 
-func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell, pc *pipeContext) {
+func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell, ctx *context) {
 	var cmdbuf InstructionBuffer
 
 	cmdbuf.add(ir.CloneShell{})
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: pc == nil})
-	g.handleRedirections(&cmdbuf, subshell.Redirections, pc)
+	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
+	g.handleRedirections(&cmdbuf, subshell.Redirections, ctx)
 
-	if pc == nil {
+	if ctx.pipe == nil {
 		for _, cmd := range subshell.Body {
-			g.generate(&cmdbuf, cmd, nil)
+			g.generate(&cmdbuf, cmd, &context{})
 		}
 	} else {
 		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
 		cmdbuf.add(ir.PushToPipelineWaitgroup{
-			Waitgroup: pc.waitgroup,
+			Waitgroup: ctx.pipe.waitgroup,
 			Value: ir.Literal(`func() error {
 				<-done
 			 	streamManager.Destroy()
@@ -66,7 +66,7 @@ func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell
 
 		var go_routing InstructionBuffer
 		for _, cmd := range subshell.Body {
-			g.generate(&go_routing, cmd, nil)
+			g.generate(&go_routing, cmd, &context{})
 		}
 		go_routing.add(ir.Literal("done<-struct{}{}\n"))
 		cmdbuf.add(ir.Closure{
@@ -80,23 +80,23 @@ func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell
 	})
 }
 
-func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, pc *pipeContext) {
+func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, ctx *context) {
 	var cmdbuf InstructionBuffer
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: pc == nil})
+	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
 
-	g.handleRedirections(&cmdbuf, cond.Redirections, pc)
+	g.handleRedirections(&cmdbuf, cond.Redirections, ctx)
 
 	var innerBuf InstructionBuffer
 	innerBuf.add(ir.Declare{Name: "condition", Value: ir.Literal("false")})
 	for _, statement := range cond.Head {
-		g.generate(&innerBuf, statement, nil)
+		g.generate(&innerBuf, statement, &context{})
 		innerBuf.add(ir.Set{Name: "condition", Value: ir.Literal("shell.ExitCode == 0")})
 		innerBuf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
 	}
 
 	var body InstructionBuffer
 	for _, statement := range cond.Body {
-		g.generate(&body, statement, nil)
+		g.generate(&body, statement, &context{})
 	}
 	innerBuf.add(ir.If{
 		Condition: ir.Literal("condition"),
@@ -107,17 +107,17 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, pc *pipeContex
 	if cond.Alternate != nil {
 		var alt InstructionBuffer
 		for _, statement := range cond.Alternate {
-			g.generate(&alt, statement, nil)
+			g.generate(&alt, statement, &context{})
 		}
 		innerBuf.add(ir.If{Condition: ir.Literal("!condition"), Body: alt})
 	}
 
-	if pc == nil {
+	if ctx.pipe == nil {
 		cmdbuf = append(cmdbuf, innerBuf...)
 	} else {
 		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
 		cmdbuf.add(ir.PushToPipelineWaitgroup{
-			Waitgroup: pc.waitgroup,
+			Waitgroup: ctx.pipe.waitgroup,
 			Value: ir.Literal(`func() error {
 				<-done
 			 	streamManager.Destroy()
@@ -140,14 +140,14 @@ func (g *generator) handleElif(elifs []ast.Elif) []ir.Instruction {
 	var cmdbuf InstructionBuffer
 
 	for _, statement := range elifs[0].Head {
-		g.generate(&cmdbuf, statement, nil)
+		g.generate(&cmdbuf, statement, &context{})
 		cmdbuf.add(ir.Set{Name: "condition", Value: ir.Literal("shell.ExitCode == 0")})
 		cmdbuf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
 	}
 
 	var body InstructionBuffer
 	for _, statement := range elifs[0].Body {
-		g.generate(&body, statement, nil)
+		g.generate(&body, statement, &context{})
 	}
 	cmdbuf.add(ir.If{
 		Condition: ir.Literal("condition"),
@@ -159,23 +159,23 @@ func (g *generator) handleElif(elifs []ast.Elif) []ir.Instruction {
 
 }
 
-func (g *generator) handleLoop(buf *InstructionBuffer, loop ast.Loop, pc *pipeContext) {
+func (g *generator) handleLoop(buf *InstructionBuffer, loop ast.Loop, ctx *context) {
 	var cmdbuf InstructionBuffer
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: pc == nil})
+	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
 
-	g.handleRedirections(&cmdbuf, loop.Redirections, pc)
+	g.handleRedirections(&cmdbuf, loop.Redirections, ctx)
 
 	var innerBuf InstructionBuffer
 	innerBuf.add(ir.Declare{Name: "condition", Value: ir.Literal("false")})
 	for _, statement := range loop.Head {
-		g.generate(&innerBuf, statement, nil)
+		g.generate(&innerBuf, statement, &context{})
 		innerBuf.add(ir.Set{Name: "condition", Value: ir.Literal("shell.ExitCode == 0")})
 		innerBuf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
 	}
 
 	var body InstructionBuffer
 	for _, statement := range loop.Body {
-		g.generate(&body, statement, nil)
+		g.generate(&body, statement, &context{})
 	}
 	condition := ir.Literal("condition")
 	if loop.Negate {
@@ -186,12 +186,12 @@ func (g *generator) handleLoop(buf *InstructionBuffer, loop ast.Loop, pc *pipeCo
 		Body:      body,
 	})
 
-	if pc == nil {
+	if ctx.pipe == nil {
 		cmdbuf = append(cmdbuf, innerBuf...)
 	} else {
 		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
 		cmdbuf.add(ir.PushToPipelineWaitgroup{
-			Waitgroup: pc.waitgroup,
+			Waitgroup: ctx.pipe.waitgroup,
 			Value: ir.Literal(`func() error {
 				<-done
 			 	streamManager.Destroy()

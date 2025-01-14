@@ -5,6 +5,6 @@ import (
 	"github.com/yassinebenaid/bunster/ir"
 )
 
-func (g *generator) handleBreak(buf *InstructionBuffer, brk ast.Break) {
+func (g *generator) handleBreak(buf *InstructionBuffer, _ ast.Break) {
 	buf.add(ir.Literal("break"))
 }

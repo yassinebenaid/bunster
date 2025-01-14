@@ -21,6 +21,7 @@ type testCase struct {
 
 var testCases = []testCase{
 	{`name=foo | cmd`, "semantic error: using shell parameters within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines. (line: 0, column: 0)"},
+	{`break`, "semantic error: The `break` keyword cannot be used here. (line: 0, column: 0)"},
 }
 
 func TestErrors(t *testing.T) {

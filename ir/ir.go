@@ -149,26 +149,38 @@ func (r StartCommand) togo() string {
 }
 
 type Closure struct {
-	Async bool
-	Body  []Instruction
+	Async     bool
+	ScopeOnly bool
+	Body      []Instruction
 }
 
 func (c Closure) togo() string {
 	var body string
-	var keyword string
-	if c.Async {
-		keyword = "go"
-	}
-
 	for _, ins := range c.Body {
 		body += ins.togo()
 	}
 
+	if c.ScopeOnly {
+		return fmt.Sprintf(
+			`{
+				%s
+			}
+		`, body)
+	}
+
+	if c.Async {
+		return fmt.Sprintf(
+			`go func(){
+				%s
+			}()
+		`, body)
+	}
+
 	return fmt.Sprintf(
-		`%s func(){
+		`func(){
 			%s
 		}()
-	`, keyword, body)
+	`, body)
 }
 
 type ExpressionClosure struct {
