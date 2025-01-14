@@ -104,20 +104,22 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, ctx *context) 
 
 	if ctx.pipe == nil {
 		cmdbuf = append(cmdbuf, innerBuf...)
-	} else {
-		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
-		cmdbuf.add(ir.PushToPipelineWaitgroup{
-			Waitgroup: ctx.pipe.waitgroup,
-			Value: ir.Literal(`func() error {
+		*buf = append(*buf, ir.Closure(cmdbuf))
+		return
+	}
+
+	cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
+	cmdbuf.add(ir.PushToPipelineWaitgroup{
+		Waitgroup: ctx.pipe.waitgroup,
+		Value: ir.Literal(`func() error {
 				<-done
 			 	streamManager.Destroy()
 				return nil
 			}`),
-		})
+	})
 
-		innerBuf.add(ir.Literal("done<-struct{}{}\n"))
-		cmdbuf.add(ir.Gorouting(innerBuf))
-	}
+	innerBuf.add(ir.Literal("done<-struct{}{}\n"))
+	cmdbuf.add(ir.Gorouting(innerBuf))
 
 	*buf = append(*buf, ir.Closure(cmdbuf))
 }
