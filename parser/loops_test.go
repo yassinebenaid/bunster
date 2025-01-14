@@ -1005,6 +1005,9 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
+	{`break`, ast.Script{
+		ast.Break(1),
+	}},
 }
 
 var loopsErrorHandlingCases = []errorHandlingTestCase{
@@ -1071,5 +1074,6 @@ var loopsErrorHandlingCases = []errorHandlingTestCase{
 
 	{`do`, "syntax error: `do` is a reserved keyword, cannot be used a command name. (line: 1, column: 1)"},
 	{`done`, "syntax error: `done` is a reserved keyword, cannot be used a command name. (line: 1, column: 1)"},
-	{`break`, "syntax error: the `break` keyword cannot be used outside loops. (line: 1, column: 1)"},
+	{`break >redirection`, "syntax error: unexpected token `>`. (line: 1, column: 7)"},
+	{`break arg`, "syntax error: unexpected token `arg`. (line: 1, column: 7)"},
 }

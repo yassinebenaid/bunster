@@ -64,9 +64,15 @@ func (p *parser) parseFunction() ast.Statement {
 }
 
 func (p *parser) parseBreak() ast.Statement {
-	if p.loopLevel == 0 {
-		p.error("the `break` keyword cannot be used outside loops")
-	}
 	p.proceed()
+
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
+	if !p.isControlToken() && p.curr.Type != token.EOF {
+		p.error("unexpected token `%s`", p.curr)
+		return nil
+	}
 	return ast.Break(1)
 }
