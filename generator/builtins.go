@@ -6,5 +6,5 @@ import (
 )
 
 func (g *generator) handleBreak(buf *InstructionBuffer, _ ast.Break) {
-	buf.add(ir.Literal("break"))
+	buf.add(ir.Literal("break\n"))
 }

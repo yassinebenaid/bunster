@@ -98,9 +98,6 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 		}
 	case ast.Loop:
 		for _, s := range v.Head {
-			if _, ok := s.(ast.Break); ok {
-				a.report(fmt.Sprintf("The `break` keyword cannot be used here"))
-			}
 			a.analyseStatement(s)
 		}
 		for _, s := range v.Body {
