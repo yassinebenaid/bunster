@@ -7,12 +7,29 @@ import (
 	"github.com/yassinebenaid/bunster/ir"
 )
 
+type pipeContext struct {
+	writer    string
+	reader    string
+	waitgroup string
+	stderr    bool
+}
+
+type context struct {
+	pipe *pipeContext
+}
+
+type InstructionBuffer []ir.Instruction
+
+func (ib *InstructionBuffer) add(ins ir.Instruction) {
+	*ib = append(*ib, ins)
+}
+
 func Generate(script ast.Script) ir.Program {
 	g := generator{}
 
 	var buf InstructionBuffer
 	for _, statement := range script {
-		g.generate(&buf, statement, nil)
+		g.generate(&buf, statement, &context{})
 	}
 
 	return ir.Program{
@@ -24,42 +41,36 @@ type generator struct {
 	expressionsCount int
 }
 
-type InstructionBuffer []ir.Instruction
-
-func (ib *InstructionBuffer) add(ins ir.Instruction) {
-	*ib = append(*ib, ins)
-}
-
-func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, pc *pipeContext) {
+func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, ctx *context) {
 	switch v := statement.(type) {
 	case ast.List:
 		g.handleList(buf, v)
 	case ast.Pipeline:
 		g.handlePipeline(buf, v)
 	case ast.Command:
-		g.handleSimpleCommand(buf, v, pc)
+		g.handleSimpleCommand(buf, v, ctx)
 	case ast.ParameterAssignement:
 		g.handleParameterAssignment(buf, v)
 	case ast.Group:
-		g.handleGroup(buf, v, pc)
+		g.handleGroup(buf, v, ctx)
 	case ast.SubShell:
-		g.handleSubshell(buf, v, pc)
+		g.handleSubshell(buf, v, ctx)
 	case ast.If:
-		g.handleIf(buf, v, pc)
+		g.handleIf(buf, v, ctx)
 	case ast.Break:
 		g.handleBreak(buf, v)
 	case ast.Loop:
-		g.handleLoop(buf, v, pc)
+		g.handleLoop(buf, v, ctx)
 	default:
 		panic(fmt.Sprintf("Unsupported statement: %T", v))
 	}
 }
 
 func (g *generator) handleList(buf *InstructionBuffer, l ast.List) {
-	g.generate(buf, l.Left, nil)
+	g.generate(buf, l.Left, &context{})
 
 	var bodybuf InstructionBuffer
-	g.generate(&bodybuf, l.Right, nil)
+	g.generate(&bodybuf, l.Right, &context{})
 
 	buf.add(ir.IfLastExitCode{
 		Zero: l.Operator == "&&",
@@ -98,7 +109,7 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 		}
 
 		pc.waitgroup = "pipelineWaitgroup"
-		g.generate(&cmdbuf, cmd.Command, &pc)
+		g.generate(&cmdbuf, cmd.Command, &context{pipe: &pc})
 	}
 
 	cmdbuf.add(ir.WaitPipelineWaitgroup("pipelineWaitgroup"))
@@ -108,7 +119,7 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 	})
 }
 
-func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command, pc *pipeContext) {
+func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command, ctx *context) {
 	var cmdbuf InstructionBuffer
 
 	cmdbuf.add(ir.Declare{Name: "commandName", Value: g.handleExpression(&cmdbuf, cmd.Name)})
@@ -131,16 +142,16 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 		})
 	}
 
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: pc == nil})
-	g.handleRedirections(&cmdbuf, cmd.Redirections, pc)
+	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
+	g.handleRedirections(&cmdbuf, cmd.Redirections, ctx)
 	cmdbuf.add(ir.SetStream{Name: "command.Stdin", Fd: ir.String("0")})
 	cmdbuf.add(ir.SetStream{Name: "command.Stdout", Fd: ir.String("1")})
 	cmdbuf.add(ir.SetStream{Name: "command.Stderr", Fd: ir.String("2")})
 
-	if pc != nil {
+	if ctx.pipe != nil {
 		cmdbuf.add(ir.StartCommand("command"))
 		cmdbuf.add(ir.PushToPipelineWaitgroup{
-			Waitgroup: pc.waitgroup,
+			Waitgroup: ctx.pipe.waitgroup,
 			Value: ir.Literal(`func() error {
 			 	defer streamManager.Destroy()
 				return command.Wait()
@@ -185,20 +196,20 @@ func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expr
 	}
 }
 
-func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []ast.Redirection, pc *pipeContext) {
+func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []ast.Redirection, ctx *context) {
 
 	// if we're inside a pipline, we need to connect the pipe to the command.(before any other redirection)
-	if pc != nil {
-		if pc.writer != "" {
-			buf.add(ir.AddStream{Fd: "1", StreamName: pc.writer, Proxy: true})
+	if ctx.pipe != nil {
+		if ctx.pipe.writer != "" {
+			buf.add(ir.AddStream{Fd: "1", StreamName: ctx.pipe.writer, Proxy: true})
 
-			if pc.stderr {
-				buf.add(ir.AddStream{Fd: "2", StreamName: pc.writer, Proxy: true})
+			if ctx.pipe.stderr {
+				buf.add(ir.AddStream{Fd: "2", StreamName: ctx.pipe.writer, Proxy: true})
 			}
 		}
 
-		if pc.reader != "" {
-			buf.add(ir.AddStream{Fd: "0", StreamName: pc.reader})
+		if ctx.pipe.reader != "" {
+			buf.add(ir.AddStream{Fd: "0", StreamName: ctx.pipe.reader})
 		}
 	}
 
@@ -306,13 +317,6 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []as
 			})
 		}
 	}
-}
-
-type pipeContext struct {
-	writer    string
-	reader    string
-	waitgroup string
-	stderr    bool
 }
 
 func (g *generator) handleParameterAssignment(buf *InstructionBuffer, p ast.ParameterAssignement) {
