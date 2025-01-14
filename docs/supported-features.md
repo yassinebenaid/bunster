@@ -11,3 +11,5 @@ as work-in-progress and as not-yet-supported.
 - [Command Grouping](https://www.gnu.org/software/bash/manual/html_node/Command-Grouping.html)
 - [Command Substituion](https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html)
 - [`if` command](https://www.gnu.org/software/bash/manual/html_node/Conditional-Constructs.html#index-if)
+- [`while` & `until` loops](https://www.gnu.org/software/bash/manual/bash.html#index-until)
+- [Shell Parameters](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameters.html)
