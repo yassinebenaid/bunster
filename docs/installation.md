@@ -28,6 +28,13 @@ Or, if you want a specific version (v.0.3.0 for example):
 docker pull ghcr.io/yassinebenaid/bunster:v0.3.0
 ```
 
+## Github Release
+You can get the latest version of `bunster` from [github releases](https://github.com/yassinebenaid/bunster/releases).
+
+::: warning
+Only `linux` and `macos` binaries are available at the moment. `windows` support is coming soon.
+:::
+
 ## Using Go
 If you already have [the Go toolchain](https://go.dev/dl) installed. You can use the `go install` command to get **Bunster** on your machine.
 
