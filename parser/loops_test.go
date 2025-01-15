@@ -1008,6 +1008,56 @@ var loopsTests = []testCase{
 	{`break`, ast.Script{
 		ast.Break(1),
 	}},
+
+	// Continue
+	{`while true;do continue;done`, ast.Script{
+		ast.Loop{
+			Head: []ast.Statement{ast.Command{Name: ast.Word("true")}},
+			Body: []ast.Statement{ast.Continue(1)},
+		},
+	}},
+	{`while true; do
+		while true; do
+		continue
+		done
+	done`, ast.Script{
+		ast.Loop{
+			Head: []ast.Statement{ast.Command{Name: ast.Word("true")}},
+			Body: []ast.Statement{
+				ast.Loop{
+					Head: []ast.Statement{ast.Command{Name: ast.Word("true")}},
+					Body: []ast.Statement{ast.Continue(1)},
+				},
+			},
+		},
+	}},
+	{`until true;do continue;done`, ast.Script{
+		ast.Loop{
+			Negate: true,
+			Head:   []ast.Statement{ast.Command{Name: ast.Word("true")}},
+			Body:   []ast.Statement{ast.Continue(1)},
+		},
+	}},
+	{`until true; do
+		until true; do
+		continue
+		done
+	done`, ast.Script{
+		ast.Loop{
+			Negate: true,
+			Head:   []ast.Statement{ast.Command{Name: ast.Word("true")}},
+			Body: []ast.Statement{
+				ast.Loop{
+					Negate: true,
+					Head:   []ast.Statement{ast.Command{Name: ast.Word("true")}},
+					Body:   []ast.Statement{ast.Continue(1)},
+				},
+			},
+		},
+	}},
+	{`continue`, ast.Script{
+		ast.Continue(1),
+	}},
 }
 
 var loopsErrorHandlingCases = []errorHandlingTestCase{
@@ -1076,4 +1126,6 @@ var loopsErrorHandlingCases = []errorHandlingTestCase{
 	{`done`, "syntax error: `done` is a reserved keyword, cannot be used a command name. (line: 1, column: 1)"},
 	{`break >redirection`, "syntax error: unexpected token `>`. (line: 1, column: 7)"},
 	{`break arg`, "syntax error: unexpected token `arg`. (line: 1, column: 7)"},
+	{`continue >redirection`, "syntax error: unexpected token `>`. (line: 1, column: 10)"},
+	{`continue arg`, "syntax error: unexpected token `arg`. (line: 1, column: 10)"},
 }

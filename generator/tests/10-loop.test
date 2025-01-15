@@ -891,3 +891,241 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 }
 
 #(ENDTEST)
+
+
+#(TEST: the `break` builtin within loop)
+
+while true; do
+    break
+done
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		for {
+			func() {
+				var commandName = `true`
+				var arguments []string
+				var command = shell.Command(commandName, arguments...)
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				if stream, err := streamManager.Get(`0`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stdin = stream
+				}
+				if stream, err := streamManager.Get(`1`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stdout = stream
+				}
+				if stream, err := streamManager.Get(`2`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stderr = stream
+				}
+				if err := command.Run(); err != nil {
+					shell.HandleError(err)
+					return
+				}
+				shell.ExitCode = command.ProcessState.ExitCode()
+
+			}()
+			var condition = shell.ExitCode == 0
+			shell.ExitCode = 0
+			if !condition {
+				break
+			}
+			break
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+
+
+#(TEST: the `continue` builtin within loop)
+
+while true; do
+    continue
+done
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		for {
+			func() {
+				var commandName = `true`
+				var arguments []string
+				var command = shell.Command(commandName, arguments...)
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				if stream, err := streamManager.Get(`0`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stdin = stream
+				}
+				if stream, err := streamManager.Get(`1`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stdout = stream
+				}
+				if stream, err := streamManager.Get(`2`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stderr = stream
+				}
+				if err := command.Run(); err != nil {
+					shell.HandleError(err)
+					return
+				}
+				shell.ExitCode = command.ProcessState.ExitCode()
+
+			}()
+			var condition = shell.ExitCode == 0
+			shell.ExitCode = 0
+			if !condition {
+				break
+			}
+			continue
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+
+
+#(TEST: the `break` & `continue` builtins within `if` in loops)
+
+while true; do
+    if true;then
+        continue
+    else
+        break
+    fi
+done
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		for {
+			func() {
+				var commandName = `true`
+				var arguments []string
+				var command = shell.Command(commandName, arguments...)
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				if stream, err := streamManager.Get(`0`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stdin = stream
+				}
+				if stream, err := streamManager.Get(`1`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stdout = stream
+				}
+				if stream, err := streamManager.Get(`2`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stderr = stream
+				}
+				if err := command.Run(); err != nil {
+					shell.HandleError(err)
+					return
+				}
+				shell.ExitCode = command.ProcessState.ExitCode()
+
+			}()
+			var condition = shell.ExitCode == 0
+			shell.ExitCode = 0
+			if !condition {
+				break
+			}
+			{
+				var condition = false
+				streamManager := streamManager.Clone()
+				func() {
+					var commandName = `true`
+					var arguments []string
+					var command = shell.Command(commandName, arguments...)
+					streamManager := streamManager.Clone()
+					defer streamManager.Destroy()
+					if stream, err := streamManager.Get(`0`); err != nil {
+						shell.HandleError(err)
+						return
+					} else {
+						command.Stdin = stream
+					}
+					if stream, err := streamManager.Get(`1`); err != nil {
+						shell.HandleError(err)
+						return
+					} else {
+						command.Stdout = stream
+					}
+					if stream, err := streamManager.Get(`2`); err != nil {
+						shell.HandleError(err)
+						return
+					} else {
+						command.Stderr = stream
+					}
+					if err := command.Run(); err != nil {
+						shell.HandleError(err)
+						return
+					}
+					shell.ExitCode = command.ProcessState.ExitCode()
+
+				}()
+				condition = shell.ExitCode == 0
+				shell.ExitCode = 0
+				if condition {
+					continue
+				}
+				if !condition {
+					break
+				}
+				goto endofscope1
+			endofscope1:
+				streamManager.Destroy()
+
+			}
+		}
+
+	}()
+}
+
+#(ENDTEST)

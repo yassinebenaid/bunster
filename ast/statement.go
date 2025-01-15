@@ -63,6 +63,7 @@ type RangeLoop struct {
 }
 
 type Break int
+type Continue int
 
 type For struct {
 	Head         ForHead
@@ -144,6 +145,7 @@ func (For) node()                 {}
 func (Function) node()            {}
 func (Test) node()                {}
 func (Break) node()               {}
+func (Continue) node()            {}
 
 // Expressions
 func (CommandSubstitution) expr() {}
@@ -166,3 +168,4 @@ func (For) stmt()       {}
 func (Function) stmt()  {}
 func (Test) stmt()      {}
 func (Break) stmt()     {}
+func (Continue) stmt()  {}
