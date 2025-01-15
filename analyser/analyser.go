@@ -124,6 +124,22 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 		if !withinLoop {
 			a.report(fmt.Sprintf("The `break` keyword cannot be used here"))
 		}
+	case ast.Continue:
+		var withinLoop bool
+	loop2:
+		for i := len(a.stack) - 1; i >= 0; i-- {
+			switch a.stack[i].(type) {
+			case ast.Loop:
+				withinLoop = true
+				break loop2
+			case ast.If, ast.Continue:
+			default:
+				a.report(fmt.Sprintf("The `continue` keyword cannot be used here"))
+			}
+		}
+		if !withinLoop {
+			a.report(fmt.Sprintf("The `continue` keyword cannot be used here"))
+		}
 	case ast.Pipeline:
 		a.analysePipeline(v)
 	default:

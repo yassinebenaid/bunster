@@ -8,3 +8,7 @@ import (
 func (g *generator) handleBreak(buf *InstructionBuffer, _ ast.Break) {
 	buf.add(ir.Literal("break\n"))
 }
+
+func (g *generator) handleContinue(buf *InstructionBuffer, _ ast.Continue) {
+	buf.add(ir.Literal("continue\n"))
+}
