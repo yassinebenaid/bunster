@@ -46,7 +46,7 @@ Checkout the [documentation](https://bunster.netlify.app/installation) for diffe
 
 ### Contributing
 
-Thank you for considering contributing to the Bunster project! The contribution guide can be found in the [documentation](https://bunster.netlify.app).
+Thank you for considering contributing to the Bunster project! The contribution guide can be found in the [documentation](https://bunster.netlify.app/contributing).
 
 This project is developed and maintained by the public community, which includes you. Anything in this repository is subject to criticism. Including features, the implementation, the code style, the way we manage code reviews, The documentation and anything else in this regard.
 
