@@ -40,6 +40,7 @@ func Generate(script ast.Script) ir.Program {
 
 type generator struct {
 	expressionsCount int
+	scopesCount      int
 }
 
 func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, ctx *context) {

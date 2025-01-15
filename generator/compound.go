@@ -1,6 +1,8 @@
 package generator
 
 import (
+	"fmt"
+
 	"github.com/yassinebenaid/bunster/ast"
 	"github.com/yassinebenaid/bunster/ir"
 )
@@ -71,13 +73,16 @@ func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell
 }
 
 func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, ctx *context) {
-	var cmdbuf InstructionBuffer
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
+	g.scopesCount++
 
-	g.handleRedirections(&cmdbuf, cond.Redirections, ctx)
+	var cmdbuf, innerBuf InstructionBuffer
 
-	var innerBuf InstructionBuffer
 	innerBuf.add(ir.Declare{Name: "condition", Value: ir.Literal("false")})
+	innerBuf.add(ir.CloneStreamManager{})
+
+	ctx.label = fmt.Sprintf("endofscope%d", g.scopesCount)
+	g.handleRedirections(&innerBuf, cond.Redirections, ctx)
+
 	for _, statement := range cond.Head {
 		g.generate(&innerBuf, statement, &context{})
 		innerBuf.add(ir.Set{Name: "condition", Value: ir.Literal("shell.ExitCode == 0")})
@@ -103,6 +108,8 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, ctx *context) 
 	}
 
 	if ctx.pipe == nil {
+		innerBuf.add(ir.Label(ctx.label))
+		innerBuf.add(ir.Literal("streamManager.Destroy()\n"))
 		cmdbuf = append(cmdbuf, innerBuf...)
 		*buf = append(*buf, ir.Scope(cmdbuf))
 		return
