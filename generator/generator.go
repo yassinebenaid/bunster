@@ -15,7 +15,8 @@ type pipeContext struct {
 }
 
 type context struct {
-	pipe *pipeContext
+	pipe  *pipeContext
+	label string
 }
 
 type InstructionBuffer []ir.Instruction
@@ -39,6 +40,7 @@ func Generate(script ast.Script) ir.Program {
 
 type generator struct {
 	expressionsCount int
+	scopesCount      int
 }
 
 func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, ctx *context) {
@@ -114,9 +116,7 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 
 	cmdbuf.add(ir.WaitPipelineWaitgroup("pipelineWaitgroup"))
 
-	*buf = append(*buf, ir.Closure{
-		Body: cmdbuf,
-	})
+	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
 func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command, ctx *context) {
@@ -161,9 +161,7 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 		cmdbuf.add(ir.RunCommand("command"))
 	}
 
-	*buf = append(*buf, ir.Closure{
-		Body: cmdbuf,
-	})
+	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
 func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expression) ir.Instruction {
@@ -220,63 +218,45 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []as
 				Name:   fmt.Sprintf("stream%d", i),
 				Target: g.handleExpression(buf, redirection.Dst),
 				Mode:   ir.FLAG_WRITE,
+				Label:  ctx.label,
 			})
-			buf.add(ir.AddStream{
-				Fd:         redirection.Src,
-				StreamName: fmt.Sprintf("stream%d", i),
-			})
+			buf.add(ir.AddStream{Fd: redirection.Src, StreamName: fmt.Sprintf("stream%d", i)})
 		case ">>":
 			buf.add(ir.OpenStream{
 				Name:   fmt.Sprintf("stream%d", i),
 				Target: g.handleExpression(buf, redirection.Dst),
 				Mode:   ir.FLAG_APPEND,
+				Label:  ctx.label,
 			})
-			buf.add(ir.AddStream{
-				Fd:         redirection.Src,
-				StreamName: fmt.Sprintf("stream%d", i),
-			})
+			buf.add(ir.AddStream{Fd: redirection.Src, StreamName: fmt.Sprintf("stream%d", i)})
 		case "&>":
 			buf.add(ir.OpenStream{
 				Name:   fmt.Sprintf("stream%d", i),
 				Target: g.handleExpression(buf, redirection.Dst),
 				Mode:   ir.FLAG_WRITE,
+				Label:  ctx.label,
 			})
-			buf.add(ir.AddStream{
-				Fd:         "1",
-				StreamName: fmt.Sprintf("stream%d", i),
-			})
-			buf.add(ir.AddStream{
-				Fd:         "2",
-				StreamName: fmt.Sprintf("stream%d", i),
-			})
+			buf.add(ir.AddStream{Fd: "1", StreamName: fmt.Sprintf("stream%d", i)})
+			buf.add(ir.AddStream{Fd: "2", StreamName: fmt.Sprintf("stream%d", i)})
 		case "&>>":
 			buf.add(ir.OpenStream{
 				Name:   fmt.Sprintf("stream%d", i),
 				Target: g.handleExpression(buf, redirection.Dst),
 				Mode:   ir.FLAG_APPEND,
+				Label:  ctx.label,
 			})
-			buf.add(ir.AddStream{
-				Fd:         "1",
-				StreamName: fmt.Sprintf("stream%d", i),
-			})
-			buf.add(ir.AddStream{
-				Fd:         "2",
-				StreamName: fmt.Sprintf("stream%d", i),
-			})
+			buf.add(ir.AddStream{Fd: "1", StreamName: fmt.Sprintf("stream%d", i)})
+			buf.add(ir.AddStream{Fd: "2", StreamName: fmt.Sprintf("stream%d", i)})
 		case ">&", "<&":
 			if redirection.Dst == nil && redirection.Close {
 				buf.add(ir.CloseStream{
-					Fd: ir.String(redirection.Src),
+					Fd:    ir.String(redirection.Src),
+					Label: ctx.label,
 				})
 			} else {
-				buf.add(ir.DuplicateStream{
-					Old: redirection.Src,
-					New: g.handleExpression(buf, redirection.Dst),
-				})
+				buf.add(ir.DuplicateStream{Old: redirection.Src, New: g.handleExpression(buf, redirection.Dst)})
 				if redirection.Close {
-					buf.add(ir.CloseStream{
-						Fd: g.handleExpression(buf, redirection.Dst),
-					})
+					buf.add(ir.CloseStream{Fd: g.handleExpression(buf, redirection.Dst), Label: ctx.label})
 				}
 			}
 		case "<":
@@ -284,37 +264,28 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []as
 				Name:   fmt.Sprintf("stream%d", i),
 				Target: g.handleExpression(buf, redirection.Dst),
 				Mode:   ir.FLAG_READ,
+				Label:  ctx.label,
 			})
-			buf.add(ir.AddStream{
-				Fd:         redirection.Src,
-				StreamName: fmt.Sprintf("stream%d", i),
-			})
+			buf.add(ir.AddStream{Fd: redirection.Src, StreamName: fmt.Sprintf("stream%d", i)})
 		case "<<<":
 			buf.add(ir.NewPipeBuffer{
 				Value: ir.Concat{
 					g.handleExpression(buf, redirection.Dst),
 					ir.String("\n"),
 				},
-				Name: fmt.Sprintf("buffer%d", i),
+				Name:  fmt.Sprintf("buffer%d", i),
+				Label: ctx.label,
 			})
-			buf.add(ir.Declare{
-				Name:  fmt.Sprintf("stream%d", i),
-				Value: ir.Literal(fmt.Sprintf("buffer%d", i)),
-			})
-			buf.add(ir.AddStream{
-				Fd:         redirection.Src,
-				StreamName: fmt.Sprintf("stream%d", i),
-			})
+			buf.add(ir.Declare{Name: fmt.Sprintf("stream%d", i), Value: ir.Literal(fmt.Sprintf("buffer%d", i))})
+			buf.add(ir.AddStream{Fd: redirection.Src, StreamName: fmt.Sprintf("stream%d", i)})
 		case "<>":
 			buf.add(ir.OpenStream{
 				Name:   fmt.Sprintf("stream%d", i),
 				Target: g.handleExpression(buf, redirection.Dst),
 				Mode:   ir.FLAG_RW,
+				Label:  ctx.label,
 			})
-			buf.add(ir.AddStream{
-				Fd:         redirection.Src,
-				StreamName: fmt.Sprintf("stream%d", i),
-			})
+			buf.add(ir.AddStream{Fd: redirection.Src, StreamName: fmt.Sprintf("stream%d", i)})
 		}
 	}
 }

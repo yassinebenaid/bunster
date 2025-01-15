@@ -1,6 +1,8 @@
 package generator
 
 import (
+	"fmt"
+
 	"github.com/yassinebenaid/bunster/ast"
 	"github.com/yassinebenaid/bunster/ir"
 )
@@ -31,15 +33,10 @@ func (g *generator) handleGroup(buf *InstructionBuffer, group ast.Group, ctx *co
 			g.generate(&go_routing, cmd, &context{})
 		}
 		go_routing.add(ir.Literal("done<-struct{}{}\n"))
-		cmdbuf.add(ir.Closure{
-			Async: true,
-			Body:  go_routing,
-		})
+		cmdbuf.add(ir.Gorouting(go_routing))
 	}
 
-	*buf = append(*buf, ir.Closure{
-		Body: cmdbuf,
-	})
+	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
 func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell, ctx *context) {
@@ -69,25 +66,23 @@ func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell
 			g.generate(&go_routing, cmd, &context{})
 		}
 		go_routing.add(ir.Literal("done<-struct{}{}\n"))
-		cmdbuf.add(ir.Closure{
-			Async: true,
-			Body:  go_routing,
-		})
+		cmdbuf.add(ir.Gorouting(go_routing))
 	}
 
-	*buf = append(*buf, ir.Closure{
-		Body: cmdbuf,
-	})
+	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
 func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, ctx *context) {
-	var cmdbuf InstructionBuffer
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
+	g.scopesCount++
 
+	var cmdbuf, innerBuf InstructionBuffer
+
+	cmdbuf.add(ir.Declare{Name: "condition", Value: ir.Literal("false")})
+	cmdbuf.add(ir.CloneStreamManager{})
+
+	ctx.label = fmt.Sprintf("endofscope%d", g.scopesCount)
 	g.handleRedirections(&cmdbuf, cond.Redirections, ctx)
 
-	var innerBuf InstructionBuffer
-	innerBuf.add(ir.Declare{Name: "condition", Value: ir.Literal("false")})
 	for _, statement := range cond.Head {
 		g.generate(&innerBuf, statement, &context{})
 		innerBuf.add(ir.Set{Name: "condition", Value: ir.Literal("shell.ExitCode == 0")})
@@ -113,23 +108,27 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, ctx *context) 
 	}
 
 	if ctx.pipe == nil {
+		innerBuf.add(ir.Label(ctx.label))
+		innerBuf.add(ir.Literal("streamManager.Destroy()\n"))
 		cmdbuf = append(cmdbuf, innerBuf...)
-	} else {
-		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
-		cmdbuf.add(ir.PushToPipelineWaitgroup{
-			Waitgroup: ctx.pipe.waitgroup,
-			Value: ir.Literal(`func() error {
+		*buf = append(*buf, ir.Scope(cmdbuf))
+		return
+	}
+
+	cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
+	cmdbuf.add(ir.PushToPipelineWaitgroup{
+		Waitgroup: ctx.pipe.waitgroup,
+		Value: ir.Literal(`func() error {
 				<-done
 			 	streamManager.Destroy()
 				return nil
 			}`),
-		})
+	})
 
-		innerBuf.add(ir.Literal("done<-struct{}{}\n"))
-		cmdbuf.add(ir.Closure{Async: true, Body: innerBuf})
-	}
+	innerBuf.add(ir.Literal("done<-struct{}{}\n"))
+	cmdbuf.add(ir.Gorouting(innerBuf))
 
-	*buf = append(*buf, ir.Closure{Body: cmdbuf})
+	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
 func (g *generator) handleElif(elifs []ast.Elif) []ir.Instruction {
@@ -206,8 +205,8 @@ func (g *generator) handleLoop(buf *InstructionBuffer, loop ast.Loop, ctx *conte
 		})
 
 		innerBuf.add(ir.Literal("done<-struct{}{}\n"))
-		cmdbuf.add(ir.Closure{Async: true, Body: innerBuf})
+		cmdbuf.add(ir.Gorouting(innerBuf))
 	}
 
-	*buf = append(*buf, ir.Closure{Body: cmdbuf})
+	*buf = append(*buf, ir.Closure(cmdbuf))
 }

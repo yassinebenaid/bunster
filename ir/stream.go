@@ -15,16 +15,22 @@ type OpenStream struct {
 	Name   string
 	Target Instruction
 	Mode   string
+	Label  string
 }
 
 func (of OpenStream) togo() string {
+	var ret = "return"
+	if of.Label != "" {
+		ret = "goto " + of.Label
+	}
+
 	return fmt.Sprintf(
 		`%s, err := streamManager.OpenStream(%s, runtime.%s)
 		if err != nil {
 			shell.HandleError(err)
-			return
+			%s
 		}
-		`, of.Name, of.Target.togo(), of.Mode)
+		`, of.Name, of.Target.togo(), of.Mode, ret)
 }
 
 type NewBuffer struct {
@@ -38,6 +44,7 @@ func (b NewBuffer) togo() string {
 type NewPipeBuffer struct {
 	Value Instruction
 	Name  string
+	Label string
 }
 
 func (b NewPipeBuffer) togo() string {
@@ -89,8 +96,9 @@ func (as SetStream) togo() string {
 }
 
 type DuplicateStream struct {
-	Old string
-	New Instruction
+	Old   string
+	New   Instruction
+	Label string
 }
 
 func (as DuplicateStream) togo() string {
@@ -103,7 +111,8 @@ func (as DuplicateStream) togo() string {
 }
 
 type CloseStream struct {
-	Fd Instruction
+	Fd    Instruction
+	Label string
 }
 
 func (c CloseStream) togo() string {

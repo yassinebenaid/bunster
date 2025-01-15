@@ -95,6 +95,12 @@ func (s Literal) togo() string {
 	return string(s)
 }
 
+type Label string
+
+func (l Label) togo() string {
+	return fmt.Sprintf("goto %s\n%s:\n", l, l)
+}
+
 type ReadVar string
 
 func (rv ReadVar) togo() string {
@@ -148,32 +154,12 @@ func (r StartCommand) togo() string {
 		`, r)
 }
 
-type Closure struct {
-	Async     bool
-	ScopeOnly bool
-	Body      []Instruction
-}
+type Closure []Instruction
 
 func (c Closure) togo() string {
 	var body string
-	for _, ins := range c.Body {
+	for _, ins := range c {
 		body += ins.togo()
-	}
-
-	if c.ScopeOnly {
-		return fmt.Sprintf(
-			`{
-				%s
-			}
-		`, body)
-	}
-
-	if c.Async {
-		return fmt.Sprintf(
-			`go func(){
-				%s
-			}()
-		`, body)
 	}
 
 	return fmt.Sprintf(
@@ -181,6 +167,35 @@ func (c Closure) togo() string {
 			%s
 		}()
 	`, body)
+}
+
+type Scope []Instruction
+
+func (s Scope) togo() string {
+	var body string
+	for _, ins := range s {
+		body += ins.togo()
+	}
+
+	return fmt.Sprintf(`{
+			%s
+		}
+	`, body)
+}
+
+type Gorouting []Instruction
+
+func (g Gorouting) togo() string {
+	var body string
+	for _, ins := range g {
+		body += ins.togo()
+	}
+
+	return fmt.Sprintf(
+		`go func(){
+			%s
+		}()
+		`, body)
 }
 
 type ExpressionClosure struct {
