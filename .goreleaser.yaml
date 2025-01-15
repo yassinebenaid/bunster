@@ -1,0 +1,26 @@
+version: 2
+
+builds:
+  - id: bunster
+    main: ./cmd/bunster
+    binary: bunster_{{ .Os }}-{{ .Arch }}
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+      - "386"
+
+archives:
+  - id: bunster_archive
+    builds:
+      - bunster
+    format: tar.gz
+    name_template: "bunster_{{ .Os }}-{{ .Arch }}"
+    files:
+      - LICENSE
+      - README.md
+
+checksum:
+  name_template: "checksums.txt"
