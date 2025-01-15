@@ -11,10 +11,9 @@ package main
 import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	func() {
-		streamManager := streamManager.Clone()
-		defer streamManager.Destroy()
+	{
 		var condition = false
+		streamManager := streamManager.Clone()
 		func() {
 			var commandName = `true`
 			var arguments []string
@@ -82,8 +81,11 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 			}()
 		}
+        goto endofscope1
+    endofscope1:
+	    streamManager.Destroy()
 
-	}()
+	}
 }
 
 #(ENDTEST)
@@ -105,10 +107,9 @@ package main
 import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	func() {
-		streamManager := streamManager.Clone()
-		defer streamManager.Destroy()
+	{
 		var condition = false
+		streamManager := streamManager.Clone()
 		func() {
 			var commandName = `true`
 			var arguments []string
@@ -244,8 +245,11 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				}()
 			}
 		}
+        goto endofscope1
+    endofscope1:
+	    streamManager.Destroy()
 
-	}()
+	}
 }
 
 #(ENDTEST)
@@ -269,10 +273,9 @@ package main
 import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	func() {
-		streamManager := streamManager.Clone()
-		defer streamManager.Destroy()
+	{
 		var condition = false
+		streamManager := streamManager.Clone()
 		func() {
 			var commandName = `true`
 			var arguments []string
@@ -374,8 +377,11 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 			}()
 		}
+        goto endofscope1
+    endofscope1:
+	    streamManager.Destroy()
 
-	}()
+	}
 }
 
 #(ENDTEST)
@@ -401,10 +407,9 @@ package main
 import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	func() {
-		streamManager := streamManager.Clone()
-		defer streamManager.Destroy()
+	{
 		var condition = false
+		streamManager := streamManager.Clone()
 		func() {
 			var commandName = `true`
 			var arguments []string
@@ -608,8 +613,11 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 			}()
 		}
+        goto endofscope1
+    endofscope1:
+	    streamManager.Destroy()
 
-	}()
+	}
 }
 
 #(ENDTEST)
@@ -679,6 +687,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			return
 		}
 		func() {
+			var condition = false
 			streamManager := streamManager.Clone()
 			streamManager.Add(`1`, pipeWriter2, true)
 			streamManager.Add(`0`, pipeReader1, false)
@@ -689,7 +698,6 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				return nil
 			})
 			go func() {
-				var condition = false
 				func() {
 					var commandName = `true`
 					var arguments []string
@@ -768,6 +776,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			return
 		}
 		func() {
+			var condition = false
 			streamManager := streamManager.Clone()
 			streamManager.Add(`1`, pipeWriter3, true)
 			streamManager.Add(`0`, pipeReader2, false)
@@ -778,7 +787,6 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				return nil
 			})
 			go func() {
-				var condition = false
 				func() {
 					var commandName = `true`
 					var arguments []string

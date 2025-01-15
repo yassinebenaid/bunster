@@ -77,11 +77,11 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, ctx *context) 
 
 	var cmdbuf, innerBuf InstructionBuffer
 
-	innerBuf.add(ir.Declare{Name: "condition", Value: ir.Literal("false")})
-	innerBuf.add(ir.CloneStreamManager{})
+	cmdbuf.add(ir.Declare{Name: "condition", Value: ir.Literal("false")})
+	cmdbuf.add(ir.CloneStreamManager{})
 
 	ctx.label = fmt.Sprintf("endofscope%d", g.scopesCount)
-	g.handleRedirections(&innerBuf, cond.Redirections, ctx)
+	g.handleRedirections(&cmdbuf, cond.Redirections, ctx)
 
 	for _, statement := range cond.Head {
 		g.generate(&innerBuf, statement, &context{})
