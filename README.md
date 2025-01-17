@@ -64,4 +64,4 @@ Plase check out our [Security Policy](https://github.com/yassinebenaid/bunster/t
 
 ### Licence
 
-The Bunster project is open-sourced software licensed under the [GPLv3 license](https://www.gnu.org/licenses/gpl-3.0.en.html).
+The Bunster project is open-sourced software licensed under [The 3-Clause BSD License](https://opensource.org/license/bsd-3-clause).
