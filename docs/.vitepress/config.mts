@@ -31,7 +31,7 @@ export default defineConfig({
     ],
 
     footer: {
-      message: "Released under the GPLv3 License.",
+      message: "Released under the 3-Clause BSD License.",
       copyright: "Copyright © 2024-present Yassine Benaid",
     },
     editLink: {
