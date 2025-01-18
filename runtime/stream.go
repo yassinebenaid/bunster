@@ -101,6 +101,12 @@ type StreamManager struct {
 
 func (sm *StreamManager) OpenStream(name string, flag int) (Stream, error) {
 	switch name {
+	case "/dev/stdin":
+		return sm.Get("0")
+	case "/dev/stdout":
+		return sm.Get("1")
+	case "/dev/stderr":
+		return sm.Get("2")
 	default:
 		return os.OpenFile(name, flag, 0644)
 	}
