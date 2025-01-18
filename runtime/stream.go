@@ -104,7 +104,11 @@ func (sm *StreamManager) OpenStream(name string, flag int) (Stream, error) {
 	case "/dev/stdin":
 		return sm.Get("0")
 	case "/dev/stdout":
-		return sm.Get("1")
+		proxy, ok := sm.mappings["1"]
+		if !ok {
+			return nil, fmt.Errorf("file descriptor %q is not open", "1")
+		}
+		return &proxyStream{original: proxy.original}, nil
 	case "/dev/stderr":
 		return sm.Get("2")
 	default:
@@ -113,13 +117,13 @@ func (sm *StreamManager) OpenStream(name string, flag int) (Stream, error) {
 }
 
 func (sm *StreamManager) Add(fd string, stream Stream, _ bool) {
-	var proxy *proxyStream
-
-	if _, ok := stream.(*proxyStream); !ok {
-		sm.openStreams = append(sm.openStreams, stream)
-		proxy = &proxyStream{original: stream}
+	if proxy, ok := stream.(*proxyStream); ok {
+		sm.mappings[fd] = proxy
+		return
 	}
 
+	sm.openStreams = append(sm.openStreams, stream)
+	proxy := &proxyStream{original: stream}
 	sm.mappings[fd] = proxy
 }
 
