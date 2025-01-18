@@ -24,7 +24,7 @@ type Shell struct {
 
 func (shell *Shell) Run() int {
 	streamManager := &StreamManager{
-		mappings: make(map[string]Stream),
+		mappings: make(map[string]*proxyStream),
 	}
 	streamManager.Add("0", shell.Stdin, true)
 	streamManager.Add("1", shell.Stdout, true)
