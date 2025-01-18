@@ -22,18 +22,27 @@ type Shell struct {
 	vars     sync.Map
 }
 
-func (shell *Shell) Run() int {
+func (shell *Shell) Run() (exitCode int) {
 	streamManager := &StreamManager{
-		mappings: make(map[string]Stream),
+		mappings: make(map[string]*proxyStream),
 	}
 	streamManager.Add("0", shell.Stdin, true)
 	streamManager.Add("1", shell.Stdout, true)
 	streamManager.Add("2", shell.Stderr, true)
 	defer streamManager.Destroy()
 
-	shell.Main(shell, streamManager)
+	defer func() {
+		err := recover()
+		if err != nil {
+			fmt.Fprintf(shell.Stderr, "crash: %v\n", err)
+			exitCode = 1
+		}
+	}()
 
-	return shell.ExitCode
+	shell.Main(shell, streamManager)
+	exitCode = shell.ExitCode
+
+	return exitCode
 }
 
 func (shell *Shell) ReadVar(name string) string {

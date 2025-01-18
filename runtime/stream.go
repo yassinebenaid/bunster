@@ -6,7 +6,6 @@ import (
 	"io"
 	"os"
 	"strings"
-	"syscall"
 )
 
 const (
@@ -96,87 +95,58 @@ func (s *proxyStream) getOriginal() (Stream, error) {
 }
 
 type StreamManager struct {
-	mappings map[string]Stream
-	proxied  []Stream
+	openStreams []Stream
+	mappings    map[string]*proxyStream
 }
 
 func (sm *StreamManager) OpenStream(name string, flag int) (Stream, error) {
 	switch name {
+	case "/dev/stdin":
+		return sm.Get("0")
+	case "/dev/stdout":
+		proxy, ok := sm.mappings["1"]
+		if !ok {
+			return nil, fmt.Errorf("file descriptor %q is not open", "1")
+		}
+		return &proxyStream{original: proxy.original}, nil
+	case "/dev/stderr":
+		return sm.Get("2")
 	default:
 		return os.OpenFile(name, flag, 0644)
 	}
 }
 
-func (sm *StreamManager) Add(fd string, stream Stream, proxy bool) {
-	// If this stream is already open, we need to close it. otherwise, Its handler will be lost and leak.
-	// This is related to pipelines in particular. when instantiating a new pipeline, we add its ends to the FDT. but if
-	// a redirection happened afterwards, it will cause the pipline handler to be lost and kept open.
-	if sm.mappings[fd] != nil {
-		sm.mappings[fd].Close()
+func (sm *StreamManager) Add(fd string, stream Stream, _ bool) {
+	if proxy, ok := stream.(*proxyStream); ok {
+		sm.mappings[fd] = proxy
+		return
 	}
 
-	if proxy {
-		sm.proxied = append(sm.proxied, stream)
-		stream = &proxyStream{original: stream}
-	}
-
-	sm.mappings[fd] = stream
+	sm.openStreams = append(sm.openStreams, stream)
+	proxy := &proxyStream{original: stream}
+	sm.mappings[fd] = proxy
 }
 
 func (sm *StreamManager) Get(fd string) (Stream, error) {
-	stream, ok := sm.mappings[fd]
+	proxy, ok := sm.mappings[fd]
 	if !ok {
 		return nil, fmt.Errorf("file descriptor %q is not open", fd)
 	}
 
-	if p, ok := stream.(*proxyStream); ok {
-		if o, err := p.getOriginal(); err != nil {
-			return nil, fmt.Errorf("bad file descriptor %q, %w", fd, err)
-		} else {
-			return o, nil
-		}
+	if stream, err := proxy.getOriginal(); err != nil {
+		return nil, fmt.Errorf("bad file descriptor %q, %w", fd, err)
+	} else {
+		return stream, nil
 	}
-
-	return stream, nil
 }
 
 func (sm *StreamManager) Duplicate(newfd, oldfd string) error {
-	if stream, ok := sm.mappings[oldfd]; !ok {
+	if proxy, ok := sm.mappings[oldfd]; !ok {
 		return fmt.Errorf("trying to duplicate bad file descriptor: %s", oldfd)
 	} else {
-		// when trying to duplicate a file descriptor to it self (eg: 3>&3 ), we just return.
-		if newfd == oldfd {
-			return nil
+		sm.mappings[newfd] = &proxyStream{
+			original: proxy.original,
 		}
-
-		// If the new fd is already open, we need to close it. otherwise, Its handler will be lost and leak. and remain open forever.
-		// for example: "3<file.txt 3<&0", we don't explicitly close 3. Thus, it is going to remain open forever, unless we implicitly close it here.
-		if sm.mappings[newfd] != nil {
-			sm.mappings[newfd].Close()
-		}
-
-		switch stream := stream.(type) {
-		case *Buffer:
-			newbuf := &bytes.Buffer{}
-			_, err := io.Copy(newbuf, stream)
-			if err != nil {
-				return fmt.Errorf("failed to duplicate file descriptor '%s', %w", oldfd, err)
-			}
-			sm.mappings[newfd] = &Buffer{buf: newbuf, readonly: stream.readonly}
-		case *os.File:
-			dupFd, err := syscall.Dup(int(stream.Fd()))
-			if err != nil {
-				return fmt.Errorf("failed to duplicate file descriptor '%s', %w", oldfd, err)
-			}
-			sm.mappings[newfd] = os.NewFile(uintptr(dupFd), stream.Name())
-		case *proxyStream:
-			sm.mappings[newfd] = &proxyStream{
-				original: stream.original,
-			}
-		default:
-			panic(fmt.Sprintf("failed to clone (%s), unhandled stream type: %T", oldfd, stream))
-		}
-
 		return nil
 	}
 }
@@ -190,7 +160,7 @@ func (sm *StreamManager) Close(fd string) error {
 }
 
 func (sm *StreamManager) Destroy() {
-	for _, stream := range sm.proxied {
+	for _, stream := range sm.openStreams {
 		stream.Close()
 	}
 	for _, stream := range sm.mappings {
@@ -200,7 +170,7 @@ func (sm *StreamManager) Destroy() {
 
 func (sm *StreamManager) Clone() *StreamManager {
 	clone := &StreamManager{
-		mappings: make(map[string]Stream),
+		mappings: make(map[string]*proxyStream),
 	}
 
 	for fd, stream := range sm.mappings {
