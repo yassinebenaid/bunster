@@ -14,8 +14,6 @@ const (
 	ansiReset           = "\033[0m"
 )
 
-type theme func() (string, string)
-
 // Diff generates a git-like diff between two strings.
 func Diff(original, modified string) string {
 	return diffStrings(original, modified, ansiFourgroundRed, ansiFourgroundGreen)
