@@ -9,10 +9,16 @@ cases:
 
       # file is truncated if it exists
       echo hello world >output2.txt
+
+      # standard output is not redirected
+      ls non-existing-dir >output3.txt
     expect:
+      exit_code: 2
+      stderr: "ls: cannot access 'non-existing-dir': No such file or directory\n"
       files:
         "output.txt": "foo bar\n"
         "output2.txt": "hello world\n"
+        "output3.txt": ""
 
   - name: "`>>` append redirection"
     script: |
@@ -26,3 +32,22 @@ cases:
         "output.txt": |
           hello
           world
+
+  - name: "`&>` all output redirection"
+    files:
+      "all2.txt": "foobar"
+    script: |
+      # file is created if missing
+      echo foo bar &>all.txt
+
+      # file is truncated if it exists
+      echo hello world &>all2.txt
+
+      # standard output redirected too
+      ls non-existing-dir &>all3.txt
+    expect:
+      exit_code: 2
+      files:
+        "all.txt": "foo bar\n"
+        "all2.txt": "hello world\n"
+        "all3.txt": "ls: cannot access 'non-existing-dir': No such file or directory\n"
