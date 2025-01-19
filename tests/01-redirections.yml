@@ -11,11 +11,10 @@ cases:
       echo hello world >output2.txt
 
       # standard output is not redirected
-      ls non-existing-dir >output3.txt
-
-      true # just so the exit code is 0
+      cat non-existing-file >output3.txt
     expect:
-      stderr: "ls: cannot access 'non-existing-dir': No such file or directory\n"
+      exit_code: 1
+      stderr: "cat: non-existing-file: No such file or directory\n"
       files:
         "output.txt": "foo bar\n"
         "output2.txt": "hello world\n"
@@ -32,11 +31,10 @@ cases:
       echo hello world >|output2.txt
 
       # standard output is not redirected
-      ls non-existing-dir >|output3.txt
-
-      true # just so the exit code is 0
+      cat non-existing-file >|output3.txt
     expect:
-      stderr: "ls: cannot access 'non-existing-dir': No such file or directory\n"
+      exit_code: 1
+      stderr: "cat: non-existing-file: No such file or directory\n"
       files:
         "output.txt": "foo bar\n"
         "output2.txt": "hello world\n"
@@ -49,7 +47,12 @@ cases:
 
       # content is appended
       echo world >>output.txt
+
+      # standard output is not redirected
+      cat non-existing-file >>output.txt
     expect:
+      exit_code: 1
+      stderr: "cat: non-existing-file: No such file or directory\n"
       files:
         "output.txt": |
           hello
@@ -66,14 +69,13 @@ cases:
       echo hello world &>all2.txt
 
       # standard output redirected too
-      ls non-existing-dir &>all3.txt
-
-      true # just so the exit code is 0
+      cat non-existing-file &>all3.txt
     expect:
+      exit_code: 1
       files:
         "all.txt": "foo bar\n"
         "all2.txt": "hello world\n"
-        "all3.txt": "ls: cannot access 'non-existing-dir': No such file or directory\n"
+        "all3.txt": "cat: non-existing-file: No such file or directory\n"
 
   - name: "`&>>` all output append redirection"
     script: |
@@ -84,15 +86,14 @@ cases:
       echo world &>>all.txt
 
       # standard output redirected too
-      ls non-existing-dir &>>all.txt
-
-      true # just so the exit code is 0
+      cat non-existing-file &>>all.txt
     expect:
+      exit_code: 1
       files:
         "all.txt": |
           hello
           world
-          ls: cannot access 'non-existing-dir': No such file or directory
+          cat: non-existing-file: No such file or directory
 
   - name: "`<` input redirection"
     files:
