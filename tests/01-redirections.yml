@@ -13,3 +13,16 @@ cases:
       files:
         "output.txt": "foo bar\n"
         "output2.txt": "hello world\n"
+
+  - name: "`>>` append redirection"
+    script: |
+      # file is created if missing
+      echo hello >>output.txt
+
+      # content is appended
+      echo world >>output.txt
+    expect:
+      files:
+        "output.txt": |
+          hello
+          world
