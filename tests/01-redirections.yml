@@ -89,3 +89,13 @@ cases:
           hello
           world
           ls: cannot access 'non-existing-dir': No such file or directory
+
+  - name: "`<` input redirection"
+    files:
+      "input.txt": "hello world"
+    script: |
+      cat <input.txt
+    expect:
+      stdout: "hello world"
+      files:
+        "input.txt": "hello world"
