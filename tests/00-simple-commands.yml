@@ -8,9 +8,9 @@ cases:
 
   - name: quoted strings
     script: |
-      echo "Hello"   'World'
+      echo "Hello"   'World' '$unrecognized_var'
     expect:
-      stdout: "Hello World\n"
+      stdout: "Hello World $unrecognized_var\n"
 
   - name: concatination
     script: |
