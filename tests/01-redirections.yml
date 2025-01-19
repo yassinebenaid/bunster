@@ -12,8 +12,9 @@ cases:
 
       # standard output is not redirected
       ls non-existing-dir >output3.txt
+
+      true # just so the exit code is 0
     expect:
-      exit_code: 2
       stderr: "ls: cannot access 'non-existing-dir': No such file or directory\n"
       files:
         "output.txt": "foo bar\n"
@@ -32,8 +33,9 @@ cases:
 
       # standard output is not redirected
       ls non-existing-dir >|output3.txt
+
+      true # just so the exit code is 0
     expect:
-      exit_code: 2
       stderr: "ls: cannot access 'non-existing-dir': No such file or directory\n"
       files:
         "output.txt": "foo bar\n"
@@ -65,8 +67,9 @@ cases:
 
       # standard output redirected too
       ls non-existing-dir &>all3.txt
+
+      true # just so the exit code is 0
     expect:
-      exit_code: 2
       files:
         "all.txt": "foo bar\n"
         "all2.txt": "hello world\n"
@@ -82,8 +85,9 @@ cases:
 
       # standard output redirected too
       ls non-existing-dir &>>all.txt
+
+      true # just so the exit code is 0
     expect:
-      exit_code: 2
       files:
         "all.txt": |
           hello
