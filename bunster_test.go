@@ -21,8 +21,14 @@ import (
 )
 
 type Test struct {
-	Name   string `yaml:"name"`
-	Script string `yaml:"script"`
+	Cases []Case
+}
+
+type Case struct {
+	Name   string   `yaml:"name"`
+	Env    []string `yaml:"env"`
+	Args   []string `yaml:"args"`
+	Script string   `yaml:"script"`
 	Expect struct {
 		Stdout   string `yaml:"stdout"`
 		Stderr   string `yaml:"stderr"`
@@ -48,43 +54,44 @@ func TestBunster(t *testing.T) {
 				t.Fatalf("Failed to open test file, %v", err)
 			}
 
-			var tests []Test
+			var test Test
 
-			if err := yaml.Unmarshal(testContent, &tests); err != nil {
+			if err := yaml.Unmarshal(testContent, &test); err != nil {
 				t.Fatalf("Failed to parse test file, %v", err)
 			}
 
-			for i, test := range tests {
-				binary, err := buildBinary([]byte(test.Script))
+			for i, testCase := range test.Cases {
+				binary, err := buildBinary([]byte(testCase.Script))
 				if err != nil {
-					t.Fatalf("\nTest(#%d): %sBuild Error: %s", i, dump(test.Name), dump(err.Error()))
+					t.Fatalf("\nTest(#%d): %sBuild Error: %s", i, dump(testCase.Name), dump(err.Error()))
 				}
 
 				var stdout, stderr bytes.Buffer
 
-				cmd := exec.Command(binary)
+				cmd := exec.Command(binary, testCase.Args...)
 				cmd.Stdout = &stdout
 				cmd.Stderr = &stderr
+				cmd.Env = append(os.Environ(), testCase.Env...)
 				if err := cmd.Run(); err != nil {
 					_, ok := err.(*exec.ExitError)
 					if !ok {
-						t.Fatalf("\nTest(#%d): %sRuntime Error: %s", i, dump(test.Name), dump(err.Error()))
+						t.Fatalf("\nTest(#%d): %sRuntime Error: %s", i, dump(testCase.Name), dump(err.Error()))
 					}
 				}
 
-				if test.Expect.ExitCode != cmd.ProcessState.ExitCode() {
+				if testCase.Expect.ExitCode != cmd.ProcessState.ExitCode() {
 					t.Fatalf("\nTest(#%d): %sExpected exit code of '%d', got '%d'",
-						i, dump(test.Name), test.Expect.ExitCode, cmd.ProcessState.ExitCode())
+						i, dump(testCase.Name), testCase.Expect.ExitCode, cmd.ProcessState.ExitCode())
 				}
 
-				if test.Expect.Stdout != stdout.String() {
+				if testCase.Expect.Stdout != stdout.String() {
 					t.Fatalf("\nTest(#%d): %sExpected `STDOUT` does not match actual value\ndiff:\n%s",
-						i, dump(test.Name), diffStrings(test.Expect.Stdout, stdout.String()))
+						i, dump(testCase.Name), diffStrings(testCase.Expect.Stdout, stdout.String()))
 				}
 
-				if test.Expect.Stderr != stderr.String() {
+				if testCase.Expect.Stderr != stderr.String() {
 					t.Fatalf("\nTest(#%d): %sExpected `STDERR` does not match actual value\ndiff:\n%s",
-						i, dump(test.Name), diffStrings(test.Expect.Stderr, stderr.String()))
+						i, dump(testCase.Name), diffStrings(testCase.Expect.Stderr, stderr.String()))
 				}
 			}
 		})
@@ -170,8 +177,8 @@ func cloneStubs(dst string) error {
 
 // ANSI color codes
 const (
-	colorRed   = "\033[31m"
-	colorGreen = "\033[32m"
+	colorRed   = "\033[41m"
+	colorGreen = "\033[42m"
 	colorReset = "\033[0m"
 )
 

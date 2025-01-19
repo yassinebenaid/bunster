@@ -1,6 +1,47 @@
 ---
-- name: simple `echo` command
-  script: |
-    echo foo bar
-  expect:
-    stdout: "foo bar\n"
+cases:
+  - name: simple `echo` command
+    script: |
+      echo foo bar
+    expect:
+      stdout: "foo bar\n"
+
+  - name: quoted strings
+    script: |
+      echo "Hello"   'World'
+    expect:
+      stdout: "Hello World\n"
+
+  - name: concatination
+    script: |
+      echo "Hello"'World'Foobar
+    expect:
+      stdout: "HelloWorldFoobar\n"
+
+  - name: environment variables
+    env: ["name=yassinebenaid", "job=developer"]
+    script: |
+      echo name: $name "job:$job"
+    expect:
+      stdout: "name: yassinebenaid job:developer\n"
+
+  - name: positional variables
+    args: ["foo", "bar", "baz"]
+    script: |
+      echo $1$2 "$3boo"
+    expect:
+      stdout: "foobar bazboo\n"
+
+  - name: shell parameters
+    script: |
+      key=value1
+      key2="value2" key3='value3' key4=$key2
+      echo $key $key2 $key3 $key4
+    expect:
+      stdout: "value1 value2 value3 value2\n"
+
+  - name: passing shell parameters as environment variables
+    script: |
+      key=value key2=$key  sh -c 'echo $key $key2'
+    expect:
+      stdout: "value\n"
