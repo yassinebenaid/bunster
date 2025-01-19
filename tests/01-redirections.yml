@@ -1,0 +1,122 @@
+---
+cases:
+  - name: "`>` output redirection"
+    files:
+      "output2.txt": "foobar"
+    script: |
+      # file is created if missing
+      echo foo bar >output.txt
+
+      # file is truncated if it exists
+      echo hello world >output2.txt
+
+      # standard output is not redirected
+      cat non-existing-file >output3.txt
+    expect:
+      exit_code: 1
+      stderr: "cat: non-existing-file: No such file or directory\n"
+      files:
+        "output.txt": "foo bar\n"
+        "output2.txt": "hello world\n"
+        "output3.txt": ""
+
+  - name: "`>|` output redirection"
+    files:
+      "output2.txt": "foobar"
+    script: |
+      # file is created if missing
+      echo foo bar >|output.txt
+
+      # file is truncated if it exists
+      echo hello world >|output2.txt
+
+      # standard output is not redirected
+      cat non-existing-file >|output3.txt
+    expect:
+      exit_code: 1
+      stderr: "cat: non-existing-file: No such file or directory\n"
+      files:
+        "output.txt": "foo bar\n"
+        "output2.txt": "hello world\n"
+        "output3.txt": ""
+
+  - name: "`>>` append redirection"
+    script: |
+      # file is created if missing
+      echo hello >>output.txt
+
+      # content is appended
+      echo world >>output.txt
+
+      # standard output is not redirected
+      cat non-existing-file >>output.txt
+    expect:
+      exit_code: 1
+      stderr: "cat: non-existing-file: No such file or directory\n"
+      files:
+        "output.txt": |
+          hello
+          world
+
+  - name: "`&>` all output redirection"
+    files:
+      "all2.txt": "foobar"
+    script: |
+      # file is created if missing
+      echo foo bar &>all.txt
+
+      # file is truncated if it exists
+      echo hello world &>all2.txt
+
+      # standard output redirected too
+      cat non-existing-file &>all3.txt
+    expect:
+      exit_code: 1
+      files:
+        "all.txt": "foo bar\n"
+        "all2.txt": "hello world\n"
+        "all3.txt": "cat: non-existing-file: No such file or directory\n"
+
+  - name: "`&>>` all output append redirection"
+    script: |
+      # file is created if missing
+      echo hello &>>all.txt
+
+      # content is appended
+      echo world &>>all.txt
+
+      # standard output redirected too
+      cat non-existing-file &>>all.txt
+    expect:
+      exit_code: 1
+      files:
+        "all.txt": |
+          hello
+          world
+          cat: non-existing-file: No such file or directory
+
+  - name: "`<` input redirection"
+    files:
+      "input.txt": "hello world"
+    script: |
+      cat <input.txt
+    expect:
+      stdout: "hello world"
+      files:
+        "input.txt": "hello world"
+
+  - name: "`>&` file descriptor duplication"
+    script: |
+      # duplicate the standard io
+      echo 'redirected to stderr' >&2
+
+      # duplicate an open file
+      echo 'Hello World' 3>file.txt >&3
+
+      # redundant duplication
+      echo 'redundant duplication of stdout' 3>&1 4>&3 1>&4
+    expect:
+      stdout: "redundant duplication of stdout\n"
+      stderr: "redirected to stderr\n"
+      files:
+        "file.txt": "Hello World\n"
