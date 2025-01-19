@@ -100,8 +100,18 @@ cases:
       files:
         "input.txt": "hello world"
 
-  - name: "`<<<` here string redirection"
+  - name: "`>&` file descriptor duplication"
     script: |
-      cat <<< "Hello World"
+      # duplicate the standard io
+      echo 'redirected to stderr' >&2
+
+      # duplicate an open file
+      echo 'Hello World' 3>file.txt >&3
+
+      # redundant duplication
+      echo 'redundant duplication of stdout' 3>&1 4>&3 1>&4
     expect:
-      stdout: "Hello World\n"
+      stdout: "redundant duplication of stdout\n"
+      stderr: "redirected to stderr\n"
+      files:
+        "file.txt": "Hello World\n"
