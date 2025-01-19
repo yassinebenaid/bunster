@@ -110,8 +110,12 @@ func buildBinary(s []byte) (string, error) {
 
 	program := generator.Generate(script)
 
-	wd, err := os.MkdirTemp("", "bunster-build-*")
-	if err != nil {
+	wd := path.Join(os.TempDir(), "bunster-build")
+	if err := os.RemoveAll(wd); err != nil {
+		return "", err
+	}
+
+	if err := os.MkdirAll(wd, 0700); err != nil {
 		return "", err
 	}
 
