@@ -42,6 +42,11 @@ var dump = (&godump.Dumper{
 }).Sprintln
 
 func TestBunster(t *testing.T) {
+	buildWorkdir, err := prepareBuildAssets()
+	if err != nil {
+		t.Fatalf("Failed to prepare the build assets, %v", err)
+	}
+
 	testFiles, err := filepath.Glob("./tests/*.yml")
 	if err != nil {
 		t.Fatalf("Failed to `Glob` test files, %v", err)
@@ -66,7 +71,7 @@ func TestBunster(t *testing.T) {
 					t.Fatalf("Failed to setup test workdir, %v", err)
 				}
 
-				binary, err := buildBinary([]byte(testCase.Script))
+				binary, err := buildBinary(buildWorkdir, []byte(testCase.Script))
 				if err != nil {
 					t.Fatalf("\nTest(#%d): %sBuild Error: %s", i, dump(testCase.Name), dump(err.Error()))
 				}
@@ -104,7 +109,7 @@ func TestBunster(t *testing.T) {
 	}
 }
 
-func buildBinary(s []byte) (string, error) {
+func buildBinary(workdir string, s []byte) (string, error) {
 	script, err := parser.Parse(lexer.New(s))
 	if err != nil {
 		return "", err
@@ -116,17 +121,30 @@ func buildBinary(s []byte) (string, error) {
 
 	program := generator.Generate(script)
 
+	err = os.WriteFile(path.Join(workdir, "program.go"), []byte(program.String()), 0600)
+	if err != nil {
+		return "", err
+	}
+
+	gocmd := exec.Command("go", "build", "-o", "build.bin")
+	gocmd.Stdin = os.Stdin
+	gocmd.Stdout = os.Stdout
+	gocmd.Stderr = os.Stderr
+	gocmd.Dir = workdir
+	if err := gocmd.Run(); err != nil {
+		return "", err
+	}
+
+	return path.Join(workdir, "build.bin"), nil
+}
+
+func prepareBuildAssets() (string, error) {
 	wd := path.Join(os.TempDir(), "bunster-build")
 	if err := os.RemoveAll(wd); err != nil {
 		return "", err
 	}
 
 	if err := os.MkdirAll(wd, 0700); err != nil {
-		return "", err
-	}
-
-	err = os.WriteFile(path.Join(wd, "program.go"), []byte(program.String()), 0600)
-	if err != nil {
 		return "", err
 	}
 
@@ -138,16 +156,7 @@ func buildBinary(s []byte) (string, error) {
 		return "", err
 	}
 
-	gocmd := exec.Command("go", "build", "-o", "build.bin")
-	gocmd.Stdin = os.Stdin
-	gocmd.Stdout = os.Stdout
-	gocmd.Stderr = os.Stderr
-	gocmd.Dir = wd
-	if err := gocmd.Run(); err != nil {
-		return "", err
-	}
-
-	return path.Join(wd, "build.bin"), nil
+	return wd, nil
 }
 
 func cloneRuntime(dst string) error {
