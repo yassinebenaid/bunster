@@ -1,0 +1,15 @@
+---
+cases:
+  - name: "`>` output redirection"
+    files:
+      "output2.txt": "foobar"
+    script: |
+      # file is created if missing
+      echo foo bar >output.txt
+
+      # file is truncated if it exists
+      echo hello world >output2.txt
+    expect:
+      files:
+        "output.txt": "foo bar\n"
+        "output2.txt": "hello world\n"

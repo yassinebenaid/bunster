@@ -25,14 +25,16 @@ type Test struct {
 }
 
 type Case struct {
-	Name   string   `yaml:"name"`
-	Env    []string `yaml:"env"`
-	Args   []string `yaml:"args"`
-	Script string   `yaml:"script"`
+	Name   string            `yaml:"name"`
+	Env    []string          `yaml:"env"`
+	Args   []string          `yaml:"args"`
+	Files  map[string]string `yaml:"files"`
+	Script string            `yaml:"script"`
 	Expect struct {
-		Stdout   string `yaml:"stdout"`
-		Stderr   string `yaml:"stderr"`
-		ExitCode int    `yaml:"exit_code"`
+		Stdout   string            `yaml:"stdout"`
+		Stderr   string            `yaml:"stderr"`
+		ExitCode int               `yaml:"exit_code"`
+		Files    map[string]string `yaml:"files"`
 	} `yaml:"expect"`
 }
 
@@ -76,6 +78,12 @@ func TestBunster(t *testing.T) {
 					t.Fatalf("\nTest(#%d): %sBuild Error: %s", i, dump(testCase.Name), dump(err.Error()))
 				}
 
+				for filename, content := range testCase.Files {
+					if err := os.WriteFile(path.Join(workdir, filename), []byte(content), 0600); err != nil {
+						t.Fatalf("\nTest(#%d): %sFailed to write file %q, %v", i, dump(testCase.Name), filename, err)
+					}
+				}
+
 				var stdout, stderr bytes.Buffer
 
 				cmd := exec.Command(binary, testCase.Args...)
@@ -103,6 +111,18 @@ func TestBunster(t *testing.T) {
 				if testCase.Expect.Stderr != stderr.String() {
 					t.Fatalf("\nTest(#%d): %sExpected `STDERR` does not match actual value\ndiff:\n%s",
 						i, dump(testCase.Name), diff.DiffBG(testCase.Expect.Stderr, stderr.String()))
+				}
+
+				for filename, expectedContent := range testCase.Expect.Files {
+					content, err := os.ReadFile(path.Join(workdir, filename))
+					if err != nil {
+						t.Fatalf("\nTest(#%d): %sFailed to read file %q, %v", i, dump(testCase.Name), filename, err)
+					}
+
+					if string(content) != expectedContent {
+						t.Fatalf("\nTest(#%d): %sExpected file content doesn't match actual content\nfile: %s\ndiff:\n%s",
+							i, dump(testCase.Name), filename, diff.DiffBG(expectedContent, string(content)))
+					}
 				}
 			}
 		})
