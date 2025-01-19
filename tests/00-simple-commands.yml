@@ -5,3 +5,16 @@ cases:
       echo foo bar
     expect:
       stdout: "foo bar\n"
+
+  - name: quoted strings
+    script: |
+      echo "Hello"   'World'
+    expect:
+      stdout: "Hello World\n"
+
+  - name: environment variables
+    env: ["name=yassinebenaid", "job=developer"]
+    script: |
+      echo name: $name "job:$job"
+    expect:
+      stdout: "name: yassinebenaid job:developer\n"
