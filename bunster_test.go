@@ -27,6 +27,7 @@ type Test struct {
 type Case struct {
 	Name   string   `yaml:"name"`
 	Env    []string `yaml:"env"`
+	Args   []string `yaml:"args"`
 	Script string   `yaml:"script"`
 	Expect struct {
 		Stdout   string `yaml:"stdout"`
@@ -67,7 +68,7 @@ func TestBunster(t *testing.T) {
 
 				var stdout, stderr bytes.Buffer
 
-				cmd := exec.Command(binary)
+				cmd := exec.Command(binary, testCase.Args...)
 				cmd.Stdout = &stdout
 				cmd.Stderr = &stderr
 				cmd.Env = append(os.Environ(), testCase.Env...)

@@ -18,3 +18,10 @@ cases:
       echo name: $name "job:$job"
     expect:
       stdout: "name: yassinebenaid job:developer\n"
+
+  - name: positional variables
+    args: ["foo", "bar", "baz"]
+    script: |
+      echo $1$2 "$3boo"
+    expect:
+      stdout: "foobar bazboo\n"
