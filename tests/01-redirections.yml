@@ -99,3 +99,9 @@ cases:
       stdout: "hello world"
       files:
         "input.txt": "hello world"
+
+  - name: "`<<<` here string redirection"
+    script: |
+      cat <<< "Hello World"
+    expect:
+      stdout: "Hello World\n"
