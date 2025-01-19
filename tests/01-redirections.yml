@@ -20,6 +20,26 @@ cases:
         "output2.txt": "hello world\n"
         "output3.txt": ""
 
+  - name: "`>|` output redirection"
+    files:
+      "output2.txt": "foobar"
+    script: |
+      # file is created if missing
+      echo foo bar >|output.txt
+
+      # file is truncated if it exists
+      echo hello world >|output2.txt
+
+      # standard output is not redirected
+      ls non-existing-dir >|output3.txt
+    expect:
+      exit_code: 2
+      stderr: "ls: cannot access 'non-existing-dir': No such file or directory\n"
+      files:
+        "output.txt": "foo bar\n"
+        "output2.txt": "hello world\n"
+        "output3.txt": ""
+
   - name: "`>>` append redirection"
     script: |
       # file is created if missing
