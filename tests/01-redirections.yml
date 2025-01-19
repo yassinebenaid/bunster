@@ -71,3 +71,21 @@ cases:
         "all.txt": "foo bar\n"
         "all2.txt": "hello world\n"
         "all3.txt": "ls: cannot access 'non-existing-dir': No such file or directory\n"
+
+  - name: "`&>>` all output append redirection"
+    script: |
+      # file is created if missing
+      echo hello &>>all.txt
+
+      # content is appended
+      echo world &>>all.txt
+
+      # standard output redirected too
+      ls non-existing-dir &>>all.txt
+    expect:
+      exit_code: 2
+      files:
+        "all.txt": |
+          hello
+          world
+          ls: cannot access 'non-existing-dir': No such file or directory
