@@ -177,8 +177,8 @@ func cloneStubs(dst string) error {
 
 // ANSI color codes
 const (
-	colorRed   = "\033[31m"
-	colorGreen = "\033[32m"
+	colorRed   = "\033[41m"
+	colorGreen = "\033[42m"
 	colorReset = "\033[0m"
 )
 
