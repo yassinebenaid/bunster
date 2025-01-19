@@ -21,6 +21,10 @@ import (
 )
 
 type Test struct {
+	Cases []Case
+}
+
+type Case struct {
 	Name   string `yaml:"name"`
 	Script string `yaml:"script"`
 	Expect struct {
@@ -48,13 +52,13 @@ func TestBunster(t *testing.T) {
 				t.Fatalf("Failed to open test file, %v", err)
 			}
 
-			var tests []Test
+			var test Test
 
-			if err := yaml.Unmarshal(testContent, &tests); err != nil {
+			if err := yaml.Unmarshal(testContent, &test); err != nil {
 				t.Fatalf("Failed to parse test file, %v", err)
 			}
 
-			for i, test := range tests {
+			for i, test := range test.Cases {
 				binary, err := buildBinary([]byte(test.Script))
 				if err != nil {
 					t.Fatalf("\nTest(#%d): %sBuild Error: %s", i, dump(test.Name), dump(err.Error()))

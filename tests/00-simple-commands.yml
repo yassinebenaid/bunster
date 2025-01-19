@@ -1,6 +1,7 @@
 ---
-- name: simple `echo` command
-  script: |
-    echo foo bar
-  expect:
-    stdout: "foo bar\n"
+cases:
+  - name: simple `echo` command
+    script: |
+      echo foo bar
+    expect:
+      stdout: "foo bar\n"
