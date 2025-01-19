@@ -61,6 +61,11 @@ func TestBunster(t *testing.T) {
 			}
 
 			for i, testCase := range test.Cases {
+				workdir, err := setupWorkdir()
+				if err != nil {
+					t.Fatalf("Failed to setup test workdir, %v", err)
+				}
+
 				binary, err := buildBinary([]byte(testCase.Script))
 				if err != nil {
 					t.Fatalf("\nTest(#%d): %sBuild Error: %s", i, dump(testCase.Name), dump(err.Error()))
@@ -71,6 +76,7 @@ func TestBunster(t *testing.T) {
 				cmd := exec.Command(binary, testCase.Args...)
 				cmd.Stdout = &stdout
 				cmd.Stderr = &stderr
+				cmd.Dir = workdir
 				cmd.Env = append(os.Environ(), testCase.Env...)
 				if err := cmd.Run(); err != nil {
 					_, ok := err.(*exec.ExitError)
@@ -177,6 +183,18 @@ func cloneStubs(dst string) error {
 	}
 
 	return nil
+}
+
+func setupWorkdir() (string, error) {
+	wd := path.Join(os.TempDir(), "bunster-testing-workdir")
+	if err := os.RemoveAll(wd); err != nil {
+		return "", err
+	}
+
+	if err := os.MkdirAll(wd, 0700); err != nil {
+		return "", err
+	}
+	return wd, nil
 }
 
 // ANSI color codes
