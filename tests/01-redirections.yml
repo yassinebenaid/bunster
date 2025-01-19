@@ -137,3 +137,17 @@ cases:
       stdout: "foobar\nHello WorldHello World"
       files:
         "file.txt": "Hello World"
+
+  - name: "`<>` open file for reading and writing"
+    files:
+      "file.txt": "Hello World"
+    script: |
+      # read from
+      cat <>file.txt
+
+      # write to
+      cat <<<foobar 3<>file.txt >&3
+    expect:
+      stdout: "Hello World"
+      files:
+        "file.txt": "foobar\norld" # the 'W' character was removed because the content was overriden without truncation
