@@ -12,6 +12,12 @@ cases:
     expect:
       stdout: "Hello World\n"
 
+  - name: concatination
+    script: |
+      echo "Hello"'World'Foobar
+    expect:
+      stdout: "HelloWorldFoobar\n"
+
   - name: environment variables
     env: ["name=yassinebenaid", "job=developer"]
     script: |
