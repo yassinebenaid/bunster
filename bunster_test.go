@@ -21,21 +21,19 @@ import (
 )
 
 type Test struct {
-	Cases []Case
-}
-
-type Case struct {
-	Name   string            `yaml:"name"`
-	Env    []string          `yaml:"env"`
-	Args   []string          `yaml:"args"`
-	Files  map[string]string `yaml:"files"`
-	Script string            `yaml:"script"`
-	Expect struct {
-		Stdout   string            `yaml:"stdout"`
-		Stderr   string            `yaml:"stderr"`
-		ExitCode int               `yaml:"exit_code"`
-		Files    map[string]string `yaml:"files"`
-	} `yaml:"expect"`
+	Cases []struct {
+		Name   string            `yaml:"name"`
+		Env    []string          `yaml:"env"`
+		Args   []string          `yaml:"args"`
+		Files  map[string]string `yaml:"files"`
+		Script string            `yaml:"script"`
+		Expect struct {
+			Stdout   string            `yaml:"stdout"`
+			Stderr   string            `yaml:"stderr"`
+			ExitCode int               `yaml:"exit_code"`
+			Files    map[string]string `yaml:"files"`
+		} `yaml:"expect"`
+	}
 }
 
 var dump = (&godump.Dumper{
@@ -111,6 +109,15 @@ func TestBunster(t *testing.T) {
 				if testCase.Expect.Stderr != stderr.String() {
 					t.Fatalf("\nTest(#%d): %sExpected `STDERR` does not match actual value\ndiff:\n%s",
 						i, dump(testCase.Name), diff.DiffBG(testCase.Expect.Stderr, stderr.String()))
+				}
+
+				files, err := filepath.Glob(workdir + "/*")
+				if err != nil {
+					t.Fatalf("\nTest(#%d): %sFailed to glob the working directory, %v", i, dump(testCase.Name), err)
+				}
+				if len(files) != len(testCase.Expect.Files) {
+					t.Fatalf("\nTest(#%d): %sExpected files in working directory does not match actual count, files count is: %d, expected files count: %d",
+						i, dump(testCase.Name), len(files), len(testCase.Expect.Files))
 				}
 
 				for filename, expectedContent := range testCase.Expect.Files {
