@@ -2,7 +2,6 @@ package bunster_test
 
 import (
 	"bytes"
-	"fmt"
 	"io/fs"
 	"os"
 	"os/exec"
@@ -16,6 +15,7 @@ import (
 	"github.com/yassinebenaid/bunster/generator"
 	"github.com/yassinebenaid/bunster/lexer"
 	"github.com/yassinebenaid/bunster/parser"
+	"github.com/yassinebenaid/bunster/pkg/diff"
 	"github.com/yassinebenaid/godump"
 	"gopkg.in/yaml.v3"
 )
@@ -97,12 +97,12 @@ func TestBunster(t *testing.T) {
 
 				if testCase.Expect.Stdout != stdout.String() {
 					t.Fatalf("\nTest(#%d): %sExpected `STDOUT` does not match actual value\ndiff:\n%s",
-						i, dump(testCase.Name), diffStrings(testCase.Expect.Stdout, stdout.String()))
+						i, dump(testCase.Name), diff.DiffBG(testCase.Expect.Stdout, stdout.String()))
 				}
 
 				if testCase.Expect.Stderr != stderr.String() {
 					t.Fatalf("\nTest(#%d): %sExpected `STDERR` does not match actual value\ndiff:\n%s",
-						i, dump(testCase.Name), diffStrings(testCase.Expect.Stderr, stderr.String()))
+						i, dump(testCase.Name), diff.DiffBG(testCase.Expect.Stderr, stderr.String()))
 				}
 			}
 		})
@@ -204,80 +204,4 @@ func setupWorkdir() (string, error) {
 		return "", err
 	}
 	return wd, nil
-}
-
-// ANSI color codes
-const (
-	colorRed   = "\033[41m"
-	colorGreen = "\033[42m"
-	colorReset = "\033[0m"
-)
-
-// diffStrings generates a git-like diff between two strings
-func diffStrings(original, modified string) string {
-	originalLines := strings.Split(original, "\n")
-	modifiedLines := strings.Split(modified, "\n")
-
-	// Compute the LCS and the diffs
-	ops := computeDiff(originalLines, modifiedLines)
-
-	var diffOutput []string
-
-	for _, op := range ops {
-		switch op.Type {
-		case "unchanged":
-			diffOutput = append(diffOutput, fmt.Sprintf("  %s", op.Line))
-		case "delete":
-			diffOutput = append(diffOutput, fmt.Sprintf("%s- %s%s", colorRed, op.Line, colorReset))
-		case "add":
-			diffOutput = append(diffOutput, fmt.Sprintf("%s+ %s%s", colorGreen, op.Line, colorReset))
-		}
-	}
-
-	return strings.Join(diffOutput, "\n")
-}
-
-// DiffOperation represents a single diff operation
-type DiffOperation struct {
-	Type string // "add", "delete", or "unchanged"
-	Line string
-}
-
-// computeDiff calculates the diff between two slices of lines using the LCS algorithm
-func computeDiff(original, modified []string) []DiffOperation {
-	m, n := len(original), len(modified)
-	lcs := make([][]int, m+1)
-	for i := range lcs {
-		lcs[i] = make([]int, n+1)
-	}
-
-	// Build the LCS table
-	for i := 1; i <= m; i++ {
-		for j := 1; j <= n; j++ {
-			if original[i-1] == modified[j-1] {
-				lcs[i][j] = lcs[i-1][j-1] + 1
-			} else {
-				lcs[i][j] = max(lcs[i-1][j], lcs[i][j-1])
-			}
-		}
-	}
-
-	// Backtrack to determine the diff
-	var ops []DiffOperation
-	i, j := m, n
-	for i > 0 || j > 0 {
-		if i > 0 && j > 0 && original[i-1] == modified[j-1] {
-			ops = append([]DiffOperation{{Type: "unchanged", Line: original[i-1]}}, ops...)
-			i--
-			j--
-		} else if j > 0 && (i == 0 || lcs[i][j-1] >= lcs[i-1][j]) {
-			ops = append([]DiffOperation{{Type: "add", Line: modified[j-1]}}, ops...)
-			j--
-		} else {
-			ops = append([]DiffOperation{{Type: "delete", Line: original[i-1]}}, ops...)
-			i--
-		}
-	}
-
-	return ops
 }
