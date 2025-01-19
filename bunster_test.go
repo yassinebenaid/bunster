@@ -42,6 +42,8 @@ var dump = (&godump.Dumper{
 }).Sprintln
 
 func TestBunster(t *testing.T) {
+	filter := os.Getenv("FILTER")
+
 	buildWorkdir, err := prepareBuildAssets()
 	if err != nil {
 		t.Fatalf("Failed to prepare the build assets, %v", err)
@@ -51,6 +53,8 @@ func TestBunster(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to `Glob` test files, %v", err)
 	}
+
+	var testsHasRan int // number of tests that has ran
 
 	for _, testFile := range testFiles {
 		t.Run(testFile, func(t *testing.T) {
@@ -66,6 +70,12 @@ func TestBunster(t *testing.T) {
 			}
 
 			for i, testCase := range test.Cases {
+				if !strings.Contains(testCase.Name, filter) {
+					// we support filtering, someone would want to run specific tests.
+					continue
+				}
+				testsHasRan++
+
 				workdir, err := setupWorkdir()
 				if err != nil {
 					t.Fatalf("Failed to setup test workdir, %v", err)
@@ -133,6 +143,10 @@ func TestBunster(t *testing.T) {
 				}
 			}
 		})
+	}
+
+	if testsHasRan == 0 {
+		t.Fatalf("\nNo tests has ran.")
 	}
 }
 
