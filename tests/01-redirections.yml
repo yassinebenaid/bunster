@@ -120,3 +120,20 @@ cases:
       stderr: "redirected to stderr\n"
       files:
         "file.txt": "Hello World\n"
+
+  - name: "`<&` file descriptor duplication"
+    files:
+      "file.txt": "Hello World"
+    script: |
+      # duplicate the standard io
+      cat 3<<<'foobar' <&3
+
+      # duplicate an open file
+      cat 3<file.txt <&3
+
+      # redundant duplication
+      cat 3<file.txt 4<&3 0<&4
+    expect:
+      stdout: "foobar\nHello WorldHello World"
+      files:
+        "file.txt": "Hello World"
