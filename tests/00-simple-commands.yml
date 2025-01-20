@@ -45,3 +45,13 @@ cases:
       key=value key2=$key  sh -c 'echo $key $key2'
     expect:
       stdout: "value\n"
+
+  - name: calling undefined command raises an error
+    script: |
+      foobar
+      /path/to/foobar
+    expect:
+      exit_code: 1
+      stderr: |
+        "foobar": executable file not found in $PATH
+        "/path/to/foobar": no such file or directory

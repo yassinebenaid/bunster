@@ -151,3 +151,72 @@ cases:
       stdout: "Hello World"
       files:
         "file.txt": "foobar\norld" # the 'W' character was removed because the content was overriden without truncation
+
+  - name: "closing open file descriptors"
+    script: |
+      # read from
+      cat 3<<<foo 4<&3- <&4 4<&-
+    expect:
+      stdout: "foo\n"
+
+  - name: "cannot write to a file open for reading, and vise-versa"
+    runs_on: linux
+    files:
+      "file.txt": "Hello World"
+    script: |
+      # file open for reading only.
+      echo foobar 3<file.txt >&3
+
+      # here string is only intended for reading only.
+      echo foobar 3<<<foobar >&3
+
+      # file open for writing only.
+      cat 3>file2.txt <&3
+
+      # file open for appending only.
+      cat 3>>file2.txt <&3
+
+      # file open for writing only.
+      cat 3>|file2.txt <&3
+    expect:
+      exit_code: 1
+      stderr: |
+        echo: write error: Bad file descriptor
+        echo: write error: Bad file descriptor
+        cat: -: Bad file descriptor
+        cat: -: Bad file descriptor
+        cat: -: Bad file descriptor
+      files:
+        "file.txt": "Hello World"
+        "file2.txt": ""
+
+  - name: "cannot write to a file open for reading, and vise-versa"
+    runs_on: darwin
+    files:
+      "file.txt": "Hello World"
+    script: |
+      # file open for reading only.
+      echo foobar 3<file.txt >&3
+
+      # here string is only intended for reading only.
+      echo foobar 3<<<foobar >&3
+
+      # file open for writing only.
+      cat 3>file2.txt <&3
+
+      # file open for appending only.
+      cat 3>>file2.txt <&3
+
+      # file open for writing only.
+      cat 3>|file2.txt <&3
+    expect:
+      exit_code: 1
+      stderr: |
+        echo: fflush: Bad file descriptor
+        echo: fflush: Bad file descriptor
+        cat: stdin: Bad file descriptor
+        cat: stdin: Bad file descriptor
+        cat: stdin: Bad file descriptor
+      files:
+        "file.txt": "Hello World"
+        "file2.txt": ""
