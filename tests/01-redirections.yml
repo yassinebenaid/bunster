@@ -214,9 +214,9 @@ cases:
       stderr: |
         echo: write error: Bad file descriptor
         echo: write error: Bad file descriptor
-        cat: -: Bad file descriptor
-        cat: -: Bad file descriptor
-        cat: -: Bad file descriptor
+        cat: stdin: Bad file descriptor
+        cat: stdin: Bad file descriptor
+        cat: stdin: Bad file descriptor
       files:
         "file.txt": "Hello World"
         "file2.txt": ""
