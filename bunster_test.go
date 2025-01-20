@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -23,6 +24,7 @@ import (
 type Test struct {
 	Cases []struct {
 		Name   string            `yaml:"name"`
+		RunsOn string            `yaml:"runs_on"`
 		Env    []string          `yaml:"env"`
 		Args   []string          `yaml:"args"`
 		Files  map[string]string `yaml:"files"`
@@ -72,6 +74,10 @@ func TestBunster(t *testing.T) {
 			for i, testCase := range test.Cases {
 				if !strings.Contains(testCase.Name, filter) {
 					// we support filtering, someone would want to run specific tests.
+					continue
+				}
+				if testCase.RunsOn != "" && testCase.RunsOn != runtime.GOOS {
+					// some tests only run on spesific platforms.
 					continue
 				}
 				testsHasRan++
