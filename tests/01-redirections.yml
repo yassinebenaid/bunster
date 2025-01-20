@@ -212,8 +212,8 @@ cases:
     expect:
       exit_code: 1
       stderr: |
-        echo: write error: Bad file descriptor
-        echo: write error: Bad file descriptor
+        echo: fflush: Bad file descriptor
+        echo: fflush: Bad file descriptor
         cat: stdin: Bad file descriptor
         cat: stdin: Bad file descriptor
         cat: stdin: Bad file descriptor
