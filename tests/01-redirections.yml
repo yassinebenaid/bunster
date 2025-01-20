@@ -151,3 +151,10 @@ cases:
       stdout: "Hello World"
       files:
         "file.txt": "foobar\norld" # the 'W' character was removed because the content was overriden without truncation
+
+  - name: "closing open file descriptors"
+    script: |
+      # read from
+      cat 3<<<foo 4<&3- <&4
+    expect:
+      stdout: "foo\n"
