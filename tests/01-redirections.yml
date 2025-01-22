@@ -264,3 +264,24 @@ cases:
       stderr: |
         "file.txt": no such file or directory
         "/root/file.txt": permission denied
+
+  - name: "stdio files are treated specially"
+    stdin: "direct-from-stdin\n"
+    script: |
+      # direct read-write
+      echo direct-to-stdout >/dev/stdout
+      echo direct-to-stderr >/dev/stderr
+      cat </dev/stdin
+
+      # the global stdio is not affected.
+      echo foobar
+      echo foobar >&2
+      cat
+    expect:
+      stderr: |
+        direct-to-stderr
+        foobar
+      stdout: |
+        direct-to-stdout
+        direct-from-stdin
+        foobar

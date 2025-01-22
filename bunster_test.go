@@ -24,6 +24,7 @@ import (
 type Test struct {
 	Cases []struct {
 		Name   string            `yaml:"name"`
+		Stdin  string            `yaml:"stdin"`
 		RunsOn string            `yaml:"runs_on"`
 		Env    []string          `yaml:"env"`
 		Args   []string          `yaml:"args"`
@@ -101,6 +102,7 @@ func TestBunster(t *testing.T) {
 				var stdout, stderr bytes.Buffer
 
 				cmd := exec.Command(binary, testCase.Args...)
+				cmd.Stdin = strings.NewReader(testCase.Stdin)
 				cmd.Stdout = &stdout
 				cmd.Stderr = &stderr
 				cmd.Dir = workdir
