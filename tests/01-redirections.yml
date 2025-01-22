@@ -238,6 +238,9 @@ cases:
       # duplicating a non open file descriptor
       echo helloworld >&3
       echo helloworld <&3
+
+      # duplicating a closed piped-stream
+      cat 3<<<foobar 3>&- <&3
     expect:
       exit_code: 1
       stderr: |
@@ -247,5 +250,17 @@ cases:
         trying to duplicate closed file descriptor: 1
         trying to duplicate bad file descriptor: 3
         trying to duplicate bad file descriptor: 3
+        trying to duplicate closed file descriptor: 3
       files:
         "file.txt": ""
+
+  - name: "file-system errors are handled"
+    script: |
+      # file doesn't exists'
+      cat <file.txt
+      cat >/root/file.txt
+    expect:
+      exit_code: 1
+      stderr: |
+        "file.txt": no such file or directory
+        "/root/file.txt": permission denied
