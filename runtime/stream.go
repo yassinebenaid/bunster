@@ -143,6 +143,8 @@ func (sm *StreamManager) Get(fd string) (Stream, error) {
 func (sm *StreamManager) Duplicate(newfd, oldfd string) error {
 	if proxy, ok := sm.mappings[oldfd]; !ok {
 		return fmt.Errorf("trying to duplicate bad file descriptor: %s", oldfd)
+	} else if proxy.closed {
+		return fmt.Errorf("trying to duplicate closed file descriptor: %s", oldfd)
 	} else {
 		sm.mappings[newfd] = &proxyStream{
 			original: proxy.original,

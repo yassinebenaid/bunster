@@ -220,3 +220,32 @@ cases:
       files:
         "file.txt": "Hello World"
         "file2.txt": ""
+
+  - name: "cannot duplicate a bad file descriptor"
+    script: |
+      # file open and closed
+      echo helloworld 3>file.txt 3>&- >&3
+
+      # file open and closed (second syntax)
+      echo helloworld 3>file.txt 3<&- >&3
+
+      # stdout is closed
+      echo helloworld >&- 3<&1
+
+      # stdout is duplicated and closed
+      echo helloworld 3>&1- 4>&1
+
+      # duplicating a non open file descriptor
+      echo helloworld >&3
+      echo helloworld <&3
+    expect:
+      exit_code: 1
+      stderr: |
+        trying to duplicate closed file descriptor: 3
+        trying to duplicate closed file descriptor: 3
+        trying to duplicate closed file descriptor: 1
+        trying to duplicate closed file descriptor: 1
+        trying to duplicate bad file descriptor: 3
+        trying to duplicate bad file descriptor: 3
+      files:
+        "file.txt": ""
