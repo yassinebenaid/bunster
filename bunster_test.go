@@ -95,9 +95,9 @@ func TestBunster(t *testing.T) {
 				}
 
 				for filename, content := range testCase.Files {
-					permission := 0600
+					permission := uint32(0600)
 					if p, ok := testCase.FilesPermissions[filename]; ok {
-						permission = int(p)
+						permission = p
 					}
 					if err := os.WriteFile(path.Join(workdir, filename), []byte(content), fs.FileMode(permission)); err != nil {
 						t.Fatalf("\nTest(#%d): %sFailed to write file %q, %v", i, dump(testCase.Name), filename, err)
