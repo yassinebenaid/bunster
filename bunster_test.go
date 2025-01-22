@@ -23,14 +23,15 @@ import (
 
 type Test struct {
 	Cases []struct {
-		Name   string            `yaml:"name"`
-		Stdin  string            `yaml:"stdin"`
-		RunsOn string            `yaml:"runs_on"`
-		Env    []string          `yaml:"env"`
-		Args   []string          `yaml:"args"`
-		Files  map[string]string `yaml:"files"`
-		Script string            `yaml:"script"`
-		Expect struct {
+		Name             string            `yaml:"name"`
+		Stdin            string            `yaml:"stdin"`
+		RunsOn           string            `yaml:"runs_on"`
+		Env              []string          `yaml:"env"`
+		Args             []string          `yaml:"args"`
+		Files            map[string]string `yaml:"files"`
+		FilesPermissions map[string]uint32 `yaml:"files_permissions"`
+		Script           string            `yaml:"script"`
+		Expect           struct {
 			Stdout   string            `yaml:"stdout"`
 			Stderr   string            `yaml:"stderr"`
 			ExitCode int               `yaml:"exit_code"`
@@ -94,7 +95,11 @@ func TestBunster(t *testing.T) {
 				}
 
 				for filename, content := range testCase.Files {
-					if err := os.WriteFile(path.Join(workdir, filename), []byte(content), 0600); err != nil {
+					permission := 0600
+					if p, ok := testCase.FilesPermissions[filename]; ok {
+						permission = int(p)
+					}
+					if err := os.WriteFile(path.Join(workdir, filename), []byte(content), fs.FileMode(permission)); err != nil {
 						t.Fatalf("\nTest(#%d): %sFailed to write file %q, %v", i, dump(testCase.Name), filename, err)
 					}
 				}
@@ -133,7 +138,7 @@ func TestBunster(t *testing.T) {
 				if err != nil {
 					t.Fatalf("\nTest(#%d): %sFailed to glob the working directory, %v", i, dump(testCase.Name), err)
 				}
-				if len(files) != len(testCase.Expect.Files) {
+				if testCase.Expect.Files != nil && len(files) != len(testCase.Expect.Files) {
 					t.Fatalf("\nTest(#%d): %sExpected files in working directory does not match actual count, files count is: %d, expected files count: %d",
 						i, dump(testCase.Name), len(files), len(testCase.Expect.Files))
 				}
