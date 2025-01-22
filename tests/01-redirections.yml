@@ -220,3 +220,73 @@ cases:
       files:
         "file.txt": "Hello World"
         "file2.txt": ""
+
+  - name: "cannot duplicate a bad file descriptor"
+    script: |
+      # file open and closed
+      echo helloworld 3>file.txt 3>&- >&3
+
+      # file open and closed (second syntax)
+      echo helloworld 3>file.txt 3<&- >&3
+
+      # stdout is closed
+      echo helloworld >&- 3<&1
+
+      # stdout is duplicated and closed
+      echo helloworld 3>&1- 4>&1
+
+      # duplicating a non open file descriptor
+      echo helloworld >&3
+      echo helloworld <&3
+
+      # duplicating a closed piped-stream
+      cat 3<<<foobar 3>&- <&3
+    expect:
+      exit_code: 1
+      stderr: |
+        trying to duplicate closed file descriptor: 3
+        trying to duplicate closed file descriptor: 3
+        trying to duplicate closed file descriptor: 1
+        trying to duplicate closed file descriptor: 1
+        trying to duplicate bad file descriptor: 3
+        trying to duplicate bad file descriptor: 3
+        trying to duplicate closed file descriptor: 3
+      files:
+        "file.txt": ""
+
+  - name: "file-system errors are handled"
+    files:
+      "non-permitted-file.txt": ""
+    files_permissions:
+      "non-permitted-file.txt": 0000
+    script: |
+      # file doesn't exists'
+      cat <file.txt
+
+      cat >non-permitted-file.txt
+    expect:
+      exit_code: 1
+      stderr: |
+        "file.txt": no such file or directory
+        "non-permitted-file.txt": permission denied
+
+  - name: "stdio files are treated specially"
+    stdin: "direct-from-stdin\n"
+    script: |
+      # direct read-write
+      echo direct-to-stdout >/dev/stdout
+      echo direct-to-stderr >/dev/stderr
+      cat </dev/stdin
+
+      # the global stdio is not affected.
+      echo foobar
+      echo foobar >&2
+      cat
+    expect:
+      stderr: |
+        direct-to-stderr
+        foobar
+      stdout: |
+        direct-to-stdout
+        direct-from-stdin
+        foobar

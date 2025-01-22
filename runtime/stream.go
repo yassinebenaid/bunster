@@ -102,7 +102,11 @@ type StreamManager struct {
 func (sm *StreamManager) OpenStream(name string, flag int) (Stream, error) {
 	switch name {
 	case "/dev/stdin":
-		return sm.Get("0")
+		proxy, ok := sm.mappings["0"]
+		if !ok {
+			return nil, fmt.Errorf("file descriptor %q is not open", "0")
+		}
+		return &proxyStream{original: proxy.original}, nil
 	case "/dev/stdout":
 		proxy, ok := sm.mappings["1"]
 		if !ok {
@@ -110,7 +114,11 @@ func (sm *StreamManager) OpenStream(name string, flag int) (Stream, error) {
 		}
 		return &proxyStream{original: proxy.original}, nil
 	case "/dev/stderr":
-		return sm.Get("2")
+		proxy, ok := sm.mappings["2"]
+		if !ok {
+			return nil, fmt.Errorf("file descriptor %q is not open", "2")
+		}
+		return &proxyStream{original: proxy.original}, nil
 	default:
 		return os.OpenFile(name, flag, 0644)
 	}
@@ -143,6 +151,8 @@ func (sm *StreamManager) Get(fd string) (Stream, error) {
 func (sm *StreamManager) Duplicate(newfd, oldfd string) error {
 	if proxy, ok := sm.mappings[oldfd]; !ok {
 		return fmt.Errorf("trying to duplicate bad file descriptor: %s", oldfd)
+	} else if proxy.closed {
+		return fmt.Errorf("trying to duplicate closed file descriptor: %s", oldfd)
 	} else {
 		sm.mappings[newfd] = &proxyStream{
 			original: proxy.original,
