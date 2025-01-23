@@ -446,7 +446,8 @@ var ifCommandTests = []testCase{
 		# comment
 		cmd # comment
 		# comment
-	fi`, ast.Script{
+	fi # comment
+	`, ast.Script{
 		ast.If{
 			Head: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
