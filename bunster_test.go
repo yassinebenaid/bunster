@@ -23,15 +23,14 @@ import (
 
 type Test struct {
 	Cases []struct {
-		Name             string            `yaml:"name"`
-		Stdin            string            `yaml:"stdin"`
-		RunsOn           string            `yaml:"runs_on"`
-		Env              []string          `yaml:"env"`
-		Args             []string          `yaml:"args"`
-		Files            map[string]string `yaml:"files"`
-		FilesPermissions map[string]uint32 `yaml:"files_permissions"`
-		Script           string            `yaml:"script"`
-		Expect           struct {
+		Name   string            `yaml:"name"`
+		Stdin  string            `yaml:"stdin"`
+		RunsOn string            `yaml:"runs_on"`
+		Env    []string          `yaml:"env"`
+		Args   []string          `yaml:"args"`
+		Files  map[string]string `yaml:"files"`
+		Script string            `yaml:"script"`
+		Expect struct {
 			Stdout   string            `yaml:"stdout"`
 			Stderr   string            `yaml:"stderr"`
 			ExitCode int               `yaml:"exit_code"`
@@ -95,11 +94,7 @@ func TestBunster(t *testing.T) {
 				}
 
 				for filename, content := range testCase.Files {
-					permission := uint32(0600)
-					if p, ok := testCase.FilesPermissions[filename]; ok {
-						permission = p
-					}
-					if err := os.WriteFile(path.Join(workdir, filename), []byte(content), fs.FileMode(permission)); err != nil {
+					if err := os.WriteFile(path.Join(workdir, filename), []byte(content), 0600); err != nil {
 						t.Fatalf("\nTest(#%d): %sFailed to write file %q, %v", i, dump(testCase.Name), filename, err)
 					}
 				}
