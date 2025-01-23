@@ -15,4 +15,5 @@ linters:
     - gosec # Inspects source code for security problems.	
     - wastedassign # Finds wasted assignment statements.	 	
     - usestdlibvars # A linter that detect the possibility to use variables/constants from the Go standard library.	
+    - reassign # Checks that package variables are not reassigned.	
   disable:
