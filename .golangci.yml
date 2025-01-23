@@ -16,4 +16,5 @@ linters:
     - wastedassign # Finds wasted assignment statements.	 	
     - usestdlibvars # A linter that detect the possibility to use variables/constants from the Go standard library.	
     - reassign # Checks that package variables are not reassigned.	
+    - predeclared # Find code that shadows one of Go's predeclared identifiers.	
   disable:
