@@ -14,5 +14,5 @@ linters:
     - gofmt  # Gofmt checks whether code was gofmt-ed. By default this tool runs with -s option to check for code simplification.
     - gosec # Inspects source code for security problems.	
     - wastedassign # Finds wasted assignment statements.	 	
-    - varnamelen # Checks that the length of a variable's name matches its scope.
+    - usestdlibvars # A linter that detect the possibility to use variables/constants from the Go standard library.	
   disable:
