@@ -81,8 +81,6 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 }
 
 func copyFileMode(dPath, sPath string) error {
-	var err error = nil
-
 	sFile, err := os.Open(sPath)
 	if err != nil {
 		return err
@@ -95,7 +93,7 @@ func copyFileMode(dPath, sPath string) error {
 	}
 	defer dFile.Close()
 
-	if _, err = io.Copy(dFile, sFile); err != nil {
+	if _, err := io.Copy(dFile, sFile); err != nil {
 		return err
 	}
 
@@ -104,11 +102,11 @@ func copyFileMode(dPath, sPath string) error {
 		return err
 	}
 
-	if err = os.Chmod(dPath, sStat.Mode()); err != nil {
+	if err := os.Chmod(dPath, sStat.Mode()); err != nil {
 		return err
 	}
 
-	if err = dFile.Sync(); err != nil {
+	if err := dFile.Sync(); err != nil {
 		return err
 	}
 
