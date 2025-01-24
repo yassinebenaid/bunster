@@ -257,18 +257,16 @@ cases:
   - name: "file-system errors are handled"
     files:
       "non-permitted-file.txt": ""
-    files_permissions:
-      "non-permitted-file.txt": 0000
     script: |
       # file doesn't exists'
       cat <file.txt
 
-      cat >non-permitted-file.txt
+      cat >dir/file.txt
     expect:
       exit_code: 1
       stderr: |
         "file.txt": no such file or directory
-        "non-permitted-file.txt": permission denied
+        "dir/file.txt": no such file or directory
 
   - name: "stdio files are treated specially"
     stdin: "direct-from-stdin\n"

@@ -257,13 +257,19 @@ func (p *parser) parseIf() ast.Statement {
 	}
 
 	for p.curr.Type != token.THEN && p.curr.Type != token.FI && p.curr.Type != token.EOF {
-		cmdList := p.parseCommandList()
-		if cmdList == nil {
-			return nil
-		}
-		cond.Head = append(cond.Head, cmdList)
-		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
-			p.proceed()
+		if p.curr.Type == token.HASH {
+			for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+				p.proceed()
+			}
+		} else {
+			cmdList := p.parseCommandList()
+			if cmdList == nil {
+				return nil
+			}
+			cond.Head = append(cond.Head, cmdList)
+			if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
+				p.proceed()
+			}
 		}
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
@@ -284,13 +290,19 @@ func (p *parser) parseIf() ast.Statement {
 	}
 
 	for p.curr.Type != token.FI && p.curr.Type != token.ELIF && p.curr.Type != token.ELSE && p.curr.Type != token.EOF {
-		cmdList := p.parseCommandList()
-		if cmdList == nil {
-			return nil
-		}
-		cond.Body = append(cond.Body, cmdList)
-		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
-			p.proceed()
+		if p.curr.Type == token.HASH {
+			for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+				p.proceed()
+			}
+		} else {
+			cmdList := p.parseCommandList()
+			if cmdList == nil {
+				return nil
+			}
+			cond.Body = append(cond.Body, cmdList)
+			if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
+				p.proceed()
+			}
 		}
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
@@ -311,13 +323,19 @@ func (p *parser) parseIf() ast.Statement {
 		var elif ast.Elif
 
 		for p.curr.Type != token.THEN && p.curr.Type != token.FI && p.curr.Type != token.EOF {
-			cmdList := p.parseCommandList()
-			if cmdList == nil {
-				return nil
-			}
-			elif.Head = append(elif.Head, cmdList)
-			if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
-				p.proceed()
+			if p.curr.Type == token.HASH {
+				for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+					p.proceed()
+				}
+			} else {
+				cmdList := p.parseCommandList()
+				if cmdList == nil {
+					return nil
+				}
+				elif.Head = append(elif.Head, cmdList)
+				if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
+					p.proceed()
+				}
 			}
 			for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 				p.proceed()
@@ -338,13 +356,19 @@ func (p *parser) parseIf() ast.Statement {
 		}
 
 		for p.curr.Type != token.FI && p.curr.Type != token.ELIF && p.curr.Type != token.ELSE && p.curr.Type != token.EOF {
-			cmdList := p.parseCommandList()
-			if cmdList == nil {
-				return nil
-			}
-			elif.Body = append(elif.Body, cmdList)
-			if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
-				p.proceed()
+			if p.curr.Type == token.HASH {
+				for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+					p.proceed()
+				}
+			} else {
+				cmdList := p.parseCommandList()
+				if cmdList == nil {
+					return nil
+				}
+				elif.Body = append(elif.Body, cmdList)
+				if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
+					p.proceed()
+				}
 			}
 			for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 				p.proceed()
@@ -365,13 +389,19 @@ func (p *parser) parseIf() ast.Statement {
 			p.proceed()
 		}
 		for p.curr.Type != token.FI && p.curr.Type != token.EOF {
-			cmdList := p.parseCommandList()
-			if cmdList == nil {
-				return nil
-			}
-			cond.Alternate = append(cond.Alternate, cmdList)
-			if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
-				p.proceed()
+			if p.curr.Type == token.HASH {
+				for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+					p.proceed()
+				}
+			} else {
+				cmdList := p.parseCommandList()
+				if cmdList == nil {
+					return nil
+				}
+				cond.Alternate = append(cond.Alternate, cmdList)
+				if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
+					p.proceed()
+				}
 			}
 			for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 				p.proceed()
@@ -391,6 +421,12 @@ func (p *parser) parseIf() ast.Statement {
 	p.proceed()
 
 	p.parseCompoundRedirections(&cond.Redirections)
+
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)

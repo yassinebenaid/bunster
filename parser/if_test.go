@@ -426,6 +426,50 @@ var ifCommandTests = []testCase{
 			},
 		},
 	}},
+	{`if
+		# comment
+		cmd; # comment
+		# comment
+	 then # comment
+		# comment
+		cmd; # comment
+		# comment
+	elif
+		# comment
+		cmd; # comment
+		# comment
+	then # comment
+		# comment
+		cmd; # comment
+		# comment
+	else # comment
+		# comment
+		cmd # comment
+		# comment
+	fi # comment
+	`, ast.Script{
+		ast.If{
+			Head: []ast.Statement{
+				ast.Command{Name: ast.Word("cmd")},
+			},
+			Body: []ast.Statement{
+				ast.Command{Name: ast.Word("cmd")},
+			},
+			Elifs: []ast.Elif{
+				{
+					Head: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+					Body: []ast.Statement{
+						ast.Command{Name: ast.Word("cmd")},
+					},
+				},
+			},
+			Alternate: []ast.Statement{
+				ast.Command{Name: ast.Word("cmd")},
+			},
+		},
+	}},
 }
 
 var ifCommandErrorHandlingCases = []errorHandlingTestCase{
