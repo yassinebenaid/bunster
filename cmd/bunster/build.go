@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"io/fs"
 	"os"
 	"os/exec"
@@ -72,11 +73,44 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	if err := os.Rename(path.Join(wd, "build.bin"), cmd.String("o")); err != nil {
+	if err := copyFileMode(cmd.String("o"), path.Join(wd, "build.bin")); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func copyFileMode(dPath, sPath string) error {
+	sFile, err := os.Open(sPath)
+	if err != nil {
+		return err
+	}
+	defer sFile.Close()
+
+	dFile, err := os.Create(dPath)
+	if err != nil {
+		return err
+	}
+	defer dFile.Close()
+
+	if _, err := io.Copy(dFile, sFile); err != nil {
+		return err
+	}
+
+	sStat, err := sFile.Stat()
+	if err != nil {
+		return err
+	}
+
+	if err := os.Chmod(dPath, sStat.Mode()); err != nil {
+		return err
+	}
+
+	if err := dFile.Sync(); err != nil {
+		return err
+	}
+
+	return err
 }
 
 func cloneRuntime(dst string) error {
