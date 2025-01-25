@@ -722,6 +722,43 @@ var loopsTests = []testCase{
 		},
 	}},
 
+	{`
+	while # comment
+		cmd # comment
+		# comment
+	do # comment
+		cmd2 # comment
+		# comment
+	done # comment
+
+	until # comment
+		cmd # comment
+		# comment
+	do # comment
+		cmd2 # comment
+		# comment
+	done # comment
+	`, ast.Script{
+		ast.Loop{
+			Negate: false,
+			Head: []ast.Statement{
+				ast.Command{Name: ast.Word("cmd")},
+			},
+			Body: []ast.Statement{
+				ast.Command{Name: ast.Word("cmd2")},
+			},
+		},
+		ast.Loop{
+			Negate: true,
+			Head: []ast.Statement{
+				ast.Command{Name: ast.Word("cmd")},
+			},
+			Body: []ast.Statement{
+				ast.Command{Name: ast.Word("cmd2")},
+			},
+		},
+	}},
+
 	//
 	// FOR LOOPS
 	//
