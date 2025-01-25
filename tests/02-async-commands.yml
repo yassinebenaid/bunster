@@ -1,0 +1,27 @@
+---
+cases:
+  - name: "commands are put to run in background, we don't wait them to finish"
+    timeout: 1
+    script: |
+      sleep 3 &
+
+  - name: "can put a pipeline to run in background"
+    timeout: 1
+    script: |
+      sleep 10 | sleep 10 &
+
+  - name: "can put a list to run in background"
+    timeout: 1
+    script: |
+      sleep 2 && echo foobar &
+
+  - name: "we can wait for commands in background"
+    timeout: 3
+    script: |
+      sleep 1 && echo foobar &
+      echo bazboo
+      wait
+    expect:
+      stdout: |
+        bazboo
+        foobar

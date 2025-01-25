@@ -2,6 +2,7 @@ package bunster_test
 
 import (
 	"bytes"
+	"context"
 	"io/fs"
 	"os"
 	"os/exec"
@@ -10,6 +11,7 @@ import (
 	"runtime"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/yassinebenaid/bunster"
 	"github.com/yassinebenaid/bunster/analyser"
@@ -23,14 +25,15 @@ import (
 
 type Test struct {
 	Cases []struct {
-		Name   string            `yaml:"name"`
-		Stdin  string            `yaml:"stdin"`
-		RunsOn string            `yaml:"runs_on"`
-		Env    []string          `yaml:"env"`
-		Args   []string          `yaml:"args"`
-		Files  map[string]string `yaml:"files"`
-		Script string            `yaml:"script"`
-		Expect struct {
+		Name    string            `yaml:"name"`
+		Stdin   string            `yaml:"stdin"`
+		RunsOn  string            `yaml:"runs_on"`
+		Env     []string          `yaml:"env"`
+		Args    []string          `yaml:"args"`
+		Files   map[string]string `yaml:"files"`
+		Timeout int               `yaml:"timeout"`
+		Script  string            `yaml:"script"`
+		Expect  struct {
 			Stdout   string            `yaml:"stdout"`
 			Stderr   string            `yaml:"stderr"`
 			ExitCode int               `yaml:"exit_code"`
@@ -101,19 +104,29 @@ func TestBunster(t *testing.T) {
 
 				var stdout, stderr bytes.Buffer
 
-				cmd := exec.Command(binary, testCase.Args...)
+				seconds := testCase.Timeout
+				if seconds == 0 {
+					seconds = 1
+				}
+				timeout, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(seconds))
+				defer cancel()
+
+				cmd := exec.CommandContext(timeout, binary, testCase.Args...)
 				cmd.Stdin = strings.NewReader(testCase.Stdin)
 				cmd.Stdout = &stdout
 				cmd.Stderr = &stderr
 				cmd.Dir = workdir
 				cmd.Env = append(os.Environ(), testCase.Env...)
 				if err := cmd.Run(); err != nil {
-					_, ok := err.(*exec.ExitError)
-					if !ok {
+					switch err.(type) {
+					case *exec.ExitError:
+						if string(err.Error()) == "signal: killed" {
+							t.Fatalf("\nTest(#%d): %sRuntime Error: %s", i, dump(testCase.Name), dump(err.Error()))
+						}
+					default:
 						t.Fatalf("\nTest(#%d): %sRuntime Error: %s", i, dump(testCase.Name), dump(err.Error()))
 					}
 				}
-
 				if testCase.Expect.ExitCode != cmd.ProcessState.ExitCode() {
 					t.Fatalf("\nTest(#%d): %sExpected exit code of '%d', got '%d'",
 						i, dump(testCase.Name), testCase.Expect.ExitCode, cmd.ProcessState.ExitCode())
