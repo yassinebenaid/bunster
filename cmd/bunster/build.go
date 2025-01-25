@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"io"
 	"io/fs"
 	"os"
 	"os/exec"
@@ -64,7 +63,16 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 	// we ignore the error, because this is just an optional step that shouldn't stop us from building the binary
 	_ = exec.Command("gofmt", "-w", wd).Run()
 
-	gocmd := exec.Command("go", "build", "-o", "build.bin")
+	destination := cmd.String("o")
+	if !path.IsAbs(destination) {
+		currWorkdir, err := os.Getwd()
+		if err != nil {
+			return err
+		}
+		destination = path.Join(currWorkdir, destination)
+	}
+
+	gocmd := exec.Command("go", "build", "-o", destination)
 	gocmd.Stdin = os.Stdin
 	gocmd.Stdout = os.Stdout
 	gocmd.Stderr = os.Stderr
@@ -73,44 +81,7 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	if err := copyFileMode(cmd.String("o"), path.Join(wd, "build.bin")); err != nil {
-		return err
-	}
-
 	return nil
-}
-
-func copyFileMode(dPath, sPath string) error {
-	sFile, err := os.Open(sPath)
-	if err != nil {
-		return err
-	}
-	defer sFile.Close()
-
-	dFile, err := os.Create(dPath)
-	if err != nil {
-		return err
-	}
-	defer dFile.Close()
-
-	if _, err := io.Copy(dFile, sFile); err != nil {
-		return err
-	}
-
-	sStat, err := sFile.Stat()
-	if err != nil {
-		return err
-	}
-
-	if err := os.Chmod(dPath, sStat.Mode()); err != nil {
-		return err
-	}
-
-	if err := dFile.Sync(); err != nil {
-		return err
-	}
-
-	return err
 }
 
 func cloneRuntime(dst string) error {
