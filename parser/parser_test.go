@@ -296,7 +296,7 @@ var testCases = []struct {
 				{Command: ast.Command{Name: ast.Word("cmd5")}, Stderr: false},
 			},
 		}},
-		{`wait`, ast.Script{ast.Wait{}}},
+		{`wait # comment`, ast.Script{ast.Wait{}}},
 	}},
 	{"Loops", loopsTests},
 	{"If Command", ifCommandTests},

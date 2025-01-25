@@ -74,6 +74,12 @@ func (p *parser) parseBreak() ast.Statement {
 		p.proceed()
 	}
 
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
+
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
 		return nil
@@ -88,6 +94,12 @@ func (p *parser) parseContinue() ast.Statement {
 		p.proceed()
 	}
 
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
+
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
 		return nil
@@ -100,6 +112,12 @@ func (p *parser) parseWait() ast.Statement {
 
 	if p.curr.Type == token.BLANK {
 		p.proceed()
+	}
+
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
 	}
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {

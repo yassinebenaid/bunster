@@ -1042,7 +1042,7 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
-	{`break`, ast.Script{
+	{`break # comment`, ast.Script{
 		ast.Break(1),
 	}},
 
@@ -1092,7 +1092,7 @@ var loopsTests = []testCase{
 			},
 		},
 	}},
-	{`continue`, ast.Script{
+	{`continue # comment`, ast.Script{
 		ast.Continue(1),
 	}},
 }
