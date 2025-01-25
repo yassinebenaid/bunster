@@ -144,6 +144,8 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 		a.analysePipeline(v)
 	case ast.BackgroundConstruction:
 		a.analyseStatement(v.Statement)
+	case ast.Wait:
+		//TODO: ensure 'wait' is not invokes when no commands are put in background.
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
@@ -182,6 +184,7 @@ func (s SemanticError) Error() string {
 
 var (
 	ErrorUsingShellParametersWithinPipeline = "using shell parameters within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
+	ErrorUsingWaitWithinPipeline            = "using 'wait' command within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
 )
 
 func (a *analyser) analysePipeline(p ast.Pipeline) {
@@ -189,6 +192,8 @@ func (a *analyser) analysePipeline(p ast.Pipeline) {
 		switch cmd.Command.(type) {
 		case ast.ParameterAssignement:
 			a.report(ErrorUsingShellParametersWithinPipeline)
+		case ast.Wait:
+			a.report(ErrorUsingWaitWithinPipeline)
 		default:
 			a.analyseStatement(cmd.Command)
 		}

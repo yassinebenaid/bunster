@@ -12,3 +12,7 @@ func (g *generator) handleBreak(buf *InstructionBuffer, _ ast.Break) {
 func (g *generator) handleContinue(buf *InstructionBuffer, _ ast.Continue) {
 	buf.add(ir.Literal("continue\n"))
 }
+
+func (g *generator) handleWait(buf *InstructionBuffer, _ ast.Wait) {
+	buf.add(ir.Literal("shell.WaitGroup.Wait()\n"))
+}

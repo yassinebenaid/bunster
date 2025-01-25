@@ -67,6 +67,8 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, ct
 		g.handleLoop(buf, v, ctx)
 	case ast.BackgroundConstruction:
 		g.handleBackgroundConstruction(buf, v)
+	case ast.Wait:
+		g.handleWait(buf, v)
 	default:
 		panic(fmt.Sprintf("Unsupported statement: %T", v))
 	}
@@ -314,6 +316,7 @@ func (g *generator) handleBackgroundConstruction(buf *InstructionBuffer, b ast.B
 	buf.add(ir.Literal("shell.WaitGroup.Add(1)\n"))
 
 	var body InstructionBuffer
+	body.add(ir.Literal("defer shell.WaitGroup.Done()\n"))
 	g.generate(&body, b.Statement, &context{})
 	buf.add(ir.Gorouting(body))
 }
