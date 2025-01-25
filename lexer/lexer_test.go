@@ -46,6 +46,7 @@ func TestLexer(t *testing.T) {
 		{`export`, []token.Token{{Type: token.EXPORT, Literal: `export`, Line: 1, Position: 1}}},
 		{`readonly`, []token.Token{{Type: token.READONLY, Literal: `readonly`, Line: 1, Position: 1}}},
 		{`unset`, []token.Token{{Type: token.UNSET, Literal: `unset`, Line: 1, Position: 1}}},
+		{`wait`, []token.Token{{Type: token.WAIT, Literal: `wait`, Line: 1, Position: 1}}},
 
 		// symbols
 		{`+`, []token.Token{{Type: token.PLUS, Literal: `+`, Line: 1, Position: 1}}},

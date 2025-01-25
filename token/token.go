@@ -38,6 +38,7 @@ const (
 	EXPORT   // `export`
 	READONLY // `readonly`
 	UNSET    // `unset`
+	WAIT     // `wait`
 
 	PLUS                 // `+`
 	MINUS                // `-`
@@ -154,6 +155,7 @@ var Keywords = map[string]TokenType{
 	"export":   EXPORT,
 	"readonly": READONLY,
 	"unset":    UNSET,
+	"wait":     WAIT,
 }
 
 func (t Token) String() string {
