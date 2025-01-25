@@ -625,6 +625,12 @@ func (p *parser) parseGroup() ast.Statement {
 
 	p.parseCompoundRedirections(&group.Redirections)
 
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
+
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
 		return nil
