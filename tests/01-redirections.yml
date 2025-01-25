@@ -222,6 +222,7 @@ cases:
         "file2.txt": ""
 
   - name: "cannot duplicate a bad file descriptor"
+    runs_on: linux
     script: |
       # file open and closed
       echo helloworld 3>file.txt 3>&- >&3
@@ -251,6 +252,43 @@ cases:
         echo: write error: Bad file descriptor
         echo: write error: Bad file descriptor
         echo: write error: Bad file descriptor
+        trying to duplicate bad file descriptor: 3
+        trying to duplicate bad file descriptor: 3
+        grep: (standard input): Bad file descriptor
+      files:
+        "file.txt": ""
+
+  - name: "cannot duplicate a bad file descriptor"
+    runs_on: darwin
+    script: |
+      # file open and closed
+      echo helloworld 3>file.txt 3>&- >&3
+
+      # file open and closed (second syntax)
+      echo helloworld 3>file.txt 3<&- >&3
+
+      # stdout is closed
+      echo helloworld >&- 3<&1
+
+      # stdout is duplicated and closed
+      echo helloworld 3>&1- 4>&1
+
+      # duplicating a non open file descriptor
+      echo helloworld >&3
+      echo helloworld <&3
+
+      # duplicating a closed piped-stream
+      grep foo 3<<<foobar 3>&- <&3
+
+      # closing a file descriptor is not an issue until it is used
+      true <&- >&- 2>&-
+    expect:
+      exit_code: 0
+      stderr: |
+        echo: fflush: Bad file descriptor
+        echo: fflush: Bad file descriptor
+        echo: fflush: Bad file descriptor
+        echo: fflush: Bad file descriptor
         trying to duplicate bad file descriptor: 3
         trying to duplicate bad file descriptor: 3
         grep: (standard input): Bad file descriptor
