@@ -79,26 +79,12 @@ func (s *proxyStream) Close() error {
 func (s *proxyStream) Read(p []byte) (n int, err error) { return 0, nil }
 
 func (s *proxyStream) Write(p []byte) (n int, err error) { return 0, nil }
-func (s *proxyStream) getOriginal() (Stream, error) {
+func (s *proxyStream) getOriginal() Stream {
 	if o, ok := s.original.(*proxyStream); ok {
 		return o.getOriginal()
 	}
 
-	return s.original, nil
-}
-
-type closeStream struct{}
-
-func (s *closeStream) Close() error {
-	return fmt.Errorf("cannot close closed stream")
-}
-
-func (s *closeStream) Read(p []byte) (n int, err error) {
-	return 0, fmt.Errorf("cannot read from closed stream")
-}
-
-func (s *closeStream) Write(p []byte) (n int, err error) {
-	return 0, fmt.Errorf("cannot write to closed stream")
+	return s.original
 }
 
 type StreamManager struct {
@@ -148,11 +134,7 @@ func (sm *StreamManager) Get(fd string) (Stream, error) {
 		return nil, fmt.Errorf("file descriptor %q is not open", fd)
 	}
 
-	if stream, err := proxy.getOriginal(); err != nil {
-		return nil, fmt.Errorf("bad file descriptor %q, %w", fd, err)
-	} else {
-		return stream, nil
-	}
+	return proxy.getOriginal(), nil
 }
 
 func (sm *StreamManager) Duplicate(newfd, oldfd string) error {
