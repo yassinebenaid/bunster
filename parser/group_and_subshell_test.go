@@ -139,15 +139,12 @@ var groupAndSubshellTests = []testCase{
 	}},
 	{`{# comment
 		#comment
-
 		#comment
 		cmd # comment
 		#comment
-
-		cmd2
-
+		cmd2 #comment
 		#comment
-		}`, ast.Script{
+		} #comment`, ast.Script{
 		ast.Group{
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
@@ -292,15 +289,12 @@ var groupAndSubshellTests = []testCase{
 	}},
 	{`(# comment
 		#comment
-
 		#comment
 		cmd # comment
 		#comment
-
-		cmd2
-
+		cmd2 #comment
 		#comment
-		)`, ast.Script{
+		) #comment`, ast.Script{
 		ast.SubShell{
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
