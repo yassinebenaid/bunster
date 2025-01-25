@@ -13,6 +13,8 @@ func (p *parser) getBuiltinParser() func() ast.Statement {
 		return p.parseContinue
 	case token.FUNCTION:
 		return p.parseFunction
+	case token.WAIT:
+		return p.parseWait
 	case token.THEN, token.ELIF, token.ELSE, token.FI, token.DO, token.DONE, token.ESAC:
 		p.error("`%s` is a reserved keyword, cannot be used a command name", p.curr)
 	}
@@ -72,6 +74,12 @@ func (p *parser) parseBreak() ast.Statement {
 		p.proceed()
 	}
 
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
+
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
 		return nil
@@ -86,9 +94,35 @@ func (p *parser) parseContinue() ast.Statement {
 		p.proceed()
 	}
 
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
+
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
 		return nil
 	}
 	return ast.Continue(1)
+}
+
+func (p *parser) parseWait() ast.Statement {
+	p.proceed()
+
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
+
+	if !p.isControlToken() && p.curr.Type != token.EOF {
+		p.error("unexpected token `%s`", p.curr)
+		return nil
+	}
+	return ast.Wait{}
 }

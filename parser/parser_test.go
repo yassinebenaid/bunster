@@ -296,6 +296,7 @@ var testCases = []struct {
 				{Command: ast.Command{Name: ast.Word("cmd5")}, Stderr: false},
 			},
 		}},
+		{`wait # comment`, ast.Script{ast.Wait{}}},
 	}},
 	{"Loops", loopsTests},
 	{"If Command", ifCommandTests},
@@ -387,6 +388,9 @@ var errorHandlingTestCases = []struct {
 	{"Quotes", []errorHandlingTestCase{
 		0: {`cmd 'foo bar`, `syntax error: a closing single quote is missing. (line: 1, column: 13)`},
 		1: {`cmd "foo bar'`, `syntax error: a closing double quote is missing. (line: 1, column: 14)`},
+	}},
+	{"Async commands", []errorHandlingTestCase{
+		0: {`wait arg`, "syntax error: unexpected token `arg`. (line: 1, column: 6)"},
 	}},
 	{"Redirections", redirectionErrorHandlingCases},
 	{"Pipes", pipesErrorHandlingCases},
