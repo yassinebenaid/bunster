@@ -64,16 +64,21 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 	// we ignore the error, because this is just an optional step that shouldn't stop us from building the binary
 	_ = exec.Command("gofmt", "-w", wd).Run()
 
-	gocmd := exec.Command("go", "build", "-o", "build.bin")
+	destination := cmd.String("o")
+	if !path.IsAbs(destination) {
+		currWorkdir, err := os.Getwd()
+		if err != nil {
+			return err
+		}
+		destination = path.Join(currWorkdir, destination)
+	}
+
+	gocmd := exec.Command("go", "build", "-o", destination)
 	gocmd.Stdin = os.Stdin
 	gocmd.Stdout = os.Stdout
 	gocmd.Stderr = os.Stderr
 	gocmd.Dir = wd
 	if err := gocmd.Run(); err != nil {
-		return err
-	}
-
-	if err := copyFileMode(cmd.String("o"), path.Join(wd, "build.bin")); err != nil {
 		return err
 	}
 
