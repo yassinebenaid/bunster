@@ -312,11 +312,17 @@ func (g *generator) handleParameterAssignment(buf *InstructionBuffer, p ast.Para
 }
 
 func (g *generator) handleBackgroundConstruction(buf *InstructionBuffer, b ast.BackgroundConstruction) {
-	buf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
-	buf.add(ir.Literal("shell.WaitGroup.Add(1)\n"))
+	var scope InstructionBuffer
+
+	scope.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
+	scope.add(ir.Literal("shell.WaitGroup.Add(1)\n"))
+	scope.add(ir.Declare{Name: "done", Value: ir.Literal("shell.WaitGroup.Done")})
+	scope.add(ir.CloneShell{})
 
 	var body InstructionBuffer
-	body.add(ir.Literal("defer shell.WaitGroup.Done()\n"))
+	body.add(ir.Literal("defer done()\n"))
 	g.generate(&body, b.Statement, &context{})
-	buf.add(ir.Gorouting(body))
+	scope.add(ir.Gorouting(body))
+
+	buf.add(ir.Scope(scope))
 }
