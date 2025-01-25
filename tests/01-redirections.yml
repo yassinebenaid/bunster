@@ -240,17 +240,20 @@ cases:
       echo helloworld <&3
 
       # duplicating a closed piped-stream
-      cat 3<<<foobar 3>&- <&3
+      grep foo 3<<<foobar 3>&- <&3
+
+      # closing a file descriptor is not an issue until it is used
+      true <&- >&- 2>&-
     expect:
-      exit_code: 1
+      exit_code: 0
       stderr: |
-        trying to duplicate closed file descriptor: 3
-        trying to duplicate closed file descriptor: 3
-        trying to duplicate closed file descriptor: 1
-        trying to duplicate closed file descriptor: 1
+        echo: write error: Bad file descriptor
+        echo: write error: Bad file descriptor
+        echo: write error: Bad file descriptor
+        echo: write error: Bad file descriptor
         trying to duplicate bad file descriptor: 3
         trying to duplicate bad file descriptor: 3
-        trying to duplicate closed file descriptor: 3
+        grep: (standard input): Bad file descriptor
       files:
         "file.txt": ""
 

@@ -68,14 +68,11 @@ func NewBuffer(s string, readonly bool) *Buffer {
 
 type proxyStream struct {
 	original Stream
-	closed   bool
 }
 
 func (s *proxyStream) Close() error {
-	if s.closed {
-		return fmt.Errorf("cannot close closed stream")
-	}
-	s.closed = true
+	// this is a bad file descirptor, it will throw an error on all operations.
+	s.original = os.NewFile(^uintptr(0), "")
 	return nil
 }
 
@@ -83,15 +80,25 @@ func (s *proxyStream) Read(p []byte) (n int, err error) { return 0, nil }
 
 func (s *proxyStream) Write(p []byte) (n int, err error) { return 0, nil }
 func (s *proxyStream) getOriginal() (Stream, error) {
-	if s.closed {
-		return nil, fmt.Errorf("file descriptor is closed")
-	}
-
 	if o, ok := s.original.(*proxyStream); ok {
 		return o.getOriginal()
 	}
 
 	return s.original, nil
+}
+
+type closeStream struct{}
+
+func (s *closeStream) Close() error {
+	return fmt.Errorf("cannot close closed stream")
+}
+
+func (s *closeStream) Read(p []byte) (n int, err error) {
+	return 0, fmt.Errorf("cannot read from closed stream")
+}
+
+func (s *closeStream) Write(p []byte) (n int, err error) {
+	return 0, fmt.Errorf("cannot write to closed stream")
 }
 
 type StreamManager struct {
@@ -151,8 +158,6 @@ func (sm *StreamManager) Get(fd string) (Stream, error) {
 func (sm *StreamManager) Duplicate(newfd, oldfd string) error {
 	if proxy, ok := sm.mappings[oldfd]; !ok {
 		return fmt.Errorf("trying to duplicate bad file descriptor: %s", oldfd)
-	} else if proxy.closed {
-		return fmt.Errorf("trying to duplicate closed file descriptor: %s", oldfd)
 	} else {
 		sm.mappings[newfd] = &proxyStream{
 			original: proxy.original,
