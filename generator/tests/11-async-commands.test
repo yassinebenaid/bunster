@@ -1,0 +1,325 @@
+#(TEST: simple async command)
+
+command &
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	{
+		shell.ExitCode = 0
+		shell.WaitGroup.Add(1)
+		var done = shell.WaitGroup.Done
+		shell := shell.Clone()
+		go func() {
+		    defer done()
+    		func() {
+    			var commandName = `command`
+    			var arguments []string
+    			var command = shell.Command(commandName, arguments...)
+    			streamManager := streamManager.Clone()
+    			defer streamManager.Destroy()
+    			if stream, err := streamManager.Get(`0`); err != nil {
+    				shell.HandleError(err)
+    				return
+    			} else {
+    				command.Stdin = stream
+    			}
+    			if stream, err := streamManager.Get(`1`); err != nil {
+    				shell.HandleError(err)
+    				return
+    			} else {
+    				command.Stdout = stream
+    			}
+    			if stream, err := streamManager.Get(`2`); err != nil {
+    				shell.HandleError(err)
+    				return
+    			} else {
+    				command.Stderr = stream
+    			}
+    			if err := command.Run(); err != nil {
+    				shell.HandleError(err)
+    				return
+    			}
+    			shell.ExitCode = command.ProcessState.ExitCode()
+
+    		}()
+
+		}()
+
+	}
+}
+
+#(ENDTEST)
+
+
+
+#(TEST: async pipeline)
+
+command | command &
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	{
+		shell.ExitCode = 0
+		shell.WaitGroup.Add(1)
+		var done = shell.WaitGroup.Done
+		shell := shell.Clone()
+		go func() {
+			defer done()
+			func() {
+				var pipelineWaitgroup []func() error
+				pipeReader1, pipeWriter1, err := runtime.NewPipe()
+				if err != nil {
+					shell.HandleError(err)
+					return
+				}
+				func() {
+					var commandName = `command`
+					var arguments []string
+					var command = shell.Command(commandName, arguments...)
+					streamManager := streamManager.Clone()
+					streamManager.Add(`1`, pipeWriter1, true)
+					if stream, err := streamManager.Get(`0`); err != nil {
+						shell.HandleError(err)
+						return
+					} else {
+						command.Stdin = stream
+					}
+					if stream, err := streamManager.Get(`1`); err != nil {
+						shell.HandleError(err)
+						return
+					} else {
+						command.Stdout = stream
+					}
+					if stream, err := streamManager.Get(`2`); err != nil {
+						shell.HandleError(err)
+						return
+					} else {
+						command.Stderr = stream
+					}
+					if err := command.Start(); err != nil {
+						shell.HandleError(err)
+						return
+					}
+					pipelineWaitgroup = append(pipelineWaitgroup, func() error {
+						defer streamManager.Destroy()
+						return command.Wait()
+					})
+
+				}()
+				func() {
+					var commandName = `command`
+					var arguments []string
+					var command = shell.Command(commandName, arguments...)
+					streamManager := streamManager.Clone()
+					streamManager.Add(`0`, pipeReader1, false)
+					if stream, err := streamManager.Get(`0`); err != nil {
+						shell.HandleError(err)
+						return
+					} else {
+						command.Stdin = stream
+					}
+					if stream, err := streamManager.Get(`1`); err != nil {
+						shell.HandleError(err)
+						return
+					} else {
+						command.Stdout = stream
+					}
+					if stream, err := streamManager.Get(`2`); err != nil {
+						shell.HandleError(err)
+						return
+					} else {
+						command.Stderr = stream
+					}
+					if err := command.Start(); err != nil {
+						shell.HandleError(err)
+						return
+					}
+					pipelineWaitgroup = append(pipelineWaitgroup, func() error {
+						defer streamManager.Destroy()
+						return command.Wait()
+					})
+
+				}()
+				for i, wait := range pipelineWaitgroup {
+					if err := wait(); err != nil {
+						shell.HandleError(err)
+					}
+					if i < (len(pipelineWaitgroup) - 1) {
+						shell.ExitCode = 0
+					}
+				}
+
+			}()
+
+		}()
+
+	}
+}
+
+#(ENDTEST)
+
+
+
+#(TEST: async list)
+
+command && command &
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	{
+		shell.ExitCode = 0
+		shell.WaitGroup.Add(1)
+		var done = shell.WaitGroup.Done
+		shell := shell.Clone()
+		go func() {
+			defer done()
+			func() {
+				var commandName = `command`
+				var arguments []string
+				var command = shell.Command(commandName, arguments...)
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				if stream, err := streamManager.Get(`0`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stdin = stream
+				}
+				if stream, err := streamManager.Get(`1`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stdout = stream
+				}
+				if stream, err := streamManager.Get(`2`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stderr = stream
+				}
+				if err := command.Run(); err != nil {
+					shell.HandleError(err)
+					return
+				}
+				shell.ExitCode = command.ProcessState.ExitCode()
+
+			}()
+			if shell.ExitCode == 0 {
+				func() {
+					var commandName = `command`
+					var arguments []string
+					var command = shell.Command(commandName, arguments...)
+					streamManager := streamManager.Clone()
+					defer streamManager.Destroy()
+					if stream, err := streamManager.Get(`0`); err != nil {
+						shell.HandleError(err)
+						return
+					} else {
+						command.Stdin = stream
+					}
+					if stream, err := streamManager.Get(`1`); err != nil {
+						shell.HandleError(err)
+						return
+					} else {
+						command.Stdout = stream
+					}
+					if stream, err := streamManager.Get(`2`); err != nil {
+						shell.HandleError(err)
+						return
+					} else {
+						command.Stderr = stream
+					}
+					if err := command.Run(); err != nil {
+						shell.HandleError(err)
+						return
+					}
+					shell.ExitCode = command.ProcessState.ExitCode()
+
+				}()
+
+			}
+
+		}()
+
+	}
+}
+
+#(ENDTEST)
+
+
+
+#(TEST: waiting for background commands to finish)
+
+command &
+
+wait
+
+#(RESULT)
+
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	{
+		shell.ExitCode = 0
+		shell.WaitGroup.Add(1)
+		var done = shell.WaitGroup.Done
+		shell := shell.Clone()
+		go func() {
+		    defer done()
+    		func() {
+    			var commandName = `command`
+    			var arguments []string
+    			var command = shell.Command(commandName, arguments...)
+    			streamManager := streamManager.Clone()
+    			defer streamManager.Destroy()
+    			if stream, err := streamManager.Get(`0`); err != nil {
+    				shell.HandleError(err)
+    				return
+    			} else {
+    				command.Stdin = stream
+    			}
+    			if stream, err := streamManager.Get(`1`); err != nil {
+    				shell.HandleError(err)
+    				return
+    			} else {
+    				command.Stdout = stream
+    			}
+    			if stream, err := streamManager.Get(`2`); err != nil {
+    				shell.HandleError(err)
+    				return
+    			} else {
+    				command.Stderr = stream
+    			}
+    			if err := command.Run(); err != nil {
+    				shell.HandleError(err)
+    				return
+    			}
+    			shell.ExitCode = command.ProcessState.ExitCode()
+
+    		}()
+
+		}()
+
+	}
+	shell.WaitGroup.Wait()
+}
+
+#(ENDTEST)
