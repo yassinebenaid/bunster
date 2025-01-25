@@ -680,6 +680,12 @@ func (p *parser) parseSubShell() ast.Statement {
 
 	p.parseCompoundRedirections(&shell.Redirections)
 
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
+
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
 		return nil
