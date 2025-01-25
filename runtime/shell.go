@@ -19,7 +19,9 @@ type Shell struct {
 	ExitCode int
 	Main     func(*Shell, *StreamManager)
 	Args     []string
-	vars     sync.Map
+
+	vars      sync.Map
+	WaitGroup sync.WaitGroup
 }
 
 func (shell *Shell) Run() (exitCode int) {

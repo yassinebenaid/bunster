@@ -65,6 +65,8 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, ct
 		g.handleContinue(buf, v)
 	case ast.Loop:
 		g.handleLoop(buf, v, ctx)
+	case ast.BackgroundConstruction:
+		g.handleBackgroundConstruction(buf, v)
 	default:
 		panic(fmt.Sprintf("Unsupported statement: %T", v))
 	}
@@ -305,4 +307,13 @@ func (g *generator) handleParameterAssignment(buf *InstructionBuffer, p ast.Para
 
 		buf.add(ins)
 	}
+}
+
+func (g *generator) handleBackgroundConstruction(buf *InstructionBuffer, b ast.BackgroundConstruction) {
+	buf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
+	buf.add(ir.Literal("shell.WaitGroup.Add(1)\n"))
+
+	var body InstructionBuffer
+	g.generate(&body, b.Statement, &context{})
+	buf.add(ir.Gorouting(body))
 }

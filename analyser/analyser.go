@@ -142,6 +142,8 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 		}
 	case ast.Pipeline:
 		a.analysePipeline(v)
+	case ast.BackgroundConstruction:
+		a.analyseStatement(v.Statement)
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
