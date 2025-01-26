@@ -1,0 +1,38 @@
+---
+cases:
+  - name: "simple pipeline"
+    script: |
+      echo hello world | cat
+    expect:
+      stdout: "hello world\n"
+
+  - name: "longer pipeline"
+    script: |
+      echo hello world | cat | cat | cat | cat
+    expect:
+      stdout: "hello world\n"
+
+  - name: "commands within pipeline run concurrently"
+    timeout: 3 # 2s for the pipelines, and 1s for the runtime, normally this would take +4s if commands don't run concurrently
+    script: |
+      sleep 2 | sleep 2
+
+  - name: "redirection is applied before any redirection, so we can suplicate pipeline ends however we want"
+    script: |
+      # not redirected
+      cat file | cat
+
+      # redirected stderr explicitly
+      cat file 2>&1 | cat
+
+      # redirected stderr using alternative syntax
+      cat file |& cat
+
+      # duplicated pipeline writer
+      echo foobar 3>&1 >&3 |& cat
+    expect:
+      stderr: "cat: file: No such file or directory\n"
+      stdout: |
+        cat: file: No such file or directory
+        cat: file: No such file or directory
+        foobar
