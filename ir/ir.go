@@ -299,5 +299,6 @@ func (i InvertExitCode) togo() string {
 			shell.ExitCode = 1
 		} else {
 			shell.ExitCode = 0
-		}`)
+		}
+		`)
 }

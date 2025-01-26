@@ -387,3 +387,107 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 }
 
 #(ENDTEST)
+
+
+#(TEST: can invert exit code )
+! command
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		var commandName = `command`
+		var arguments []string
+		var command = shell.Command(commandName, arguments...)
+		streamManager := streamManager.Clone()
+        defer streamManager.Destroy()
+		if stream, err := streamManager.Get(`0`); err != nil {
+        shell.HandleError(err)
+        return
+        } else {
+            command.Stdin = stream
+        }
+        if stream, err := streamManager.Get(`1`); err != nil {
+            shell.HandleError(err)
+            return
+        } else {
+            command.Stdout = stream
+        }
+        if stream, err := streamManager.Get(`2`); err != nil {
+            shell.HandleError(err)
+            return
+        } else {
+            command.Stderr = stream
+        }
+		if err := command.Run(); err != nil {
+			shell.HandleError(err)
+			return
+		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+	}()
+	if shell.ExitCode == 0 {
+		shell.ExitCode = 1
+	} else {
+		shell.ExitCode = 0
+	}
+}
+
+#(ENDTEST)
+
+
+
+#(TEST: can invert exit code recursivly)
+! ! command
+#(RESULT)
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		var commandName = `command`
+		var arguments []string
+		var command = shell.Command(commandName, arguments...)
+		streamManager := streamManager.Clone()
+        defer streamManager.Destroy()
+		if stream, err := streamManager.Get(`0`); err != nil {
+        shell.HandleError(err)
+        return
+        } else {
+            command.Stdin = stream
+        }
+        if stream, err := streamManager.Get(`1`); err != nil {
+            shell.HandleError(err)
+            return
+        } else {
+            command.Stdout = stream
+        }
+        if stream, err := streamManager.Get(`2`); err != nil {
+            shell.HandleError(err)
+            return
+        } else {
+            command.Stderr = stream
+        }
+		if err := command.Run(); err != nil {
+			shell.HandleError(err)
+			return
+		}
+        shell.ExitCode = command.ProcessState.ExitCode()
+
+	}()
+	if shell.ExitCode == 0 {
+		shell.ExitCode = 1
+	} else {
+		shell.ExitCode = 0
+	}
+	if shell.ExitCode == 0 {
+		shell.ExitCode = 1
+	} else {
+		shell.ExitCode = 0
+	}
+}
+
+#(ENDTEST)
