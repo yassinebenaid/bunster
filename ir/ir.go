@@ -302,3 +302,11 @@ func (i InvertExitCode) togo() string {
 		}
 		`)
 }
+
+type Function struct {
+	Name string
+}
+
+func (f Function) togo() string {
+	return fmt.Sprintf("shell.RegisterFunction(`%s`, nil)", f.Name)
+}

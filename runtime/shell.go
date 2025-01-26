@@ -22,9 +22,12 @@ type Shell struct {
 
 	vars      sync.Map
 	WaitGroup sync.WaitGroup
+	functions map[string]func(*Shell, *StreamManager)
 }
 
 func (shell *Shell) Run() (exitCode int) {
+	shell.functions = make(map[string]func(*Shell, *StreamManager))
+
 	streamManager := &StreamManager{
 		mappings: make(map[string]*proxyStream),
 	}
@@ -113,4 +116,8 @@ func (shell *Shell) Clone() *Shell {
 		ExitCode: shell.ExitCode,
 		Args:     shell.Args,
 	}
+}
+
+func (shell *Shell) RegisterFunction(name string, handler func(*Shell, *StreamManager)) {
+	shell.functions[name] = handler
 }
