@@ -24,6 +24,7 @@ func (g *generator) handleCommandSubstitution(buf *InstructionBuffer, statements
 
 	cmdbuf.add(ir.Literal("return buffer.String(true), shell.ExitCode"))
 
+	// TODO: add support for labels here
 	name := fmt.Sprintf("expr%d", g.expressionsCount)
 	buf.add(ir.ExpressionClosure{
 		Body: cmdbuf,
