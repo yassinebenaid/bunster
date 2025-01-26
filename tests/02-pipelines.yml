@@ -36,3 +36,27 @@ cases:
         cat: file: No such file or directory
         cat: file: No such file or directory
         foobar
+
+  - name: "can invert exit code of a command"
+    script: |
+      ! true
+    expect:
+      exit_code: 1
+
+  - name: "can invert exit code of a pipeline"
+    script: |
+      ! true | true
+    expect:
+      exit_code: 1
+
+  - name: "can invert exit code recursively"
+    script: |
+      ! ! true
+    expect:
+      exit_code: 0
+
+  - name: "can invert exit code recursively in a pipeline"
+    script: |
+      ! ! true && !!! false
+    expect:
+      exit_code: 0

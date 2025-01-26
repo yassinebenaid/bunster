@@ -67,6 +67,9 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, ct
 		g.handleLoop(buf, v, ctx)
 	case ast.BackgroundConstruction:
 		g.handleBackgroundConstruction(buf, v)
+	case ast.InvertExitCode:
+		g.generate(buf, v.Statement, &context{})
+		buf.add(ir.InvertExitCode{})
 	case ast.Wait:
 		g.handleWait(buf, v)
 	default:

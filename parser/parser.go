@@ -90,15 +90,10 @@ func (p *parser) ParseScript() ast.Script {
 }
 
 func (p *parser) parseCommandList() ast.Statement {
-	var left ast.Statement
-	pipe := p.parsePipline()
+	left := p.parsePipline()
 
-	if pipe == nil {
+	if left == nil {
 		return nil
-	} else if len(pipe) == 1 {
-		left = pipe[0].Command
-	} else {
-		left = pipe
 	}
 
 	for p.curr.Type == token.AND || p.curr.Type == token.OR {
@@ -108,14 +103,9 @@ func (p *parser) parseCommandList() ast.Statement {
 			p.proceed()
 		}
 
-		var right ast.Statement
-		rightPipe := p.parsePipline()
-		if rightPipe == nil {
+		right := p.parsePipline()
+		if right == nil {
 			return nil
-		} else if len(rightPipe) == 1 {
-			right = rightPipe[0].Command
-		} else {
-			right = rightPipe
 		}
 
 		left = ast.List{
@@ -132,8 +122,23 @@ func (p *parser) parseCommandList() ast.Statement {
 	return left
 }
 
-func (p *parser) parsePipline() ast.Pipeline {
+func (p *parser) parsePipline() ast.Statement {
+	var statement ast.Statement
 	var pipeline ast.Pipeline
+
+	if p.curr.Type == token.EXCLAMATION {
+		p.proceed()
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+		statement = p.parsePipline()
+		if statement == nil {
+			return nil
+		}
+		return ast.InvertExitCode{
+			Statement: statement,
+		}
+	}
 
 	cmd := p.parseCommand()
 	if cmd == nil {
@@ -160,7 +165,13 @@ func (p *parser) parsePipline() ast.Pipeline {
 		pipeline = append(pipeline, pipe)
 	}
 
-	return pipeline
+	if len(pipeline) == 1 {
+		statement = pipeline[0].Command
+	} else {
+		statement = pipeline
+	}
+
+	return statement
 }
 
 func (p *parser) parseCommand() ast.Statement {

@@ -67,6 +67,25 @@ var pipesTests = []testCase{
 			{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: false},
 		},
 	}},
+	{"! cmd", ast.Script{
+		ast.InvertExitCode{
+			Statement: ast.Command{Name: ast.Word("cmd")},
+		},
+	}},
+	{"! ! cmd", ast.Script{
+		ast.InvertExitCode{
+			Statement: ast.InvertExitCode{
+				Statement: ast.Command{Name: ast.Word("cmd")},
+			},
+		},
+	}},
+	{"!!cmd", ast.Script{
+		ast.InvertExitCode{
+			Statement: ast.InvertExitCode{
+				Statement: ast.Command{Name: ast.Word("cmd")},
+			},
+		},
+	}},
 }
 
 var pipesErrorHandlingCases = []errorHandlingTestCase{
@@ -74,4 +93,5 @@ var pipesErrorHandlingCases = []errorHandlingTestCase{
 	{`cmd | foo |&`, "syntax error: expected a valid command name, found `end of file`. (line: 1, column: 13)"},
 	{`cmd foo | cmd >foo| |&`, "syntax error: expected a valid command name, found `|&`. (line: 1, column: 21)"},
 	{"cmd |\n\n\t <foo", "syntax error: expected a valid command name, found `<`. (line: 3, column: 3)"},
+	{"!\n", "syntax error: expected a valid command name, found `newline`. (line: 2, column: 0)"},
 }
