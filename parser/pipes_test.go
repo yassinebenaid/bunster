@@ -86,4 +86,5 @@ var pipesErrorHandlingCases = []errorHandlingTestCase{
 	{`cmd | foo |&`, "syntax error: expected a valid command name, found `end of file`. (line: 1, column: 13)"},
 	{`cmd foo | cmd >foo| |&`, "syntax error: expected a valid command name, found `|&`. (line: 1, column: 21)"},
 	{"cmd |\n\n\t <foo", "syntax error: expected a valid command name, found `<`. (line: 3, column: 3)"},
+	{"!\n", "syntax error: expected a valid command name, found `newline`. (line: 2, column: 0)"},
 }
