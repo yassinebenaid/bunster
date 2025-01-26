@@ -100,10 +100,35 @@ func (shell *Shell) HandleError(err error) {
 	}
 }
 
-func (shell *Shell) Command(name string, args ...string) *exec.Cmd {
+type Command struct {
+	Stdin  Stream
+	Stdout Stream
+	Stderr Stream
+
+	ExitCode int
+
+	execCmd *exec.Cmd
+}
+
+func (cmd *Command) Run() error {
+	cmd.execCmd.Stdin = cmd.Stdin
+	cmd.execCmd.Stdout = cmd.Stdout
+	cmd.execCmd.Stderr = cmd.Stderr
+	if err := cmd.execCmd.Run(); err != nil {
+		return err
+	}
+	cmd.ExitCode = cmd.execCmd.ProcessState.ExitCode()
+	return nil
+}
+
+func (shell *Shell) Command(name string, args ...string) Command {
+	var command Command
 	cmd := exec.Command(name, args...)
 	cmd.Env = syscall.Environ()
-	return cmd
+
+	command.execCmd = cmd
+
+	return command
 }
 
 func (shell *Shell) Clone() *Shell {

@@ -139,7 +139,7 @@ func (r RunCommand) togo() string {
 			shell.HandleError(err)
 			return
 		}
-		shell.ExitCode = %s.ProcessState.ExitCode()
+		shell.ExitCode = %s.ExitCode
 		`, r, r)
 }
 
