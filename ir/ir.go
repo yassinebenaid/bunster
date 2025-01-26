@@ -305,8 +305,17 @@ func (i InvertExitCode) togo() string {
 
 type Function struct {
 	Name string
+	Body []Instruction
 }
 
 func (f Function) togo() string {
-	return fmt.Sprintf("shell.RegisterFunction(`%s`, nil)", f.Name)
+	var body string
+	for _, ins := range f.Body {
+		body += ins.togo()
+	}
+
+	return fmt.Sprintf(
+		"shell.RegisterFunction(`%s`, func(shell *runtime.Shell, streamManager *runtime.StreamManager){\n%s\n})\n",
+		f.Name, body,
+	)
 }

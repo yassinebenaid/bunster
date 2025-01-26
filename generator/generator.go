@@ -72,6 +72,13 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, ct
 		buf.add(ir.InvertExitCode{})
 	case ast.Wait:
 		g.handleWait(buf, v)
+	case ast.Function:
+		var body InstructionBuffer
+		g.generate(&body, v.Command, &context{})
+		buf.add(ir.Function{
+			Name: v.Name,
+			Body: body,
+		})
 	default:
 		panic(fmt.Sprintf("Unsupported statement: %T", v))
 	}
