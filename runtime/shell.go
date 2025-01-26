@@ -112,11 +112,10 @@ type Command struct {
 }
 
 func (cmd *Command) Run() error {
-	cmd.execCmd.Stdin = cmd.Stdin
-	cmd.execCmd.Stdout = cmd.Stdout
-	cmd.execCmd.Stderr = cmd.Stderr
-	cmd.execCmd.Env = append(cmd.execCmd.Env, cmd.Env...)
-	if err := cmd.execCmd.Run(); err != nil {
+	if err := cmd.Start(); err != nil {
+		return err
+	}
+	if err := cmd.Wait(); err != nil {
 		return err
 	}
 	cmd.ExitCode = cmd.execCmd.ProcessState.ExitCode()
