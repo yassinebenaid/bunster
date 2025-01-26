@@ -104,6 +104,7 @@ type Command struct {
 	Stdin  Stream
 	Stdout Stream
 	Stderr Stream
+	Env    []string
 
 	ExitCode int
 
@@ -114,11 +115,24 @@ func (cmd *Command) Run() error {
 	cmd.execCmd.Stdin = cmd.Stdin
 	cmd.execCmd.Stdout = cmd.Stdout
 	cmd.execCmd.Stderr = cmd.Stderr
+	cmd.execCmd.Env = append(cmd.execCmd.Env, cmd.Env...)
 	if err := cmd.execCmd.Run(); err != nil {
 		return err
 	}
 	cmd.ExitCode = cmd.execCmd.ProcessState.ExitCode()
 	return nil
+}
+
+func (cmd *Command) Start() error {
+	cmd.execCmd.Stdin = cmd.Stdin
+	cmd.execCmd.Stdout = cmd.Stdout
+	cmd.execCmd.Stderr = cmd.Stderr
+	cmd.execCmd.Env = append(cmd.execCmd.Env, cmd.Env...)
+	return cmd.execCmd.Start()
+}
+
+func (cmd *Command) Wait() error {
+	return cmd.execCmd.Wait()
 }
 
 func (shell *Shell) Command(name string, args ...string) Command {

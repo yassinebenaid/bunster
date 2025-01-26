@@ -42,7 +42,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.HandleError(err)
 				return
 			}
-			shell.ExitCode = command.ProcessState.ExitCode()
+			shell.ExitCode = command.ExitCode
 
 		}()
 		condition = shell.ExitCode == 0
@@ -77,7 +77,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					shell.HandleError(err)
 					return
 				}
-				shell.ExitCode = command.ProcessState.ExitCode()
+				shell.ExitCode = command.ExitCode
 
 			}()
 		}
@@ -138,7 +138,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.HandleError(err)
 				return
 			}
-			shell.ExitCode = command.ProcessState.ExitCode()
+			shell.ExitCode = command.ExitCode
 
 		}()
 		condition = shell.ExitCode == 0
@@ -173,7 +173,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					shell.HandleError(err)
 					return
 				}
-				shell.ExitCode = command.ProcessState.ExitCode()
+				shell.ExitCode = command.ExitCode
 
 			}()
 		} else {
@@ -205,7 +205,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					shell.HandleError(err)
 					return
 				}
-				shell.ExitCode = command.ProcessState.ExitCode()
+				shell.ExitCode = command.ExitCode
 
 			}()
 			condition = shell.ExitCode == 0
@@ -240,7 +240,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 						shell.HandleError(err)
 						return
 					}
-					shell.ExitCode = command.ProcessState.ExitCode()
+					shell.ExitCode = command.ExitCode
 
 				}()
 			}
@@ -304,7 +304,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.HandleError(err)
 				return
 			}
-			shell.ExitCode = command.ProcessState.ExitCode()
+			shell.ExitCode = command.ExitCode
 
 		}()
 		condition = shell.ExitCode == 0
@@ -339,7 +339,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					shell.HandleError(err)
 					return
 				}
-				shell.ExitCode = command.ProcessState.ExitCode()
+				shell.ExitCode = command.ExitCode
 
 			}()
 		}
@@ -373,7 +373,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					shell.HandleError(err)
 					return
 				}
-				shell.ExitCode = command.ProcessState.ExitCode()
+				shell.ExitCode = command.ExitCode
 
 			}()
 		}
@@ -438,7 +438,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.HandleError(err)
 				return
 			}
-			shell.ExitCode = command.ProcessState.ExitCode()
+			shell.ExitCode = command.ExitCode
 
 		}()
 		condition = shell.ExitCode == 0
@@ -473,7 +473,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					shell.HandleError(err)
 					return
 				}
-				shell.ExitCode = command.ProcessState.ExitCode()
+				shell.ExitCode = command.ExitCode
 
 			}()
 		} else {
@@ -505,7 +505,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					shell.HandleError(err)
 					return
 				}
-				shell.ExitCode = command.ProcessState.ExitCode()
+				shell.ExitCode = command.ExitCode
 
 			}()
 			if shell.ExitCode != 0 {
@@ -537,7 +537,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 						shell.HandleError(err)
 						return
 					}
-					shell.ExitCode = command.ProcessState.ExitCode()
+					shell.ExitCode = command.ExitCode
 
 				}()
 
@@ -574,7 +574,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 						shell.HandleError(err)
 						return
 					}
-					shell.ExitCode = command.ProcessState.ExitCode()
+					shell.ExitCode = command.ExitCode
 
 				}()
 			}
@@ -609,7 +609,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					shell.HandleError(err)
 					return
 				}
-				shell.ExitCode = command.ProcessState.ExitCode()
+				shell.ExitCode = command.ExitCode
 
 			}()
 		}
@@ -726,7 +726,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 						shell.HandleError(err)
 						return
 					}
-					shell.ExitCode = command.ProcessState.ExitCode()
+					shell.ExitCode = command.ExitCode
 
 				}()
 				condition = shell.ExitCode == 0
@@ -761,7 +761,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 							shell.HandleError(err)
 							return
 						}
-						shell.ExitCode = command.ProcessState.ExitCode()
+						shell.ExitCode = command.ExitCode
 
 					}()
 				}
@@ -815,7 +815,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 						shell.HandleError(err)
 						return
 					}
-					shell.ExitCode = command.ProcessState.ExitCode()
+					shell.ExitCode = command.ExitCode
 
 				}()
 				condition = shell.ExitCode == 0
@@ -850,7 +850,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 							shell.HandleError(err)
 							return
 						}
-						shell.ExitCode = command.ProcessState.ExitCode()
+						shell.ExitCode = command.ExitCode
 
 					}()
 				}
