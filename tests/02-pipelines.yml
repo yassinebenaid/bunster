@@ -20,19 +20,19 @@ cases:
   - name: "redirection is applied before any redirection, so we can suplicate pipeline ends however we want"
     script: |
       # not redirected
-      ls dir1 | cat
+      cat file | cat
 
       # redirected stderr explicitly
-      ls dir2 2>&1 | cat
+      cat file 2>&1 | cat
 
       # redirected stderr using alternative syntax
-      ls dir3 |& cat
+      cat file |& cat
 
       # duplicated pipeline writer
       echo foobar 3>&1 >&3 |& cat
     expect:
-      stderr: "ls: cannot access 'dir1': No such file or directory\n"
+      stderr: "cat: file: No such file or directory\n"
       stdout: |
-        ls: cannot access 'dir2': No such file or directory
-        ls: cannot access 'dir3': No such file or directory
+        cat: file: No such file or directory
+        cat: file: No such file or directory
         foobar
