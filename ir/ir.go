@@ -315,7 +315,7 @@ func (f Function) togo() string {
 	}
 
 	return fmt.Sprintf(
-		"shell.RegisterFunction(`%s`, func(shell *runtime.Shell, streamManager *runtime.StreamManager){\n%s\n})\n",
+		"shell.RegisterFunction(`%s`, func(){\n%s\n})\n",
 		f.Name, body,
 	)
 }

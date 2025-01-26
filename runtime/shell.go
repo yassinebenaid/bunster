@@ -22,11 +22,11 @@ type Shell struct {
 
 	vars      sync.Map
 	WaitGroup sync.WaitGroup
-	functions map[string]func(*Shell, *StreamManager)
+	functions map[string]func()
 }
 
 func (shell *Shell) Run() (exitCode int) {
-	shell.functions = make(map[string]func(*Shell, *StreamManager))
+	shell.functions = make(map[string]func())
 
 	streamManager := &StreamManager{
 		mappings: make(map[string]*proxyStream),
@@ -108,7 +108,9 @@ type Command struct {
 
 	ExitCode int
 
-	execCmd *exec.Cmd
+	function func()
+	execCmd  *exec.Cmd
+	wg       sync.WaitGroup
 }
 
 func (cmd *Command) Run() error {
@@ -118,11 +120,22 @@ func (cmd *Command) Run() error {
 	if err := cmd.Wait(); err != nil {
 		return err
 	}
-	cmd.ExitCode = cmd.execCmd.ProcessState.ExitCode()
+	if cmd.function == nil {
+		cmd.ExitCode = cmd.execCmd.ProcessState.ExitCode()
+	}
 	return nil
 }
 
 func (cmd *Command) Start() error {
+	if cmd.function != nil {
+		cmd.wg.Add(1)
+		go func() {
+			cmd.function()
+			cmd.wg.Done()
+		}()
+		return nil
+	}
+
 	cmd.execCmd.Stdin = cmd.Stdin
 	cmd.execCmd.Stdout = cmd.Stdout
 	cmd.execCmd.Stderr = cmd.Stderr
@@ -131,17 +144,27 @@ func (cmd *Command) Start() error {
 }
 
 func (cmd *Command) Wait() error {
+	if cmd.function != nil {
+		cmd.wg.Wait()
+		return nil
+	}
 	return cmd.execCmd.Wait()
 }
 
-func (shell *Shell) Command(name string, args ...string) Command {
+func (shell *Shell) Command(name string, args ...string) *Command {
 	var command Command
+
+	if fn := shell.functions[name]; fn != nil {
+		command.function = fn
+		return &command
+	}
+
 	cmd := exec.Command(name, args...)
 	cmd.Env = syscall.Environ()
 
 	command.execCmd = cmd
 
-	return command
+	return &command
 }
 
 func (shell *Shell) Clone() *Shell {
@@ -156,6 +179,6 @@ func (shell *Shell) Clone() *Shell {
 	}
 }
 
-func (shell *Shell) RegisterFunction(name string, handler func(*Shell, *StreamManager)) {
+func (shell *Shell) RegisterFunction(name string, handler func()) {
 	shell.functions[name] = handler
 }
