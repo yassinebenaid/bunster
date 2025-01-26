@@ -79,6 +79,13 @@ var pipesTests = []testCase{
 			},
 		},
 	}},
+	{"!!cmd", ast.Script{
+		ast.InvertExitCode{
+			Statement: ast.InvertExitCode{
+				Statement: ast.Command{Name: ast.Word("cmd")},
+			},
+		},
+	}},
 }
 
 var pipesErrorHandlingCases = []errorHandlingTestCase{
