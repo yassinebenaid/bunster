@@ -290,3 +290,14 @@ func (i Loop) togo() string {
 
 	return cond + "}\n"
 }
+
+type InvertExitCode struct{}
+
+func (i InvertExitCode) togo() string {
+	return fmt.Sprintf(
+		`if shell.ExitCode == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}`)
+}

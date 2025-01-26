@@ -146,6 +146,8 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 		a.analyseStatement(v.Statement)
 	case ast.Wait:
 		//TODO: ensure 'wait' is not invokes when no commands are put in background.
+	case ast.InvertExitCode:
+		a.analyseStatement(v.Statement)
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
