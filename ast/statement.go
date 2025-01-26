@@ -34,6 +34,10 @@ type PipelineCommand struct {
 
 type Pipeline []PipelineCommand
 
+type InvertExitCode struct {
+	Statement
+}
+
 type Redirection struct {
 	Src    string
 	Method string
@@ -133,6 +137,7 @@ type Test struct {
 func (Redirection) node()         {}
 func (Command) node()             {}
 func (Pipeline) node()            {}
+func (InvertExitCode) node()      {}
 func (List) node()                {}
 func (Loop) node()                {}
 func (RangeLoop) node()           {}
@@ -157,18 +162,19 @@ func (CommandSubstitution) string() string { return "" }
 func (ProcessSubstitution) string() string { return "" }
 
 // Statements
-func (Command) stmt()   {}
-func (Pipeline) stmt()  {}
-func (List) stmt()      {}
-func (Loop) stmt()      {}
-func (RangeLoop) stmt() {}
-func (If) stmt()        {}
-func (Case) stmt()      {}
-func (Group) stmt()     {}
-func (SubShell) stmt()  {}
-func (For) stmt()       {}
-func (Function) stmt()  {}
-func (Test) stmt()      {}
-func (Break) stmt()     {}
-func (Continue) stmt()  {}
-func (Wait) stmt()      {}
+func (Command) stmt()        {}
+func (Pipeline) stmt()       {}
+func (InvertExitCode) stmt() {}
+func (List) stmt()           {}
+func (Loop) stmt()           {}
+func (RangeLoop) stmt()      {}
+func (If) stmt()             {}
+func (Case) stmt()           {}
+func (Group) stmt()          {}
+func (SubShell) stmt()       {}
+func (For) stmt()            {}
+func (Function) stmt()       {}
+func (Test) stmt()           {}
+func (Break) stmt()          {}
+func (Continue) stmt()       {}
+func (Wait) stmt()           {}
