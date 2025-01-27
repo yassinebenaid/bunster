@@ -22,11 +22,11 @@ type Shell struct {
 
 	vars      sync.Map
 	WaitGroup sync.WaitGroup
-	functions map[string]func()
+	functions map[string]func(stdin, stdout, stderr Stream)
 }
 
 func (shell *Shell) Run() (exitCode int) {
-	shell.functions = make(map[string]func())
+	shell.functions = make(map[string]func(stdin, stdout, stderr Stream))
 
 	streamManager := &StreamManager{
 		mappings: make(map[string]*proxyStream),
@@ -108,7 +108,7 @@ type Command struct {
 
 	ExitCode int
 
-	function func()
+	function func(stdin, stdout, stderr Stream)
 	execCmd  *exec.Cmd
 	wg       sync.WaitGroup
 }
@@ -130,7 +130,7 @@ func (cmd *Command) Start() error {
 	if cmd.function != nil {
 		cmd.wg.Add(1)
 		go func() {
-			cmd.function()
+			cmd.function(cmd.Stdin, cmd.Stdout, cmd.Stderr)
 			cmd.wg.Done()
 		}()
 		return nil
@@ -179,6 +179,6 @@ func (shell *Shell) Clone() *Shell {
 	}
 }
 
-func (shell *Shell) RegisterFunction(name string, handler func()) {
+func (shell *Shell) RegisterFunction(name string, handler func(stdin, stdout, stderr Stream)) {
 	shell.functions[name] = handler
 }
