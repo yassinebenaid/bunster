@@ -44,7 +44,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.HandleError(err)
 				return
 			}
-			shell.ExitCode = command.ProcessState.ExitCode()
+			shell.ExitCode = command.ExitCode
 
 		}()
 		func() {
@@ -76,7 +76,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.HandleError(err)
 				return
 			}
-			shell.ExitCode = command.ProcessState.ExitCode()
+			shell.ExitCode = command.ExitCode
 
 		}()
 
@@ -145,7 +145,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.HandleError(err)
 				return
 			}
-			shell.ExitCode = command.ProcessState.ExitCode()
+			shell.ExitCode = command.ExitCode
 
 		}()
 		func() {
@@ -177,7 +177,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.HandleError(err)
 				return
 			}
-			shell.ExitCode = command.ProcessState.ExitCode()
+			shell.ExitCode = command.ExitCode
 
 		}()
 
@@ -441,7 +441,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					shell.HandleError(err)
 					return
 				}
-				shell.ExitCode = command.ProcessState.ExitCode()
+				shell.ExitCode = command.ExitCode
 
 			}()
 
@@ -478,7 +478,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					shell.HandleError(err)
 					return
 				}
-				shell.ExitCode = command.ProcessState.ExitCode()
+				shell.ExitCode = command.ExitCode
 
 			}()
 
@@ -548,7 +548,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 						shell.HandleError(err)
 						return
 					}
-					shell.ExitCode = command.ProcessState.ExitCode()
+					shell.ExitCode = command.ExitCode
 
 				}()
 				done <- struct{}{}
@@ -594,7 +594,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 						shell.HandleError(err)
 						return
 					}
-					shell.ExitCode = command.ProcessState.ExitCode()
+					shell.ExitCode = command.ExitCode
 
 				}()
 				done <- struct{}{}

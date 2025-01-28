@@ -139,7 +139,7 @@ func (r RunCommand) togo() string {
 			shell.HandleError(err)
 			return
 		}
-		shell.ExitCode = %s.ProcessState.ExitCode()
+		shell.ExitCode = %s.ExitCode
 		`, r, r)
 }
 
@@ -301,4 +301,27 @@ func (i InvertExitCode) togo() string {
 			shell.ExitCode = 0
 		}
 		`)
+}
+
+type Function struct {
+	Name string
+	Body []Instruction
+}
+
+func (f Function) togo() string {
+	var body string
+	for _, ins := range f.Body {
+		body += ins.togo()
+	}
+
+	return fmt.Sprintf(
+		"shell.RegisterFunction(`%s`, func(stdin, stdout, stderr runtime.Stream){"+`
+			streamManager := streamManager.Clone()
+			streamManager.Add("0", stdin, true)
+			streamManager.Add("1", stdout, true)
+			streamManager.Add("2", stderr, true)
+			%s
+		`+"})\n",
+		f.Name, body,
+	)
 }

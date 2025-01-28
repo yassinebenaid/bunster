@@ -22,9 +22,12 @@ type Shell struct {
 
 	vars      sync.Map
 	WaitGroup sync.WaitGroup
+	functions map[string]func(stdin, stdout, stderr Stream)
 }
 
 func (shell *Shell) Run() (exitCode int) {
+	shell.functions = make(map[string]func(stdin, stdout, stderr Stream))
+
 	streamManager := &StreamManager{
 		mappings: make(map[string]*proxyStream),
 	}
@@ -97,10 +100,71 @@ func (shell *Shell) HandleError(err error) {
 	}
 }
 
-func (shell *Shell) Command(name string, args ...string) *exec.Cmd {
+type Command struct {
+	Stdin  Stream
+	Stdout Stream
+	Stderr Stream
+	Env    []string
+
+	ExitCode int
+
+	function func(stdin, stdout, stderr Stream)
+	execCmd  *exec.Cmd
+	wg       sync.WaitGroup
+}
+
+func (cmd *Command) Run() error {
+	if err := cmd.Start(); err != nil {
+		return err
+	}
+	if err := cmd.Wait(); err != nil {
+		return err
+	}
+	if cmd.function == nil {
+		cmd.ExitCode = cmd.execCmd.ProcessState.ExitCode()
+	}
+	return nil
+}
+
+func (cmd *Command) Start() error {
+	if cmd.function != nil {
+		cmd.wg.Add(1)
+		go func() {
+			cmd.function(cmd.Stdin, cmd.Stdout, cmd.Stderr)
+			cmd.wg.Done()
+		}()
+		return nil
+	}
+
+	cmd.execCmd.Stdin = cmd.Stdin
+	cmd.execCmd.Stdout = cmd.Stdout
+	cmd.execCmd.Stderr = cmd.Stderr
+	cmd.execCmd.Env = append(cmd.execCmd.Env, cmd.Env...)
+	return cmd.execCmd.Start()
+}
+
+func (cmd *Command) Wait() error {
+	if cmd.function != nil {
+		cmd.wg.Wait()
+		return nil
+	}
+	return cmd.execCmd.Wait()
+}
+
+func (shell *Shell) Command(name string, args ...string) *Command {
+	var command Command
+
+	if fn := shell.functions[name]; fn != nil {
+		command.function = fn
+		return &command
+	}
+
 	cmd := exec.Command(name, args...)
 	cmd.Env = syscall.Environ()
-	return cmd
+
+	command.execCmd = cmd
+
+	return &command
 }
 
 func (shell *Shell) Clone() *Shell {
@@ -113,4 +177,8 @@ func (shell *Shell) Clone() *Shell {
 		ExitCode: shell.ExitCode,
 		Args:     shell.Args,
 	}
+}
+
+func (shell *Shell) RegisterFunction(name string, handler func(stdin, stdout, stderr Stream)) {
+	shell.functions[name] = handler
 }
