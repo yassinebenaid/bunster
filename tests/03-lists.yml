@@ -15,7 +15,24 @@ cases:
     script: |
       true  && echo foo || echo bar
       true  || echo foo && echo bar
+      true  || echo foo || echo bar && echo baz
+      false  && echo foo && echo bar || echo bao
     expect:
       stdout: |
         foo
         bar
+        baz
+        bao
+
+  - name: "list of pipelines"
+    script: |
+      true  && echo foo |cat || echo bar |cat
+      true  || echo foo  |cat && echo bar |cat
+      true  || echo foo |cat  || echo bar |cat  && echo baz |cat
+      false  && echo foo |cat  && echo bar  |cat || echo bao |cat
+    expect:
+      stdout: |
+        foo
+        bar
+        baz
+        bao
