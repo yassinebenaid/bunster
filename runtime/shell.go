@@ -31,9 +31,9 @@ func (shell *Shell) Run() (exitCode int) {
 	streamManager := &StreamManager{
 		mappings: make(map[string]*proxyStream),
 	}
-	streamManager.Add("0", shell.Stdin, true)
-	streamManager.Add("1", shell.Stdout, true)
-	streamManager.Add("2", shell.Stderr, true)
+	streamManager.Add("0", shell.Stdin)
+	streamManager.Add("1", shell.Stdout)
+	streamManager.Add("2", shell.Stderr)
 	defer streamManager.Destroy()
 
 	defer func() {

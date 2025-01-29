@@ -215,10 +215,10 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []as
 	// if we're inside a pipline, we need to connect the pipe to the command.(before any other redirection)
 	if ctx.pipe != nil {
 		if ctx.pipe.writer != "" {
-			buf.add(ir.AddStream{Fd: "1", StreamName: ctx.pipe.writer, Proxy: true})
+			buf.add(ir.AddStream{Fd: "1", StreamName: ctx.pipe.writer})
 
 			if ctx.pipe.stderr {
-				buf.add(ir.AddStream{Fd: "2", StreamName: ctx.pipe.writer, Proxy: true})
+				buf.add(ir.AddStream{Fd: "2", StreamName: ctx.pipe.writer})
 			}
 		}
 
