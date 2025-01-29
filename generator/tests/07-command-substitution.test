@@ -15,7 +15,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			defer streamManager.Destroy()
 			shell := shell.Clone()
 			var buffer = runtime.NewBuffer(``, false)
-			streamManager.Add(`1`, buffer, false)
+			streamManager.Add(`1`, buffer)
 			func() {
 				var commandName = `command`
 				var arguments []string
@@ -104,7 +104,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			defer streamManager.Destroy()
 			shell := shell.Clone()
 			var buffer = runtime.NewBuffer(``, false)
-			streamManager.Add(`1`, buffer, false)
+			streamManager.Add(`1`, buffer)
 			func() {
 				var commandName = `program`
 				var arguments []string
@@ -196,7 +196,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			defer streamManager.Destroy()
 			shell := shell.Clone()
 			var buffer = runtime.NewBuffer(``, false)
-			streamManager.Add(`1`, buffer, false)
+			streamManager.Add(`1`, buffer)
 			func() {
 				var commandName = `subcommand`
 				var arguments []string
@@ -291,7 +291,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			defer streamManager.Destroy()
 			shell := shell.Clone()
 			var buffer = runtime.NewBuffer(``, false)
-			streamManager.Add(`1`, buffer, false)
+			streamManager.Add(`1`, buffer)
 			func() {
 				var commandName = `echo`
 				var arguments []string
@@ -335,7 +335,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			shell.HandleError(err)
 			return
 		}
-		streamManager.Add(`0`, stream0, false)
+		streamManager.Add(`0`, stream0)
 		if stream, err := streamManager.Get(`0`); err != nil {
 			shell.HandleError(err)
 			return

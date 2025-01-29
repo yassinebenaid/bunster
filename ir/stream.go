@@ -72,11 +72,10 @@ func (c CloneStreamManager) togo() string {
 type AddStream struct {
 	Fd         string
 	StreamName string
-	Proxy      bool
 }
 
 func (as AddStream) togo() string {
-	return fmt.Sprintf("streamManager.Add(`%s`, %s, %t)\n", as.Fd, as.StreamName, as.Proxy)
+	return fmt.Sprintf("streamManager.Add(`%s`, %s)\n", as.Fd, as.StreamName)
 }
 
 type SetStream struct {

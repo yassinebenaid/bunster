@@ -117,7 +117,7 @@ func (sm *StreamManager) OpenStream(name string, flag int) (Stream, error) {
 	}
 }
 
-func (sm *StreamManager) Add(fd string, stream Stream, _ bool) {
+func (sm *StreamManager) Add(fd string, stream Stream) {
 	if proxy, ok := stream.(*proxyStream); ok {
 		sm.mappings[fd] = proxy
 		return

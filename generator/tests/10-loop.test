@@ -112,13 +112,13 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			shell.HandleError(err)
 			return
 		}
-		streamManager.Add(`1`, stream0, false)
+		streamManager.Add(`1`, stream0)
 		stream1, err := streamManager.OpenStream(`input.txt`, runtime.STREAM_FLAG_READ)
 		if err != nil {
 			shell.HandleError(err)
 			return
 		}
-		streamManager.Add(`0`, stream1, false)
+		streamManager.Add(`0`, stream1)
 		for {
     		func() {
     			var commandName = `true`
@@ -223,7 +223,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		}
 		func() {
 			streamManager := streamManager.Clone()
-			streamManager.Add(`1`, pipeWriter1, true)
+			streamManager.Add(`1`, pipeWriter1)
 			var done = make(chan struct{}, 1)
 			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
 				<-done
@@ -313,8 +313,8 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		}
 		func() {
 			streamManager := streamManager.Clone()
-			streamManager.Add(`1`, pipeWriter2, true)
-			streamManager.Add(`0`, pipeReader1, false)
+			streamManager.Add(`1`, pipeWriter2)
+			streamManager.Add(`0`, pipeReader1)
 			var done = make(chan struct{}, 1)
 			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
 				<-done
@@ -401,7 +401,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			var arguments []string
 			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
-			streamManager.Add(`0`, pipeReader2, false)
+			streamManager.Add(`0`, pipeReader2)
 			if stream, err := streamManager.Get(`0`); err != nil {
 				shell.HandleError(err)
 				return
@@ -560,13 +560,13 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			shell.HandleError(err)
 			return
 		}
-		streamManager.Add(`1`, stream0, false)
+		streamManager.Add(`1`, stream0)
 		stream1, err := streamManager.OpenStream(`input.txt`, runtime.STREAM_FLAG_READ)
 		if err != nil {
 			shell.HandleError(err)
 			return
 		}
-		streamManager.Add(`0`, stream1, false)
+		streamManager.Add(`0`, stream1)
 		for {
     		func() {
     			var commandName = `true`
@@ -671,7 +671,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		}
 		func() {
 			streamManager := streamManager.Clone()
-			streamManager.Add(`1`, pipeWriter1, true)
+			streamManager.Add(`1`, pipeWriter1)
 			var done = make(chan struct{}, 1)
 			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
 				<-done
@@ -761,8 +761,8 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		}
 		func() {
 			streamManager := streamManager.Clone()
-			streamManager.Add(`1`, pipeWriter2, true)
-			streamManager.Add(`0`, pipeReader1, false)
+			streamManager.Add(`1`, pipeWriter2)
+			streamManager.Add(`0`, pipeReader1)
 			var done = make(chan struct{}, 1)
 			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
 				<-done
@@ -849,7 +849,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			var arguments []string
 			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
-			streamManager.Add(`0`, pipeReader2, false)
+			streamManager.Add(`0`, pipeReader2)
 			if stream, err := streamManager.Get(`0`); err != nil {
 				shell.HandleError(err)
 				return
