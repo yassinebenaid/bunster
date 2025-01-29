@@ -60,3 +60,15 @@ cases:
       ! ! true && !!! false
     expect:
       exit_code: 0
+
+  - name: "pipeline's exit code is the last command's exit code"
+    script: |
+      true | false
+      echo $?
+
+      false | true
+      echo $?
+    expect:
+      stdout: |
+        1
+        0
