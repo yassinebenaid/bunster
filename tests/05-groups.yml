@@ -1,0 +1,64 @@
+---
+cases:
+  - name: "simple groups"
+    script: |
+      { echo foobar; }
+
+      {
+        echo foo
+        echo bar
+      }
+    expect:
+      stdout: |
+        foobar
+        foo
+        bar
+
+  - name: "redirections on groups"
+    script: |
+      {
+        cat
+        echo error >&2
+        echo alternative output >&3
+      } <<<"Hello World" >output.txt 2>error.txt 3>alternate.txt
+    expect:
+      files:
+        output.txt: "Hello World\n"
+        error.txt: "error\n"
+        alternate.txt: "alternative output\n"
+
+  - name: "groups within pipelines"
+    script: |
+      echo foo | {
+        cat
+        echo bar
+      } | {
+        cat
+        echo baz
+      }
+    expect:
+      stdout: |
+        foo
+        bar
+        baz
+
+  - name: "groups within lists"
+    script: |
+      true && { echo foo; }
+      false || { echo bar; }
+    expect:
+      stdout: |
+        foo
+        bar
+
+  - name: "groups run in same shell context"
+    script: |
+      var=foo
+
+      {
+        var=bar
+      }
+
+      echo $var
+    expect:
+      stdout: "bar\n"
