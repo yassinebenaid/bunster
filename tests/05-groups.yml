@@ -62,3 +62,21 @@ cases:
       echo $var
     expect:
       stdout: "bar\n"
+
+  - name: "group's exit code is last command's exit code"
+    script: |
+      {
+        false
+        true
+      }
+      echo $?
+
+      {
+        true
+        false
+      }
+      echo $?
+    expect:
+      stdout: |
+        0
+        1

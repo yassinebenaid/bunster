@@ -32,6 +32,17 @@ cases:
     expect:
       stdout: "foobar bazboo\n"
 
+  - name: special variables
+    script: |
+      true
+      echo $?
+      false
+      echo $?
+    expect:
+      stdout: |
+        0
+        1
+
   - name: shell parameters
     script: |
       key=value1
