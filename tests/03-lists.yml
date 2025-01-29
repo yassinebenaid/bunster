@@ -1,0 +1,21 @@
+---
+cases:
+  - name: "simple list"
+    script: |
+      true  && echo first is true
+      true  || echo will not run
+      false && echo will not run
+      false || echo  second is false
+    expect:
+      stdout: |
+        first is true
+        second is false
+
+  - name: "longer list"
+    script: |
+      true  && echo foo || echo bar
+      true  || echo foo && echo bar
+    expect:
+      stdout: |
+        foo
+        bar
