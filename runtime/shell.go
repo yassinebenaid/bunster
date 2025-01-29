@@ -169,13 +169,14 @@ func (shell *Shell) Command(name string, args ...string) *Command {
 
 func (shell *Shell) Clone() *Shell {
 	return &Shell{
-		parent:   shell,
-		PID:      shell.PID,
-		Stdin:    shell.Stdin,
-		Stdout:   shell.Stdout,
-		Stderr:   shell.Stderr,
-		ExitCode: shell.ExitCode,
-		Args:     shell.Args,
+		parent:    shell,
+		PID:       shell.PID,
+		Stdin:     shell.Stdin,
+		Stdout:    shell.Stdout,
+		Stderr:    shell.Stderr,
+		ExitCode:  shell.ExitCode,
+		Args:      shell.Args,
+		functions: shell.functions,
 	}
 }
 
