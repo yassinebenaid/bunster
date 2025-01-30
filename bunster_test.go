@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"io/fs"
+	"log"
 	"os"
 	"os/exec"
 	"path"
@@ -48,6 +49,7 @@ var dump = (&godump.Dumper{
 }).Sprintln
 
 func TestBunster(t *testing.T) {
+	var logger = log.New(os.Stdout, "", log.Ltime)
 	filter := os.Getenv("FILTER")
 
 	buildWorkdir := path.Join(os.TempDir(), "bunster-testing")
@@ -63,10 +65,10 @@ func TestBunster(t *testing.T) {
 		t.Fatalf("Failed to `Glob` test files, %v", err)
 	}
 
-	var testsHasRan int // number of tests that has ran
-
 	for _, testFile := range testFiles {
 		t.Run(testFile, func(t *testing.T) {
+			t.Parallel()
+
 			testContent, err := os.ReadFile(testFile)
 			if err != nil {
 				t.Fatalf("Failed to open test file, %v", err)
@@ -87,14 +89,8 @@ func TestBunster(t *testing.T) {
 					// some tests only run on spesific platforms.
 					continue
 				}
-				testsHasRan++
 
-				workdir, err := setupWorkdir()
-				if err != nil {
-					t.Fatalf("Failed to setup test workdir, %v", err)
-				}
-
-				binary, err := buildBinary(buildWorkdir, []byte(testCase.Script))
+				binary, workdir, err := buildBinary(buildWorkdir, []byte(testCase.Script))
 				if err != nil {
 					t.Fatalf("\nTest(#%d): %sBuild Error: %s", i, dump(testCase.Name), dump(err.Error()))
 				}
@@ -165,43 +161,44 @@ func TestBunster(t *testing.T) {
 							i, dump(testCase.Name), filename, diff.DiffBG(expectedContent, string(content)))
 					}
 				}
+				logger.Print(dump(testCase.Name))
 			}
 		})
 	}
-
-	if testsHasRan == 0 {
-		t.Fatalf("\nNo tests has ran.")
-	}
 }
 
-func buildBinary(buildWorkdir string, s []byte) (string, error) {
+func buildBinary(buildWorkdir string, s []byte) (string, string, error) {
 	workdir, err := os.MkdirTemp(buildWorkdir, "*")
 	if err != nil {
-		return "", err
+		return "", "", err
+	}
+	rundir := path.Join(workdir, "rundir")
+	if err := os.MkdirAll(rundir, 0700); err != nil {
+		return "", "", err
 	}
 
 	if err := cloneRuntime(workdir); err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	if err := cloneStubs(workdir); err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	script, err := parser.Parse(lexer.New(s))
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	if err := analyser.Analyse(script); err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	program := generator.Generate(script)
 
 	err = os.WriteFile(path.Join(workdir, "program.go"), []byte(program.String()), 0600)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 
 	gocmd := exec.Command("go", "build", "-o", "build.bin")
@@ -210,10 +207,10 @@ func buildBinary(buildWorkdir string, s []byte) (string, error) {
 	gocmd.Stderr = os.Stderr
 	gocmd.Dir = workdir
 	if err := gocmd.Run(); err != nil {
-		return "", err
+		return "", "", err
 	}
 
-	return path.Join(workdir, "build.bin"), nil
+	return path.Join(workdir, "build.bin"), rundir, nil
 }
 
 func cloneRuntime(dst string) error {
@@ -249,16 +246,4 @@ func cloneStubs(dst string) error {
 	}
 
 	return nil
-}
-
-func setupWorkdir() (string, error) {
-	wd := path.Join(os.TempDir(), "bunster-testing-workdir")
-	if err := os.RemoveAll(wd); err != nil {
-		return "", err
-	}
-
-	if err := os.MkdirAll(wd, 0700); err != nil {
-		return "", err
-	}
-	return wd, nil
 }
