@@ -42,7 +42,7 @@ fetch_system_info() {
     BINARY_NAME="bunster/bunster_linux-amd64"
   elif [[ "$OS" == "Linux" && "$ARCH" == "arm64" ]]; then
     DOWNLOAD_LINK="$LINUX_ARM64"
-    BINARY_NAME="bunster/bunster_linux-ard64"
+    BINARY_NAME="bunster/bunster_linux-arm64"
   else
     log_error "OPERATING SYSTEM AND/OR ARCH NOT SUPPORTED"
     log_info "Attemptinng install with go..."
