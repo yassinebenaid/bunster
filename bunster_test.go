@@ -79,10 +79,6 @@ func TestBunster(t *testing.T) {
 				t.Fatalf("Failed to parse test file, %v", err)
 			}
 
-			if !test.NoParallel {
-				t.Parallel()
-			}
-
 			for i, testCase := range test.Cases {
 				if !strings.Contains(testCase.Name, filter) {
 					// we support filtering, someone would want to run specific tests.
@@ -121,14 +117,19 @@ func TestBunster(t *testing.T) {
 					close(done)
 				}()
 
+				if testCase.Timeout == 0 {
+					testCase.Timeout = 1
+				}
+
 				select {
 				case err := <-done:
 					if _, ok := err.(*exec.ExitError); !ok && err != nil {
 						t.Fatalf("\nTest(#%d): %sRuntime Error: %s", i, dump(testCase.Name), dump(err.Error()))
 					}
-				case <-time.After(time.Second * time.Duration(testCase.Timeout+1)):
-					defer cmd.Process.Kill()
-					t.Fatalf("\nTest(#%d): %sRuntime Error: process exceeded timeout of %d seconds ", i, dump(testCase.Name), time.Duration(testCase.Timeout+1))
+				case <-time.After(time.Second * time.Duration(testCase.Timeout)):
+					defer func() { _ = cmd.Process.Kill() }()
+
+					t.Fatalf("\nTest(#%d): %sRuntime Error: process exceeded timeout of %d seconds ", i, dump(testCase.Name), time.Duration(testCase.Timeout))
 				}
 
 				if testCase.Expect.ExitCode != cmd.ProcessState.ExitCode() {

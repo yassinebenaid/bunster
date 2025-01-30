@@ -1,5 +1,4 @@
 ---
-no-parallel: true
 cases:
   - name: "commands are put to run in background, we don't wait them to finish"
     timeout: 1
