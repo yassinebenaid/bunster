@@ -50,9 +50,12 @@ var dump = (&godump.Dumper{
 func TestBunster(t *testing.T) {
 	filter := os.Getenv("FILTER")
 
-	buildWorkdir, err := prepareBuildAssets()
-	if err != nil {
-		t.Fatalf("Failed to prepare the build assets, %v", err)
+	buildWorkdir := path.Join(os.TempDir(), "bunster-testing")
+	if err := os.RemoveAll(buildWorkdir); err != nil {
+		t.Fatalf("Failed to clean old workspace, %v", err)
+	}
+	if err := os.MkdirAll(buildWorkdir, 0700); err != nil {
+		t.Fatalf("Failed to create workspace, %v", err)
 	}
 
 	testFiles, err := filepath.Glob("./tests/*.yml")
@@ -171,7 +174,20 @@ func TestBunster(t *testing.T) {
 	}
 }
 
-func buildBinary(workdir string, s []byte) (string, error) {
+func buildBinary(buildWorkdir string, s []byte) (string, error) {
+	workdir, err := os.MkdirTemp(buildWorkdir, "*")
+	if err != nil {
+		return "", err
+	}
+
+	if err := cloneRuntime(workdir); err != nil {
+		return "", err
+	}
+
+	if err := cloneStubs(workdir); err != nil {
+		return "", err
+	}
+
 	script, err := parser.Parse(lexer.New(s))
 	if err != nil {
 		return "", err
@@ -198,27 +214,6 @@ func buildBinary(workdir string, s []byte) (string, error) {
 	}
 
 	return path.Join(workdir, "build.bin"), nil
-}
-
-func prepareBuildAssets() (string, error) {
-	wd := path.Join(os.TempDir(), "bunster-build")
-	if err := os.RemoveAll(wd); err != nil {
-		return "", err
-	}
-
-	if err := os.MkdirAll(wd, 0700); err != nil {
-		return "", err
-	}
-
-	if err := cloneRuntime(wd); err != nil {
-		return "", err
-	}
-
-	if err := cloneStubs(wd); err != nil {
-		return "", err
-	}
-
-	return wd, nil
 }
 
 func cloneRuntime(dst string) error {
