@@ -2,7 +2,6 @@ package bunster_test
 
 import (
 	"bytes"
-	"context"
 	"io/fs"
 	"log"
 	"os"
@@ -25,7 +24,8 @@ import (
 )
 
 type Test struct {
-	Cases []struct {
+	NoParallel bool `yaml:"no-parallel"`
+	Cases      []struct {
 		Name    string            `yaml:"name"`
 		Stdin   string            `yaml:"stdin"`
 		RunsOn  string            `yaml:"runs_on"`
@@ -67,7 +67,6 @@ func TestBunster(t *testing.T) {
 
 	for _, testFile := range testFiles {
 		t.Run(testFile, func(t *testing.T) {
-			t.Parallel()
 
 			testContent, err := os.ReadFile(testFile)
 			if err != nil {
@@ -102,30 +101,37 @@ func TestBunster(t *testing.T) {
 				}
 
 				var stdout, stderr bytes.Buffer
-
-				seconds := testCase.Timeout
-				if seconds == 0 {
-					seconds = 1
-				}
-				timeout, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(seconds))
-				defer cancel()
-
-				cmd := exec.CommandContext(timeout, binary, testCase.Args...)
+				cmd := exec.Command(binary, testCase.Args...)
 				cmd.Stdin = strings.NewReader(testCase.Stdin)
 				cmd.Stdout = &stdout
 				cmd.Stderr = &stderr
 				cmd.Dir = workdir
 				cmd.Env = append(os.Environ(), testCase.Env...)
-				if err := cmd.Run(); err != nil {
-					switch err.(type) {
-					case *exec.ExitError:
-						if string(err.Error()) == "signal: killed" {
-							t.Fatalf("\nTest(#%d): %sRuntime Error: %s", i, dump(testCase.Name), dump(err.Error()))
-						}
-					default:
+				if err := cmd.Start(); err != nil {
+					t.Fatalf("\nTest(#%d): %sRuntime Error: %s", i, dump(testCase.Name), dump(err.Error()))
+				}
+
+				var done = make(chan error, 1)
+				go func() {
+					done <- cmd.Wait()
+					close(done)
+				}()
+
+				if testCase.Timeout == 0 {
+					testCase.Timeout = 1
+				}
+
+				select {
+				case err := <-done:
+					if _, ok := err.(*exec.ExitError); !ok && err != nil {
 						t.Fatalf("\nTest(#%d): %sRuntime Error: %s", i, dump(testCase.Name), dump(err.Error()))
 					}
+				case <-time.After(time.Second * time.Duration(testCase.Timeout)):
+					defer func() { _ = cmd.Process.Kill() }()
+
+					t.Fatalf("\nTest(#%d): %sRuntime Error: process exceeded timeout of %d seconds ", i, dump(testCase.Name), time.Duration(testCase.Timeout))
 				}
+
 				if testCase.Expect.ExitCode != cmd.ProcessState.ExitCode() {
 					t.Fatalf("\nTest(#%d): %sExpected exit code of '%d', got '%d'",
 						i, dump(testCase.Name), testCase.Expect.ExitCode, cmd.ProcessState.ExitCode())
