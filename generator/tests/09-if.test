@@ -11,9 +11,10 @@ package main
 import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	{
+	func() {
 		var condition = false
 		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
 		func() {
 			var commandName = `true`
 			var arguments []string
@@ -81,11 +82,8 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 			}()
 		}
-        goto endofscope1
-    endofscope1:
-	    streamManager.Destroy()
 
-	}
+	}()
 }
 
 #(ENDTEST)
@@ -107,9 +105,10 @@ package main
 import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	{
+	func() {
 		var condition = false
 		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
 		func() {
 			var commandName = `true`
 			var arguments []string
@@ -245,11 +244,8 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				}()
 			}
 		}
-        goto endofscope1
-    endofscope1:
-	    streamManager.Destroy()
 
-	}
+	}()
 }
 
 #(ENDTEST)
@@ -273,9 +269,10 @@ package main
 import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	{
+	func() {
 		var condition = false
 		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
 		func() {
 			var commandName = `true`
 			var arguments []string
@@ -377,11 +374,8 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 			}()
 		}
-        goto endofscope1
-    endofscope1:
-	    streamManager.Destroy()
 
-	}
+	}()
 }
 
 #(ENDTEST)
@@ -407,9 +401,10 @@ package main
 import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	{
+	func() {
 		var condition = false
 		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
 		func() {
 			var commandName = `true`
 			var arguments []string
@@ -613,11 +608,8 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 			}()
 		}
-        goto endofscope1
-    endofscope1:
-	    streamManager.Destroy()
 
-	}
+	}()
 }
 
 #(ENDTEST)

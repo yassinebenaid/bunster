@@ -1,8 +1,6 @@
 package generator
 
 import (
-	"fmt"
-
 	"github.com/yassinebenaid/bunster/ast"
 	"github.com/yassinebenaid/bunster/ir"
 )
@@ -80,9 +78,8 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, ctx *context) 
 	var cmdbuf, innerBuf InstructionBuffer
 
 	cmdbuf.add(ir.Declare{Name: "condition", Value: ir.Literal("false")})
-	cmdbuf.add(ir.CloneStreamManager{})
+	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
 
-	ctx.label = fmt.Sprintf("endofscope%d", g.scopesCount)
 	g.handleRedirections(&cmdbuf, cond.Redirections, ctx)
 
 	for _, statement := range cond.Head {
@@ -110,10 +107,8 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, ctx *context) 
 	}
 
 	if ctx.pipe == nil {
-		innerBuf.add(ir.Label(ctx.label))
-		innerBuf.add(ir.Literal("streamManager.Destroy()\n"))
 		cmdbuf = append(cmdbuf, innerBuf...)
-		*buf = append(*buf, ir.Scope(cmdbuf))
+		*buf = append(*buf, ir.Closure(cmdbuf))
 		return
 	}
 

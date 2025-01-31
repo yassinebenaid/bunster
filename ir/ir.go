@@ -95,12 +95,6 @@ func (s Literal) togo() string {
 	return string(s)
 }
 
-type Label string
-
-func (l Label) togo() string {
-	return fmt.Sprintf("goto %s\n%s:\n", l, l)
-}
-
 type ReadVar string
 
 func (rv ReadVar) togo() string {
