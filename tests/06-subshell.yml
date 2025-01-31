@@ -1,0 +1,84 @@
+---
+cases:
+  - name: "simple subshell"
+    script: |
+      ( echo foobar )
+
+      (
+        echo foo
+        echo bar
+      )
+    expect:
+      stdout: |
+        foobar
+        foo
+        bar
+
+  - name: "redirections on subshell"
+    script: |
+      (
+        cat
+        echo error >&2
+        echo alternative output >&3
+      ) <<<"Hello World" >output.txt 2>error.txt 3>alternate.txt
+    expect:
+      files:
+        output.txt: "Hello World\n"
+        error.txt: "error\n"
+        alternate.txt: "alternative output\n"
+
+  - name: "subshell within pipelines"
+    script: |
+      echo foo | (
+        cat
+        echo bar
+      ) | (
+        cat
+        echo baz
+      )
+    expect:
+      stdout: |
+        foo
+        bar
+        baz
+
+  - name: "subshell within lists"
+    script: |
+      true && ( echo foo )
+      false || ( echo bar )
+    expect:
+      stdout: |
+        foo
+        bar
+
+  - name: "subshell run in sub-shell context"
+    script: |
+      var=foo
+
+      (
+        echo $var
+        var=bar
+        echo $var
+      )
+
+      echo $var
+    expect:
+      stdout: "foo\nbar\nfoo\n"
+
+  - name: "subshell's exit code is last command's exit code"
+    script: |
+      (
+        false
+        true
+      )
+      echo $?
+
+      (
+        true
+        false
+      )
+      echo $?
+    expect:
+      stdout: |
+        0
+        1
