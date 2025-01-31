@@ -8,7 +8,7 @@
 <div align="center">
 
 [![CI](https://github.com/yassinebenaid/bunster/actions/workflows/ci.yml/badge.svg)](https://github.com/yassinebenaid/bunster/actions/workflows/ci.yml)
-[![Documentation](https://img.shields.io/badge/Documentation-e57884?logo=BookStack&logoColor=9c2e5c)](https://bunster.netlify.app)
+[![Read - documentation](https://img.shields.io/badge/Read-documentation-9c2e5c)](https://bunster.netlify.app)
 
 </div>
 
