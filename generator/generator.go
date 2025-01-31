@@ -151,11 +151,11 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 	})
 
 	for _, env := range cmd.Env {
-		cmdbuf.add(ir.SetCmdEnv{
-			Command: "command",
-			Key:     env.Name,
-			Value:   g.handleExpression(&cmdbuf, env.Value),
-		})
+		var value ir.Instruction = ir.String("")
+		if env.Value != nil {
+			value = g.handleExpression(&cmdbuf, env.Value)
+		}
+		cmdbuf.add(ir.SetCmdEnv{Command: "command", Key: env.Name, Value: value})
 	}
 
 	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
