@@ -13,7 +13,9 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
+	    var parentShell = shell
 	    shell := shell.Clone()
+        defer func() { parentShell.ExitCode = shell.ExitCode }()
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		func() {
@@ -103,7 +105,9 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
+	    var parentShell = shell
 	    shell := shell.Clone()
+        defer func() { parentShell.ExitCode = shell.ExitCode }()
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		stream0, err := streamManager.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
@@ -204,7 +208,9 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
+	    var parentShell = shell
 	    shell := shell.Clone()
+        defer func() { parentShell.ExitCode = shell.ExitCode }()
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		func() {
@@ -410,11 +416,15 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
+	    var parentShell = shell
 	    shell := shell.Clone()
+        defer func() { parentShell.ExitCode = shell.ExitCode }()
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		func() {
-		    shell := shell.Clone()
+    	    var parentShell = shell
+    	    shell := shell.Clone()
+            defer func() { parentShell.ExitCode = shell.ExitCode }()
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
 			func() {
@@ -452,7 +462,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 		}()
 		func() {
-		    shell := shell.Clone()
+    	    var parentShell = shell
+    	    shell := shell.Clone()
+            defer func() { parentShell.ExitCode = shell.ExitCode }()
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
 			func() {
@@ -516,7 +528,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			return
 		}
 		func() {
-		    shell := shell.Clone()
+    	    var parentShell = shell
+    	    shell := shell.Clone()
+            defer func() { parentShell.ExitCode = shell.ExitCode }()
 			streamManager := streamManager.Clone()
 			streamManager.Add(`1`, pipeWriter1)
 			var done = make(chan struct{}, 1)
@@ -564,7 +578,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 		}()
 		func() {
-		    shell := shell.Clone()
+    	    var parentShell = shell
+    	    shell := shell.Clone()
+            defer func() { parentShell.ExitCode = shell.ExitCode }()
 			streamManager := streamManager.Clone()
 			streamManager.Add(`0`, pipeReader1)
 			var done = make(chan struct{}, 1)
