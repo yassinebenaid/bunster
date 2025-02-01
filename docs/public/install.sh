@@ -45,7 +45,7 @@ fetch_system_info() {
     BINARY_NAME="bunster/bunster_linux-arm64"
   else
     log_error "OPERATING SYSTEM AND/OR ARCH NOT SUPPORTED"
-    log_info "Attemptinng install with go..."
+    log_info "Attempting install with go..."
     if command -v go &>/dev/null; then
       log_success "go is installed, proceeding..."
       go_install
