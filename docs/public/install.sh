@@ -21,15 +21,20 @@ LINUX_386="https://github.com/yassinebenaid/bunster/releases/download/${CURRENT_
 LINUX_AMD64="https://github.com/yassinebenaid/bunster/releases/download/${CURRENT_VERSION}/bunster_linux-amd64.tar.gz"
 LINUX_ARM64="https://github.com/yassinebenaid/bunster/releases/download/${CURRENT_VERSION}/bunster_linux-arm64.tar.gz"
 
-# Fetch Info
 DOWNLOAD_LINK=""
 BINARY_NAME=""
 DOWNLOAD_OUTPUT="/tmp/bunster-installer/"
+HAS_SUDO="TRUE" #set true by default
 
 fetch_system_info() {
   ARCH="$(uname -m)"
   OS="$(uname -s)"
+  if ! command -v sudo &>/dev/null || ! sudo -n true 2>/dev/null; then
+    HAS_SUDO="FALSE"
+  fi
+
   log_info "Finding binary for Arch: ${ARCH}, OS: ${OS}"
+
   if [[ "$OS" == Darwin && "$ARCH" == "arm64" ]]; then
     DOWNLOAD_LINK="$DARWIN_ARM64"
     BINARY_NAME="bunster_darwin-arm64"
@@ -150,20 +155,39 @@ tar_install() {
 }
 
 binary_move() {
-  read -p "Move binary to /usr/local/bin? (Y/n): " response
+  if [[ $HAS_SUDO == "TRUE" ]]; then
+    read -p "Move binary to /usr/local/bin? (Y/n): " response
+    response=${response:-Y}
+    if [[ "$response" =~ ^[Yy]$ ]]; then
+      log_info "Proceeding..."
+      sudo mv "${DOWNLOAD_OUTPUT}${BINARY_NAME}" "/usr/local/bin/bunster" || {
+        log_error "Failed to install package"
+        exit 1
+      }
+      clean
+      log_success "Bunster installed successfully."
+      return 0
+    fi
+  fi
+
+  # case no sudo
+  read -p "Move binary to ~/.local/bin? (Y/n): " response
   response=${response:-Y}
   if [[ "$response" =~ ^[Yy]$ ]]; then
     log_info "Proceeding..."
-    sudo mv "${DOWNLOAD_OUTPUT}${BINARY_NAME}" "/usr/local/bin/bunster" || {
+    sudo mv "${DOWNLOAD_OUTPUT}${BINARY_NAME}" "$HOME/.local/bin/bunster" || {
       log_error "Failed to install package"
       exit 1
     }
     clean
     log_success "Bunster installed successfully."
-  else
-    log_error "Operation canceled."
-    exit 1
+    return 0
   fi
+
+  log_error "Aborting installation..."
+  log_info 'Cleaning...'
+  clean
+  exit 1
 }
 
 clean() {
