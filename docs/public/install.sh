@@ -24,25 +24,27 @@ LINUX_ARM64="https://github.com/yassinebenaid/bunster/releases/download/${CURREN
 # Fetch Info
 DOWNLOAD_LINK=""
 BINARY_NAME=""
+DOWNLOAD_OUTPUT="/tmp/bunster-installer/"
+
 fetch_system_info() {
   ARCH="$(uname -m)"
   OS="$(uname -s)"
   log_info "Finding binary for Arch: ${ARCH}, OS: ${OS}"
   if [[ "$OS" == Darwin && "$ARCH" == "arm64" ]]; then
     DOWNLOAD_LINK="$DARWIN_ARM64"
-    BINARY_NAME="bunster/bunster_darwin-arm64"
+    BINARY_NAME="bunster_darwin-arm64"
   elif [[ "$OS" == "Darwin" && "$ARCH" == "x86_64" ]]; then
     DOWNLOAD_LINK="$DARWIN_AMD64"
-    BINARY_NAME="bunster/bunster_darwin-amd64"
+    BINARY_NAME="bunster_darwin-amd64"
   elif [[ "$OS" == "Linux" && ("$ARCH" == "i386" || "$ARCH" == "i686") ]]; then
     DOWNLOAD_LINK="$LINUX_386"
-    BINARY_NAME="bunster/bunster_linux-386"
+    BINARY_NAME="bunster_linux-386"
   elif [[ "$OS" == "Linux" && "$ARCH" == "x86_64" ]]; then
     DOWNLOAD_LINK="$LINUX_AMD64"
-    BINARY_NAME="bunster/bunster_linux-amd64"
+    BINARY_NAME="bunster_linux-amd64"
   elif [[ "$OS" == "Linux" && "$ARCH" == "arm64" ]]; then
     DOWNLOAD_LINK="$LINUX_ARM64"
-    BINARY_NAME="bunster/bunster_linux-arm64"
+    BINARY_NAME="/bunster_linux-arm64"
   else
     log_error "OPERATING SYSTEM AND/OR ARCH NOT SUPPORTED"
     log_info "Attempting install with go..."
@@ -92,7 +94,7 @@ Make sure you have atleast one of the following:\n
 
 curl_install() {
   log_info "Starting installation..."
-  if curl -o bunster.tar.gz -L "$DOWNLOAD_LINK"; then
+  if curl -o "${DOWNLOAD_OUTPUT}bunster.tar.gz" -L "$DOWNLOAD_LINK"; then
     log_success "Bunster installed successfully."
     tar_install
   else
@@ -103,7 +105,7 @@ curl_install() {
 
 wget_install() {
   log_info "Starting installation..."
-  if wget -O bunster.tar.gz "$DOWNLOAD_LINK"; then
+  if wget -O "${DOWNLOAD_OUTPUT}bunster.tar.gz" "$DOWNLOAD_LINK"; then
     log_success "Bunster installed successfully."
     tar_install
   else
@@ -114,7 +116,7 @@ wget_install() {
 
 fetch_install() {
   log_info "Starting installation..."
-  if fetch --location "$DOWNLOAD_LINK" -o bunster.tar.gz; then
+  if fetch --location "$DOWNLOAD_LINK" -o "${DOWNLOAD_OUTPUT}bunster.tar.gz"; then
     log_success "Bunster installed successfully."
     tar_install
   else
@@ -138,7 +140,7 @@ go_install() {
 tar_install() {
   mkdir bunster/
   log_info "Unzipping tar..."
-  if tar -xvzf bunster.tar.gz -C bunster/; then
+  if tar -xvzf "${DOWNLOAD_OUTPUT}bunster.tar.gz" -C "${DOWNLOAD_OUTPUT}"; then
     log_success "Unzipped tar.gz"
   else
     log_error "Failed to unzip tar.gz"
@@ -152,7 +154,7 @@ binary_move() {
   response=${response:-Y}
   if [[ "$response" =~ ^[Yy]$ ]]; then
     log_info "Proceeding..."
-    sudo mv "${BINARY_NAME}" "/usr/local/bin/bunster" || {
+    sudo mv "${DOWNLOAD_OUTPUT}${BINARY_NAME}" "/usr/local/bin/bunster" || {
       log_error "Failed to install package"
       exit 1
     }
@@ -166,12 +168,17 @@ binary_move() {
 
 clean() {
   log_info "Cleaning..."
-  rm -rf bunster/ bunster.tar.gz
+  rm -rf "${DOWNLOAD_OUTPUT}"
 }
 
 main() {
+  log_info "creating temporary install directory..."
+  mkdir "${DOWNLOAD_OUTPUT}"
   fetch_system_info
   check_and_route
 }
+
+trap 'clean' EXIT
+trap 'clean; exit 1' INT TERM
 
 main
