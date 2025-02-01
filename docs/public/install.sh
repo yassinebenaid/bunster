@@ -118,7 +118,7 @@ fetch_install() {
     log_success "Bunster installed successfully."
     tar_install
   else
-    log_error "Failed to download using wget. Exiting..."
+    log_error "Failed to download using fetch. Exiting..."
     exit 1
   fi
 }
