@@ -143,7 +143,6 @@ go_install() {
 }
 
 tar_install() {
-  mkdir bunster/
   log_info "Unzipping tar..."
   if tar -xvzf "${DOWNLOAD_OUTPUT}bunster.tar.gz" -C "${DOWNLOAD_OUTPUT}"; then
     log_success "Unzipped tar.gz"
@@ -175,7 +174,7 @@ binary_move() {
   response=${response:-Y}
   if [[ "$response" =~ ^[Yy]$ ]]; then
     log_info "Proceeding..."
-    sudo mv "${DOWNLOAD_OUTPUT}${BINARY_NAME}" "$HOME/.local/bin/bunster" || {
+    mv "${DOWNLOAD_OUTPUT}${BINARY_NAME}" "$HOME/.local/bin/bunster" || {
       log_error "Failed to install package"
       exit 1
     }
