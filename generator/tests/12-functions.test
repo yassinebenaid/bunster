@@ -1,0 +1,189 @@
+#(TEST: simple function declaration)
+
+function foobar {
+    echo foo bar
+}
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	shell.RegisterFunction(`foobar`, func(stdin, stdout, stderr runtime.Stream) {
+		streamManager := streamManager.Clone()
+		streamManager.Add("0", stdin)
+		streamManager.Add("1", stdout)
+		streamManager.Add("2", stderr)
+		func() {
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			func() {
+				var commandName = `echo`
+				var arguments []string
+				arguments = append(arguments, `foo`)
+				arguments = append(arguments, `bar`)
+				var command = shell.Command(commandName, arguments...)
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				if stream, err := streamManager.Get(`0`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stdin = stream
+				}
+				if stream, err := streamManager.Get(`1`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stdout = stream
+				}
+				if stream, err := streamManager.Get(`2`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stderr = stream
+				}
+				if err := command.Run(); err != nil {
+					shell.HandleError(err)
+					return
+				}
+				shell.ExitCode = command.ExitCode
+
+			}()
+
+		}()
+
+	})
+}
+
+#(ENDTEST)
+
+
+
+#(TEST: naked functions declaration)
+
+foobar() {
+    echo foo bar
+}
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	shell.RegisterFunction(`foobar`, func(stdin, stdout, stderr runtime.Stream) {
+		streamManager := streamManager.Clone()
+		streamManager.Add("0", stdin)
+		streamManager.Add("1", stdout)
+		streamManager.Add("2", stderr)
+		func() {
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			func() {
+				var commandName = `echo`
+				var arguments []string
+				arguments = append(arguments, `foo`)
+				arguments = append(arguments, `bar`)
+				var command = shell.Command(commandName, arguments...)
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				if stream, err := streamManager.Get(`0`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stdin = stream
+				}
+				if stream, err := streamManager.Get(`1`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stdout = stream
+				}
+				if stream, err := streamManager.Get(`2`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stderr = stream
+				}
+				if err := command.Run(); err != nil {
+					shell.HandleError(err)
+					return
+				}
+				shell.ExitCode = command.ExitCode
+
+			}()
+
+		}()
+
+	})
+}
+
+#(ENDTEST)
+
+
+
+#(TEST: naked functions declaration)
+
+foobar() {
+    echo foo bar
+}
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	shell.RegisterFunction(`foobar`, func(stdin, stdout, stderr runtime.Stream) {
+		streamManager := streamManager.Clone()
+		streamManager.Add("0", stdin)
+		streamManager.Add("1", stdout)
+		streamManager.Add("2", stderr)
+		func() {
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			func() {
+				var commandName = `echo`
+				var arguments []string
+				arguments = append(arguments, `foo`)
+				arguments = append(arguments, `bar`)
+				var command = shell.Command(commandName, arguments...)
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				if stream, err := streamManager.Get(`0`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stdin = stream
+				}
+				if stream, err := streamManager.Get(`1`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stdout = stream
+				}
+				if stream, err := streamManager.Get(`2`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stderr = stream
+				}
+				if err := command.Run(); err != nil {
+					shell.HandleError(err)
+					return
+				}
+				shell.ExitCode = command.ExitCode
+
+			}()
+
+		}()
+
+	})
+}
+
+#(ENDTEST)
