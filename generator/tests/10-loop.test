@@ -1019,14 +1019,10 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 
 
-#(TEST: the `break` & `continue` builtins within `if` in loops)
+#(TEST: the `break` & `continue` builtins within `list` in loops)
 
 while true; do
-    if true;then
-        continue
-    else
-        break
-    fi
+    true && continue ||  break
 done
 
 #(RESULT)
@@ -1076,51 +1072,43 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			if !condition {
 				break
 			}
-			{
-				var condition = false
+			func() {
+				var commandName = `true`
+				var arguments []string
+				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
-				func() {
-					var commandName = `true`
-					var arguments []string
-					var command = shell.Command(commandName, arguments...)
-					streamManager := streamManager.Clone()
-					defer streamManager.Destroy()
-					if stream, err := streamManager.Get(`0`); err != nil {
-						shell.HandleError(err)
-						return
-					} else {
-						command.Stdin = stream
-					}
-					if stream, err := streamManager.Get(`1`); err != nil {
-						shell.HandleError(err)
-						return
-					} else {
-						command.Stdout = stream
-					}
-					if stream, err := streamManager.Get(`2`); err != nil {
-						shell.HandleError(err)
-						return
-					} else {
-						command.Stderr = stream
-					}
-					if err := command.Run(); err != nil {
-						shell.HandleError(err)
-						return
-					}
-					shell.ExitCode = command.ExitCode
+				defer streamManager.Destroy()
+				if stream, err := streamManager.Get(`0`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stdin = stream
+				}
+				if stream, err := streamManager.Get(`1`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stdout = stream
+				}
+				if stream, err := streamManager.Get(`2`); err != nil {
+					shell.HandleError(err)
+					return
+				} else {
+					command.Stderr = stream
+				}
+				if err := command.Run(); err != nil {
+					shell.HandleError(err)
+					return
+				}
+				shell.ExitCode = command.ExitCode
 
-				}()
-				condition = shell.ExitCode == 0
-				shell.ExitCode = 0
-				if condition {
-					continue
-				}
-				if !condition {
-					break
-				}
-				goto endofscope1
-			endofscope1:
-				streamManager.Destroy()
+			}()
+			if shell.ExitCode == 0 {
+				continue
+
+			}
+			if shell.ExitCode != 0 {
+				break
 
 			}
 		}

@@ -1,0 +1,130 @@
+---
+cases:
+  - name: "simple `if` command"
+    script: |
+      if true; then
+        echo foo
+      fi
+
+      if false; then
+        echo bar
+      else
+        echo baz
+      fi
+
+      if false; then
+        echo boo
+      elif true; then
+        echo boz
+      else
+        echo bee
+      fi
+
+      if false; then
+        echo fee
+      elif false; then
+        echo foa
+      elif false; then
+        echo fai
+      elif false; then
+        echo zoo
+      elif true; then
+        echo foz
+      else
+        echo bee
+      fi
+    expect:
+      stdout: |
+        foo
+        baz
+        boz
+        foz
+
+  - name: "nested `if` commands"
+    script: |
+      if true; then
+        if false; then
+          echo bar
+        else
+          if false; then
+            echo boo
+          elif true; then
+            echo boz
+          else
+            echo bee
+          fi
+        fi
+      fi
+    expect:
+      stdout: "boz\n"
+
+  - name: "redirections on `if` command"
+    script: |
+      if true; then
+        cat
+        echo error >&2
+        echo alternative output >&3
+      fi <<<"Hello World" >output.txt 2>error.txt 3>alternate.txt
+    expect:
+      files:
+        output.txt: "Hello World\n"
+        error.txt: "error\n"
+        alternate.txt: "alternative output\n"
+
+  - name: "`if` command within pipeline"
+    script: |
+      echo Hello World | if true; then
+          cat
+      fi | if true; then
+          cat
+      fi | if true; then
+          cat
+      fi | if true; then
+          cat
+      fi
+    expect:
+      stdout: "Hello World\n"
+
+  - name: "`if` command within lists"
+    script: |
+      true && if true; then echo foo;  fi
+      false || if true; then echo bar;  fi
+    expect:
+      stdout: "foo\nbar\n"
+
+  - name: "`if` command runs in same shell context"
+    script: |
+      var=foo
+
+      if true; then
+        echo $var
+        var=bar
+        echo $var
+      fi
+
+      echo $var
+    expect:
+      stdout: "foo\nbar\nbar\n"
+
+  - name: "`if` command's exit code is last command's exit code"
+    script: |
+      if true; then
+        true
+      fi
+      echo $?
+
+      if true; then
+        false
+      fi
+      echo $?
+    expect:
+      stdout: "0\n1\n"
+
+  - name: "`if` command's header exit code does not affect the overall exit code"
+    script: |
+      if false; then
+        false
+      fi
+      echo $?
+    expect:
+      stdout: "0\n"
