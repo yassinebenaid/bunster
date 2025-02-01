@@ -213,6 +213,26 @@ var functionsTests = []testCase{
 			},
 		},
 	}},
+	{`foo() { cmd; } # comment`, ast.Script{
+		ast.Function{
+			Name: "foo",
+			Command: ast.Group{
+				Body: []ast.Statement{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+			},
+		},
+	}},
+	{`function foo() { cmd; } # comment`, ast.Script{
+		ast.Function{
+			Name: "foo",
+			Command: ast.Group{
+				Body: []ast.Statement{
+					ast.Command{Name: ast.Word("cmd")},
+				},
+			},
+		},
+	}},
 }
 
 var functionsErrorHandlingCases = []errorHandlingTestCase{
@@ -233,4 +253,6 @@ var functionsErrorHandlingCases = []errorHandlingTestCase{
 	{`function cmd (`, "syntax error: expected `)`, found `end of file`. (line: 1, column: 15)"},
 	{`function cmd )`, "syntax error: function body is expected to be a compound command, found `)`. (line: 1, column: 14)"},
 	{`function cmd () function foo() {cmd;}`, "syntax error: function body is expected to be a compound command, found `function`. (line: 1, column: 17)"},
+	{`function func() {cmd;} | cat`, "syntax error: unexpected token `|`. (line: 1, column: 24)"},
+	{`func() {cmd;} | cat`, "syntax error: unexpected token `|`. (line: 1, column: 15)"},
 }

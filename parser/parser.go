@@ -358,7 +358,16 @@ func (p *parser) parseNakedFunction(nameExpr ast.Expression) ast.Statement {
 		return nil
 	}
 
-	return ast.Function{Name: string(name), Command: compound()}
+	fn := ast.Function{Name: string(name), Command: compound()}
+
+	switch p.curr.Type {
+	case token.SEMICOLON, token.NEWLINE, token.EOF, token.AND, token.OR:
+	default:
+		p.error("unexpected token `%s`", p.curr)
+		return nil
+	}
+
+	return fn
 }
 
 func concat(n []ast.Expression, quoted bool) ast.Expression {
