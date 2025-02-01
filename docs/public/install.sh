@@ -25,8 +25,8 @@ LINUX_ARM64="https://github.com/yassinebenaid/bunster/releases/download/${CURREN
 DOWNLOAD_LINK=""
 BINARY_NAME=""
 fetch_system_info() {
-  ARCH=$(uname -m)
-  OS=$(uname -s)
+  ARCH="$(uname -m)"
+  OS="$(uname -s)"
   log_info "Finding binary for Arch: ${ARCH}, OS: ${OS}"
   if [[ "$OS" == Darwin && "$ARCH" == "arm64" ]]; then
     DOWNLOAD_LINK="$DARWIN_ARM64"
