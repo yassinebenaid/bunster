@@ -1,0 +1,47 @@
+---
+cases:
+  - name: "simple function declaration"
+    script: |
+      foo() {
+        echo this is foo
+      }
+
+      function bar() {
+        foo
+        echo this is bar
+      }
+
+      function baz {
+        bar
+        echo this is baz
+      }
+
+      baz
+    expect:
+      stdout: |
+        this is foo
+        this is bar
+        this is baz
+
+  - name: "can apply redirections on functions"
+    script: |
+      foo() {
+        cat
+      } >foo.txt <<<"this is foo"
+
+      function bar() {
+        foo
+        cat
+      } >bar.txt <<<"this is bar"
+
+      function baz {
+        bar
+        cat
+      } >baz.txt <<<"this is baz"
+
+      baz
+    expect:
+      files:
+        foo.txt: "this is foo\n"
+        bar.txt: "this is bar\n"
+        baz.txt: "this is baz\n"

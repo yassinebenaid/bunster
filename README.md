@@ -21,15 +21,17 @@ Technically speaking, **Bunster** in fact is a `shell-to-Go` [Transpiler](https:
 > [!WARNING]
 > This project is in its early stages of development. [Only a subset of features are supported so far](https://bunster.netlify.app/supported-features.html).
 
-## Goals
+## Vision
 
-Bunster's primary goal is to make shell scripts feel like any modern programming language. Additional goals include (but not limited to):
+Bunster has a vision to make shell scripts feel like any modern programming language. With as many features as we could, without any bloating. anything that
+makes you feel happy when writing shell scripts. a feeling that shells usually don't provide, afeeling like languages like Go gives you, we aim to:
 
-- **Modules**: We aim to introduce a module system that allow you to publish and consume scripts as libraries, with a builtin package manager.
-- **Standard library**: We aim to add first-class support for a wide collection of builtin commands that just work out of the box. You don't need external programs to use them.
-- **Builtin support for .env files**: Bunster aims to allow you to load variables from `.env` files. 
-- **Static Asset Embedding**: This feature allows you to embed a file's content to a variable at build time. ([Go has one already](https://pkg.go.dev/embed))
-- **Different Shells support**: Bunster aims to add support for a variety of shells in the future.
+- Introduce a module system that allows you to publish and consume scripts as libraries, with a builtin package manager.
+- Add first-class support for a wide collection of builtin commands that just work out of the box. You don't need external programs to use them.
+- Add first-class support for `.env` files. Allowing you to load variables from `.env`.
+- Support static asset embedding. This feature allows you to embed a file's content to a variable at build time. ([Go has one already](https://pkg.go.dev/embed))
+- Support different shells and POSIX.
+
 
 ## Get Started
 
@@ -48,10 +50,10 @@ It does not. Bunster does not make your script more secure. Instead, it makes yo
 _more about this topic on this discussion:_ https://github.com/yassinebenaid/bunster/discussions/126.
 
 ### Does bunster replace the programs in my script?
-No, bunster replaces the shell, but you still need to have the programs available in `$PATH` to use them. Later we might add first-class support for a subset of commands builtin.  
+No, bunster replaces the shell, but you still need to have the programs available in `$PATH` to use them. Later we might add first-class support for a subset of commands builtin.
 
 ### Is bunster a drop-in replacement for bash?
-Yes and No. 
+Yes and No.
 
 Yes because bunster aims to be compatible with bash, with a lot of additional features. Bunster is worth being your primary tool for shell scripting.
 
@@ -61,12 +63,12 @@ No because bunster programs are binary. They're cool if they're yours, but very 
 - Don't use bunster for short, simple scripts.
 
 ### Why would I choose bunster over classic shells?
-You don't have to. If you're happy with your favorite shell, just stick with it. **Bunster** is just another option. However, there are a lot of motivators worth consideration. 
+You don't have to. If you're happy with your favorite shell, just stick with it. **Bunster** is just another option. However, there are a lot of motivators worth consideration.
 
 - **Unique goals:** Bunster brings a [lot of features](https://github.com/yassinebenaid/bunster/edit/update-readme/README.md#goals) that are not present in any of the shells out there.
 - **Implementation differences:** Bunster is built differently. A lot of implementation details have been adopted to improve efficiency of your scripts.
 - **Portability**: How many times you wrote a script for `bash` in one machine, and it didn't work in another machine just because `bash` version was different. Well, bunster programs are statically linked, compile once, run everywhere (with respect to arch/os).
-- **Security**: A lot of security risks are brought just by having the shell installed on your web server, (or wherever else). if your programs are statically linked. you can eliminate the shell at all. Additionally, in some cases you might want to hide the content of the script for any reason. Well, is it easy to read `binary` files ? 
+- **Security**: A lot of security risks are brought just by having the shell installed on your web server, (or wherever else). if your programs are statically linked. you can eliminate the shell at all. Additionally, in some cases you might want to hide the content of the script for any reason. Well, is it easy to read `binary` files ?
 
 ## Versioning
 
