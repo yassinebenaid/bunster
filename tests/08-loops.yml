@@ -1,0 +1,23 @@
+---
+cases:
+  - name: "simple `while` command"
+    script: |
+      while true; do
+        echo foo
+        break
+      done
+    expect:
+      stdout: |
+        foo
+
+  - name: "simple `until` command"
+    script: |
+      until false; do
+        echo foo
+        break
+      done
+    expect:
+      stdout: |
+        foo
+
+# TODO: add more tests here
