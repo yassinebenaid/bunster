@@ -185,7 +185,6 @@ binary_move() {
   fi
 
   log_error "Aborting installation..."
-  log_info 'Cleaning...'
   clean
   exit 1
 }
@@ -196,6 +195,7 @@ clean() {
 }
 
 main() {
+  clean
   log_info "creating temporary install directory..."
   mkdir "${DOWNLOAD_OUTPUT}"
   fetch_system_info
