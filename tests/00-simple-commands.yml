@@ -32,6 +32,17 @@ cases:
     expect:
       stdout: "foobar bazboo\n"
 
+  - name: special variables
+    script: |
+      true
+      echo $?
+      false
+      echo $?
+    expect:
+      stdout: |
+        0
+        1
+
   - name: shell parameters
     script: |
       key=value1
@@ -43,8 +54,10 @@ cases:
   - name: passing shell parameters as environment variables
     script: |
       key=value key2=$key  sh -c 'echo $key $key2'
+
+      key= sh -c 'echo $key'
     expect:
-      stdout: "value\n"
+      stdout: "value\n\n"
 
   - name: calling undefined command raises an error
     script: |

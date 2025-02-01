@@ -116,7 +116,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			case ast.Loop:
 				withinLoop = true
 				break loop
-			case ast.If, ast.Break:
+			case ast.List, ast.Break:
 			default:
 				a.report(fmt.Sprintf("The `break` keyword cannot be used here"))
 			}
@@ -132,7 +132,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			case ast.Loop:
 				withinLoop = true
 				break loop2
-			case ast.If, ast.Continue:
+			case ast.List, ast.Continue:
 			default:
 				a.report(fmt.Sprintf("The `continue` keyword cannot be used here"))
 			}

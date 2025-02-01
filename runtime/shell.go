@@ -31,9 +31,9 @@ func (shell *Shell) Run() (exitCode int) {
 	streamManager := &StreamManager{
 		mappings: make(map[string]*proxyStream),
 	}
-	streamManager.Add("0", shell.Stdin, true)
-	streamManager.Add("1", shell.Stdout, true)
-	streamManager.Add("2", shell.Stderr, true)
+	streamManager.Add("0", shell.Stdin)
+	streamManager.Add("1", shell.Stdout)
+	streamManager.Add("2", shell.Stderr)
 	defer streamManager.Destroy()
 
 	defer func() {
@@ -169,13 +169,14 @@ func (shell *Shell) Command(name string, args ...string) *Command {
 
 func (shell *Shell) Clone() *Shell {
 	return &Shell{
-		parent:   shell,
-		PID:      shell.PID,
-		Stdin:    shell.Stdin,
-		Stdout:   shell.Stdout,
-		Stderr:   shell.Stderr,
-		ExitCode: shell.ExitCode,
-		Args:     shell.Args,
+		parent:    shell,
+		PID:       shell.PID,
+		Stdin:     shell.Stdin,
+		Stdout:    shell.Stdout,
+		Stderr:    shell.Stderr,
+		ExitCode:  shell.ExitCode,
+		Args:      shell.Args,
+		functions: shell.functions,
 	}
 }
 

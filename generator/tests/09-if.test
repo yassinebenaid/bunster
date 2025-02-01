@@ -11,9 +11,10 @@ package main
 import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	{
+	func() {
 		var condition = false
 		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
 		func() {
 			var commandName = `true`
 			var arguments []string
@@ -81,11 +82,8 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 			}()
 		}
-        goto endofscope1
-    endofscope1:
-	    streamManager.Destroy()
 
-	}
+	}()
 }
 
 #(ENDTEST)
@@ -107,9 +105,10 @@ package main
 import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	{
+	func() {
 		var condition = false
 		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
 		func() {
 			var commandName = `true`
 			var arguments []string
@@ -245,11 +244,8 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				}()
 			}
 		}
-        goto endofscope1
-    endofscope1:
-	    streamManager.Destroy()
 
-	}
+	}()
 }
 
 #(ENDTEST)
@@ -273,9 +269,10 @@ package main
 import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	{
+	func() {
 		var condition = false
 		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
 		func() {
 			var commandName = `true`
 			var arguments []string
@@ -377,11 +374,8 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 			}()
 		}
-        goto endofscope1
-    endofscope1:
-	    streamManager.Destroy()
 
-	}
+	}()
 }
 
 #(ENDTEST)
@@ -407,9 +401,10 @@ package main
 import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	{
+	func() {
 		var condition = false
 		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
 		func() {
 			var commandName = `true`
 			var arguments []string
@@ -613,11 +608,8 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 			}()
 		}
-        goto endofscope1
-    endofscope1:
-	    streamManager.Destroy()
 
-	}
+	}()
 }
 
 #(ENDTEST)
@@ -652,7 +644,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			var arguments []string
 			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
-			streamManager.Add(`1`, pipeWriter1, true)
+			streamManager.Add(`1`, pipeWriter1)
 			if stream, err := streamManager.Get(`0`); err != nil {
 				shell.HandleError(err)
 				return
@@ -689,8 +681,8 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		func() {
 			var condition = false
 			streamManager := streamManager.Clone()
-			streamManager.Add(`1`, pipeWriter2, true)
-			streamManager.Add(`0`, pipeReader1, false)
+			streamManager.Add(`1`, pipeWriter2)
+			streamManager.Add(`0`, pipeReader1)
 			var done = make(chan struct{}, 1)
 			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
 				<-done
@@ -778,8 +770,8 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		func() {
 			var condition = false
 			streamManager := streamManager.Clone()
-			streamManager.Add(`1`, pipeWriter3, true)
-			streamManager.Add(`0`, pipeReader2, false)
+			streamManager.Add(`1`, pipeWriter3)
+			streamManager.Add(`0`, pipeReader2)
 			var done = make(chan struct{}, 1)
 			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
 				<-done
@@ -864,7 +856,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			var arguments []string
 			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
-			streamManager.Add(`0`, pipeReader3, false)
+			streamManager.Add(`0`, pipeReader3)
 			if stream, err := streamManager.Get(`0`); err != nil {
 				shell.HandleError(err)
 				return
