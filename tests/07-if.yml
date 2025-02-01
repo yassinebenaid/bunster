@@ -70,3 +70,61 @@ cases:
         output.txt: "Hello World\n"
         error.txt: "error\n"
         alternate.txt: "alternative output\n"
+
+  - name: "`if` command within pipeline"
+    script: |
+      echo Hello World | if true; then
+          cat
+      fi | if true; then
+          cat
+      fi | if true; then
+          cat
+      fi | if true; then
+          cat
+      fi
+    expect:
+      stdout: "Hello World\n"
+
+  - name: "`if` command within lists"
+    script: |
+      true && if true; then echo foo;  fi
+      false || if true; then echo bar;  fi
+    expect:
+      stdout: "foo\nbar\n"
+
+  - name: "`if` command runs in same shell context"
+    script: |
+      var=foo
+
+      if true; then
+        echo $var
+        var=bar
+        echo $var
+      fi
+
+      echo $var
+    expect:
+      stdout: "foo\nbar\nbar\n"
+
+  - name: "`if` command's exit code is last command's exit code"
+    script: |
+      if true; then
+        true
+      fi
+      echo $?
+
+      if true; then
+        false
+      fi
+      echo $?
+    expect:
+      stdout: "0\n1\n"
+
+  - name: "`if` command's header exit code does not affect the overall exit code"
+    script: |
+      if false; then
+        false
+      fi
+      echo $?
+    expect:
+      stdout: "0\n"
