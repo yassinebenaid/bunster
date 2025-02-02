@@ -52,12 +52,15 @@ cases:
       stdout: "value1 value2 value3 value2\n"
 
   - name: passing shell parameters as environment variables
+    env: [foo=bar]
     script: |
       key=value key2=$key  sh -c 'echo $key $key2'
 
       key= sh -c 'echo $key'
+
+      keys=value sh -c 'echo $keys $foo'
     expect:
-      stdout: "value\n\n"
+      stdout: "value\n\nvalue bar\n"
 
   - name: calling undefined command raises an error
     script: |

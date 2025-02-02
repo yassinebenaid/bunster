@@ -6,28 +6,35 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 	"sync"
-	"syscall"
 )
 
 type Shell struct {
-	parent   *Shell
-	PID      int
-	Stdin    Stream
-	Stdout   Stream
-	Stderr   Stream
-	ExitCode int
-	Main     func(*Shell, *StreamManager)
-	Args     []string
+	parent    *Shell
+	PID       int
+	Stdin     Stream
+	Stdout    Stream
+	Stderr    Stream
+	ExitCode  int
+	Main      func(*Shell, *StreamManager)
+	Args      []string
+	WaitGroup sync.WaitGroup
 
 	vars      *sync.Map
-	WaitGroup sync.WaitGroup
+	env       *sync.Map
 	functions map[string]func(shell *Shell, stdin, stdout, stderr Stream)
 }
 
 func (shell *Shell) Run() (exitCode int) {
 	shell.vars = &sync.Map{}
+	shell.env = &sync.Map{}
 	shell.functions = make(map[string]func(shell *Shell, stdin, stdout, stderr Stream))
+
+	for _, env := range os.Environ() {
+		envs := strings.SplitN(env, "=", 2)
+		shell.env.Store(envs[0], envs[1])
+	}
 
 	streamManager := &StreamManager{
 		mappings: make(map[string]*proxyStream),
@@ -112,6 +119,7 @@ func (shell *Shell) Clone() *Shell {
 		Args:      shell.Args,
 		functions: shell.functions,
 		vars:      &sync.Map{},
+		env:       &sync.Map{},
 	}
 
 	shell.vars.Range(func(key any, value any) bool {
@@ -124,6 +132,22 @@ func (shell *Shell) Clone() *Shell {
 
 func (shell *Shell) RegisterFunction(name string, handler func(shell *Shell, stdin, stdout, stderr Stream)) {
 	shell.functions[name] = handler
+}
+
+func (shell *Shell) Command(name string, args ...string) *Command {
+	var command Command
+	command.shell = shell
+	command.Args = args
+
+	if fn := shell.functions[name]; fn != nil {
+		command.function = fn
+		return &command
+	}
+
+	cmd := exec.Command(name, args...)
+	command.execCmd = cmd
+
+	return &command
 }
 
 type Command struct {
@@ -167,6 +191,7 @@ func (cmd *Command) Start() error {
 				Args:      append(cmd.shell.Args[:1], cmd.Args...),
 				functions: cmd.shell.functions,
 				vars:      cmd.shell.vars,
+				env:       cmd.shell.env,
 			}
 
 			cmd.function(&shell, cmd.Stdin, cmd.Stdout, cmd.Stderr)
@@ -178,7 +203,13 @@ func (cmd *Command) Start() error {
 	cmd.execCmd.Stdin = cmd.Stdin
 	cmd.execCmd.Stdout = cmd.Stdout
 	cmd.execCmd.Stderr = cmd.Stderr
+
+	cmd.shell.env.Range(func(key any, value any) bool {
+		cmd.execCmd.Env = append(cmd.execCmd.Env, fmt.Sprintf("%s=%s", key, value))
+		return true
+	})
 	cmd.execCmd.Env = append(cmd.execCmd.Env, cmd.Env...)
+
 	return cmd.execCmd.Start()
 }
 
@@ -188,22 +219,4 @@ func (cmd *Command) Wait() error {
 		return nil
 	}
 	return cmd.execCmd.Wait()
-}
-
-func (shell *Shell) Command(name string, args ...string) *Command {
-	var command Command
-	command.shell = shell
-	command.Args = args
-
-	if fn := shell.functions[name]; fn != nil {
-		command.function = fn
-		return &command
-	}
-
-	cmd := exec.Command(name, args...)
-	cmd.Env = syscall.Environ()
-
-	command.execCmd = cmd
-
-	return &command
 }
