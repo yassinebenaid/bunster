@@ -23,7 +23,7 @@ cases:
         this is bar
         this is baz
 
-  - name: "can apply redirections on functions"
+  - name: "can apply redirections on functions declaration"
     script: |
       foo() {
         cat
@@ -41,6 +41,32 @@ cases:
 
       baz
     expect:
+      files:
+        foo.txt: "this is foo\n"
+        bar.txt: "this is bar\n"
+        baz.txt: "this is baz\n"
+
+  - name: "can apply redirections on functions calls"
+    script: |
+      foo() {
+        cat
+      }
+
+      function bar() {
+        foo >foo.txt <<<"this is foo"
+        cat
+      }
+
+      function baz {
+        bar >bar.txt <<<"this is bar"
+        cat
+      }
+
+      baz >baz.txt <<<"this is baz"
+
+      echo foobar
+    expect:
+      stdout: "foobar\n"
       files:
         foo.txt: "this is foo\n"
         bar.txt: "this is bar\n"
