@@ -59,14 +59,16 @@ func (shell *Shell) Run() (exitCode int) {
 }
 
 func (shell *Shell) ReadVar(name string) string {
-	value, ok := shell.vars.Load(name)
-	if ok {
+	if value, ok := shell.vars.Load(name); ok {
+		return value.(string)
+	}
+	if value, ok := shell.env.Load(name); ok {
 		return value.(string)
 	}
 	if shell.parent != nil {
 		return shell.parent.ReadVar(name)
 	}
-	return os.Getenv(name)
+	return ""
 }
 
 func (shell *Shell) SetVar(name string, value string) {
@@ -191,7 +193,16 @@ func (cmd *Command) Start() error {
 				Args:      append(cmd.shell.Args[:1], cmd.Args...),
 				functions: cmd.shell.functions,
 				vars:      cmd.shell.vars,
-				env:       cmd.shell.env,
+				env:       &sync.Map{},
+			}
+
+			cmd.shell.env.Range(func(key any, value any) bool {
+				shell.env.Store(key, value)
+				return true
+			})
+			for _, env := range cmd.Env {
+				envs := strings.SplitN(env, "=", 2)
+				shell.env.Store(envs[0], envs[1])
 			}
 
 			cmd.function(&shell, cmd.Stdin, cmd.Stdout, cmd.Stderr)

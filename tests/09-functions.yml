@@ -142,16 +142,19 @@ cases:
         bar
         bar
 
-  # - name: "can pass environment variables to a function"
-  #   script: |
-  #     func(){
-  #       bash -c 'echo $var'
-  #     }
+  - name: "can pass environment variables to a function"
+    env:
+      - lang=Go
+    script: |
+      func(){
+        bash -c 'echo $hobby $lang'
+      }
 
-  #     var=foo
-  #     var=bar func
-  #     echo $var
-  #   expect:
-  #     stdout: |
-  #       bar
-  #       foo
+      hobby=dev
+      hobby=tech lang=java func
+
+      echo $hobby $lang
+    expect:
+      stdout: |
+        tech java
+        dev Go
