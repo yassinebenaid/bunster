@@ -141,3 +141,17 @@ cases:
         foo
         bar
         bar
+
+  - name: "can pass environment variables to a function"
+    script: |
+      func(){
+        bash -c 'echo $var'
+      }
+
+      var=foo
+      var=bar func
+      echo $var
+    expect:
+      stdout: |
+        bar
+        foo
