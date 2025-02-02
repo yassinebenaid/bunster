@@ -72,6 +72,24 @@ cases:
         bar.txt: "this is bar\n"
         baz.txt: "this is baz\n"
 
+  - name: "redirections applied on function declarations take precedence over those applied on function calls"
+    script: |
+      foo() {
+        cat
+        echo hey >&3
+        echo cool >&4
+      } >func.txt <<<"hello world" 3>third.txt
+
+      foo >func2.txt <<<"foobar" 3>third2.txt 4>fourth.txt
+    expect:
+      stderr: "trying to duplicate bad file descriptor: 4\n"
+      files:
+        func.txt: "hello world\n"
+        func2.txt: ""
+        third.txt: "hey\n"
+        third2.txt: ""
+        fourth.txt: ""
+
   - name: "can pass positional arguments to functions"
     args: [foo, bar]
     script: |
