@@ -24,7 +24,7 @@ Technically speaking, **Bunster** in fact is a `shell-to-Go` [Transpiler](https:
 ## Vision
 
 Bunster has a vision to make shell scripts feel like any modern programming language. With as many features as we could, without any bloating. anything that
-makes you feel happy when writing shell scripts. a feeling that shells usually don't provide, afeeling like languages like Go gives you, we aim to:
+makes you feel happy when writing shell scripts. a feeling that shells usually don't provide, a feeling that languages like Go give you, we aim to:
 
 - Introduce a module system that allows you to publish and consume scripts as libraries, with a builtin package manager.
 - Add first-class support for a wide collection of builtin commands that just work out of the box. You don't need external programs to use them.
