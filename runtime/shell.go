@@ -140,20 +140,19 @@ func (shell *Shell) Command(name string, args ...string) *Command {
 	var command Command
 	command.shell = shell
 	command.Args = args
+	command.Name = name
 
 	if fn := shell.functions[name]; fn != nil {
 		command.function = fn
 		return &command
 	}
 
-	cmd := exec.Command(name, args...)
-	command.execCmd = cmd
-
 	return &command
 }
 
 type Command struct {
 	shell  *Shell
+	Name   string
 	Args   []string
 	Stdin  Stream
 	Stdout Stream
@@ -211,6 +210,7 @@ func (cmd *Command) Start() error {
 		return nil
 	}
 
+	cmd.execCmd = exec.Command(cmd.Name, cmd.Args...)
 	cmd.execCmd.Stdin = cmd.Stdin
 	cmd.execCmd.Stdout = cmd.Stdout
 	cmd.execCmd.Stderr = cmd.Stderr
