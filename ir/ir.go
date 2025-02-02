@@ -309,7 +309,7 @@ func (f Function) togo() string {
 	}
 
 	return fmt.Sprintf(
-		"shell.RegisterFunction(`%s`, func(stdin, stdout, stderr runtime.Stream){"+`
+		"shell.RegisterFunction(`%s`, func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream){"+`
 			streamManager := streamManager.Clone()
 			streamManager.Add("0", stdin)
 			streamManager.Add("1", stdout)
