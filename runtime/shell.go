@@ -101,6 +101,31 @@ func (shell *Shell) HandleError(err error) {
 	}
 }
 
+func (shell *Shell) Clone() *Shell {
+	sh := &Shell{
+		parent:    shell,
+		PID:       shell.PID,
+		Stdin:     shell.Stdin,
+		Stdout:    shell.Stdout,
+		Stderr:    shell.Stderr,
+		ExitCode:  shell.ExitCode,
+		Args:      shell.Args,
+		functions: shell.functions,
+		vars:      &sync.Map{},
+	}
+
+	shell.vars.Range(func(key any, value any) bool {
+		sh.vars.Store(key, value)
+		return true
+	})
+
+	return sh
+}
+
+func (shell *Shell) RegisterFunction(name string, handler func(shell *Shell, stdin, stdout, stderr Stream)) {
+	shell.functions[name] = handler
+}
+
 type Command struct {
 	shell  *Shell
 	Args   []string
@@ -181,21 +206,4 @@ func (shell *Shell) Command(name string, args ...string) *Command {
 	command.execCmd = cmd
 
 	return &command
-}
-
-func (shell *Shell) Clone() *Shell {
-	return &Shell{
-		parent:    shell,
-		PID:       shell.PID,
-		Stdin:     shell.Stdin,
-		Stdout:    shell.Stdout,
-		Stderr:    shell.Stderr,
-		ExitCode:  shell.ExitCode,
-		Args:      shell.Args,
-		functions: shell.functions,
-	}
-}
-
-func (shell *Shell) RegisterFunction(name string, handler func(shell *Shell, stdin, stdout, stderr Stream)) {
-	shell.functions[name] = handler
 }
