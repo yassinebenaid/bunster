@@ -106,3 +106,21 @@ cases:
         foo bar
         baz boo
         bee fox
+
+  - name: "function declaration happens in same global scope scope"
+    args: [foo, bar]
+    script: |
+      inner
+
+      outer(){
+        inner(){
+          echo from inner
+        }
+      }
+
+      outer
+      inner
+    expect:
+      stderr: |
+        "inner": executable file not found in $PATH
+      stdout: "from inner\n"
