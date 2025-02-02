@@ -11,7 +11,7 @@ package main
 import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	shell.RegisterFunction(`foobar`, func(stdin, stdout, stderr runtime.Stream) {
+	shell.RegisterFunction(`foobar`, func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 		streamManager := streamManager.Clone()
 		streamManager.Add("0", stdin)
 		streamManager.Add("1", stdout)
@@ -75,7 +75,7 @@ package main
 import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	shell.RegisterFunction(`foobar`, func(stdin, stdout, stderr runtime.Stream) {
+	shell.RegisterFunction(`foobar`, func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 		streamManager := streamManager.Clone()
 		streamManager.Add("0", stdin)
 		streamManager.Add("1", stdout)
@@ -139,7 +139,7 @@ package main
 import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	shell.RegisterFunction(`foobar`, func(stdin, stdout, stderr runtime.Stream) {
+	shell.RegisterFunction(`foobar`, func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 		streamManager := streamManager.Clone()
 		streamManager.Add("0", stdin)
 		streamManager.Add("1", stdout)
@@ -208,7 +208,7 @@ package main
 import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	shell.RegisterFunction(`foobar`, func(stdin, stdout, stderr runtime.Stream) {
+	shell.RegisterFunction(`foobar`, func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 		streamManager := streamManager.Clone()
 		streamManager.Add("0", stdin)
 		streamManager.Add("1", stdout)
@@ -254,7 +254,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 	})
 	if shell.ExitCode == 0 {
-		shell.RegisterFunction(`foobar`, func(stdin, stdout, stderr runtime.Stream) {
+		shell.RegisterFunction(`foobar`, func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 			streamManager := streamManager.Clone()
 			streamManager.Add("0", stdin)
 			streamManager.Add("1", stdout)
@@ -302,7 +302,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 	}
 	if shell.ExitCode != 0 {
-		shell.RegisterFunction(`foobar`, func(stdin, stdout, stderr runtime.Stream) {
+		shell.RegisterFunction(`foobar`, func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 			streamManager := streamManager.Clone()
 			streamManager.Add("0", stdin)
 			streamManager.Add("1", stdout)
@@ -375,7 +375,7 @@ package main
 import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	shell.RegisterFunction(`foobar`, func(stdin, stdout, stderr runtime.Stream) {
+	shell.RegisterFunction(`foobar`, func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 		streamManager := streamManager.Clone()
 		streamManager.Add("0", stdin)
 		streamManager.Add("1", stdout)
@@ -383,7 +383,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		func() {
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
-			shell.RegisterFunction(`foobar`, func(stdin, stdout, stderr runtime.Stream) {
+			shell.RegisterFunction(`foobar`, func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 				streamManager := streamManager.Clone()
 				streamManager.Add("0", stdin)
 				streamManager.Add("1", stdout)

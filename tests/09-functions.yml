@@ -45,3 +45,20 @@ cases:
         foo.txt: "this is foo\n"
         bar.txt: "this is bar\n"
         baz.txt: "this is baz\n"
+
+  - name: "can pass positional arguments to functions"
+    args: [foo, bar]
+    script: |
+      echo $1 $2
+
+      func(){
+        echo $1 $2
+      }
+
+      func baz boo
+      func bee fox
+    expect:
+      stdout: |
+        foo bar
+        baz boo
+        bee fox
