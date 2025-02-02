@@ -6,27 +6,35 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 	"sync"
-	"syscall"
 )
 
 type Shell struct {
-	parent   *Shell
-	PID      int
-	Stdin    Stream
-	Stdout   Stream
-	Stderr   Stream
-	ExitCode int
-	Main     func(*Shell, *StreamManager)
-	Args     []string
-
-	vars      sync.Map
+	parent    *Shell
+	PID       int
+	Stdin     Stream
+	Stdout    Stream
+	Stderr    Stream
+	ExitCode  int
+	Main      func(*Shell, *StreamManager)
+	Args      []string
 	WaitGroup sync.WaitGroup
+
+	vars      *sync.Map
+	env       *sync.Map
 	functions map[string]func(shell *Shell, stdin, stdout, stderr Stream)
 }
 
 func (shell *Shell) Run() (exitCode int) {
+	shell.vars = &sync.Map{}
+	shell.env = &sync.Map{}
 	shell.functions = make(map[string]func(shell *Shell, stdin, stdout, stderr Stream))
+
+	for _, env := range os.Environ() {
+		envs := strings.SplitN(env, "=", 2)
+		shell.env.Store(envs[0], envs[1])
+	}
 
 	streamManager := &StreamManager{
 		mappings: make(map[string]*proxyStream),
@@ -51,14 +59,16 @@ func (shell *Shell) Run() (exitCode int) {
 }
 
 func (shell *Shell) ReadVar(name string) string {
-	value, ok := shell.vars.Load(name)
-	if ok {
+	if value, ok := shell.vars.Load(name); ok {
+		return value.(string)
+	}
+	if value, ok := shell.env.Load(name); ok {
 		return value.(string)
 	}
 	if shell.parent != nil {
 		return shell.parent.ReadVar(name)
 	}
-	return os.Getenv(name)
+	return ""
 }
 
 func (shell *Shell) SetVar(name string, value string) {
@@ -100,8 +110,49 @@ func (shell *Shell) HandleError(err error) {
 	}
 }
 
+func (shell *Shell) Clone() *Shell {
+	sh := &Shell{
+		parent:    shell,
+		PID:       shell.PID,
+		Stdin:     shell.Stdin,
+		Stdout:    shell.Stdout,
+		Stderr:    shell.Stderr,
+		ExitCode:  shell.ExitCode,
+		Args:      shell.Args,
+		functions: shell.functions,
+		vars:      &sync.Map{},
+		env:       &sync.Map{},
+	}
+
+	shell.vars.Range(func(key any, value any) bool {
+		sh.vars.Store(key, value)
+		return true
+	})
+
+	return sh
+}
+
+func (shell *Shell) RegisterFunction(name string, handler func(shell *Shell, stdin, stdout, stderr Stream)) {
+	shell.functions[name] = handler
+}
+
+func (shell *Shell) Command(name string, args ...string) *Command {
+	var command Command
+	command.shell = shell
+	command.Args = args
+	command.Name = name
+
+	if fn := shell.functions[name]; fn != nil {
+		command.function = fn
+		return &command
+	}
+
+	return &command
+}
+
 type Command struct {
 	shell  *Shell
+	Name   string
 	Args   []string
 	Stdin  Stream
 	Stdout Stream
@@ -140,6 +191,17 @@ func (cmd *Command) Start() error {
 				Stderr:    cmd.shell.Stderr,
 				Args:      append(cmd.shell.Args[:1], cmd.Args...),
 				functions: cmd.shell.functions,
+				vars:      cmd.shell.vars,
+				env:       &sync.Map{},
+			}
+
+			cmd.shell.env.Range(func(key any, value any) bool {
+				shell.env.Store(key, value)
+				return true
+			})
+			for _, env := range cmd.Env {
+				envs := strings.SplitN(env, "=", 2)
+				shell.env.Store(envs[0], envs[1])
 			}
 
 			cmd.function(&shell, cmd.Stdin, cmd.Stdout, cmd.Stderr)
@@ -148,10 +210,17 @@ func (cmd *Command) Start() error {
 		return nil
 	}
 
+	cmd.execCmd = exec.Command(cmd.Name, cmd.Args...) //nolint:gosec
 	cmd.execCmd.Stdin = cmd.Stdin
 	cmd.execCmd.Stdout = cmd.Stdout
 	cmd.execCmd.Stderr = cmd.Stderr
+
+	cmd.shell.env.Range(func(key any, value any) bool {
+		cmd.execCmd.Env = append(cmd.execCmd.Env, fmt.Sprintf("%s=%s", key, value))
+		return true
+	})
 	cmd.execCmd.Env = append(cmd.execCmd.Env, cmd.Env...)
+
 	return cmd.execCmd.Start()
 }
 
@@ -161,39 +230,4 @@ func (cmd *Command) Wait() error {
 		return nil
 	}
 	return cmd.execCmd.Wait()
-}
-
-func (shell *Shell) Command(name string, args ...string) *Command {
-	var command Command
-	command.shell = shell
-	command.Args = args
-
-	if fn := shell.functions[name]; fn != nil {
-		command.function = fn
-		return &command
-	}
-
-	cmd := exec.Command(name, args...)
-	cmd.Env = syscall.Environ()
-
-	command.execCmd = cmd
-
-	return &command
-}
-
-func (shell *Shell) Clone() *Shell {
-	return &Shell{
-		parent:    shell,
-		PID:       shell.PID,
-		Stdin:     shell.Stdin,
-		Stdout:    shell.Stdout,
-		Stderr:    shell.Stderr,
-		ExitCode:  shell.ExitCode,
-		Args:      shell.Args,
-		functions: shell.functions,
-	}
-}
-
-func (shell *Shell) RegisterFunction(name string, handler func(shell *Shell, stdin, stdout, stderr Stream)) {
-	shell.functions[name] = handler
 }

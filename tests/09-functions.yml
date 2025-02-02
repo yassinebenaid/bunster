@@ -23,7 +23,7 @@ cases:
         this is bar
         this is baz
 
-  - name: "can apply redirections on functions"
+  - name: "can apply redirections on functions declaration"
     script: |
       foo() {
         cat
@@ -46,6 +46,50 @@ cases:
         bar.txt: "this is bar\n"
         baz.txt: "this is baz\n"
 
+  - name: "can apply redirections on functions calls"
+    script: |
+      foo() {
+        cat
+      }
+
+      function bar() {
+        foo >foo.txt <<<"this is foo"
+        cat
+      }
+
+      function baz {
+        bar >bar.txt <<<"this is bar"
+        cat
+      }
+
+      baz >baz.txt <<<"this is baz"
+
+      echo foobar
+    expect:
+      stdout: "foobar\n"
+      files:
+        foo.txt: "this is foo\n"
+        bar.txt: "this is bar\n"
+        baz.txt: "this is baz\n"
+
+  - name: "redirections applied on function declarations take precedence over those applied on function calls"
+    script: |
+      foo() {
+        cat
+        echo hey >&3
+        echo cool >&4
+      } >func.txt <<<"hello world" 3>third.txt
+
+      foo >func2.txt <<<"foobar" 3>third2.txt 4>fourth.txt
+    expect:
+      stderr: "trying to duplicate bad file descriptor: 4\n"
+      files:
+        func.txt: "hello world\n"
+        func2.txt: ""
+        third.txt: "hey\n"
+        third2.txt: ""
+        fourth.txt: ""
+
   - name: "can pass positional arguments to functions"
     args: [foo, bar]
     script: |
@@ -62,3 +106,55 @@ cases:
         foo bar
         baz boo
         bee fox
+
+  - name: "function declaration happens in same global scope scope"
+    script: |
+      inner
+
+      outer(){
+        inner(){
+          echo from inner
+        }
+      }
+
+      outer
+      inner
+    expect:
+      stderr: |
+        "inner": executable file not found in $PATH
+      stdout: "from inner\n"
+
+  - name: "function runs in same outer context"
+    script: |
+      var=foo
+
+      func(){
+        echo $var
+        var=bar
+        echo $var
+      }
+
+      func
+      echo $var
+    expect:
+      stdout: |
+        foo
+        bar
+        bar
+
+  - name: "can pass environment variables to a function"
+    env:
+      - lang=Go
+    script: |
+      func(){
+        bash -c 'echo $hobby $lang'
+      }
+
+      hobby=dev
+      hobby=tech lang=java func
+
+      echo $hobby $lang
+    expect:
+      stdout: |
+        tech java
+        dev Go

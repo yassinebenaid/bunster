@@ -132,6 +132,11 @@ func TestBunster(t *testing.T) {
 					t.Fatalf("\nTest(#%d): %sRuntime Error: process exceeded timeout of %d seconds ", i, dump(testCase.Name), time.Duration(testCase.Timeout))
 				}
 
+				if testCase.Expect.Stderr != stderr.String() {
+					t.Fatalf("\nTest(#%d): %sExpected `STDERR` does not match actual value\ndiff:\n%s",
+						i, dump(testCase.Name), diff.DiffBG(testCase.Expect.Stderr, stderr.String()))
+				}
+
 				if testCase.Expect.ExitCode != cmd.ProcessState.ExitCode() {
 					t.Fatalf("\nTest(#%d): %sExpected exit code of '%d', got '%d'",
 						i, dump(testCase.Name), testCase.Expect.ExitCode, cmd.ProcessState.ExitCode())
@@ -140,11 +145,6 @@ func TestBunster(t *testing.T) {
 				if testCase.Expect.Stdout != stdout.String() {
 					t.Fatalf("\nTest(#%d): %sExpected `STDOUT` does not match actual value\ndiff:\n%s",
 						i, dump(testCase.Name), diff.DiffBG(testCase.Expect.Stdout, stdout.String()))
-				}
-
-				if testCase.Expect.Stderr != stderr.String() {
-					t.Fatalf("\nTest(#%d): %sExpected `STDERR` does not match actual value\ndiff:\n%s",
-						i, dump(testCase.Name), diff.DiffBG(testCase.Expect.Stderr, stderr.String()))
 				}
 
 				files, err := filepath.Glob(workdir + "/*")
