@@ -20,12 +20,13 @@ type Shell struct {
 	Main     func(*Shell, *StreamManager)
 	Args     []string
 
-	vars      sync.Map
+	vars      *sync.Map
 	WaitGroup sync.WaitGroup
 	functions map[string]func(shell *Shell, stdin, stdout, stderr Stream)
 }
 
 func (shell *Shell) Run() (exitCode int) {
+	shell.vars = &sync.Map{}
 	shell.functions = make(map[string]func(shell *Shell, stdin, stdout, stderr Stream))
 
 	streamManager := &StreamManager{
@@ -140,6 +141,7 @@ func (cmd *Command) Start() error {
 				Stderr:    cmd.shell.Stderr,
 				Args:      append(cmd.shell.Args[:1], cmd.Args...),
 				functions: cmd.shell.functions,
+				vars:      cmd.shell.vars,
 			}
 
 			cmd.function(&shell, cmd.Stdin, cmd.Stdout, cmd.Stderr)

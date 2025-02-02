@@ -108,7 +108,6 @@ cases:
         bee fox
 
   - name: "function declaration happens in same global scope scope"
-    args: [foo, bar]
     script: |
       inner
 
@@ -124,3 +123,21 @@ cases:
       stderr: |
         "inner": executable file not found in $PATH
       stdout: "from inner\n"
+
+  - name: "function runs in same outer context"
+    script: |
+      var=foo
+
+      func(){
+        echo $var
+        var=bar
+        echo $var
+      }
+
+      func
+      echo $var
+    expect:
+      stdout: |
+        foo
+        bar
+        bar
