@@ -210,7 +210,7 @@ func (cmd *Command) Start() error {
 		return nil
 	}
 
-	cmd.execCmd = exec.Command(cmd.Name, cmd.Args...)
+	cmd.execCmd = exec.Command(cmd.Name, cmd.Args...) //nolint:gosec
 	cmd.execCmd.Stdin = cmd.Stdin
 	cmd.execCmd.Stdout = cmd.Stdout
 	cmd.execCmd.Stderr = cmd.Stderr
