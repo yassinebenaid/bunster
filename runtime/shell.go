@@ -80,7 +80,7 @@ func (shell *Shell) ReadSpecialVar(name string) string {
 	case "$":
 		return strconv.FormatInt(int64(shell.PID), 10)
 	case "#":
-		return strconv.FormatInt(int64(len(shell.Args)), 10)
+		return strconv.FormatInt(int64(len(shell.Args)-1), 10)
 	case "?":
 		return strconv.FormatInt(int64(shell.ExitCode), 10)
 	default:
