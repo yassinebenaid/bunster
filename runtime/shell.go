@@ -26,7 +26,7 @@ type Shell struct {
 	functions map[string]func(shell *Shell, stdin, stdout, stderr Stream)
 }
 
-func (shell *Shell) Run() (exitCode int) {
+func (shell *Shell) Run(streamManager *StreamManager) (exitCode int) {
 	shell.vars = &sync.Map{}
 	shell.env = &sync.Map{}
 	shell.functions = make(map[string]func(shell *Shell, stdin, stdout, stderr Stream))
@@ -35,14 +35,6 @@ func (shell *Shell) Run() (exitCode int) {
 		envs := strings.SplitN(env, "=", 2)
 		shell.env.Store(envs[0], envs[1])
 	}
-
-	streamManager := &StreamManager{
-		mappings: make(map[string]*proxyStream),
-	}
-	streamManager.Add("0", shell.Stdin)
-	streamManager.Add("1", shell.Stdout)
-	streamManager.Add("2", shell.Stderr)
-	defer streamManager.Destroy()
 
 	defer func() {
 		err := recover()
