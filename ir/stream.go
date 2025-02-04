@@ -21,7 +21,7 @@ func (of OpenStream) togo() string {
 	return fmt.Sprintf(
 		`%s, err := streamManager.OpenStream(%s, runtime.%s)
 		if err != nil {
-			shell.HandleError(err)
+			shell.HandleError(streamManager, err)
 			return
 		}
 		`, of.Name, of.Target.togo(), of.Mode)
@@ -44,7 +44,7 @@ func (b NewPipeBuffer) togo() string {
 	return fmt.Sprintf(
 		`%s, err := runtime.NewBufferedStream(%s)
 		if err != nil {
-			shell.HandleError(err)
+			shell.HandleError(streamManager, err)
 			return
 		}
 		`, b.Name, b.Value.togo())
@@ -79,7 +79,7 @@ type SetStream struct {
 func (as SetStream) togo() string {
 	return fmt.Sprintf(
 		`if stream, err := streamManager.Get(%s); err != nil{
-			shell.HandleError(err)
+			shell.HandleError(streamManager, err)
 			return
 		}else{
 			%s = stream
@@ -95,7 +95,7 @@ type DuplicateStream struct {
 func (as DuplicateStream) togo() string {
 	return fmt.Sprintf(
 		`if err := streamManager.Duplicate("%s", %s); err != nil {
-			shell.HandleError(err)
+			shell.HandleError(streamManager, err)
 			return
 		}
 	`, as.Old, as.New.togo())
@@ -108,7 +108,7 @@ type CloseStream struct {
 func (c CloseStream) togo() string {
 	return fmt.Sprintf(
 		`if err := streamManager.Close(%s); err != nil {
-			shell.HandleError(err)
+			shell.HandleError(streamManager, err)
 			return
 		}
 	`, c.Fd.togo())

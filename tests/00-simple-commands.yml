@@ -33,34 +33,41 @@ cases:
       stdout: "foobar bazboo\n"
 
   - name: special variables
+    args: ["foo", "bar", "baz"]
     script: |
       true
       echo $?
       false
       echo $?
+
+      echo $#
     expect:
       stdout: |
         0
         1
+        3
 
   - name: shell parameters
     script: |
-      key=value1
-      key2="value2" key3='value3' key4=$key2
-      echo $key $key2 $key3 $key4
+      name=bunster
+      lang="golang" source='bash' target=$lang
+      echo $name $lang $source $target
     expect:
-      stdout: "value1 value2 value3 value2\n"
+      stdout: "bunster golang bash golang\n"
 
   - name: passing shell parameters as environment variables
-    env: [foo=bar]
+    env: [lang=golang]
     script: |
-      key=value key2=$key  sh -c 'echo $key $key2'
+      source=$lang built_with=$source  sh -c 'echo $source $built_with'
 
-      key= sh -c 'echo $key'
+      null=   sh -c 'echo $null'
 
-      keys=value sh -c 'echo $keys $foo'
+      name=bunster sh -c 'echo $name $lang'
     expect:
-      stdout: "value\n\nvalue bar\n"
+      stdout: |
+        golang
+
+        bunster golang
 
   - name: calling undefined command raises an error
     script: |

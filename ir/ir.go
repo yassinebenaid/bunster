@@ -130,7 +130,7 @@ type RunCommand string
 func (r RunCommand) togo() string {
 	return fmt.Sprintf(
 		`if err := %s.Run(); err != nil {
-			shell.HandleError(err)
+			shell.HandleError(streamManager, err)
 			return
 		}
 		shell.ExitCode = %s.ExitCode
@@ -142,7 +142,7 @@ type StartCommand string
 func (r StartCommand) togo() string {
 	return fmt.Sprintf(
 		`if err := %s.Start(); err != nil {
-			shell.HandleError(err)
+			shell.HandleError(streamManager, err)
 			return
 		}
 		`, r)

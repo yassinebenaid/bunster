@@ -28,25 +28,25 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
 				if stream, err := streamManager.Get(`0`); err != nil {
-					shell.HandleError(err)
+				      shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdin = stream
 				}
 				if stream, err := streamManager.Get(`1`); err != nil {
-					shell.HandleError(err)
+				      shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdout = stream
 				}
 				if stream, err := streamManager.Get(`2`); err != nil {
-					shell.HandleError(err)
+				      shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stderr = stream
 				}
 				if err := command.Run(); err != nil {
-					shell.HandleError(err)
+				      shell.HandleError(streamManager, err)
 					return
 				}
 				shell.ExitCode = command.ExitCode
@@ -92,25 +92,25 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
 				if stream, err := streamManager.Get(`0`); err != nil {
-					shell.HandleError(err)
+				      shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdin = stream
 				}
 				if stream, err := streamManager.Get(`1`); err != nil {
-					shell.HandleError(err)
+				      shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdout = stream
 				}
 				if stream, err := streamManager.Get(`2`); err != nil {
-					shell.HandleError(err)
+				      shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stderr = stream
 				}
 				if err := command.Run(); err != nil {
-					shell.HandleError(err)
+				      shell.HandleError(streamManager, err)
 					return
 				}
 				shell.ExitCode = command.ExitCode
@@ -156,25 +156,25 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
 				if stream, err := streamManager.Get(`0`); err != nil {
-					shell.HandleError(err)
+				      shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdin = stream
 				}
 				if stream, err := streamManager.Get(`1`); err != nil {
-					shell.HandleError(err)
+				      shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdout = stream
 				}
 				if stream, err := streamManager.Get(`2`); err != nil {
-					shell.HandleError(err)
+				      shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stderr = stream
 				}
 				if err := command.Run(); err != nil {
-					shell.HandleError(err)
+				      shell.HandleError(streamManager, err)
 					return
 				}
 				shell.ExitCode = command.ExitCode
@@ -225,25 +225,25 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
 				if stream, err := streamManager.Get(`0`); err != nil {
-					shell.HandleError(err)
+				      shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdin = stream
 				}
 				if stream, err := streamManager.Get(`1`); err != nil {
-					shell.HandleError(err)
+				      shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdout = stream
 				}
 				if stream, err := streamManager.Get(`2`); err != nil {
-					shell.HandleError(err)
+				      shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stderr = stream
 				}
 				if err := command.Run(); err != nil {
-					shell.HandleError(err)
+				      shell.HandleError(streamManager, err)
 					return
 				}
 				shell.ExitCode = command.ExitCode
@@ -271,25 +271,25 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					streamManager := streamManager.Clone()
 					defer streamManager.Destroy()
 					if stream, err := streamManager.Get(`0`); err != nil {
-						shell.HandleError(err)
+					     shell.HandleError(streamManager, err)
 						return
 					} else {
 						command.Stdin = stream
 					}
 					if stream, err := streamManager.Get(`1`); err != nil {
-						shell.HandleError(err)
+					     shell.HandleError(streamManager, err)
 						return
 					} else {
 						command.Stdout = stream
 					}
 					if stream, err := streamManager.Get(`2`); err != nil {
-						shell.HandleError(err)
+					     shell.HandleError(streamManager, err)
 						return
 					} else {
 						command.Stderr = stream
 					}
 					if err := command.Run(); err != nil {
-						shell.HandleError(err)
+					     shell.HandleError(streamManager, err)
 						return
 					}
 					shell.ExitCode = command.ExitCode
@@ -319,25 +319,25 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					streamManager := streamManager.Clone()
 					defer streamManager.Destroy()
 					if stream, err := streamManager.Get(`0`); err != nil {
-						shell.HandleError(err)
+					     shell.HandleError(streamManager, err)
 						return
 					} else {
 						command.Stdin = stream
 					}
 					if stream, err := streamManager.Get(`1`); err != nil {
-						shell.HandleError(err)
+					     shell.HandleError(streamManager, err)
 						return
 					} else {
 						command.Stdout = stream
 					}
 					if stream, err := streamManager.Get(`2`); err != nil {
-						shell.HandleError(err)
+					     shell.HandleError(streamManager, err)
 						return
 					} else {
 						command.Stderr = stream
 					}
 					if err := command.Run(); err != nil {
-						shell.HandleError(err)
+					     shell.HandleError(streamManager, err)
 						return
 					}
 					shell.ExitCode = command.ExitCode
@@ -400,25 +400,25 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 						streamManager := streamManager.Clone()
 						defer streamManager.Destroy()
 						if stream, err := streamManager.Get(`0`); err != nil {
-							shell.HandleError(err)
+						    shell.HandleError(streamManager, err)
 							return
 						} else {
 							command.Stdin = stream
 						}
 						if stream, err := streamManager.Get(`1`); err != nil {
-							shell.HandleError(err)
+						    shell.HandleError(streamManager, err)
 							return
 						} else {
 							command.Stdout = stream
 						}
 						if stream, err := streamManager.Get(`2`); err != nil {
-							shell.HandleError(err)
+						    shell.HandleError(streamManager, err)
 							return
 						} else {
 							command.Stderr = stream
 						}
 						if err := command.Run(); err != nil {
-							shell.HandleError(err)
+						    shell.HandleError(streamManager, err)
 							return
 						}
 						shell.ExitCode = command.ExitCode
