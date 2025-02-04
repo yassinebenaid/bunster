@@ -13,9 +13,6 @@ import (
 type Shell struct {
 	parent    *Shell
 	PID       int
-	Stdin     Stream
-	Stdout    Stream
-	Stderr    Stream
 	ExitCode  int
 	Main      func(*Shell, *StreamManager)
 	Args      []string
@@ -39,7 +36,7 @@ func (shell *Shell) Run(streamManager *StreamManager) (exitCode int) {
 	defer func() {
 		err := recover()
 		if err != nil {
-			fmt.Fprintf(shell.Stderr, "crash: %v\n", err)
+			fmt.Fprintf(os.Stderr, "crash: %v\n", err)
 			exitCode = 1
 		}
 	}()
@@ -112,9 +109,6 @@ func (shell *Shell) Clone() *Shell {
 	sh := &Shell{
 		parent:    shell,
 		PID:       shell.PID,
-		Stdin:     shell.Stdin,
-		Stdout:    shell.Stdout,
-		Stderr:    shell.Stderr,
 		ExitCode:  shell.ExitCode,
 		Args:      shell.Args,
 		functions: shell.functions,
@@ -184,9 +178,6 @@ func (cmd *Command) Start() error {
 			shell := Shell{
 				parent:    cmd.shell,
 				PID:       cmd.shell.PID,
-				Stdin:     cmd.shell.Stdin,
-				Stdout:    cmd.shell.Stdout,
-				Stderr:    cmd.shell.Stderr,
 				Args:      append(cmd.shell.Args[:1], cmd.Args...),
 				functions: cmd.shell.functions,
 				vars:      cmd.shell.vars,
