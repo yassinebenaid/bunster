@@ -95,18 +95,24 @@ func (shell *Shell) ReadSpecialVar(name string) string {
 	}
 }
 
-func (shell *Shell) HandleError(err error) {
+func (shell *Shell) HandleError(sm *StreamManager, err error) {
 	shell.ExitCode = 1
+
+	stderr, _err := sm.Get("2")
+	if _err != nil {
+		// TODO: better handle this situation
+		return
+	}
 
 	switch e := err.(type) {
 	case *exec.Error:
-		fmt.Fprintf(shell.Stderr, "%q: %v\n", e.Name, e.Err)
+		fmt.Fprintf(stderr, "%q: %v\n", e.Name, e.Err)
 	case *fs.PathError:
-		fmt.Fprintf(shell.Stderr, "%q: %v\n", e.Path, e.Err)
+		fmt.Fprintf(stderr, "%q: %v\n", e.Path, e.Err)
 	case *exec.ExitError:
 		shell.ExitCode = e.ExitCode()
 	default:
-		fmt.Fprintln(shell.Stderr, err)
+		fmt.Fprintln(stderr, err)
 	}
 }
 
