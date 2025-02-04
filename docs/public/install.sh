@@ -1,207 +1,128 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-# Colors
-RESET="\033[0m"
-GREEN="\033[1;32m"
-YELLOW="\033[1;33m"
-RED="\033[1;31m"
-BLUE="\033[1;34m"
+set -e
 
-# Logging functions
-log_info() { echo -e "${BLUE}[INFO]${RESET} $1"; }
-log_success() { echo -e "${GREEN}[SUCCESS]${RESET} $1"; }
-log_warning() { echo -e "${YELLOW}[WARNING]${RESET} $1"; }
-log_error() { echo -e "${RED}[ERROR]${RESET} $1"; }
+log() {
+    echo "[BUNSTER INSTALLER] $1"
+}
 
-# RELEASE DOWNLOAD LINKS
-CURRENT_VERSION="v0.7.1"
-DARWIN_ARM64="https://github.com/yassinebenaid/bunster/releases/download/${CURRENT_VERSION}/bunster_darwin-arm64.tar.gz"
-DARWIN_AMD64="https://github.com/yassinebenaid/bunster/releases/download/${CURRENT_VERSION}/bunster_darwin-amd64.tar.gz"
-LINUX_386="https://github.com/yassinebenaid/bunster/releases/download/${CURRENT_VERSION}/bunster_linux-386.tar.gz"
-LINUX_AMD64="https://github.com/yassinebenaid/bunster/releases/download/${CURRENT_VERSION}/bunster_linux-amd64.tar.gz"
-LINUX_ARM64="https://github.com/yassinebenaid/bunster/releases/download/${CURRENT_VERSION}/bunster_linux-arm64.tar.gz"
+error() {
+    echo "[BUNSTER INSTALLER] ERROR: $1" >&2
+    exit 1
+}
 
-DOWNLOAD_LINK=""
-BINARY_NAME=""
-DOWNLOAD_OUTPUT="/tmp/bunster-installer/"
-HAS_SUDO="TRUE" #set true by default
+# Detect OS and Architecture
+detect_system() {
+    OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+    ARCH=$(uname -m)
 
-fetch_system_info() {
-  ARCH="$(uname -m)"
-  OS="$(uname -s)"
-  if ! command -v sudo &>/dev/null || ! sudo -n true 2>/dev/null; then
-    HAS_SUDO="FALSE"
-  fi
+    case "$ARCH" in
+        x86_64) ARCH="amd64" ;;
+        aarch64) ARCH="arm64" ;;
+        arm64) ARCH="arm64" ;;
+        i386|x86) ARCH="386" ;;
+        *) error "Unsupported architecture: $ARCH" ;;
+    esac
 
-  log_info "Finding binary for Arch: ${ARCH}, OS: ${OS}"
+    case "$OS" in
+        darwin|linux) ;;
+        *) error "Unsupported operating system: $OS" ;;
+    esac
 
-  if [[ "$OS" == Darwin && "$ARCH" == "arm64" ]]; then
-    DOWNLOAD_LINK="$DARWIN_ARM64"
-    BINARY_NAME="bunster_darwin-arm64"
-  elif [[ "$OS" == "Darwin" && "$ARCH" == "x86_64" ]]; then
-    DOWNLOAD_LINK="$DARWIN_AMD64"
-    BINARY_NAME="bunster_darwin-amd64"
-  elif [[ "$OS" == "Linux" && ("$ARCH" == "i386" || "$ARCH" == "i686") ]]; then
-    DOWNLOAD_LINK="$LINUX_386"
-    BINARY_NAME="bunster_linux-386"
-  elif [[ "$OS" == "Linux" && "$ARCH" == "x86_64" ]]; then
-    DOWNLOAD_LINK="$LINUX_AMD64"
-    BINARY_NAME="bunster_linux-amd64"
-  elif [[ "$OS" == "Linux" && "$ARCH" == "arm64" ]]; then
-    DOWNLOAD_LINK="$LINUX_ARM64"
-    BINARY_NAME="/bunster_linux-arm64"
-  else
-    log_error "OPERATING SYSTEM AND/OR ARCH NOT SUPPORTED"
-    log_info "Attempting install with go..."
-    if command -v go &>/dev/null; then
-      log_success "go is installed, proceeding..."
-      go_install
+    log "Detected system: $OS/$ARCH"
+}
+
+# Fetch latest release version
+get_latest_version() {
+    VERSION=$(curl -s https://api.github.com/repos/yassinebenaid/bunster/releases/latest | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+    log "Latest version: $VERSION"
+}
+
+download_file() {
+    local URL=$1
+    local OUTPUT=$2
+
+    if command -v curl > /dev/null; then
+        log "Downloading using curl"
+        curl -sL -o "$OUTPUT" "$URL" || error "curl download failed"
+    elif command -v wget > /dev/null; then
+        log "Downloading using wget"
+        wget -O "$OUTPUT" "$URL" || error "wget download failed"
     else
-      log_error "go not installed... aborting..."
-      exit 1
+        error "No download utility available (curl/wget)"
     fi
-  fi
 }
 
-# Check dependency and route
-check_and_route() {
-  log_info "Checking for dependencies..."
+verify_checksum() {
+    local ARCHIVE=$1
+    log "Downloading checksums"
+    download_file "https://github.com/yassinebenaid/bunster/releases/download/v$VERSION/checksums.txt" checksums.txt
 
-  if command -v tar &>/dev/null; then
-    log_success "tar is installed"
-  else
-    log_error "tar is not installed, aborting..."
-    exit 1
-  fi
+    if command -v sha256sum > /dev/null; then
+        CHECKSUM=$(sha256sum "$ARCHIVE" | awk '{print $1}')
+    elif command -v shasum > /dev/null; then
+        CHECKSUM=$(shasum -a 256 "$ARCHIVE" | awk '{print $1}')
+    else
+        log "Warning: Cannot verify checksum. No sha256 utility found."
+        return
+    fi
 
-  if command -v curl &>/dev/null; then
-    log_success "curl is installed, proceeding..."
-    curl_install
-  elif command -v wget &>/dev/null; then
-    log_success "wget is installed, proceeding..."
-    wget_install
-  elif command -v fetch &>/dev/null; then
-    log_success "fetch is installed, proceeding..."
-    fetch_install
-  elif command -v go &>/dev/null; then
-    log_success "go is installed, proceeding..."
-    go_install
-  else
-    log_error "Missing install dependency: \n
-Make sure you have atleast one of the following:\n
-- wget\n
-- curl\n
-- fetch\n
-- go"
-    exit 1
-  fi
-}
-
-curl_install() {
-  log_info "Starting installation..."
-  if curl -o "${DOWNLOAD_OUTPUT}bunster.tar.gz" -L "$DOWNLOAD_LINK"; then
-    log_success "Bunster installed successfully."
-    tar_install
-  else
-    log_error "Failed to download using curl. Exiting..."
-    exit 1
-  fi
-}
-
-wget_install() {
-  log_info "Starting installation..."
-  if wget -O "${DOWNLOAD_OUTPUT}bunster.tar.gz" "$DOWNLOAD_LINK"; then
-    log_success "Bunster installed successfully."
-    tar_install
-  else
-    log_error "Failed to download using wget. Exiting..."
-    exit 1
-  fi
-}
-
-fetch_install() {
-  log_info "Starting installation..."
-  if fetch --location "$DOWNLOAD_LINK" -o "${DOWNLOAD_OUTPUT}bunster.tar.gz"; then
-    log_success "Bunster installed successfully."
-    tar_install
-  else
-    log_error "Failed to download using fetch. Exiting..."
-    exit 1
-  fi
+    if grep -q "$CHECKSUM.*bunster_$OS-$ARCH.tar.gz" checksums.txt; then
+        log "Checksum verified successfully"
+    else
+        error "Checksum verification failed"
+    fi
 }
 
 go_install() {
-  log_info "Starting installation..."
-  if go install github.com/yassinebenaid/bunster/cmd/bunster@latest; then
-    log_success "Bunster installed at ~/go/bin/."
-    BINARY_NAME="$HOME/go/bin/bunster"
-    binary_move
-  else
-    log_error "Failed to install via go. Exiting..."
-    exit 1
-  fi
-}
-
-tar_install() {
-  log_info "Unzipping tar..."
-  if tar -xvzf "${DOWNLOAD_OUTPUT}bunster.tar.gz" -C "${DOWNLOAD_OUTPUT}"; then
-    log_success "Unzipped tar.gz"
-  else
-    log_error "Failed to unzip tar.gz"
-    exit 1
-  fi
-  binary_move
-}
-
-binary_move() {
-  if [[ $HAS_SUDO == "TRUE" ]]; then
-    read -p "Move binary to /usr/local/bin? (Y/n): " response
-    response=${response:-Y}
-    if [[ "$response" =~ ^[Yy]$ ]]; then
-      log_info "Proceeding..."
-      sudo mv "${DOWNLOAD_OUTPUT}${BINARY_NAME}" "/usr/local/bin/bunster" || {
-        log_error "Failed to install package"
-        exit 1
-      }
-      clean
-      log_success "Bunster installed successfully."
-      return 0
+    log "Attempting Go installation method"
+    if command -v go > /dev/null; then
+        go install github.com/yassinebenaid/bunster@latest || error "Go install failed"
+        log "Successfully installed via go install"
+        exit 0
+    else
+        error "Go is not installed"
     fi
-  fi
-
-  # case no sudo
-  read -p "Move binary to ~/.local/bin? (Y/n): " response
-  response=${response:-Y}
-  if [[ "$response" =~ ^[Yy]$ ]]; then
-    log_info "Proceeding..."
-    mv "${DOWNLOAD_OUTPUT}${BINARY_NAME}" "$HOME/.local/bin/bunster" || {
-      log_error "Failed to install package"
-      exit 1
-    }
-    clean
-    log_success "Bunster installed successfully."
-    return 0
-  fi
-
-  log_error "Aborting installation..."
-  clean
-  exit 1
-}
-
-clean() {
-  log_info "Cleaning..."
-  rm -rf "${DOWNLOAD_OUTPUT}"
 }
 
 main() {
-  clean
-  log_info "creating temporary install directory..."
-  mkdir "${DOWNLOAD_OUTPUT}"
-  fetch_system_info
-  check_and_route
+    detect_system
+    get_latest_version
+
+    # Construct download URL
+    ARCHIVE="bunster_$OS-$ARCH.tar.gz"
+    DOWNLOAD_URL="https://github.com/yassinebenaid/bunster/releases/download/v$VERSION/$ARCHIVE"
+
+    # Create temporary directory
+    TEMP_DIR=$(mktemp -d "/tmp/bunster-intaller-XXXXXX")
+    cd "$TEMP_DIR"
+
+    # Download archive
+    log "Downloading $ARCHIVE"
+    download_file "$DOWNLOAD_URL" "$ARCHIVE"
+
+    # Verify checksum
+    verify_checksum "$ARCHIVE"
+
+    # Extract archive
+    log "Extracting archive"
+    tar -xzf "$ARCHIVE"
+
+    # Confirm installation path
+    read -p "Install Bunster to /usr/local/bin/bunster? (y/n) " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        log "Moving binary to /usr/local/bin"
+        sudo mv bunster /usr/local/bin/bunster
+        log "Installation complete!"
+    else
+        log "Installation cancelled by user"
+        exit 1
+    fi
 }
 
-trap 'clean' EXIT
-trap 'clean; exit 1' INT TERM
+# Fallback to Go install if no release found
+trap 'go_install' ERR
+
 
 main

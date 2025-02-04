@@ -3,7 +3,7 @@ version: 2
 builds:
   - id: bunster
     main: ./cmd/bunster
-    binary: bunster_{{ .Os }}-{{ .Arch }}
+    binary: bunster
     goos:
       - linux
       - darwin
