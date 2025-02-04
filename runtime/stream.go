@@ -87,6 +87,12 @@ func (s *proxyStream) getOriginal() Stream {
 	return s.original
 }
 
+func NewStreamManager() *StreamManager {
+	return &StreamManager{
+		mappings: make(map[string]*proxyStream),
+	}
+}
+
 type StreamManager struct {
 	openStreams []Stream
 	mappings    map[string]*proxyStream

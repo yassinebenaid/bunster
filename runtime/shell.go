@@ -13,9 +13,6 @@ import (
 type Shell struct {
 	parent    *Shell
 	PID       int
-	Stdin     Stream
-	Stdout    Stream
-	Stderr    Stream
 	ExitCode  int
 	Main      func(*Shell, *StreamManager)
 	Args      []string
@@ -26,7 +23,7 @@ type Shell struct {
 	functions map[string]func(shell *Shell, stdin, stdout, stderr Stream)
 }
 
-func (shell *Shell) Run() (exitCode int) {
+func (shell *Shell) Run(streamManager *StreamManager) (exitCode int) {
 	shell.vars = &sync.Map{}
 	shell.env = &sync.Map{}
 	shell.functions = make(map[string]func(shell *Shell, stdin, stdout, stderr Stream))
@@ -36,18 +33,10 @@ func (shell *Shell) Run() (exitCode int) {
 		shell.env.Store(envs[0], envs[1])
 	}
 
-	streamManager := &StreamManager{
-		mappings: make(map[string]*proxyStream),
-	}
-	streamManager.Add("0", shell.Stdin)
-	streamManager.Add("1", shell.Stdout)
-	streamManager.Add("2", shell.Stderr)
-	defer streamManager.Destroy()
-
 	defer func() {
 		err := recover()
 		if err != nil {
-			fmt.Fprintf(shell.Stderr, "crash: %v\n", err)
+			fmt.Fprintf(os.Stderr, "crash: %v\n", err)
 			exitCode = 1
 		}
 	}()
@@ -120,9 +109,6 @@ func (shell *Shell) Clone() *Shell {
 	sh := &Shell{
 		parent:    shell,
 		PID:       shell.PID,
-		Stdin:     shell.Stdin,
-		Stdout:    shell.Stdout,
-		Stderr:    shell.Stderr,
 		ExitCode:  shell.ExitCode,
 		Args:      shell.Args,
 		functions: shell.functions,
@@ -192,9 +178,6 @@ func (cmd *Command) Start() error {
 			shell := Shell{
 				parent:    cmd.shell,
 				PID:       cmd.shell.PID,
-				Stdin:     cmd.shell.Stdin,
-				Stdout:    cmd.shell.Stdout,
-				Stderr:    cmd.shell.Stderr,
 				Args:      append(cmd.shell.Args[:1], cmd.Args...),
 				functions: cmd.shell.functions,
 				vars:      cmd.shell.vars,

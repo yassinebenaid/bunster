@@ -6,18 +6,17 @@ import (
 )
 
 func main() {
-
 	shell := runtime.Shell{
         PID: os.Getpid(),
-
-		Stdin:  os.Stdin,
-		Stdout: os.Stdout,
-		Stderr: os.Stderr,
-
         Args: os.Args,
-
 		Main: Main,
 	}
 
-	os.Exit(shell.Run())
+	streamManager := runtime.NewStreamManager()
+	streamManager.Add("0", os.Stdin)
+	streamManager.Add("1", os.Stdout)
+	streamManager.Add("2", os.Stderr)
+	defer streamManager.Destroy()
+
+	os.Exit(shell.Run(streamManager))
 }
