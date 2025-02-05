@@ -65,11 +65,14 @@ NEWLINE
 EOF
 ```
 
+This package gives each character in the input a meaning. for example, `>` means `GT`,  `|` means `PIPE`, but `>|` is considered one token `GTPIPE`. and `>>` is also considered one token `APPEND`. In other words, the `lexer` applies lexical analysis over the input and decides what each combination of characters means.  
+
 > [!TIP]
 > This package does not generate all tokens at once. It exports a function (`NextToken`) that returns one token at a time. 
 
 **Depends on:** 
 
 `token`
+
 
 
