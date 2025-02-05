@@ -36,3 +36,31 @@ cases:
         bar
         baz
         bao
+
+  - name: "list's exit code is the lats command's exit code"
+    script: |
+      true  && true
+      echo $?
+
+      true  && false
+      echo $?
+
+      false || true
+      echo $?
+
+      false || false
+      echo $?
+
+      false && false || true
+      echo $?
+
+      false && false || false
+      echo $?
+    expect:
+      stdout: |
+        0
+        1
+        0
+        1
+        0
+        1

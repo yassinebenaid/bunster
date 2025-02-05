@@ -17,7 +17,7 @@ cases:
     script: |
       sleep 2 | sleep 2
 
-  - name: "redirection is applied before any redirection, so we can suplicate pipeline ends however we want"
+  - name: "redirection is applied before any redirection, so we can duplicate pipeline ends however we want"
     script: |
       # not redirected
       cat file | cat

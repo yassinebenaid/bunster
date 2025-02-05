@@ -182,6 +182,7 @@ func (cmd *Command) Start() error {
 				functions: cmd.shell.functions,
 				vars:      cmd.shell.vars,
 				env:       &sync.Map{},
+				ExitCode:  cmd.shell.ExitCode,
 			}
 
 			cmd.shell.env.Range(func(key any, value any) bool {

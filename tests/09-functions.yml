@@ -158,3 +158,19 @@ cases:
       stdout: |
         tech java
         dev Go
+
+  - name: "functions inherit exit code of calling shell"
+    script: |
+      func(){
+        echo $?
+      }
+
+      false
+      func
+
+      true
+      func
+    expect:
+      stdout: |
+        1
+        0
