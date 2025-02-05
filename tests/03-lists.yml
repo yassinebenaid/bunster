@@ -9,7 +9,7 @@ cases:
     expect:
       stdout: |
         first is true
-        second is falses
+        second is false
 
   - name: "longer list"
     script: |
