@@ -90,7 +90,7 @@ This section guides you through submitting an enhancement suggestion for bunster
 - Make sure that you are using the latest version.
 - Read the [documentation](https://bunster.netlify.app) carefully and find out if the functionality is already covered, maybe by an individual configuration.
 - Perform a [search](https://github.com/yassinebenaid/bunster/issues) to see if the enhancement has already been suggested. If it has, add a comment to the existing issue instead of opening a new one.
-- Find out whether your idea fits with the scope and aims of the project. It's up to you to make a strong case to convince the project's developers of the merits of this feature. Keep in mind that we want features that will be useful to the majority of our users and not just a small subset. If you're just targeting a minority of users, consider writing an add-on/plugin library.
+- Find out whether your idea fits with the scope and aims of the project. It's up to you to make a strong case to convince the project's developers of the merits of this feature. Keep in mind that we want features that will be useful to the majority of our users and not just a small subset. If you're just targeting a minority of users, you could still open an issue, but expect that we might not take it in consideration if it's not really convincing.
 
 #### How Do I Submit a Good Enhancement Suggestion?
 
