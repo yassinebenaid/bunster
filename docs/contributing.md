@@ -42,7 +42,7 @@ If you then still feel the need to ask a question and need clarification, we rec
 
 - Open an [Issue](https://github.com/yassinebenaid/bunster/issues/new).
 - Provide as much context as you can about what you're running into.
-- Provide project version, platform and go version.
+- Provide project version, platform and architecture.
 
 We will then take care of the issue as soon as possible.
 
