@@ -107,6 +107,23 @@ cases:
         baz boo
         bee fox
 
+  - name: "special variables within functions are different"
+    script: |
+      func(){
+        echo $1 $2
+        echo $*
+        echo $@
+        echo $#
+      }
+
+      func foo bar
+    expect:
+      stdout: |
+        foo bar
+        foo bar
+        foo bar
+        2
+
   - name: "function declaration happens in same global scope scope"
     script: |
       inner

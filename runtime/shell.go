@@ -72,6 +72,8 @@ func (shell *Shell) ReadSpecialVar(name string) string {
 		return strconv.FormatInt(int64(len(shell.Args)-1), 10)
 	case "?":
 		return strconv.FormatInt(int64(shell.ExitCode), 10)
+	case "*", "@":
+		return strings.Join(shell.Args[1:], " ")
 	default:
 		index, err := strconv.ParseUint(name, 10, 64)
 		if err != nil {
