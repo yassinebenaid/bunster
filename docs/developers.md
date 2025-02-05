@@ -40,4 +40,36 @@ This project tree is very simple. It is flatten with encapsulated functionalitie
 
 This package only defines a list of constants that represent tokens. Things like keywords, symbols and so on. It doesn't export any functionality. But serves as an asset for the `parser` and `lexer`.
 
-Depends on: _nothing_
+
+#### `lexer`
+
+This package is responsible on the generation of tokens. It reads the input file (as text) and converts it into a feed of tokens. For example:
+```shell
+echo foobar >file | cat
+
+```
+
+will yield a list of tokens similar to the following:
+```
+WORD: "echo"
+BLANK
+WORD: "foobar"
+BLANK
+GT: ">"
+WORD: "file"
+BLANK
+PIPE: "|"
+BLANK
+WORD: "cat"
+NEWLINE
+EOF
+```
+
+> [!TIP]
+> This package does not generate all tokens at once. It exports a function (`NextToken`) that returns one token at a time. 
+
+**Depends on:** 
+
+`token`
+
+
