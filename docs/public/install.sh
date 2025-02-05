@@ -1,5 +1,17 @@
 #!/bin/bash
 
+global=0
+
+for arg; do
+    if [ "$arg" = --global ];then
+        global=1
+    else
+        echo "unrecognized argument: $arg" >&2
+        exit 1
+    fi
+done
+
+
 set -e
 
 log() {
@@ -108,17 +120,16 @@ main() {
     log "Extracting archive"
     tar -xzf "$ARCHIVE"
 
-    # Confirm installation path
-    read -p "Install Bunster to /usr/local/bin/bunster? (y/n) " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        log "Moving binary to /usr/local/bin"
-        sudo mv bunster /usr/local/bin/bunster
+    if [ $global = 0 ]; then
+        log "Moving binary to: $HOME/.local/bin/bunster"
+        mv bunster "$HOME/.local/bin/bunster"
         log "Installation complete!"
-    else
-        log "Installation cancelled by user"
-        exit 1
+        exit 0
     fi
+
+    log "Moving binary to /usr/local/bin"
+    sudo mv bunster /usr/local/bin/bunster
+    log "Installation complete!"
 }
 
 # Fallback to Go install if no release found
