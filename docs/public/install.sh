@@ -120,16 +120,24 @@ main() {
     log "Extracting archive"
     tar -xzf "$ARCHIVE"
 
-    if [ $global = 0 ]; then
-        log "Moving binary to: $HOME/.local/bin/bunster"
-        mv bunster "$HOME/.local/bin/bunster"
-        log "Installation complete!"
-        exit 0
-    fi
+    if [ $global = 1 ]; then
+		log "Moving binary to /usr/local/bin"
+		sudo mv bunster /usr/local/bin/bunster
+		log "Installation complete!"
+		exit 0
+	fi
 
-    log "Moving binary to /usr/local/bin"
-    sudo mv bunster /usr/local/bin/bunster
-    log "Installation complete!"
+	if [ $OS == "darwin" ]; then
+		mkdir -p "$HOME/bin"
+	    log "Moving binary to $HOME/bin/bunster"
+		mv bunster "$HOME/bin/bunster"
+		log "Installation complete!"
+		exit 0
+	fi
+
+	log "Moving binary to: $HOME/.local/bin/bunster"
+	mv bunster "$HOME/.local/bin/bunster"
+	log "Installation complete!"
 }
 
 # Fallback to Go install if no release found
