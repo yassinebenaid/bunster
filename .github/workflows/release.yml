@@ -12,23 +12,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  update-version:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: master
-
-      - name: bump the version
-        run: echo "${{ github.ref_name }}" > VERSION
-
-      - name: push new version back
-        uses: stefanzweifel/git-auto-commit-action@e348103e9026cc0eee72ae06630dbe30c8bf7a79 #v5.1.0
-        with:
-          commit_message: Bump the release version
-
   goreleaser:
-    needs: update-version
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -47,7 +31,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-and-push-image:
-    needs: update-version
     runs-on: ubuntu-latest
     permissions:
       contents: read
