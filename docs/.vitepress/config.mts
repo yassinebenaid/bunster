@@ -22,6 +22,7 @@ export default defineConfig({
           { text: "Supported Features", link: "/supported-features" },
           { text: "Usage", link: "/usage" },
           { text: "Contributing", link: "/contributing" },
+          { text: "Developers Guideline", link: "/developers" },
         ],
       },
     ],

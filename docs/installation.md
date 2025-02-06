@@ -13,8 +13,24 @@ If you only care about the generated Go code, and don't want **Bunster** to auto
 That is totally fine and you can go for it.
 :::
 
+## Linux/Mac
+We have bash script that installs `bunster` and adds it to your `$PATH`.
 
-## Docker Image
+```shell
+curl -f https://bunster.netlify.app/install.sh | bash
+```
+
+The script will install bunster at `~/.local/bin/bunster` on linux. And `~/bin/bunster` on mac. If you want to install the binary system wide and make it accessible by all users.
+
+```shell
+curl -f https://bunster.netlify.app/install.sh | GLOBAL=1 bash
+```
+
+::: warning
+Do not trust scripts downloaded from the interne. take a look at the code before running it.
+:::
+
+ ## Docker Image
 The easiest way to get **Bunster** is through our official [Docker Image](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-an-image/).
 It comes with everything needed. Including the **Bunster** compiler and [the Go toolchain](https://go.dev/dl).
 

@@ -41,6 +41,23 @@ makes you feel happy when writing shell scripts. a feeling that shells usually d
 
 ## Installation
 
+We have bash script that installs `bunster` and adds it to your `$PATH`.
+
+```shell
+curl -f https://bunster.netlify.app/install.sh | bash
+```
+
+
+The script will install bunster at `~/.local/bin/bunster` on linux. And `~/bin/bunster` on mac. If you want to install the binary system wide and make it accessible by all users.
+
+```shell
+curl -f https://bunster.netlify.app/install.sh | GLOBAL=1 bash
+```
+
+
+> [!WARNING]
+> Do not trust scripts downloaded from the internet. A quick look at the code before running it won't hurt.
+
 Checkout the [documentation](https://bunster.netlify.app/installation) for different ways of installation.
 
 ## FAQ
@@ -77,6 +94,10 @@ Bunster follows [SemVer](https://semver.org/) system for release versioning. On 
 Once we reach the stable release `v1.0.0`, you must expect your bash scripts to be fully compatible with Bunster (there might be some caveats). All features mentioned above to be implemented unless the community agreed on skipping some of them.
 
 Adding support for additional shells is not planned until our first stable release `v1`. All regarding contributions will remain open until then.
+
+## Developers Guidline
+
+If you are interested in this project and want to know more about it's underlying implementation. Or if you want to contribute back but you don't know where to start. [We have brief article](https://bunster.netlify.app/developers) that explains everything you need to get your hands dirty. Things like the project structure, packages and their concerns, how each component work and interact with other components, how to add new features, how to improve existing features, testing and anything else in this regard. 
 
 ## Contributing
 
