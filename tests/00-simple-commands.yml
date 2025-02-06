@@ -41,11 +41,16 @@ cases:
       echo $?
 
       echo $#
+
+      echo $*
+      echo $@
     expect:
       stdout: |
         0
         1
         3
+        foo bar baz
+        foo bar baz
 
   - name: shell parameters
     script: |
