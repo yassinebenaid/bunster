@@ -84,11 +84,7 @@ fi
 until true; then
   echo foo bar | cat
 
-  if true; then
-      break
-  else
-    continue
-  fi
+   true && break || continue
 fi
 
 # running commands in backgroud
