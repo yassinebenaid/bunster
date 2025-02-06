@@ -19,6 +19,7 @@ All types of contributions are encouraged and valued. See the [Table of Contents
   - [Suggesting Enhancements](#suggesting-enhancements)
   - [Your First Code Contribution](#your-first-code-contribution)
   - [Improving The Documentation](#improving-the-documentation)
+- [Developers Guideline](#developers-guideline)
 - [Styleguides](#styleguides)
   - [Commit Messages](#commit-messages)
 - [Join The Project Team](#join-the-project-team)
@@ -101,3 +102,6 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/yassin
 - **Describe the current behavior** and **explain which behavior you expected to see instead** and why. At this point you can also tell which alternatives do not work for you.
 - You may want to **include screenshots and animated GIFs** which help you demonstrate the steps or point out the part which the suggestion is related to. You can use [this tool](https://www.cockos.com/licecap/) to record GIFs on macOS and Windows, and [this tool](https://github.com/colinkeenan/silentcast) or [this tool](https://github.com/GNOME/byzanz) on Linux. <!-- this should only be included if the project has a GUI -->
 - **Explain why this enhancement would be useful** to most bunster users. You may also want to point out the other shells that solved it better and which could serve as inspiration.
+
+## Developers Guideline
+If you want to know more about the codebase. We have a [dedicated section](https://bunster.netlify.app/developers) that explains pretty much everything you need to get your hands dirty. Dedicated only for you.
