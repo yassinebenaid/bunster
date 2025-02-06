@@ -13,6 +13,8 @@ as work-in-progress and as not-yet-supported.
 - [`if` command](https://www.gnu.org/software/bash/manual/html_node/Conditional-Constructs.html#index-if)
 - [`while` & `until` loops](https://www.gnu.org/software/bash/manual/bash.html#index-until)
 - [Shell Parameters](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameters.html)
+- Running commands in background
+- [Functions](https://www.gnu.org/software/bash/manual/html_node/Shell-Functions.html)
 
 ## Code Example
 ```shell
@@ -28,6 +30,7 @@ cat 3<>io.txt 3>&-
 
 # pipelines
 cat file.json | jq '.filename' | grep "*hosts.txt"
+! true
 
 # conditional execution
 command || command2 && command3
@@ -87,4 +90,13 @@ until true; then
     continue
   fi
 fi
+
+# running commands in backgroud
+command &
+
+# functions
+function foo() {
+  echo foobar
+}
+
 ```
