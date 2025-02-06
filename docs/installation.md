@@ -26,6 +26,9 @@ The script will install bunster at `~/.local/bin/bunster` on linux. And `~/bin/b
 curl -f https://bunster.netlify.app/install.sh | GLOBAL=1 bash
 ```
 
+::: warning
+Do not trust scripts downloaded from the interne. take a look at the code before running it.
+:::
 
  ## Docker Image
 The easiest way to get **Bunster** is through our official [Docker Image](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-an-image/).
