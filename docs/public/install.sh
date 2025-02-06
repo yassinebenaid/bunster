@@ -1,17 +1,5 @@
 #!/bin/bash
 
-global=0
-
-for arg; do
-    if [ "$arg" = --global ];then
-        global=1
-    else
-        echo "unrecognized argument: $arg" >&2
-        exit 1
-    fi
-done
-
-
 set -e
 
 log() {
@@ -120,7 +108,7 @@ main() {
     log "Extracting archive"
     tar -xzf "$ARCHIVE"
 
-    if [ $global = 1 ]; then
+    if [ $GLOBAL = 1 ]; then
 		log "Moving binary to /usr/local/bin"
 		sudo mv bunster /usr/local/bin/bunster
 		log "Installation complete!"
