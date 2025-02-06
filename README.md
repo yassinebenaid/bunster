@@ -41,6 +41,23 @@ makes you feel happy when writing shell scripts. a feeling that shells usually d
 
 ## Installation
 
+We have bash script that installs `bunster` and adds it to your `$PATH`.
+
+```shell
+curl -f https://bunster.netlify.app/install.sh | bash
+```
+
+
+The script will install bunster at `~/.local/bin/bunster` on linux. And `~/bin/bunster` on mac. If you want to install the binary system wide and make it accessible by all users.
+
+```shell
+curl -f https://bunster.netlify.app/install.sh | GLOBAL=1 bash
+```
+
+
+> [!WARNING]
+> Do not trust scripts downloaded from the internet. A quick look at the code before running it won't hurt.
+
 Checkout the [documentation](https://bunster.netlify.app/installation) for different ways of installation.
 
 ## FAQ
