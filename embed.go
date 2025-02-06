@@ -10,3 +10,6 @@ var GoModStub []byte
 
 //go:embed stubs/main.go.stub
 var MainGoStub []byte
+
+//go:embed VERSION
+var Version string

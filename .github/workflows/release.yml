@@ -1,16 +1,53 @@
-#
-name: Create and publish Docker image
+name: Build and publish binaries
 
 on:
   release:
     types: [published]
+
+permissions:
+  contents: write
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: bump the version
+        run: echo "${{ github.ref_name }}" > VERSION
+
+      - name: push new version back
+        uses: stefanzweifel/git-auto-commit-action@e348103e9026cc0eee72ae06630dbe30c8bf7a79 #v5.1.0
+        with:
+          commit_message: Bump the release version
+
+  goreleaser:
+    needs: update-version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Go
+        uses: actions/setup-go@v5
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@9ed2f89a662bf1735a48bc8557fd212fa902bebf # v6.1.0
+        with:
+          distribution: goreleaser
+          version: "~> v2"
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   build-and-push-image:
+    needs: update-version
     runs-on: ubuntu-latest
     permissions:
       contents: read
