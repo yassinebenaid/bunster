@@ -4,8 +4,10 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/urfave/cli/v3"
+	"github.com/yassinebenaid/bunster"
 	"github.com/yassinebenaid/bunster/lexer"
 	"github.com/yassinebenaid/bunster/parser"
 	"github.com/yassinebenaid/godump"
@@ -38,6 +40,14 @@ func main() {
 				Action: geneateCMD,
 				Flags: []cli.Flag{
 					&cli.StringFlag{Name: "o", Required: true},
+				},
+			},
+			{
+				Name:  "version",
+				Usage: "Print bunster version",
+				Action: func(ctx context.Context, c *cli.Command) error {
+					fmt.Println(strings.TrimSpace(bunster.Version))
+					return nil
 				},
 			},
 		},
