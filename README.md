@@ -78,6 +78,10 @@ Once we reach the stable release `v1.0.0`, you must expect your bash scripts to 
 
 Adding support for additional shells is not planned until our first stable release `v1`. All regarding contributions will remain open until then.
 
+## Developers Guidline
+
+If you are interested in this project and want to know more about it's underlying implementation. Or if you want to contribute back but you don't know where to start. [We have brief article](https://bunster.netlify.app/developers) that explains everything you need to get your hands dirty. Things like the project structure, packages and their concerns, how each component work and interact with other components, how to add new features, how to improve existing features, testing and anything else in this regard. 
+
 ## Contributing
 
 Thank you for considering contributing to the Bunster project! The contribution guide can be found in the [documentation](https://bunster.netlify.app/contributing).
