@@ -329,3 +329,13 @@ cases:
         direct-to-stdout
         direct-from-stdin
         foobar
+
+  - name: "shell errors can also be redirected"
+    script: |
+      # This error is thrown by the shell, not the command itself
+      cat 2>error.txt <non-existing-file.txt
+    expect:
+      exit_code: 1
+      files:
+        error.txt: |
+          "non-existing-file.txt": no such file or directory
