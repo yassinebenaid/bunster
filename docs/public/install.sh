@@ -108,7 +108,7 @@ main() {
     log "Extracting archive"
     tar -xzf "$ARCHIVE"
 
-    if [ $GLOBAL = 1 ]; then
+    if [ "$GLOBAL" == 1 ]; then
 		log "Moving binary to /usr/local/bin"
 		sudo mv bunster /usr/local/bin/bunster
 		log "Installation complete!"
