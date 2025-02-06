@@ -72,11 +72,7 @@ fi
 while true; then
   echo foo bar | cat
 
-  if true; then
-      break
-  else
-    continue
-  fi
+  true && break || continue
 fi
 
 
