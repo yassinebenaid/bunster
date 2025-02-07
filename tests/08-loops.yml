@@ -20,4 +20,16 @@ cases:
       stdout: |
         foo
 
+  - name: "`for` loop over positionals"
+    args: ["foo", "bar", "baz"]
+    script: |
+      for arg; do
+        echo arg
+      done
+    expect:
+      stdout: |
+        foo
+        bar
+        baz
+
 # TODO: add more tests here
