@@ -135,6 +135,7 @@ func (shell *Shell) Command(name string, args ...string) *Command {
 	command.shell = shell
 	command.Args = args
 	command.Name = name
+	command.Env = make(map[string]string)
 
 	if fn := shell.functions[name]; fn != nil {
 		command.function = fn
@@ -151,7 +152,7 @@ type Command struct {
 	Stdin  Stream
 	Stdout Stream
 	Stderr Stream
-	Env    []string
+	Env    map[string]string
 
 	ExitCode int
 
@@ -191,9 +192,8 @@ func (cmd *Command) Start() error {
 				shell.env.Store(key, value)
 				return true
 			})
-			for _, env := range cmd.Env {
-				envs := strings.SplitN(env, "=", 2)
-				shell.env.Store(envs[0], envs[1])
+			for key, value := range cmd.Env {
+				shell.env.Store(key, value)
 			}
 
 			cmd.function(&shell, cmd.Stdin, cmd.Stdout, cmd.Stderr)
@@ -211,7 +211,9 @@ func (cmd *Command) Start() error {
 		cmd.execCmd.Env = append(cmd.execCmd.Env, fmt.Sprintf("%s=%s", key, value))
 		return true
 	})
-	cmd.execCmd.Env = append(cmd.execCmd.Env, cmd.Env...)
+	for key, value := range cmd.Env {
+		cmd.execCmd.Env = append(cmd.execCmd.Env, key+"="+value)
+	}
 
 	return cmd.execCmd.Start()
 }

@@ -11,7 +11,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		var arguments []string
 		arguments = append(arguments, "key=value")
 		var command = shell.Command(commandName, arguments...)
-		command.Env = append(command.Env, `key=`+"value")
+		command.Env["key"] = "value"
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
         if stream, err := streamManager.Get("0"); err != nil {
@@ -60,10 +60,10 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		var commandName = "cmd"
 		var arguments []string
 		var command = shell.Command(commandName, arguments...)
-		command.Env = append(command.Env, `key1=`+"value")
-		command.Env = append(command.Env, `key2=`+"value")
-		command.Env = append(command.Env, `key3=`+"value")
-		command.Env = append(command.Env, `key4=`+"value")
+		command.Env["key1"] = "value"
+		command.Env["key2"] = "value"
+		command.Env["key3"] = "value"
+		command.Env["key4"] = "value"
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
         if stream, err := streamManager.Get("0"); err != nil {
@@ -112,7 +112,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		var commandName = "cmd"
 		var arguments []string
 		var command = shell.Command(commandName, arguments...)
-		command.Env = append(command.Env, `key=`+"")
+		command.Env["key"] = ""
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
         if stream, err := streamManager.Get("0"); err != nil {

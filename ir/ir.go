@@ -222,7 +222,7 @@ type SetCmdEnv struct {
 }
 
 func (s SetCmdEnv) togo() string {
-	return fmt.Sprintf("%s.Env = append(%s.Env,`%s=` + %s)\n", s.Command, s.Command, s.Key, s.Value.togo())
+	return fmt.Sprintf("%s.Env[%q] = %s\n", s.Command, s.Key, s.Value.togo())
 }
 
 type IfLastExitCode struct {
