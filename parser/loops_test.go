@@ -995,6 +995,17 @@ var loopsTests = []testCase{
 			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
 		},
 	}},
+	{`for arg # comment
+	 do # comment
+		# comment
+		cmd # comment
+		# comment
+	done # comment`, ast.Script{
+		ast.RangeLoop{
+			Var:  "arg",
+			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+		},
+	}},
 
 	// Break
 	{`while true;do break;done`, ast.Script{
