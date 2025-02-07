@@ -113,7 +113,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 	loop:
 		for i := len(a.stack) - 1; i >= 0; i-- {
 			switch a.stack[i].(type) {
-			case ast.Loop:
+			case ast.Loop, ast.RangeLoop:
 				withinLoop = true
 				break loop
 			case ast.List, ast.Break:
@@ -129,7 +129,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 	loop2:
 		for i := len(a.stack) - 1; i >= 0; i-- {
 			switch a.stack[i].(type) {
-			case ast.Loop:
+			case ast.Loop, ast.RangeLoop:
 				withinLoop = true
 				break loop2
 			case ast.List, ast.Continue:

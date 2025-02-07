@@ -99,4 +99,41 @@ cases:
         inline: boz
         inline: fee
 
+  - name: "break and continue within `for` loop"
+    args: ["foo", "bar", "baz"]
+    script: |
+      for arg; do
+        echo before 1
+        continue
+        echo after 1
+      done
+
+      for arg; do
+        echo before 2
+        break
+        echo after 2
+      done
+
+      for arg in foo bar baz; do
+        echo before 3
+        continue
+        echo after 3
+      done
+
+      for arg in foo bar baz; do
+        echo before 4
+        break
+        echo after 4
+      done
+    expect:
+      stdout: |
+        before 1
+        before 1
+        before 1
+        before 2
+        before 3
+        before 3
+        before 3
+        before 4
+
 # TODO: add more tests here
