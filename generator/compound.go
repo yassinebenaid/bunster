@@ -219,9 +219,20 @@ func (g *generator) handleRangeLoop(buf *InstructionBuffer, loop ast.RangeLoop, 
 	for _, statement := range loop.Body {
 		g.generate(&body, statement, &context{})
 	}
+
+	var members = ir.Literal("shell.Args[1:]")
+	if len(loop.Operands) > 0 {
+		cmdbuf.add(ir.DeclareSlice{Name: "arguments"})
+
+		for _, arg := range loop.Operands {
+			cmdbuf.add(ir.Append{Name: "arguments", Value: g.handleExpression(&cmdbuf, arg)})
+		}
+		members = ir.Literal("arguments")
+	}
+
 	innerBuf.add(ir.RangeLoop{
 		Var:     loop.Var,
-		Members: ir.Literal("shell.Args[1:]"),
+		Members: members,
 		Body:    body,
 	})
 
