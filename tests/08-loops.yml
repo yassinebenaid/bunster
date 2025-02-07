@@ -10,7 +10,27 @@ cases:
       stdout: |
         foo
 
+  - name: "`while` loop within pipeline"
+    script: |
+      while true; do
+        echo foo
+        break
+      done | cat
+    expect:
+      stdout: |
+        foo
+
   - name: "simple `until` command"
+    script: |
+      until false; do
+        echo foo
+        break
+      done | cat
+    expect:
+      stdout: |
+        foo
+
+  - name: "`until` loop within pipeline"
     script: |
       until false; do
         echo foo
