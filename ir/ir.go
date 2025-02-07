@@ -73,7 +73,7 @@ func (a Append) togo() string {
 type String string
 
 func (s String) togo() string {
-	return fmt.Sprintf("`%s`", s)
+	return fmt.Sprintf("%q", s)
 }
 
 type Concat []Instruction
@@ -222,7 +222,7 @@ type SetCmdEnv struct {
 }
 
 func (s SetCmdEnv) togo() string {
-	return fmt.Sprintf("%s.Env = append(%s.Env,`%s=` + %s)\n", s.Command, s.Command, s.Key, s.Value.togo())
+	return fmt.Sprintf("%s.Env[%q] = %s\n", s.Command, s.Key, s.Value.togo())
 }
 
 type IfLastExitCode struct {
@@ -285,6 +285,25 @@ func (i Loop) togo() string {
 	return cond + "}\n"
 }
 
+type RangeLoop struct {
+	Var     string
+	Members Instruction
+	Body    []Instruction
+}
+
+func (i RangeLoop) togo() string {
+	cond := fmt.Sprintf(
+		`for _,member := range %s {
+			shell.SetVar(%q, member)
+		`, i.Members.togo(), i.Var,
+	)
+	for _, ins := range i.Body {
+		cond += ins.togo()
+	}
+
+	return cond + "}\n"
+}
+
 type InvertExitCode struct{}
 
 func (i InvertExitCode) togo() string {
@@ -309,7 +328,7 @@ func (f Function) togo() string {
 	}
 
 	return fmt.Sprintf(
-		"shell.RegisterFunction(`%s`, func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream){"+`
+		"shell.RegisterFunction(%q, func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream){"+`
 			streamManager := streamManager.Clone()
 			streamManager.Add("0", stdin)
 			streamManager.Add("1", stdout)

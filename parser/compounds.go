@@ -207,6 +207,11 @@ func (p *parser) parseForLoop() ast.Statement {
 	if p.curr.Type == token.SEMICOLON {
 		p.proceed()
 	}
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
 	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()
 	}
@@ -221,13 +226,19 @@ func (p *parser) parseForLoop() ast.Statement {
 	}
 
 	for p.curr.Type != token.DONE && p.curr.Type != token.EOF {
-		cmdList := p.parseCommandList()
-		if cmdList == nil {
-			return nil
-		}
-		loopBody = append(loopBody, cmdList)
-		if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
-			p.proceed()
+		if p.curr.Type == token.HASH {
+			for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+				p.proceed()
+			}
+		} else {
+			cmdList := p.parseCommandList()
+			if cmdList == nil {
+				return nil
+			}
+			loopBody = append(loopBody, cmdList)
+			if p.curr.Type == token.SEMICOLON || p.curr.Type == token.AMPERSAND {
+				p.proceed()
+			}
 		}
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
@@ -245,6 +256,12 @@ func (p *parser) parseForLoop() ast.Statement {
 	p.proceed()
 
 	p.parseCompoundRedirections(&loopRedirections)
+
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)

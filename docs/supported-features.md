@@ -11,7 +11,7 @@ as work-in-progress and as not-yet-supported.
 - [Command Grouping](https://www.gnu.org/software/bash/manual/html_node/Command-Grouping.html)
 - [Command Substituion](https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html)
 - [`if` command](https://www.gnu.org/software/bash/manual/html_node/Conditional-Constructs.html#index-if)
-- [`while` & `until` loops](https://www.gnu.org/software/bash/manual/bash.html#index-until)
+- [loops](https://www.gnu.org/software/bash/manual/bash.html#index-until)
 - [Shell Parameters](https://www.gnu.org/software/bash/manual/html_node/Shell-Parameters.html)
 - Running commands in background
 - [Functions](https://www.gnu.org/software/bash/manual/html_node/Shell-Functions.html)
@@ -68,20 +68,33 @@ else
 fi
 
 
-# `while` command
-while true; then
+# `while` loop
+while true; do
   echo foo bar | cat
 
   true && break || continue
-fi
+  done
 
 
-# `until` command
-until true; then
+# `until` loop
+until true; do
   echo foo bar | cat
 
    true && break || continue
-fi
+   done
+
+# `for` loop
+for arg; do
+
+  # `for` loop over arguments
+  for arg in foo bar baz; do
+    echo $arg
+    done
+
+  echo foo bar | cat
+
+   true && break || continue
+done
 
 # running commands in backgroud
 command &

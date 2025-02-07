@@ -15,24 +15,24 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		defer streamManager.Destroy()
 		for {
     		func() {
-    			var commandName = `true`
+    			var commandName = "true"
     			var arguments []string
     			var command = shell.Command(commandName, arguments...)
     			streamManager := streamManager.Clone()
     			defer streamManager.Destroy()
-    			if stream, err := streamManager.Get(`0`); err != nil {
+    			if stream, err := streamManager.Get("0"); err != nil {
     				shell.HandleError(streamManager, err)
     				return
     			} else {
     				command.Stdin = stream
     			}
-    			if stream, err := streamManager.Get(`1`); err != nil {
+    			if stream, err := streamManager.Get("1"); err != nil {
     				shell.HandleError(streamManager, err)
     				return
     			} else {
     				command.Stdout = stream
     			}
-    			if stream, err := streamManager.Get(`2`); err != nil {
+    			if stream, err := streamManager.Get("2"); err != nil {
     				shell.HandleError(streamManager, err)
     				return
     			} else {
@@ -51,25 +51,25 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
                 break
             }
 			func() {
-				var commandName = `echo`
+				var commandName = "echo"
 				var arguments []string
-				arguments = append(arguments, `foo bar`)
+				arguments = append(arguments, "foo bar")
 				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
-				if stream, err := streamManager.Get(`0`); err != nil {
+				if stream, err := streamManager.Get("0"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdin = stream
 				}
-				if stream, err := streamManager.Get(`1`); err != nil {
+				if stream, err := streamManager.Get("1"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdout = stream
 				}
-				if stream, err := streamManager.Get(`2`); err != nil {
+				if stream, err := streamManager.Get("2"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
@@ -107,38 +107,38 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
-		stream0, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
+		stream0, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_WRITE)
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return
 		}
-		streamManager.Add(`1`, stream0)
-		stream1, err := streamManager.OpenStream(`input.txt`, runtime.STREAM_FLAG_READ)
+		streamManager.Add("1", stream0)
+		stream1, err := streamManager.OpenStream("input.txt", runtime.STREAM_FLAG_READ)
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return
 		}
-		streamManager.Add(`0`, stream1)
+		streamManager.Add("0", stream1)
 		for {
     		func() {
-    			var commandName = `true`
+    			var commandName = "true"
     			var arguments []string
     			var command = shell.Command(commandName, arguments...)
     			streamManager := streamManager.Clone()
     			defer streamManager.Destroy()
-    			if stream, err := streamManager.Get(`0`); err != nil {
+    			if stream, err := streamManager.Get("0"); err != nil {
     				shell.HandleError(streamManager, err)
     				return
     			} else {
     				command.Stdin = stream
     			}
-    			if stream, err := streamManager.Get(`1`); err != nil {
+    			if stream, err := streamManager.Get("1"); err != nil {
     				shell.HandleError(streamManager, err)
     				return
     			} else {
     				command.Stdout = stream
     			}
-    			if stream, err := streamManager.Get(`2`); err != nil {
+    			if stream, err := streamManager.Get("2"); err != nil {
     				shell.HandleError(streamManager, err)
     				return
     			} else {
@@ -157,25 +157,25 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
                 break
             }
 			func() {
-				var commandName = `echo`
+				var commandName = "echo"
 				var arguments []string
-				arguments = append(arguments, `foo bar`)
+				arguments = append(arguments, "foo bar")
 				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
-				if stream, err := streamManager.Get(`0`); err != nil {
+				if stream, err := streamManager.Get("0"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdin = stream
 				}
-				if stream, err := streamManager.Get(`1`); err != nil {
+				if stream, err := streamManager.Get("1"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdout = stream
 				}
-				if stream, err := streamManager.Get(`2`); err != nil {
+				if stream, err := streamManager.Get("2"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
@@ -223,7 +223,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		}
 		func() {
 			streamManager := streamManager.Clone()
-			streamManager.Add(`1`, pipeWriter1)
+			streamManager.Add("1", pipeWriter1)
 			var done = make(chan struct{}, 1)
 			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
 				<-done
@@ -233,24 +233,24 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			go func() {
 			    for {
     				func() {
-    					var commandName = `true`
+    					var commandName = "true"
     					var arguments []string
     					var command = shell.Command(commandName, arguments...)
     					streamManager := streamManager.Clone()
     					defer streamManager.Destroy()
-    					if stream, err := streamManager.Get(`0`); err != nil {
+    					if stream, err := streamManager.Get("0"); err != nil {
     						shell.HandleError(streamManager, err)
     						return
     					} else {
     						command.Stdin = stream
     					}
-    					if stream, err := streamManager.Get(`1`); err != nil {
+    					if stream, err := streamManager.Get("1"); err != nil {
     						shell.HandleError(streamManager, err)
     						return
     					} else {
     						command.Stdout = stream
     					}
-    					if stream, err := streamManager.Get(`2`); err != nil {
+    					if stream, err := streamManager.Get("2"); err != nil {
     						shell.HandleError(streamManager, err)
     						return
     					} else {
@@ -269,25 +269,25 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
                         break
                     }
 					func() {
-						var commandName = `echo`
+						var commandName = "echo"
 						var arguments []string
-						arguments = append(arguments, `foo bar`)
+						arguments = append(arguments, "foo bar")
 						var command = shell.Command(commandName, arguments...)
 						streamManager := streamManager.Clone()
 						defer streamManager.Destroy()
-						if stream, err := streamManager.Get(`0`); err != nil {
+						if stream, err := streamManager.Get("0"); err != nil {
 							shell.HandleError(streamManager, err)
 							return
 						} else {
 							command.Stdin = stream
 						}
-						if stream, err := streamManager.Get(`1`); err != nil {
+						if stream, err := streamManager.Get("1"); err != nil {
 							shell.HandleError(streamManager, err)
 							return
 						} else {
 							command.Stdout = stream
 						}
-						if stream, err := streamManager.Get(`2`); err != nil {
+						if stream, err := streamManager.Get("2"); err != nil {
 							shell.HandleError(streamManager, err)
 							return
 						} else {
@@ -313,8 +313,8 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		}
 		func() {
 			streamManager := streamManager.Clone()
-			streamManager.Add(`1`, pipeWriter2)
-			streamManager.Add(`0`, pipeReader1)
+			streamManager.Add("1", pipeWriter2)
+			streamManager.Add("0", pipeReader1)
 			var done = make(chan struct{}, 1)
 			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
 				<-done
@@ -324,24 +324,24 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			go func() {
 				for {
     				func() {
-    					var commandName = `true`
+    					var commandName = "true"
     					var arguments []string
     					var command = shell.Command(commandName, arguments...)
     					streamManager := streamManager.Clone()
     					defer streamManager.Destroy()
-    					if stream, err := streamManager.Get(`0`); err != nil {
+    					if stream, err := streamManager.Get("0"); err != nil {
     						shell.HandleError(streamManager, err)
     						return
     					} else {
     						command.Stdin = stream
     					}
-    					if stream, err := streamManager.Get(`1`); err != nil {
+    					if stream, err := streamManager.Get("1"); err != nil {
     						shell.HandleError(streamManager, err)
     						return
     					} else {
     						command.Stdout = stream
     					}
-    					if stream, err := streamManager.Get(`2`); err != nil {
+    					if stream, err := streamManager.Get("2"); err != nil {
     						shell.HandleError(streamManager, err)
     						return
     					} else {
@@ -360,24 +360,24 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
                         break
                     }
 					func() {
-						var commandName = `cat`
+						var commandName = "cat"
 						var arguments []string
 						var command = shell.Command(commandName, arguments...)
 						streamManager := streamManager.Clone()
 						defer streamManager.Destroy()
-						if stream, err := streamManager.Get(`0`); err != nil {
+						if stream, err := streamManager.Get("0"); err != nil {
 							shell.HandleError(streamManager, err)
 							return
 						} else {
 							command.Stdin = stream
 						}
-						if stream, err := streamManager.Get(`1`); err != nil {
+						if stream, err := streamManager.Get("1"); err != nil {
 							shell.HandleError(streamManager, err)
 							return
 						} else {
 							command.Stdout = stream
 						}
-						if stream, err := streamManager.Get(`2`); err != nil {
+						if stream, err := streamManager.Get("2"); err != nil {
 							shell.HandleError(streamManager, err)
 							return
 						} else {
@@ -397,24 +397,24 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 		}()
 		func() {
-			var commandName = `command`
+			var commandName = "command"
 			var arguments []string
 			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
-			streamManager.Add(`0`, pipeReader2)
-			if stream, err := streamManager.Get(`0`); err != nil {
+			streamManager.Add("0", pipeReader2)
+			if stream, err := streamManager.Get("0"); err != nil {
 				shell.HandleError(streamManager, err)
 				return
 			} else {
 				command.Stdin = stream
 			}
-			if stream, err := streamManager.Get(`1`); err != nil {
+			if stream, err := streamManager.Get("1"); err != nil {
 				shell.HandleError(streamManager, err)
 				return
 			} else {
 				command.Stdout = stream
 			}
-			if stream, err := streamManager.Get(`2`); err != nil {
+			if stream, err := streamManager.Get("2"); err != nil {
 				shell.HandleError(streamManager, err)
 				return
 			} else {
@@ -463,24 +463,24 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		defer streamManager.Destroy()
 		for {
     		func() {
-    			var commandName = `true`
+    			var commandName = "true"
     			var arguments []string
     			var command = shell.Command(commandName, arguments...)
     			streamManager := streamManager.Clone()
     			defer streamManager.Destroy()
-    			if stream, err := streamManager.Get(`0`); err != nil {
+    			if stream, err := streamManager.Get("0"); err != nil {
     				shell.HandleError(streamManager, err)
     				return
     			} else {
     				command.Stdin = stream
     			}
-    			if stream, err := streamManager.Get(`1`); err != nil {
+    			if stream, err := streamManager.Get("1"); err != nil {
     				shell.HandleError(streamManager, err)
     				return
     			} else {
     				command.Stdout = stream
     			}
-    			if stream, err := streamManager.Get(`2`); err != nil {
+    			if stream, err := streamManager.Get("2"); err != nil {
     				shell.HandleError(streamManager, err)
     				return
     			} else {
@@ -499,25 +499,25 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
                 break
             }
 			func() {
-				var commandName = `echo`
+				var commandName = "echo"
 				var arguments []string
-				arguments = append(arguments, `foo bar`)
+				arguments = append(arguments, "foo bar")
 				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
-				if stream, err := streamManager.Get(`0`); err != nil {
+				if stream, err := streamManager.Get("0"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdin = stream
 				}
-				if stream, err := streamManager.Get(`1`); err != nil {
+				if stream, err := streamManager.Get("1"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdout = stream
 				}
-				if stream, err := streamManager.Get(`2`); err != nil {
+				if stream, err := streamManager.Get("2"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
@@ -555,38 +555,38 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
-		stream0, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
+		stream0, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_WRITE)
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return
 		}
-		streamManager.Add(`1`, stream0)
-		stream1, err := streamManager.OpenStream(`input.txt`, runtime.STREAM_FLAG_READ)
+		streamManager.Add("1", stream0)
+		stream1, err := streamManager.OpenStream("input.txt", runtime.STREAM_FLAG_READ)
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return
 		}
-		streamManager.Add(`0`, stream1)
+		streamManager.Add("0", stream1)
 		for {
     		func() {
-    			var commandName = `true`
+    			var commandName = "true"
     			var arguments []string
     			var command = shell.Command(commandName, arguments...)
     			streamManager := streamManager.Clone()
     			defer streamManager.Destroy()
-    			if stream, err := streamManager.Get(`0`); err != nil {
+    			if stream, err := streamManager.Get("0"); err != nil {
     				shell.HandleError(streamManager, err)
     				return
     			} else {
     				command.Stdin = stream
     			}
-    			if stream, err := streamManager.Get(`1`); err != nil {
+    			if stream, err := streamManager.Get("1"); err != nil {
     				shell.HandleError(streamManager, err)
     				return
     			} else {
     				command.Stdout = stream
     			}
-    			if stream, err := streamManager.Get(`2`); err != nil {
+    			if stream, err := streamManager.Get("2"); err != nil {
     				shell.HandleError(streamManager, err)
     				return
     			} else {
@@ -605,25 +605,25 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
                 break
             }
 			func() {
-				var commandName = `echo`
+				var commandName = "echo"
 				var arguments []string
-				arguments = append(arguments, `foo bar`)
+				arguments = append(arguments, "foo bar")
 				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
-				if stream, err := streamManager.Get(`0`); err != nil {
+				if stream, err := streamManager.Get("0"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdin = stream
 				}
-				if stream, err := streamManager.Get(`1`); err != nil {
+				if stream, err := streamManager.Get("1"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdout = stream
 				}
-				if stream, err := streamManager.Get(`2`); err != nil {
+				if stream, err := streamManager.Get("2"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
@@ -671,7 +671,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		}
 		func() {
 			streamManager := streamManager.Clone()
-			streamManager.Add(`1`, pipeWriter1)
+			streamManager.Add("1", pipeWriter1)
 			var done = make(chan struct{}, 1)
 			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
 				<-done
@@ -681,24 +681,24 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			go func() {
 			    for {
     				func() {
-    					var commandName = `true`
+    					var commandName = "true"
     					var arguments []string
     					var command = shell.Command(commandName, arguments...)
     					streamManager := streamManager.Clone()
     					defer streamManager.Destroy()
-    					if stream, err := streamManager.Get(`0`); err != nil {
+    					if stream, err := streamManager.Get("0"); err != nil {
     						shell.HandleError(streamManager, err)
     						return
     					} else {
     						command.Stdin = stream
     					}
-    					if stream, err := streamManager.Get(`1`); err != nil {
+    					if stream, err := streamManager.Get("1"); err != nil {
     						shell.HandleError(streamManager, err)
     						return
     					} else {
     						command.Stdout = stream
     					}
-    					if stream, err := streamManager.Get(`2`); err != nil {
+    					if stream, err := streamManager.Get("2"); err != nil {
     						shell.HandleError(streamManager, err)
     						return
     					} else {
@@ -717,25 +717,25 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
                         break
                     }
 					func() {
-						var commandName = `echo`
+						var commandName = "echo"
 						var arguments []string
-						arguments = append(arguments, `foo bar`)
+						arguments = append(arguments, "foo bar")
 						var command = shell.Command(commandName, arguments...)
 						streamManager := streamManager.Clone()
 						defer streamManager.Destroy()
-						if stream, err := streamManager.Get(`0`); err != nil {
+						if stream, err := streamManager.Get("0"); err != nil {
 							shell.HandleError(streamManager, err)
 							return
 						} else {
 							command.Stdin = stream
 						}
-						if stream, err := streamManager.Get(`1`); err != nil {
+						if stream, err := streamManager.Get("1"); err != nil {
 							shell.HandleError(streamManager, err)
 							return
 						} else {
 							command.Stdout = stream
 						}
-						if stream, err := streamManager.Get(`2`); err != nil {
+						if stream, err := streamManager.Get("2"); err != nil {
 							shell.HandleError(streamManager, err)
 							return
 						} else {
@@ -761,8 +761,8 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		}
 		func() {
 			streamManager := streamManager.Clone()
-			streamManager.Add(`1`, pipeWriter2)
-			streamManager.Add(`0`, pipeReader1)
+			streamManager.Add("1", pipeWriter2)
+			streamManager.Add("0", pipeReader1)
 			var done = make(chan struct{}, 1)
 			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
 				<-done
@@ -772,24 +772,24 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			go func() {
 				for {
     				func() {
-    					var commandName = `true`
+    					var commandName = "true"
     					var arguments []string
     					var command = shell.Command(commandName, arguments...)
     					streamManager := streamManager.Clone()
     					defer streamManager.Destroy()
-    					if stream, err := streamManager.Get(`0`); err != nil {
+    					if stream, err := streamManager.Get("0"); err != nil {
     						shell.HandleError(streamManager, err)
     						return
     					} else {
     						command.Stdin = stream
     					}
-    					if stream, err := streamManager.Get(`1`); err != nil {
+    					if stream, err := streamManager.Get("1"); err != nil {
     						shell.HandleError(streamManager, err)
     						return
     					} else {
     						command.Stdout = stream
     					}
-    					if stream, err := streamManager.Get(`2`); err != nil {
+    					if stream, err := streamManager.Get("2"); err != nil {
     						shell.HandleError(streamManager, err)
     						return
     					} else {
@@ -808,24 +808,24 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
                         break
                     }
 					func() {
-						var commandName = `cat`
+						var commandName = "cat"
 						var arguments []string
 						var command = shell.Command(commandName, arguments...)
 						streamManager := streamManager.Clone()
 						defer streamManager.Destroy()
-						if stream, err := streamManager.Get(`0`); err != nil {
+						if stream, err := streamManager.Get("0"); err != nil {
 							shell.HandleError(streamManager, err)
 							return
 						} else {
 							command.Stdin = stream
 						}
-						if stream, err := streamManager.Get(`1`); err != nil {
+						if stream, err := streamManager.Get("1"); err != nil {
 							shell.HandleError(streamManager, err)
 							return
 						} else {
 							command.Stdout = stream
 						}
-						if stream, err := streamManager.Get(`2`); err != nil {
+						if stream, err := streamManager.Get("2"); err != nil {
 							shell.HandleError(streamManager, err)
 							return
 						} else {
@@ -845,24 +845,24 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 		}()
 		func() {
-			var commandName = `command`
+			var commandName = "command"
 			var arguments []string
 			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
-			streamManager.Add(`0`, pipeReader2)
-			if stream, err := streamManager.Get(`0`); err != nil {
+			streamManager.Add("0", pipeReader2)
+			if stream, err := streamManager.Get("0"); err != nil {
 				shell.HandleError(streamManager, err)
 				return
 			} else {
 				command.Stdin = stream
 			}
-			if stream, err := streamManager.Get(`1`); err != nil {
+			if stream, err := streamManager.Get("1"); err != nil {
 				shell.HandleError(streamManager, err)
 				return
 			} else {
 				command.Stdout = stream
 			}
-			if stream, err := streamManager.Get(`2`); err != nil {
+			if stream, err := streamManager.Get("2"); err != nil {
 				shell.HandleError(streamManager, err)
 				return
 			} else {
@@ -911,24 +911,24 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		defer streamManager.Destroy()
 		for {
 			func() {
-				var commandName = `true`
+				var commandName = "true"
 				var arguments []string
 				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
-				if stream, err := streamManager.Get(`0`); err != nil {
+				if stream, err := streamManager.Get("0"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdin = stream
 				}
-				if stream, err := streamManager.Get(`1`); err != nil {
+				if stream, err := streamManager.Get("1"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdout = stream
 				}
-				if stream, err := streamManager.Get(`2`); err != nil {
+				if stream, err := streamManager.Get("2"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
@@ -974,24 +974,24 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		defer streamManager.Destroy()
 		for {
 			func() {
-				var commandName = `true`
+				var commandName = "true"
 				var arguments []string
 				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
-				if stream, err := streamManager.Get(`0`); err != nil {
+				if stream, err := streamManager.Get("0"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdin = stream
 				}
-				if stream, err := streamManager.Get(`1`); err != nil {
+				if stream, err := streamManager.Get("1"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdout = stream
 				}
-				if stream, err := streamManager.Get(`2`); err != nil {
+				if stream, err := streamManager.Get("2"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
@@ -1037,24 +1037,24 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		defer streamManager.Destroy()
 		for {
 			func() {
-				var commandName = `true`
+				var commandName = "true"
 				var arguments []string
 				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
-				if stream, err := streamManager.Get(`0`); err != nil {
+				if stream, err := streamManager.Get("0"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdin = stream
 				}
-				if stream, err := streamManager.Get(`1`); err != nil {
+				if stream, err := streamManager.Get("1"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdout = stream
 				}
-				if stream, err := streamManager.Get(`2`); err != nil {
+				if stream, err := streamManager.Get("2"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
@@ -1073,24 +1073,24 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				break
 			}
 			func() {
-				var commandName = `true`
+				var commandName = "true"
 				var arguments []string
 				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
-				if stream, err := streamManager.Get(`0`); err != nil {
+				if stream, err := streamManager.Get("0"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdin = stream
 				}
-				if stream, err := streamManager.Get(`1`); err != nil {
+				if stream, err := streamManager.Get("1"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {
 					command.Stdout = stream
 				}
-				if stream, err := streamManager.Get(`2`); err != nil {
+				if stream, err := streamManager.Get("2"); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				} else {

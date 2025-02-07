@@ -113,7 +113,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 	loop:
 		for i := len(a.stack) - 1; i >= 0; i-- {
 			switch a.stack[i].(type) {
-			case ast.Loop:
+			case ast.Loop, ast.RangeLoop:
 				withinLoop = true
 				break loop
 			case ast.List, ast.Break:
@@ -129,7 +129,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 	loop2:
 		for i := len(a.stack) - 1; i >= 0; i-- {
 			switch a.stack[i].(type) {
-			case ast.Loop:
+			case ast.Loop, ast.RangeLoop:
 				withinLoop = true
 				break loop2
 			case ast.List, ast.Continue:
@@ -150,6 +150,18 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 		a.analyseStatement(v.Statement)
 	case ast.Function:
 		a.analyseStatement(v.Command)
+	case ast.RangeLoop:
+		for _, expr := range v.Operands {
+			a.analyseExpression(expr)
+		}
+		for _, s := range v.Body {
+			a.analyseStatement(s)
+		}
+		for _, r := range v.Redirections {
+			if r.Dst != nil {
+				a.analyseExpression(r.Dst)
+			}
+		}
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}

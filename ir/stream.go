@@ -68,7 +68,7 @@ type AddStream struct {
 }
 
 func (as AddStream) togo() string {
-	return fmt.Sprintf("streamManager.Add(`%s`, %s)\n", as.Fd, as.StreamName)
+	return fmt.Sprintf("streamManager.Add(%q, %s)\n", as.Fd, as.StreamName)
 }
 
 type SetStream struct {
