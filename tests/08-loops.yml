@@ -60,4 +60,23 @@ cases:
         inline: boz
         inline: fee
 
+  - name: "`for` loop within list"
+    args: ["foo", "bar", "baz"]
+    script: |
+      for arg; do
+        echo positional: $arg
+      done   &&
+
+        for arg in boo boz fee; do
+          echo inline: $arg
+        done
+    expect:
+      stdout: |
+        positional: foo
+        positional: bar
+        positional: baz
+        inline: boo
+        inline: boz
+        inline: fee
+
 # TODO: add more tests here
