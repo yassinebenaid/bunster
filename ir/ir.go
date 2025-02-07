@@ -73,7 +73,7 @@ func (a Append) togo() string {
 type String string
 
 func (s String) togo() string {
-	return fmt.Sprintf("`%s`", s)
+	return fmt.Sprintf("%q", s)
 }
 
 type Concat []Instruction
@@ -328,7 +328,7 @@ func (f Function) togo() string {
 	}
 
 	return fmt.Sprintf(
-		"shell.RegisterFunction(`%s`, func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream){"+`
+		"shell.RegisterFunction(%q, func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream){"+`
 			streamManager := streamManager.Clone()
 			streamManager.Add("0", stdin)
 			streamManager.Add("1", stdout)

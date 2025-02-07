@@ -12,48 +12,48 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
-  		var commandName = `git`
+  		var commandName = "git"
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
   		streamManager := streamManager.Clone()
   		defer streamManager.Destroy()
-        stream0, err := streamManager.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
+        stream0, err := streamManager.OpenStream("output.txt", runtime.STREAM_FLAG_WRITE)
         if err != nil {
             shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`1`, stream0)
-        stream1, err := streamManager.OpenStream(`errors.txt`, runtime.STREAM_FLAG_WRITE)
+        streamManager.Add("1", stream0)
+        stream1, err := streamManager.OpenStream("errors.txt", runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`2`, stream1)
-        stream2, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
+        streamManager.Add("2", stream1)
+        stream2, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`3`, stream2)
-        stream3, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
+        streamManager.Add("3", stream2)
+        stream3, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`4`, stream3)
-  		if stream, err := streamManager.Get(`0`); err != nil {
+        streamManager.Add("4", stream3)
+  		if stream, err := streamManager.Get("0"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
             command.Stdin = stream
         }
-        if stream, err := streamManager.Get(`1`); err != nil {
+        if stream, err := streamManager.Get("1"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
             command.Stdout = stream
         }
-        if stream, err := streamManager.Get(`2`); err != nil {
+        if stream, err := streamManager.Get("2"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
@@ -84,48 +84,48 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
-  		var commandName = `git`
+  		var commandName = "git"
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
   		streamManager := streamManager.Clone()
   		defer streamManager.Destroy()
-        stream0, err := streamManager.OpenStream(`output.txt`, runtime.STREAM_FLAG_APPEND)
+        stream0, err := streamManager.OpenStream("output.txt", runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`1`, stream0)
-        stream1, err := streamManager.OpenStream(`errors.txt`, runtime.STREAM_FLAG_APPEND)
+        streamManager.Add("1", stream0)
+        stream1, err := streamManager.OpenStream("errors.txt", runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`2`, stream1)
-        stream2, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
+        streamManager.Add("2", stream1)
+        stream2, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`3`, stream2)
-        stream3, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
+        streamManager.Add("3", stream2)
+        stream3, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`4`, stream3)
-  		if stream, err := streamManager.Get(`0`); err != nil {
+        streamManager.Add("4", stream3)
+  		if stream, err := streamManager.Get("0"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
             command.Stdin = stream
         }
-        if stream, err := streamManager.Get(`1`); err != nil {
+        if stream, err := streamManager.Get("1"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
             command.Stdout = stream
         }
-        if stream, err := streamManager.Get(`2`); err != nil {
+        if stream, err := streamManager.Get("2"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
@@ -155,38 +155,38 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
-  		var commandName = `git`
+  		var commandName = "git"
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
   		streamManager := streamManager.Clone()
   		defer streamManager.Destroy()
-        stream0, err := streamManager.OpenStream(`output.txt`, runtime.STREAM_FLAG_WRITE)
+        stream0, err := streamManager.OpenStream("output.txt", runtime.STREAM_FLAG_WRITE)
         if err != nil {
         shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`1`, stream0)
-        streamManager.Add(`2`, stream0)
-        stream1, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
+        streamManager.Add("1", stream0)
+        streamManager.Add("2", stream0)
+        stream1, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_APPEND)
         if err != nil {
         shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`1`, stream1)
-        streamManager.Add(`2`, stream1)
-  		if stream, err := streamManager.Get(`0`); err != nil {
+        streamManager.Add("1", stream1)
+        streamManager.Add("2", stream1)
+  		if stream, err := streamManager.Get("0"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
             command.Stdin = stream
         }
-        if stream, err := streamManager.Get(`1`); err != nil {
+        if stream, err := streamManager.Get("1"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
             command.Stdout = stream
         }
-        if stream, err := streamManager.Get(`2`); err != nil {
+        if stream, err := streamManager.Get("2"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
@@ -218,52 +218,52 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
-  		var commandName = `git`
+  		var commandName = "git"
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
   		streamManager := streamManager.Clone()
   		defer streamManager.Destroy()
-        stream0, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_WRITE)
+        stream0, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_WRITE)
         if err != nil {
             shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`3`, stream0)
-        if err := streamManager.Duplicate("1", `3`); err != nil {
+        streamManager.Add("3", stream0)
+        if err := streamManager.Duplicate("1", "3"); err != nil {
             shell.HandleError(streamManager, err)
             return
         }
-        if err := streamManager.Close(`3`); err != nil {
+        if err := streamManager.Close("3"); err != nil {
             shell.HandleError(streamManager, err)
             return
         }
-        if err := streamManager.Duplicate("2", `1`); err != nil {
+        if err := streamManager.Duplicate("2", "1"); err != nil {
             shell.HandleError(streamManager, err)
             return
         }
-        stream3, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_APPEND)
+        stream3, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_APPEND)
         if err != nil {
             shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`4`, stream3)
-        if err := streamManager.Close(`4`); err != nil {
+        streamManager.Add("4", stream3)
+        if err := streamManager.Close("4"); err != nil {
             shell.HandleError(streamManager, err)
             return
         }
-  		if stream, err := streamManager.Get(`0`); err != nil {
+  		if stream, err := streamManager.Get("0"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
             command.Stdin = stream
         }
-        if stream, err := streamManager.Get(`1`); err != nil {
+        if stream, err := streamManager.Get("1"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
             command.Stdout = stream
         }
-        if stream, err := streamManager.Get(`2`); err != nil {
+        if stream, err := streamManager.Get("2"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
@@ -294,48 +294,48 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
-  		var commandName = `git`
+  		var commandName = "git"
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
   		streamManager := streamManager.Clone()
   		defer streamManager.Destroy()
-        stream0, err := streamManager.OpenStream(`output.txt`, runtime.STREAM_FLAG_READ)
+        stream0, err := streamManager.OpenStream("output.txt", runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`0`, stream0)
-        stream1, err := streamManager.OpenStream(`errors.txt`, runtime.STREAM_FLAG_READ)
+        streamManager.Add("0", stream0)
+        stream1, err := streamManager.OpenStream("errors.txt", runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`2`, stream1)
-        stream2, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
+        streamManager.Add("2", stream1)
+        stream2, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`3`, stream2)
-        stream3, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
+        streamManager.Add("3", stream2)
+        stream3, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_READ)
         if err != nil {
         shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`4`, stream3)
-  		if stream, err := streamManager.Get(`0`); err != nil {
+        streamManager.Add("4", stream3)
+  		if stream, err := streamManager.Get("0"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
             command.Stdin = stream
         }
-        if stream, err := streamManager.Get(`1`); err != nil {
+        if stream, err := streamManager.Get("1"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
             command.Stdout = stream
         }
-        if stream, err := streamManager.Get(`2`); err != nil {
+        if stream, err := streamManager.Get("2"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
@@ -365,40 +365,38 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
-  		var commandName = `git`
+  		var commandName = "git"
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
   		streamManager := streamManager.Clone()
   		defer streamManager.Destroy()
-        buffer0, err := runtime.NewBufferedStream(`Foo` + `
-`)
+        buffer0, err := runtime.NewBufferedStream("Foo" + "\n")
         if err != nil {
             shell.HandleError(streamManager, err)
             return
         }
         var stream0 = buffer0
-        streamManager.Add(`0`, stream0)
-        buffer1, err := runtime.NewBufferedStream(`Foo Bar` + `
-`)
+        streamManager.Add("0", stream0)
+        buffer1, err := runtime.NewBufferedStream("Foo Bar" + "\n")
         if err != nil {
             shell.HandleError(streamManager, err)
             return
         }
         var stream1 = buffer1
-        streamManager.Add(`2`, stream1)
-  		if stream, err := streamManager.Get(`0`); err != nil {
+        streamManager.Add("2", stream1)
+  		if stream, err := streamManager.Get("0"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
             command.Stdin = stream
         }
-        if stream, err := streamManager.Get(`1`); err != nil {
+        if stream, err := streamManager.Get("1"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
             command.Stdout = stream
         }
-        if stream, err := streamManager.Get(`2`); err != nil {
+        if stream, err := streamManager.Get("2"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
@@ -429,54 +427,53 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
-  		var commandName = `git`
+  		var commandName = "git"
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
   		streamManager := streamManager.Clone()
   		defer streamManager.Destroy()
-        stream0, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_READ)
+        stream0, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_READ)
         if err != nil {
             shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`3`, stream0)
-        if err := streamManager.Duplicate("0", `3`); err != nil {
+        streamManager.Add("3", stream0)
+        if err := streamManager.Duplicate("0", "3"); err != nil {
             shell.HandleError(streamManager, err)
             return
         }
-        if err := streamManager.Close(`3`); err != nil {
+        if err := streamManager.Close("3"); err != nil {
             shell.HandleError(streamManager, err)
             return
         }
-        if err := streamManager.Duplicate("2", `1`); err != nil {
+        if err := streamManager.Duplicate("2", "1"); err != nil {
             shell.HandleError(streamManager, err)
             return
         }
-        buffer3, err := runtime.NewBufferedStream(`foobar` + `
-`)
+        buffer3, err := runtime.NewBufferedStream("foobar" + "\n")
         if err != nil {
             shell.HandleError(streamManager, err)
             return
         }
         var stream3 = buffer3
-        streamManager.Add(`4`, stream3)
-        if err := streamManager.Close(`4`); err != nil {
+        streamManager.Add("4", stream3)
+        if err := streamManager.Close("4"); err != nil {
             shell.HandleError(streamManager, err)
             return
         }
-  		if stream, err := streamManager.Get(`0`); err != nil {
+  		if stream, err := streamManager.Get("0"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
             command.Stdin = stream
         }
-        if stream, err := streamManager.Get(`1`); err != nil {
+        if stream, err := streamManager.Get("1"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
             command.Stdout = stream
         }
-        if stream, err := streamManager.Get(`2`); err != nil {
+        if stream, err := streamManager.Get("2"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
@@ -505,36 +502,36 @@ import "bunster-build/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
-  		var commandName = `git`
+  		var commandName = "git"
   		var arguments []string
   		var command = shell.Command(commandName, arguments...)
   		streamManager := streamManager.Clone()
   		defer streamManager.Destroy()
-        stream0, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_RW)
+        stream0, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_RW)
         if err != nil {
             shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`0`, stream0)
-        stream1, err := streamManager.OpenStream(`file.txt`, runtime.STREAM_FLAG_RW)
+        streamManager.Add("0", stream0)
+        stream1, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_RW)
         if err != nil {
             shell.HandleError(streamManager, err)
             return
         }
-        streamManager.Add(`2`, stream1)
-  		if stream, err := streamManager.Get(`0`); err != nil {
+        streamManager.Add("2", stream1)
+  		if stream, err := streamManager.Get("0"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
             command.Stdin = stream
         }
-        if stream, err := streamManager.Get(`1`); err != nil {
+        if stream, err := streamManager.Get("1"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
             command.Stdout = stream
         }
-        if stream, err := streamManager.Get(`2`); err != nil {
+        if stream, err := streamManager.Get("2"); err != nil {
             shell.HandleError(streamManager, err)
             return
         } else {
