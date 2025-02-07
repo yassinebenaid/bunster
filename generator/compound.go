@@ -207,3 +207,39 @@ func (g *generator) handleLoop(buf *InstructionBuffer, loop ast.Loop, ctx *conte
 
 	*buf = append(*buf, ir.Closure(cmdbuf))
 }
+
+func (g *generator) handleRangeLoop(buf *InstructionBuffer, loop ast.RangeLoop, ctx *context) {
+	var cmdbuf InstructionBuffer
+	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
+
+	g.handleRedirections(&cmdbuf, loop.Redirections, ctx)
+
+	var innerBuf, body InstructionBuffer
+
+	for _, statement := range loop.Body {
+		g.generate(&body, statement, &context{})
+	}
+	innerBuf.add(ir.RangeLoop{
+		Var:     loop.Var,
+		Members: ir.Literal("shell.Args[1:]"),
+		Body:    body,
+	})
+
+	if ctx.pipe == nil {
+		cmdbuf = append(cmdbuf, innerBuf...)
+	} else {
+		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
+		cmdbuf.add(ir.PushToPipelineWaitgroup{
+			Waitgroup: ctx.pipe.waitgroup,
+			Value: ir.Literal(`func() error {
+				<-done
+			 	streamManager.Destroy()
+				return nil
+			}`),
+		})
+
+		innerBuf.add(ir.Literal("done<-struct{}{}\n"))
+		cmdbuf.add(ir.Gorouting(innerBuf))
+	}
+	*buf = append(*buf, ir.Closure(cmdbuf))
+}

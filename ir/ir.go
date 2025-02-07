@@ -285,6 +285,25 @@ func (i Loop) togo() string {
 	return cond + "}\n"
 }
 
+type RangeLoop struct {
+	Var     string
+	Members Instruction
+	Body    []Instruction
+}
+
+func (i RangeLoop) togo() string {
+	cond := fmt.Sprintf(
+		`for _,member := range %s {
+			shell.SetVar(%q, member)
+		`, i.Members.togo(), i.Var,
+	)
+	for _, ins := range i.Body {
+		cond += ins.togo()
+	}
+
+	return cond + "}\n"
+}
+
 type InvertExitCode struct{}
 
 func (i InvertExitCode) togo() string {

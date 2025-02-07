@@ -24,7 +24,7 @@ cases:
     args: ["foo", "bar", "baz"]
     script: |
       for arg; do
-        echo arg
+        echo $arg
       done
     expect:
       stdout: |
