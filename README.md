@@ -83,7 +83,7 @@ No because bunster programs are binary. They're cool if they're yours, but very 
 ### Why would I choose bunster over classic shells?
 You don't have to. If you're happy with your favorite shell, just stick with it. **Bunster** is just another option. However, there are a lot of motivators worth consideration.
 
-- **Unique goals:** Bunster brings a [lot of features](https://github.com/yassinebenaid/bunster/edit/update-readme/README.md#goals) that are not present in any of the shells out there.
+- **Unique goals:** Bunster brings a [lot of features](https://github.com/yassinebenaid/bunster/blob/master/README.md#vision) that are not present in any of the shells out there.
 - **Implementation differences:** Bunster is built differently. A lot of implementation details have been adopted to improve efficiency of your scripts.
 - **Portability**: How many times you wrote a script for `bash` in one machine, and it didn't work in another machine just because `bash` version was different. Well, bunster programs are statically linked, compile once, run everywhere (with respect to arch/os).
 - **Security**: A lot of security risks are brought just by having the shell installed on your web server, (or wherever else). if your programs are statically linked. you can eliminate the shell at all. Additionally, in some cases you might want to hide the content of the script for any reason. Well, is it easy to read `binary` files ?
