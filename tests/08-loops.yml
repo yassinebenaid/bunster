@@ -60,6 +60,26 @@ cases:
         inline: boz
         inline: fee
 
+  - name: "redirections on the `for` loop"
+    args: ["foo", "bar", "baz"]
+    script: |
+      for arg; do
+          cat
+          echo error >&2
+          echo alternative output >&3
+      done <<<"Hello World" >output.txt 2>error.txt 3>alternate.txt
+    expect:
+      files:
+        output.txt: "Hello World\n"
+        error.txt: |
+          error
+          error
+          error
+        alternate.txt: |
+          alternative output
+          alternative output
+          alternative output
+
   - name: "`for` loop within pipeline"
     args: ["foo", "bar", "baz"]
     script: |
