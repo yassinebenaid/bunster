@@ -1117,3 +1117,326 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 }
 
 #(ENDTEST)
+
+
+
+
+
+
+#(TEST: simple `for` loop)
+
+for arg; do
+    echo $arg
+done
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		for _, member := range shell.Args[1:] {
+			shell.SetVar("arg", member)
+			func() {
+				var commandName = "echo"
+				var arguments []string
+				arguments = append(arguments, shell.ReadVar("arg"))
+				var command = shell.Command(commandName, arguments...)
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				if stream, err := streamManager.Get("0"); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				} else {
+					command.Stdin = stream
+				}
+				if stream, err := streamManager.Get("1"); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				} else {
+					command.Stdout = stream
+				}
+				if stream, err := streamManager.Get("2"); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				} else {
+					command.Stderr = stream
+				}
+				if err := command.Run(); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+				shell.ExitCode = command.ExitCode
+
+			}()
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+
+
+#(TEST: simple `for` loop over operands)
+
+for arg in foo bar baz; do
+    echo $arg
+done
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var members []string
+		members = append(members, "foo")
+		members = append(members, "bar")
+		members = append(members, "baz")
+		for _, member := range members {
+			shell.SetVar("arg", member)
+			func() {
+				var commandName = "echo"
+				var arguments []string
+				arguments = append(arguments, shell.ReadVar("arg"))
+				var command = shell.Command(commandName, arguments...)
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				if stream, err := streamManager.Get("0"); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				} else {
+					command.Stdin = stream
+				}
+				if stream, err := streamManager.Get("1"); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				} else {
+					command.Stdout = stream
+				}
+				if stream, err := streamManager.Get("2"); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				} else {
+					command.Stderr = stream
+				}
+				if err := command.Run(); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+				shell.ExitCode = command.ExitCode
+
+			}()
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+
+
+#(TEST: redirections on `for` loops)
+
+for arg; do
+    echo $arg
+done >file.txt <input.txt
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		stream0, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_WRITE)
+		if err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+		streamManager.Add("1", stream0)
+		stream1, err := streamManager.OpenStream("input.txt", runtime.STREAM_FLAG_READ)
+		if err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+		streamManager.Add("0", stream1)
+		for _, member := range shell.Args[1:] {
+			shell.SetVar("arg", member)
+			func() {
+				var commandName = "echo"
+				var arguments []string
+				arguments = append(arguments, shell.ReadVar("arg"))
+				var command = shell.Command(commandName, arguments...)
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				if stream, err := streamManager.Get("0"); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				} else {
+					command.Stdin = stream
+				}
+				if stream, err := streamManager.Get("1"); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				} else {
+					command.Stdout = stream
+				}
+				if stream, err := streamManager.Get("2"); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				} else {
+					command.Stderr = stream
+				}
+				if err := command.Run(); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+				shell.ExitCode = command.ExitCode
+
+			}()
+		}
+
+	}()
+}
+
+
+#(ENDTEST)
+
+
+
+
+
+#(TEST: `for` loop within pipeline)
+
+for arg in foo bar baz; do
+    echo $arg
+done | cat
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		var pipelineWaitgroup []func() error
+		pipeReader1, pipeWriter1, err := runtime.NewPipe()
+		if err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+		func() {
+			streamManager := streamManager.Clone()
+			streamManager.Add("1", pipeWriter1)
+			var members []string
+			members = append(members, "foo")
+			members = append(members, "bar")
+			members = append(members, "baz")
+			var done = make(chan struct{}, 1)
+			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
+				<-done
+				streamManager.Destroy()
+				return nil
+			})
+			go func() {
+				for _, member := range members {
+					shell.SetVar("arg", member)
+					func() {
+						var commandName = "echo"
+						var arguments []string
+						arguments = append(arguments, shell.ReadVar("arg"))
+						var command = shell.Command(commandName, arguments...)
+						streamManager := streamManager.Clone()
+						defer streamManager.Destroy()
+						if stream, err := streamManager.Get("0"); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						} else {
+							command.Stdin = stream
+						}
+						if stream, err := streamManager.Get("1"); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						} else {
+							command.Stdout = stream
+						}
+						if stream, err := streamManager.Get("2"); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						} else {
+							command.Stderr = stream
+						}
+						if err := command.Run(); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						}
+						shell.ExitCode = command.ExitCode
+
+					}()
+				}
+				done <- struct{}{}
+
+			}()
+
+		}()
+		func() {
+			var commandName = "cat"
+			var arguments []string
+			var command = shell.Command(commandName, arguments...)
+			streamManager := streamManager.Clone()
+			streamManager.Add("0", pipeReader1)
+			if stream, err := streamManager.Get("0"); err != nil {
+				shell.HandleError(streamManager, err)
+				return
+			} else {
+				command.Stdin = stream
+			}
+			if stream, err := streamManager.Get("1"); err != nil {
+				shell.HandleError(streamManager, err)
+				return
+			} else {
+				command.Stdout = stream
+			}
+			if stream, err := streamManager.Get("2"); err != nil {
+				shell.HandleError(streamManager, err)
+				return
+			} else {
+				command.Stderr = stream
+			}
+			if err := command.Start(); err != nil {
+				shell.HandleError(streamManager, err)
+				return
+			}
+			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
+				defer streamManager.Destroy()
+				return command.Wait()
+			})
+
+		}()
+		for i, wait := range pipelineWaitgroup {
+			if err := wait(); err != nil {
+				shell.HandleError(streamManager, err)
+			}
+			if i < (len(pipelineWaitgroup) - 1) {
+				shell.ExitCode = 0
+			}
+		}
+
+	}()
+}
+
+#(ENDTEST)
