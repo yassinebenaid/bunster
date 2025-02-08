@@ -20,12 +20,14 @@ type Shell struct {
 
 	vars      *sync.Map
 	env       *sync.Map
+	localVars *sync.Map
 	functions map[string]func(shell *Shell, stdin, stdout, stderr Stream)
 }
 
 func (shell *Shell) Run(streamManager *StreamManager) (exitCode int) {
 	shell.vars = &sync.Map{}
 	shell.env = &sync.Map{}
+	shell.localVars = &sync.Map{}
 	shell.functions = make(map[string]func(shell *Shell, stdin, stdout, stderr Stream))
 
 	for _, env := range os.Environ() {
@@ -48,6 +50,9 @@ func (shell *Shell) Run(streamManager *StreamManager) (exitCode int) {
 }
 
 func (shell *Shell) ReadVar(name string) string {
+	if value, ok := shell.localVars.Load(name); ok {
+		return value.(string)
+	}
 	if value, ok := shell.vars.Load(name); ok {
 		return value.(string)
 	}
@@ -62,6 +67,10 @@ func (shell *Shell) ReadVar(name string) string {
 
 func (shell *Shell) SetVar(name string, value string) {
 	shell.vars.Store(name, value)
+}
+
+func (shell *Shell) SetLocalVar(name string, value string) {
+	shell.localVars.Store(name, value)
 }
 
 func (shell *Shell) ReadSpecialVar(name string) string {
@@ -116,13 +125,14 @@ func (shell *Shell) Clone() *Shell {
 		functions: shell.functions,
 		vars:      &sync.Map{},
 		env:       &sync.Map{},
+		localVars: &sync.Map{},
 	}
 
 	shell.vars.Range(func(key any, value any) bool {
 		sh.vars.Store(key, value)
 		return true
 	})
-
+	//todo: handle locals too
 	return sh
 }
 
@@ -185,6 +195,7 @@ func (cmd *Command) Start() error {
 				functions: cmd.shell.functions,
 				vars:      cmd.shell.vars,
 				env:       &sync.Map{},
+				localVars: &sync.Map{},
 				ExitCode:  cmd.shell.ExitCode,
 			}
 

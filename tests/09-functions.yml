@@ -191,3 +191,21 @@ cases:
       stdout: |
         1
         0
+
+  - name: "functions local variables"
+    script: |
+      var=foobar
+      echo $var
+
+      func(){
+        local var=bazboo
+        echo $var
+      }
+
+      func
+      echo $var
+    expect:
+      stdout: |
+        foobar
+        bazboo
+        foobar

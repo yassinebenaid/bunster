@@ -96,6 +96,12 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.analyseExpression(pa.Value)
 			}
 		}
+	case ast.LocalParameterAssignement:
+		for _, pa := range v {
+			if pa.Value != nil {
+				a.analyseExpression(pa.Value)
+			}
+		}
 	case ast.Loop:
 		for _, s := range v.Head {
 			a.analyseStatement(s)

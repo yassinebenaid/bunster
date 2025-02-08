@@ -110,6 +110,15 @@ func (s SetVar) togo() string {
 	return fmt.Sprintf("shell.SetVar(%q, %v)\n", s.Key, s.Value.togo())
 }
 
+type SetLocalVar struct {
+	Key   string
+	Value Instruction
+}
+
+func (s SetLocalVar) togo() string {
+	return fmt.Sprintf("shell.SetLocalVar(%q, %v)\n", s.Key, s.Value.togo())
+}
+
 type ReadSpecialVar string
 
 func (rv ReadSpecialVar) togo() string {
