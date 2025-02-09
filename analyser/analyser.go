@@ -96,6 +96,25 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.analyseExpression(pa.Value)
 			}
 		}
+	case ast.LocalParameterAssignement:
+		var withinFunction bool
+	funcLoop:
+		for i := len(a.stack) - 1; i >= 0; i-- {
+			switch a.stack[i].(type) {
+			case ast.Function:
+				withinFunction = true
+				break funcLoop
+			}
+		}
+		if !withinFunction {
+			a.report(fmt.Sprintf("The `local` keyword cannot be used outside functions"))
+		}
+
+		for _, pa := range v {
+			if pa.Value != nil {
+				a.analyseExpression(pa.Value)
+			}
+		}
 	case ast.Loop:
 		for _, s := range v.Head {
 			a.analyseStatement(s)
@@ -201,6 +220,7 @@ func (s SemanticError) Error() string {
 var (
 	ErrorUsingShellParametersWithinPipeline = "using shell parameters within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
 	ErrorUsingWaitWithinPipeline            = "using 'wait' command within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
+	ErrorUsingLocalWithinPipeline           = "using 'local' command within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
 )
 
 func (a *analyser) analysePipeline(p ast.Pipeline) {
@@ -210,6 +230,8 @@ func (a *analyser) analysePipeline(p ast.Pipeline) {
 			a.report(ErrorUsingShellParametersWithinPipeline)
 		case ast.Wait:
 			a.report(ErrorUsingWaitWithinPipeline)
+		case ast.LocalParameterAssignement:
+			a.report(ErrorUsingLocalWithinPipeline)
 		default:
 			a.analyseStatement(cmd.Command)
 		}

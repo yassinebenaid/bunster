@@ -176,6 +176,22 @@ cases:
         tech java
         dev Go
 
+  - name: "functions environment variables are inherited in subshells"
+    script: |
+      func(){
+        (
+          echo var:$var
+        )
+
+        echo var:$var
+      }
+
+      var=foobar func
+    expect:
+      stdout: |
+        var:foobar
+        var:foobar
+
   - name: "functions inherit exit code of calling shell"
     script: |
       func(){
@@ -191,3 +207,108 @@ cases:
       stdout: |
         1
         0
+
+  - name: "functions local variables"
+    script: |
+      var=foobar
+      echo var:$var
+
+      func(){
+        local var=bazboo
+        echo var:$var
+      }
+
+      func
+      echo var:$var
+
+
+      # setting local variables does not affect global context
+      var2=bob
+      var3=zeof
+      var4=beeb
+
+      func2(){
+        local var2=boz var3 var4
+        var2=bee
+        var3=feoz
+
+        echo var2:$var2 var3:$var3 var4:$var4
+      }
+
+      func2
+      echo var2:$var2 var3:$var3 var4:$var4
+    expect:
+      stdout: |
+        var:foobar
+        var:bazboo
+        var:foobar
+        var2:bee var3:feoz var4:
+        var2:bob var3:zeof var4:beeb
+
+  - name: "functions local variables are inherited by child functions, and setting them inside child functions affects the parent function's context"
+    script: |
+      var=foo
+      echo var:$var
+
+      func(){
+        local var=bar
+        echo var:$var
+
+        func2(){
+          var=baz
+          echo var:$var
+        }
+
+        func2
+        echo var:$var
+      }
+
+      func
+      echo var:$var
+    expect:
+      stdout: |
+        var:foo
+        var:bar
+        var:baz
+        var:baz
+        var:foo
+
+  - name: "functions local variables are inherited in subshells"
+    script: |
+      func(){
+        local var=foo
+
+        (
+          echo var:$var
+          var=bar
+          echo var:$var
+        )
+
+        echo var:$var
+      }
+
+      func
+    expect:
+      stdout: |
+        var:foo
+        var:bar
+        var:foo
+
+  - name: "functions local variables are ok to be used in nested constructs"
+    script: |
+      func(){
+        if true; then
+          if true; then
+            local var=foo
+          fi
+        fi
+
+        echo var:$var
+      }
+
+      func
+      echo var:$var
+    expect:
+      stdout: |
+        var:foo
+        var:

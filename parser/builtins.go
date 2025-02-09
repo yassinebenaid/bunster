@@ -15,6 +15,8 @@ func (p *parser) getBuiltinParser() func() ast.Statement {
 		return p.parseFunction
 	case token.WAIT:
 		return p.parseWait
+	case token.LOCAL:
+		return p.parseLocal
 	case token.THEN, token.ELIF, token.ELSE, token.FI, token.DO, token.DONE, token.ESAC:
 		p.error("`%s` is a reserved keyword, cannot be used a command name", p.curr)
 	}
@@ -134,4 +136,46 @@ func (p *parser) parseWait() ast.Statement {
 		return nil
 	}
 	return ast.Wait{}
+}
+
+func (p *parser) parseLocal() ast.Statement {
+	p.proceed()
+
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
+	var assignements ast.LocalParameterAssignement
+
+	for {
+		if p.curr.Type != token.WORD {
+			break
+		}
+		assignment := ast.Assignement{Name: p.curr.Literal}
+		p.proceed()
+
+		if p.curr.Type == token.ASSIGN {
+			p.proceed()
+			assignment.Value = p.parseExpression()
+		}
+
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+
+		assignements = append(assignements, assignment)
+	}
+
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
+
+	if assignements == nil || (!p.isControlToken() && p.curr.Type != token.EOF) {
+		p.error("unexpected token `%s`", p.curr)
+		return nil
+	}
+
+	return assignements
 }

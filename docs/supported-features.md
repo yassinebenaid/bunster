@@ -102,6 +102,9 @@ command &
 # functions
 function foo() {
   echo foobar
+
+  # local variables
+  local key=value
 }
 
 ```
