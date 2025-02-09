@@ -147,13 +147,14 @@ func (shell *Shell) HandleError(sm *StreamManager, err error) {
 
 func (shell *Shell) Clone() *Shell {
 	sh := &Shell{
-		PID:       shell.PID,
-		ExitCode:  shell.ExitCode,
-		Args:      shell.Args,
-		functions: shell.functions,
-		vars:      shell.vars.clone(),
-		localVars: shell.localVars.clone(),
-		env:       shell.env.clone(),
+		PID:          shell.PID,
+		ExitCode:     shell.ExitCode,
+		Args:         shell.Args,
+		functions:    shell.functions,
+		vars:         shell.vars.clone(),
+		localVars:    shell.localVars.clone(),
+		env:          shell.env.clone(),
+		exportedVars: shell.exportedVars,
 	}
 
 	return sh

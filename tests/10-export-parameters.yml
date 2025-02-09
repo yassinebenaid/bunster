@@ -23,3 +23,24 @@ cases:
       stdout: |
         var:foobar var2:bazboo
         env:foobar env2:
+
+  - name: "exported variables are inherited to subshells"
+    script: |
+      export var
+
+      var=foobar
+
+      (
+        var=beaoz
+        echo var:$var
+        bash -c 'echo env:$var'
+      )
+
+      echo var:$var
+      bash -c 'echo env:$var'
+    expect:
+      stdout: |
+        var:beaoz
+        env:beaoz
+        var:foobar
+        env:foobar
