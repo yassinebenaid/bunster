@@ -176,6 +176,22 @@ cases:
         tech java
         dev Go
 
+  - name: "functions environment variables are inherited in subshells"
+    script: |
+      func(){
+        (
+          echo var:$var
+        )
+
+        echo var:$var
+      }
+
+      var=foobar func
+    expect:
+      stdout: |
+        var:foobar
+        var:foobar
+
   - name: "functions inherit exit code of calling shell"
     script: |
       func(){
@@ -255,4 +271,25 @@ cases:
         var:bar
         var:baz
         var:baz
+        var:foo
+
+  - name: "functions local variables are inherited in subshells"
+    script: |
+      func(){
+        local var=foo
+
+        (
+          echo var:$var
+          var=bar
+          echo var:$var
+        )
+
+        echo var:$var
+      }
+
+      func
+    expect:
+      stdout: |
+        var:foo
+        var:bar
         var:foo

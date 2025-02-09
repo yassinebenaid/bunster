@@ -140,17 +140,15 @@ func (shell *Shell) HandleError(sm *StreamManager, err error) {
 
 func (shell *Shell) Clone() *Shell {
 	sh := &Shell{
-		parent:    shell,
 		PID:       shell.PID,
 		ExitCode:  shell.ExitCode,
 		Args:      shell.Args,
 		functions: shell.functions,
 		vars:      shell.vars.clone(),
-		env:       newRepository(),
-		localVars: newRepository(),
+		localVars: shell.localVars.clone(),
+		env:       shell.env.clone(),
 	}
 
-	//todo: handle locals too
 	return sh
 }
 
