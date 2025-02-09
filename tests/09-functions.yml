@@ -209,21 +209,22 @@ cases:
       # setting local variables does not affect global context
       var2=bob
       var3=zeof
+      var4=beeb
 
       func2(){
-        local var2=boz var3
+        local var2=boz var3 var4
         var2=bee
         var3=feoz
 
-        echo var2:$var2 var3:$var3
+        echo var2:$var2 var3:$var3 var4:$var4
       }
 
       func2
-      echo var2:$var2 var3:$var3
+      echo var2:$var2 var3:$var3 var4:$var4
     expect:
       stdout: |
         var:foobar
         var:bazboo
         var:foobar
-        var2:bee var3:feoz
-        var2:bob var3:zeof
+        var2:bee var3:feoz var4:
+        var2:bob var3:zeof var4:beeb
