@@ -99,8 +99,13 @@ func (shell *Shell) SetLocalVar(name string, value string) {
 }
 
 func (shell *Shell) SetExportVar(name string, value string) {
+	// if shell.parent != nil {
+	// 	log.Println(9875)
+	// 	shell.parent.SetExportVar(name, value)
+	// } else {
 	shell.exportedVars.set(name, struct{}{})
 	shell.vars.set(name, value)
+	// }
 }
 
 func (shell *Shell) ReadSpecialVar(name string) string {
@@ -213,14 +218,15 @@ func (cmd *Command) Start() error {
 		cmd.wg.Add(1)
 		go func() {
 			shell := Shell{
-				parent:    cmd.shell,
-				PID:       cmd.shell.PID,
-				Args:      append(cmd.shell.Args[:1], cmd.Args...),
-				functions: cmd.shell.functions,
-				vars:      cmd.shell.vars,
-				env:       cmd.shell.env.clone(),
-				localVars: newRepository[string](),
-				ExitCode:  cmd.shell.ExitCode,
+				parent:       cmd.shell,
+				PID:          cmd.shell.PID,
+				Args:         append(cmd.shell.Args[:1], cmd.Args...),
+				functions:    cmd.shell.functions,
+				vars:         cmd.shell.vars,
+				env:          cmd.shell.env.clone(),
+				localVars:    newRepository[string](),
+				ExitCode:     cmd.shell.ExitCode,
+				exportedVars: cmd.shell.exportedVars,
 			}
 
 			for key, value := range cmd.Env {

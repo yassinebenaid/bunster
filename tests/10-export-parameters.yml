@@ -64,3 +64,24 @@ cases:
         env:beaoz
         var:foobar
         env:
+
+  - name: "can export variables within functions"
+    script: |
+      var=foobar
+
+      func(){
+        export var
+        var=beaoz
+        echo var:$var
+        bash -c 'echo env:$var'
+      }
+
+      func
+      echo var:$var
+      bash -c 'echo env:$var'
+    expect:
+      stdout: |
+        var:beaoz
+        env:beaoz
+        var:beaoz
+        env:beaoz
