@@ -50,7 +50,7 @@ func (shell *Shell) Run(streamManager *StreamManager) (exitCode int) {
 }
 
 func (shell *Shell) ReadVar(name string) string {
-	if value, ok := shell.localVars.get(name); ok {
+	if value, ok := shell.getLocalVar(name); ok {
 		return value
 	}
 	if value, ok := shell.vars.get(name); ok {
@@ -65,10 +65,29 @@ func (shell *Shell) ReadVar(name string) string {
 	return ""
 }
 
-func (shell *Shell) SetVar(name string, value string) {
+func (shell *Shell) setLocalVar(name, value string) bool {
 	if _, ok := shell.localVars.get(name); ok {
 		shell.localVars.set(name, value)
-	} else {
+		return true
+	}
+	if shell.parent != nil {
+		return shell.parent.setLocalVar(name, value)
+	}
+	return false
+}
+
+func (shell *Shell) getLocalVar(name string) (string, bool) {
+	if value, ok := shell.localVars.get(name); ok {
+		return value, true
+	}
+	if shell.parent != nil {
+		return shell.parent.getLocalVar(name)
+	}
+	return "", false
+}
+
+func (shell *Shell) SetVar(name string, value string) {
+	if !shell.setLocalVar(name, value) {
 		shell.vars.set(name, value)
 	}
 }

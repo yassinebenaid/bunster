@@ -228,3 +228,31 @@ cases:
         var:foobar
         var2:bee var3:feoz var4:
         var2:bob var3:zeof var4:beeb
+
+  - name: "functions local variables are inherited by child functions, and setting them inside child functions affects the parent function's context"
+    script: |
+      var=foo
+      echo var:$var
+
+      func(){
+        local var=bar
+        echo var:$var
+
+        func2(){
+          var=baz
+          echo var:$var
+        }
+
+        func2
+        echo var:$var
+      }
+
+      func
+      echo var:$var
+    expect:
+      stdout: |
+        var:foo
+        var:bar
+        var:baz
+        var:baz
+        var:foo
