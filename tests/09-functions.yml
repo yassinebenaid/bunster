@@ -195,17 +195,35 @@ cases:
   - name: "functions local variables"
     script: |
       var=foobar
-      echo $var
+      echo var:$var
 
       func(){
         local var=bazboo
-        echo $var
+        echo var:$var
       }
 
       func
-      echo $var
+      echo var:$var
+
+
+      # setting local variables does not affect global context
+      var2=bob
+      var3=zeof
+
+      func2(){
+        local var2=boz var3
+        var2=bee
+        var3=feoz
+
+        echo var2:$var2 var3:$var3
+      }
+
+      func2
+      echo var2:$var2 var3:$var3
     expect:
       stdout: |
-        foobar
-        bazboo
-        foobar
+        var:foobar
+        var:bazboo
+        var:foobar
+        var2:bee var3:feoz
+        var2:bob var3:zeof
