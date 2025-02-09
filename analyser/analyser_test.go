@@ -24,6 +24,8 @@ var testCases = []testCase{
 	{`break`, "semantic error: The `break` keyword cannot be used here. (line: 0, column: 0)"},
 	{`continue`, "semantic error: The `continue` keyword cannot be used here. (line: 0, column: 0)"},
 	{`local var`, "semantic error: The `local` keyword cannot be used outside functions. (line: 0, column: 0)"},
+	{`wait | cmd`, "semantic error: using 'wait' command within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines. (line: 0, column: 0)"},
+	{`func(){ local var | cmd; }`, "semantic error: using 'local' command within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines. (line: 0, column: 0)"},
 }
 
 func TestErrors(t *testing.T) {

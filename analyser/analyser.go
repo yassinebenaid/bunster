@@ -220,6 +220,7 @@ func (s SemanticError) Error() string {
 var (
 	ErrorUsingShellParametersWithinPipeline = "using shell parameters within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
 	ErrorUsingWaitWithinPipeline            = "using 'wait' command within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
+	ErrorUsingLocalWithinPipeline           = "using 'local' command within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
 )
 
 func (a *analyser) analysePipeline(p ast.Pipeline) {
@@ -229,6 +230,8 @@ func (a *analyser) analysePipeline(p ast.Pipeline) {
 			a.report(ErrorUsingShellParametersWithinPipeline)
 		case ast.Wait:
 			a.report(ErrorUsingWaitWithinPipeline)
+		case ast.LocalParameterAssignement:
+			a.report(ErrorUsingLocalWithinPipeline)
 		default:
 			a.analyseStatement(cmd.Command)
 		}
