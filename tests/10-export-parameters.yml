@@ -9,3 +9,17 @@ cases:
       stdout: |
         var:foobar
         env:foobar
+
+  - name: "can mark variables as exported"
+    script: |
+      export var
+
+      var=foobar
+      var2=bazboo
+
+      echo var:$var var2:$var2
+      bash -c 'echo env:$var env2:$var2'
+    expect:
+      stdout: |
+        var:foobar var2:bazboo
+        env:foobar env2:
