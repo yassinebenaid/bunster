@@ -96,6 +96,10 @@ func (shell *Shell) SetLocalVar(name string, value string) {
 	shell.localVars.set(name, value)
 }
 
+func (shell *Shell) SetExportVar(name string, value string) {
+	shell.env.set(name, value)
+}
+
 func (shell *Shell) ReadSpecialVar(name string) string {
 	switch name {
 	case "$":

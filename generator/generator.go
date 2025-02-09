@@ -54,6 +54,8 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, ct
 		g.handleParameterAssignment(buf, v)
 	case ast.LocalParameterAssignement:
 		g.handleLocalParameterAssignment(buf, v)
+	case ast.ExportParameterAssignement:
+		g.handleExportParameterAssignment(buf, v)
 	case ast.Group:
 		g.handleGroup(buf, v, ctx)
 	case ast.SubShell:
@@ -320,6 +322,21 @@ func (g *generator) handleLocalParameterAssignment(buf *InstructionBuffer, p ast
 	buf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
 	for _, assignment := range p {
 		ins := ir.SetLocalVar{
+			Key:   assignment.Name,
+			Value: ir.String(""),
+		}
+		if assignment.Value != nil {
+			ins.Value = g.handleExpression(buf, assignment.Value)
+		}
+
+		buf.add(ins)
+	}
+}
+
+func (g *generator) handleExportParameterAssignment(buf *InstructionBuffer, p ast.ExportParameterAssignement) {
+	buf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
+	for _, assignment := range p {
+		ins := ir.SetExportVar{
 			Key:   assignment.Name,
 			Value: ir.String(""),
 		}

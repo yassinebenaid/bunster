@@ -1,0 +1,11 @@
+---
+cases:
+  - name: "can export variables"
+    script: |
+      export var=foobar
+      echo var:$var
+      bash -c 'echo env:$var'
+    expect:
+      stdout: |
+        var:foobar
+        env:foobar
