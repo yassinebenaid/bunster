@@ -44,3 +44,23 @@ cases:
         env:beaoz
         var:foobar
         env:foobar
+
+  - name: "exporting variables within subshels does not affect parent shell"
+    script: |
+      var=foobar
+
+      (
+        export var
+        var=beaoz
+        echo var:$var
+        bash -c 'echo env:$var'
+      )
+
+      echo var:$var
+      bash -c 'echo env:$var'
+    expect:
+      stdout: |
+        var:beaoz
+        env:beaoz
+        var:foobar
+        env:

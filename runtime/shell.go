@@ -154,7 +154,7 @@ func (shell *Shell) Clone() *Shell {
 		vars:         shell.vars.clone(),
 		localVars:    shell.localVars.clone(),
 		env:          shell.env.clone(),
-		exportedVars: shell.exportedVars,
+		exportedVars: shell.exportedVars.clone(),
 	}
 
 	return sh
