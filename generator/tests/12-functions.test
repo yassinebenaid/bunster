@@ -435,3 +435,38 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 }
 
 #(ENDTEST)
+
+
+
+#(TEST: declaring nested functions)
+
+foobar() {
+
+  local key=value
+
+}
+
+#(RESULT)
+
+package main
+
+import "bunster-build/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	shell.RegisterFunction("foobar", func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
+		streamManager := streamManager.Clone()
+		streamManager.Add("0", stdin)
+		streamManager.Add("1", stdout)
+		streamManager.Add("2", stderr)
+		func() {
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			shell.ExitCode = 0
+			shell.SetLocalVar("key", "value")
+
+		}()
+
+	})
+}
+
+#(ENDTEST)
