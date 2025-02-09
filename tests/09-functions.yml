@@ -293,3 +293,22 @@ cases:
         var:foo
         var:bar
         var:foo
+
+  - name: "functions local variables are ok to be used in nested constructs"
+    script: |
+      func(){
+        if true; then
+          if true; then
+            local var=foo
+          fi
+        fi
+
+        echo var:$var
+      }
+
+      func
+      echo var:$var
+    expect:
+      stdout: |
+        var:foo
+        var:
