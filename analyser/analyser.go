@@ -96,6 +96,12 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.analyseExpression(pa.Value)
 			}
 		}
+	case ast.ExportParameterAssignement:
+		for _, pa := range v {
+			if pa.Value != nil {
+				a.analyseExpression(pa.Value)
+			}
+		}
 	case ast.LocalParameterAssignement:
 		var withinFunction bool
 	funcLoop:
@@ -221,6 +227,7 @@ var (
 	ErrorUsingShellParametersWithinPipeline = "using shell parameters within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
 	ErrorUsingWaitWithinPipeline            = "using 'wait' command within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
 	ErrorUsingLocalWithinPipeline           = "using 'local' command within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
+	ErrorUsingExportWithinPipeline          = "using 'export' command within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
 )
 
 func (a *analyser) analysePipeline(p ast.Pipeline) {
@@ -232,6 +239,8 @@ func (a *analyser) analysePipeline(p ast.Pipeline) {
 			a.report(ErrorUsingWaitWithinPipeline)
 		case ast.LocalParameterAssignement:
 			a.report(ErrorUsingLocalWithinPipeline)
+		case ast.ExportParameterAssignement:
+			a.report(ErrorUsingExportWithinPipeline)
 		default:
 			a.analyseStatement(cmd.Command)
 		}
