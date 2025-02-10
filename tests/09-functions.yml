@@ -312,3 +312,19 @@ cases:
       stdout: |
         var:foo
         var:
+
+  - name: "marking variable as local alters its value"
+    script: |
+      var=foo
+
+      func(){
+        local var
+        echo var:$var
+      }
+
+      func
+      echo var:$var
+    expect:
+      stdout: |
+        var:
+        var:foo
