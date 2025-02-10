@@ -1,0 +1,122 @@
+---
+cases:
+  - name: "can export variables"
+    script: |
+      export var=foobar
+      echo var:$var
+      bash -c 'echo env:$var'
+    expect:
+      stdout: |
+        var:foobar
+        env:foobar
+
+  - name: "can mark variables as exported"
+    script: |
+      export var
+
+      var=foobar
+      var2=bazboo
+
+      echo var:$var var2:$var2
+      bash -c 'echo env:$var env2:$var2'
+    expect:
+      stdout: |
+        var:foobar var2:bazboo
+        env:foobar env2:
+
+  - name: "exported variables are inherited to subshells"
+    script: |
+      export var
+
+      var=foobar
+
+      (
+        var=beaoz
+        echo var:$var
+        bash -c 'echo env:$var'
+      )
+
+      echo var:$var
+      bash -c 'echo env:$var'
+    expect:
+      stdout: |
+        var:beaoz
+        env:beaoz
+        var:foobar
+        env:foobar
+
+  - name: "exporting variables within subshels does not affect parent shell"
+    script: |
+      var=foobar
+
+      (
+        export var
+        var=beaoz
+        echo var:$var
+        bash -c 'echo env:$var'
+      )
+
+      echo var:$var
+      bash -c 'echo env:$var'
+    expect:
+      stdout: |
+        var:beaoz
+        env:beaoz
+        var:foobar
+        env:
+
+  - name: "can export variables within functions"
+    script: |
+      var=foobar
+
+      func(){
+        export var
+        var=beaoz
+        echo var:$var
+        bash -c 'echo env:$var'
+      }
+
+      func
+      echo var:$var
+      bash -c 'echo env:$var'
+    expect:
+      stdout: |
+        var:beaoz
+        env:beaoz
+        var:beaoz
+        env:beaoz
+
+  - name: "exporting local variables does not prevent variables from being expotred to the parent scope too"
+    script: |
+      var=foobar
+
+      func(){
+        local var
+        export var
+        var=beaoz
+        echo var:$var
+        bash -c 'echo env:$var'
+      }
+
+      func
+      echo var:$var
+      bash -c 'echo env:$var'
+    expect:
+      stdout: |
+        var:beaoz
+        env:beaoz
+        var:foobar
+        env:foobar
+
+  - name: "can mark a variable as exported without changing it's value"
+    script: |
+      var=helloworld
+
+      export var
+
+      echo var:$var
+      bash -c 'echo env:$var'
+    expect:
+      stdout: |
+        var:helloworld
+        env:helloworld

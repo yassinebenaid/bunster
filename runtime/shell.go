@@ -18,16 +18,18 @@ type Shell struct {
 	Args      []string
 	WaitGroup sync.WaitGroup
 
-	vars      *repository
-	env       *repository
-	localVars *repository
-	functions map[string]func(shell *Shell, stdin, stdout, stderr Stream)
+	vars         *repository[string]
+	env          *repository[string]
+	localVars    *repository[string]
+	exportedVars *repository[struct{}]
+	functions    map[string]func(shell *Shell, stdin, stdout, stderr Stream)
 }
 
 func (shell *Shell) Run(streamManager *StreamManager) (exitCode int) {
-	shell.vars = newRepository()
-	shell.env = newRepository()
-	shell.localVars = newRepository()
+	shell.vars = newRepository[string]()
+	shell.env = newRepository[string]()
+	shell.localVars = newRepository[string]()
+	shell.exportedVars = newRepository[struct{}]()
 	shell.functions = make(map[string]func(shell *Shell, stdin, stdout, stderr Stream))
 
 	for _, env := range os.Environ() {
@@ -96,6 +98,19 @@ func (shell *Shell) SetLocalVar(name string, value string) {
 	shell.localVars.set(name, value)
 }
 
+func (shell *Shell) SetExportVar(name string, value string) {
+	shell.exportedVars.set(name, struct{}{})
+	shell.vars.set(name, value)
+}
+
+func (shell *Shell) MarkVarAsLocal(name string) {
+	shell.localVars.set(name, shell.ReadVar(name))
+}
+
+func (shell *Shell) MarkVarAsExported(name string) {
+	shell.exportedVars.set(name, struct{}{})
+}
+
 func (shell *Shell) ReadSpecialVar(name string) string {
 	switch name {
 	case "$":
@@ -140,13 +155,14 @@ func (shell *Shell) HandleError(sm *StreamManager, err error) {
 
 func (shell *Shell) Clone() *Shell {
 	sh := &Shell{
-		PID:       shell.PID,
-		ExitCode:  shell.ExitCode,
-		Args:      shell.Args,
-		functions: shell.functions,
-		vars:      shell.vars.clone(),
-		localVars: shell.localVars.clone(),
-		env:       shell.env.clone(),
+		PID:          shell.PID,
+		ExitCode:     shell.ExitCode,
+		Args:         shell.Args,
+		functions:    shell.functions,
+		vars:         shell.vars.clone(),
+		localVars:    shell.localVars.clone(),
+		env:          shell.env.clone(),
+		exportedVars: shell.exportedVars.clone(),
 	}
 
 	return sh
@@ -202,23 +218,24 @@ func (cmd *Command) Run() error {
 
 func (cmd *Command) Start() error {
 	if cmd.function != nil {
+		shell := Shell{
+			parent:       cmd.shell,
+			PID:          cmd.shell.PID,
+			Args:         append(cmd.shell.Args[:1], cmd.Args...),
+			functions:    cmd.shell.functions,
+			vars:         cmd.shell.vars,
+			env:          cmd.shell.env.clone(),
+			localVars:    newRepository[string](),
+			ExitCode:     cmd.shell.ExitCode,
+			exportedVars: cmd.shell.exportedVars,
+		}
+
+		for key, value := range cmd.Env {
+			shell.env.set(key, value)
+		}
+
 		cmd.wg.Add(1)
 		go func() {
-			shell := Shell{
-				parent:    cmd.shell,
-				PID:       cmd.shell.PID,
-				Args:      append(cmd.shell.Args[:1], cmd.Args...),
-				functions: cmd.shell.functions,
-				vars:      cmd.shell.vars,
-				env:       cmd.shell.env.clone(),
-				localVars: newRepository(),
-				ExitCode:  cmd.shell.ExitCode,
-			}
-
-			for key, value := range cmd.Env {
-				shell.env.set(key, value)
-			}
-
 			cmd.function(&shell, cmd.Stdin, cmd.Stdout, cmd.Stderr)
 			cmd.wg.Done()
 		}()
@@ -232,6 +249,10 @@ func (cmd *Command) Start() error {
 
 	cmd.shell.env.foreach(func(key string, value string) bool {
 		cmd.execCmd.Env = append(cmd.execCmd.Env, fmt.Sprintf("%s=%s", key, value))
+		return true
+	})
+	cmd.shell.exportedVars.foreach(func(key string, _ struct{}) bool {
+		cmd.execCmd.Env = append(cmd.execCmd.Env, fmt.Sprintf("%s=%s", key, cmd.shell.ReadVar(key)))
 		return true
 	})
 	for key, value := range cmd.Env {
@@ -249,39 +270,39 @@ func (cmd *Command) Wait() error {
 	return cmd.execCmd.Wait()
 }
 
-type repository struct {
+type repository[T any] struct {
 	mx   sync.RWMutex
-	data map[string]string
+	data map[string]T
 }
 
-func newRepository() *repository {
-	return &repository{
-		data: make(map[string]string),
+func newRepository[T any]() *repository[T] {
+	return &repository[T]{
+		data: make(map[string]T),
 	}
 }
 
-func (r *repository) get(key string) (string, bool) {
+func (r *repository[T]) get(key string) (T, bool) {
 	r.mx.RLock()
 	defer r.mx.RUnlock()
 	v, ok := r.data[key]
 	return v, ok
 }
 
-func (r *repository) set(key, value string) {
+func (r *repository[T]) set(key string, value T) {
 	r.mx.Lock()
 	defer r.mx.Unlock()
 	r.data[key] = value
 }
 
-func (r *repository) clone() *repository {
-	var repo = newRepository()
+func (r *repository[T]) clone() *repository[T] {
+	var repo = newRepository[T]()
 	for key, value := range r.data {
 		repo.set(key, value)
 	}
 	return repo
 }
 
-func (r *repository) foreach(fn func(key, value string) bool) {
+func (r *repository[T]) foreach(fn func(key string, value T) bool) {
 	r.mx.RLock()
 	defer r.mx.RUnlock()
 	for key, value := range r.data {

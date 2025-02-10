@@ -14,3 +14,8 @@ type LocalParameterAssignement []Assignement
 
 func (LocalParameterAssignement) node() {}
 func (LocalParameterAssignement) stmt() {}
+
+type ExportParameterAssignement []Assignement
+
+func (ExportParameterAssignement) node() {}
+func (ExportParameterAssignement) stmt() {}
