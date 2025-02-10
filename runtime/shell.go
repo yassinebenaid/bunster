@@ -99,13 +99,16 @@ func (shell *Shell) SetLocalVar(name string, value string) {
 }
 
 func (shell *Shell) SetExportVar(name string, value string) {
-	// if shell.parent != nil {
-	// 	log.Println(9875)
-	// 	shell.parent.SetExportVar(name, value)
-	// } else {
 	shell.exportedVars.set(name, struct{}{})
 	shell.vars.set(name, value)
-	// }
+}
+
+func (shell *Shell) MarkVarAsLocal(name string) {
+	shell.localVars.set(name, shell.ReadVar(name))
+}
+
+func (shell *Shell) MarkVarAsExported(name string) {
+	shell.exportedVars.set(name, struct{}{})
 }
 
 func (shell *Shell) ReadSpecialVar(name string) string {
@@ -215,24 +218,24 @@ func (cmd *Command) Run() error {
 
 func (cmd *Command) Start() error {
 	if cmd.function != nil {
+		shell := Shell{
+			parent:       cmd.shell,
+			PID:          cmd.shell.PID,
+			Args:         append(cmd.shell.Args[:1], cmd.Args...),
+			functions:    cmd.shell.functions,
+			vars:         cmd.shell.vars,
+			env:          cmd.shell.env.clone(),
+			localVars:    newRepository[string](),
+			ExitCode:     cmd.shell.ExitCode,
+			exportedVars: cmd.shell.exportedVars,
+		}
+
+		for key, value := range cmd.Env {
+			shell.env.set(key, value)
+		}
+
 		cmd.wg.Add(1)
 		go func() {
-			shell := Shell{
-				parent:       cmd.shell,
-				PID:          cmd.shell.PID,
-				Args:         append(cmd.shell.Args[:1], cmd.Args...),
-				functions:    cmd.shell.functions,
-				vars:         cmd.shell.vars,
-				env:          cmd.shell.env.clone(),
-				localVars:    newRepository[string](),
-				ExitCode:     cmd.shell.ExitCode,
-				exportedVars: cmd.shell.exportedVars,
-			}
-
-			for key, value := range cmd.Env {
-				shell.env.set(key, value)
-			}
-
 			cmd.function(&shell, cmd.Stdin, cmd.Stdout, cmd.Stderr)
 			cmd.wg.Done()
 		}()
@@ -249,10 +252,7 @@ func (cmd *Command) Start() error {
 		return true
 	})
 	cmd.shell.exportedVars.foreach(func(key string, _ struct{}) bool {
-		value, ok := cmd.shell.vars.get(key)
-		if ok {
-			cmd.execCmd.Env = append(cmd.execCmd.Env, fmt.Sprintf("%s=%s", key, value))
-		}
+		cmd.execCmd.Env = append(cmd.execCmd.Env, fmt.Sprintf("%s=%s", key, cmd.shell.ReadVar(key)))
 		return true
 	})
 	for key, value := range cmd.Env {

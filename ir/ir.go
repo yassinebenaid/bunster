@@ -128,6 +128,12 @@ func (s SetExportVar) togo() string {
 	return fmt.Sprintf("shell.SetExportVar(%q, %v)\n", s.Key, s.Value.togo())
 }
 
+type MarkVarAsExported string
+
+func (s MarkVarAsExported) togo() string {
+	return fmt.Sprintf("shell.MarkVarAsExported(%q)\n", s)
+}
+
 type ReadSpecialVar string
 
 func (rv ReadSpecialVar) togo() string {

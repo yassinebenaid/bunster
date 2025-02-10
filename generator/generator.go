@@ -336,15 +336,17 @@ func (g *generator) handleLocalParameterAssignment(buf *InstructionBuffer, p ast
 func (g *generator) handleExportParameterAssignment(buf *InstructionBuffer, p ast.ExportParameterAssignement) {
 	buf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
 	for _, assignment := range p {
-		ins := ir.SetExportVar{
-			Key:   assignment.Name,
-			Value: ir.String(""),
-		}
 		if assignment.Value != nil {
+			ins := ir.SetExportVar{
+				Key:   assignment.Name,
+				Value: ir.String(""),
+			}
 			ins.Value = g.handleExpression(buf, assignment.Value)
-		}
 
-		buf.add(ins)
+			buf.add(ins)
+		} else {
+			buf.add(ir.MarkVarAsExported(assignment.Name))
+		}
 	}
 }
 

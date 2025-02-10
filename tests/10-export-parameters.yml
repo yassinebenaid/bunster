@@ -85,3 +85,38 @@ cases:
         env:beaoz
         var:beaoz
         env:beaoz
+
+  - name: "exporting local variables does not prevent variables from being expotred to the parent scope too"
+    script: |
+      var=foobar
+
+      func(){
+        local var
+        export var
+        var=beaoz
+        echo var:$var
+        bash -c 'echo env:$var'
+      }
+
+      func
+      echo var:$var
+      bash -c 'echo env:$var'
+    expect:
+      stdout: |
+        var:beaoz
+        env:beaoz
+        var:foobar
+        env:foobar
+
+  - name: "can mark a variable as exported without changing it's value"
+    script: |
+      var=helloworld
+
+      export var
+
+      echo var:$var
+      bash -c 'echo env:$var'
+    expect:
+      stdout: |
+        var:helloworld
+        env:helloworld
