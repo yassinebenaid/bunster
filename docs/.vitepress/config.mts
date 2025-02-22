@@ -6,7 +6,7 @@ export default defineConfig({
     "Compile shell scripts to native self-contained executable programs",
   themeConfig: {
     nav: [
-      { text: "Documentation", link: "/quick-start" },
+      { text: "Documentation", link: "/introduction" },
       { text: "Installation", link: "/installation" },
       { text: "Maintainers", link: "/maintainers" },
     ],
@@ -17,10 +17,18 @@ export default defineConfig({
     sidebar: [
       {
         items: [
-          { text: "Quick Start", link: "/quick-start" },
+          { text: "Introduction", link: "/introduction" },
           { text: "Installation", link: "/installation" },
           { text: "Supported Features", link: "/supported-features" },
-          { text: "Usage", link: "/usage" },
+          { text: "CLI", link: "/cli" },
+          {
+            text: "Language",
+            collapsed: false,
+
+            items: [
+              { text: "Simple Commands", link: "/language/simple-commands" },
+            ],
+          },
           { text: "Contributing", link: "/contributing" },
           { text: "Developers Guideline", link: "/developers" },
         ],

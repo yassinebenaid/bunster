@@ -15,7 +15,7 @@ hero:
       link: /installation
     - theme: alt
       text: Documentation
-      link: /quick-start
+      link: /introduction
 features:
   - title: Native Program Generation
     details: |
