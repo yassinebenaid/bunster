@@ -10,6 +10,8 @@ import (
 	"sync"
 )
 
+type PredefinedCommand func(shell *Shell, stdin, stdout, stderr Stream)
+
 type Shell struct {
 	parent    *Shell
 	PID       int
@@ -22,7 +24,7 @@ type Shell struct {
 	env          *repository[string]
 	localVars    *repository[string]
 	exportedVars *repository[struct{}]
-	functions    map[string]func(shell *Shell, stdin, stdout, stderr Stream)
+	functions    *repository[PredefinedCommand]
 }
 
 func (shell *Shell) Run(streamManager *StreamManager) (exitCode int) {
@@ -30,7 +32,7 @@ func (shell *Shell) Run(streamManager *StreamManager) (exitCode int) {
 	shell.env = newRepository[string]()
 	shell.localVars = newRepository[string]()
 	shell.exportedVars = newRepository[struct{}]()
-	shell.functions = make(map[string]func(shell *Shell, stdin, stdout, stderr Stream))
+	shell.functions = newRepository[PredefinedCommand]()
 
 	for _, env := range os.Environ() {
 		envs := strings.SplitN(env, "=", 2)
@@ -103,10 +105,6 @@ func (shell *Shell) SetExportVar(name string, value string) {
 	shell.vars.set(name, value)
 }
 
-func (shell *Shell) MarkVarAsLocal(name string) {
-	shell.localVars.set(name, shell.ReadVar(name))
-}
-
 func (shell *Shell) MarkVarAsExported(name string) {
 	shell.exportedVars.set(name, struct{}{})
 }
@@ -158,7 +156,7 @@ func (shell *Shell) Clone() *Shell {
 		PID:          shell.PID,
 		ExitCode:     shell.ExitCode,
 		Args:         shell.Args,
-		functions:    shell.functions,
+		functions:    shell.functions.clone(),
 		vars:         shell.vars.clone(),
 		localVars:    shell.localVars.clone(),
 		env:          shell.env.clone(),
@@ -168,8 +166,8 @@ func (shell *Shell) Clone() *Shell {
 	return sh
 }
 
-func (shell *Shell) RegisterFunction(name string, handler func(shell *Shell, stdin, stdout, stderr Stream)) {
-	shell.functions[name] = handler
+func (shell *Shell) RegisterFunction(name string, handler PredefinedCommand) {
+	shell.functions.set(name, handler)
 }
 
 func (shell *Shell) Command(name string, args ...string) *Command {
@@ -179,7 +177,7 @@ func (shell *Shell) Command(name string, args ...string) *Command {
 	command.Name = name
 	command.Env = make(map[string]string)
 
-	if fn := shell.functions[name]; fn != nil {
+	if fn, ok := shell.functions.get(name); ok {
 		command.function = fn
 		return &command
 	}
@@ -198,7 +196,7 @@ type Command struct {
 
 	ExitCode int
 
-	function func(shell *Shell, stdin, stdout, stderr Stream)
+	function PredefinedCommand
 	execCmd  *exec.Cmd
 	wg       sync.WaitGroup
 }
