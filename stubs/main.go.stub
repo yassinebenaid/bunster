@@ -16,7 +16,9 @@ func main() {
 	streamManager.Add("0", os.Stdin)
 	streamManager.Add("1", os.Stdout)
 	streamManager.Add("2", os.Stderr)
-	defer streamManager.Destroy()
 
-	os.Exit(shell.Run(streamManager))
+	exitCode := shell.Run(streamManager)
+
+	streamManager.Destroy()
+	os.Exit(exitCode)
 }
