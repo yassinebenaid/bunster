@@ -156,7 +156,7 @@ func (shell *Shell) Clone() *Shell {
 		PID:          shell.PID,
 		ExitCode:     shell.ExitCode,
 		Args:         shell.Args,
-		functions:    shell.functions,
+		functions:    shell.functions.clone(),
 		vars:         shell.vars.clone(),
 		localVars:    shell.localVars.clone(),
 		env:          shell.env.clone(),

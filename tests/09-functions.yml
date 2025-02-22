@@ -141,6 +141,26 @@ cases:
         "inner": executable file not found in $PATH
       stdout: "from inner\n"
 
+  - name: "function declaration in subshell do not affect global shell"
+    script: |
+      func
+
+      (
+        func(){
+          echo from func
+        }
+
+        func
+      )
+
+      func
+    expect:
+      exit_code: 1
+      stderr: |
+        "func": executable file not found in $PATH
+        "func": executable file not found in $PATH
+      stdout: "from func\n"
+
   - name: "function runs in same outer context"
     script: |
       var=foo
