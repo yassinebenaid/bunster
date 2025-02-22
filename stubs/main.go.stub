@@ -5,12 +5,15 @@ import (
 	"fmt"
 
 	"github.com/yassinebenaid/bunster/runtime"
+	"github.com/yassinebenaid/bunster/runtime/builtin"
 )
 
 func main() {
 	shell := runtime.NewShell()
 	shell.PID = os.Getpid()
 	shell.Args = os.Args
+
+    builtin.Register(shell)
 
 	streamManager := runtime.NewStreamManager()
 	streamManager.Add("0", os.Stdin)

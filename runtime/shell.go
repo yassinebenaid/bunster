@@ -10,22 +10,6 @@ import (
 	"sync"
 )
 
-type PredefinedCommand func(shell *Shell, stdin, stdout, stderr Stream)
-
-type Shell struct {
-	parent    *Shell
-	PID       int
-	ExitCode  int
-	Args      []string
-	WaitGroup sync.WaitGroup
-
-	vars         *repository[string]
-	env          *repository[string]
-	localVars    *repository[string]
-	exportedVars *repository[struct{}]
-	functions    *repository[PredefinedCommand]
-}
-
 func NewShell() *Shell {
 	shell := &Shell{}
 
@@ -41,6 +25,28 @@ func NewShell() *Shell {
 	}
 
 	return shell
+}
+
+type ExitError int
+
+func (e ExitError) Error() string {
+	return fmt.Sprintf("exit code %d", e)
+}
+
+type PredefinedCommand func(shell *Shell, stdin, stdout, stderr Stream)
+
+type Shell struct {
+	parent    *Shell
+	PID       int
+	ExitCode  int
+	Args      []string
+	WaitGroup sync.WaitGroup
+
+	vars         *repository[string]
+	env          *repository[string]
+	localVars    *repository[string]
+	exportedVars *repository[struct{}]
+	functions    *repository[PredefinedCommand]
 }
 
 func (shell *Shell) ReadVar(name string) string {
@@ -136,6 +142,8 @@ func (shell *Shell) HandleError(sm *StreamManager, err error) {
 		fmt.Fprintf(stderr, "%q: %v\n", e.Path, e.Err)
 	case *exec.ExitError:
 		shell.ExitCode = e.ExitCode()
+	case ExitError:
+		shell.ExitCode = int(e)
 	default:
 		fmt.Fprintln(stderr, err)
 	}
@@ -254,6 +262,9 @@ func (cmd *Command) Start() error {
 func (cmd *Command) Wait() error {
 	if cmd.function != nil {
 		cmd.wg.Wait()
+		if cmd.ExitCode != 0 {
+			return ExitError(cmd.ExitCode)
+		}
 		return nil
 	}
 	return cmd.execCmd.Wait()
