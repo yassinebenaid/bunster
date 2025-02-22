@@ -61,3 +61,21 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 }
 
 #(ENDTEST)
+
+
+#(TEST: exporting parameters)
+
+export key=value key2
+
+#(RESULT)
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    shell.ExitCode = 0
+	shell.SetExportVar("key", "value")
+	shell.MarkVarAsExported("key2")
+}
+
+#(ENDTEST)
