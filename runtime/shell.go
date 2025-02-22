@@ -225,6 +225,7 @@ func (cmd *Command) Start() error {
 		cmd.wg.Add(1)
 		go func() {
 			cmd.function(&shell, cmd.Stdin, cmd.Stdout, cmd.Stderr)
+			cmd.ExitCode = shell.ExitCode
 			cmd.wg.Done()
 		}()
 		return nil

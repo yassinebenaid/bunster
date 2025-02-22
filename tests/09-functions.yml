@@ -228,6 +228,26 @@ cases:
         1
         0
 
+  - name: "function's exit code is the last command's exit code"
+    script: |
+      func(){
+        true
+      }
+
+      func
+      echo $?
+
+      func2(){
+        false
+      }
+
+      func2
+      echo $?
+    expect:
+      stdout: |
+        0
+        1
+
   - name: "functions local variables"
     script: |
       var=foobar
