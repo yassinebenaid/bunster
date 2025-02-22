@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	"io/fs"
@@ -103,8 +102,6 @@ func cloneRuntime(dst string) error {
 		if err != nil {
 			return err
 		}
-
-		content = bytes.ReplaceAll(content, []byte("github.com/yassinebenaid/bunster"), []byte("bunster-build"))
 
 		return os.WriteFile(path.Join(dst, dpath), content, 0600)
 	})
