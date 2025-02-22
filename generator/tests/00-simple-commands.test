@@ -5,7 +5,7 @@
 #(RESULT)
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 }
@@ -21,7 +21,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 #(RESULT)
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 }
@@ -38,7 +38,7 @@ git
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
@@ -85,7 +85,7 @@ cmd arg 'arg 2' "arg 3" $ARG3
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
@@ -138,7 +138,7 @@ cmd --option=value \
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
@@ -190,7 +190,7 @@ cmd2; cmd3
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
@@ -300,7 +300,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
@@ -348,7 +348,7 @@ echo $1 $? $$ $#
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {

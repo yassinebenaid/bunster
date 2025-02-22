@@ -8,7 +8,7 @@ git >output.txt 2>|errors.txt 3>'file.txt' 4>"file.txt"
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
@@ -80,7 +80,7 @@ git >>output.txt 2>>errors.txt 3>>'file.txt' 4>>"file.txt"
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
@@ -151,7 +151,7 @@ git &>output.txt &>>'file.txt'
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
@@ -214,7 +214,7 @@ git 3>file.txt >&3- 2>&1  4>>file.txt 4>&-
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
@@ -290,7 +290,7 @@ git <output.txt 2<errors.txt 3<'file.txt' 4<"file.txt"
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
@@ -361,7 +361,7 @@ git <<< Foo 2<<< 'Foo Bar'
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
@@ -423,7 +423,7 @@ git 3<file.txt <&3- 2<&1  4<<<foobar 4<&-
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {
@@ -498,7 +498,7 @@ git <>file.txt 2<>file.txt
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     func() {

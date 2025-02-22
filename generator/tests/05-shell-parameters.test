@@ -5,7 +5,7 @@ key=value
 #(RESULT)
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     shell.ExitCode = 0
@@ -28,7 +28,7 @@ key5=value \
 #(RESULT)
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     shell.ExitCode = 0
@@ -52,7 +52,7 @@ key1= key2=
 #(RESULT)
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     shell.ExitCode = 0
