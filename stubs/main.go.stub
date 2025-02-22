@@ -2,22 +2,34 @@ package main
 
 import (
 	"os"
+	"fmt"
+
 	"bunster-build/runtime"
 )
 
 func main() {
-	shell := runtime.Shell{
-        PID: os.Getpid(),
-        Args: os.Args,
-		Main: Main,
-	}
+	shell := runtime.NewShell()
+	shell.PID = os.Getpid()
+	shell.Args = os.Args
 
 	streamManager := runtime.NewStreamManager()
 	streamManager.Add("0", os.Stdin)
 	streamManager.Add("1", os.Stdout)
 	streamManager.Add("2", os.Stderr)
 
-	exitCode := shell.Run(streamManager)
+    exitCode := 0
+    func(){
+        defer func() {
+    		err := recover()
+    		if err != nil {
+    			fmt.Fprintf(os.Stderr, "crash: %v\n", err)
+    			exitCode = 1
+    		}
+	    }()
+
+	    Main(shell, streamManager)
+        exitCode = shell.ExitCode
+    }()
 
 	streamManager.Destroy()
 	os.Exit(exitCode)

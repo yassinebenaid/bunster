@@ -16,7 +16,6 @@ type Shell struct {
 	parent    *Shell
 	PID       int
 	ExitCode  int
-	Main      func(*Shell, *StreamManager)
 	Args      []string
 	WaitGroup sync.WaitGroup
 
@@ -27,7 +26,9 @@ type Shell struct {
 	functions    *repository[PredefinedCommand]
 }
 
-func (shell *Shell) Run(streamManager *StreamManager) (exitCode int) {
+func NewShell() *Shell {
+	shell := &Shell{}
+
 	shell.vars = newRepository[string]()
 	shell.env = newRepository[string]()
 	shell.localVars = newRepository[string]()
@@ -39,18 +40,7 @@ func (shell *Shell) Run(streamManager *StreamManager) (exitCode int) {
 		shell.env.set(envs[0], envs[1])
 	}
 
-	defer func() {
-		err := recover()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "crash: %v\n", err)
-			exitCode = 1
-		}
-	}()
-
-	shell.Main(shell, streamManager)
-	exitCode = shell.ExitCode
-
-	return exitCode
+	return shell
 }
 
 func (shell *Shell) ReadVar(name string) string {
