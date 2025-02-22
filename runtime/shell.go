@@ -103,10 +103,6 @@ func (shell *Shell) SetExportVar(name string, value string) {
 	shell.vars.set(name, value)
 }
 
-func (shell *Shell) MarkVarAsLocal(name string) {
-	shell.localVars.set(name, shell.ReadVar(name))
-}
-
 func (shell *Shell) MarkVarAsExported(name string) {
 	shell.exportedVars.set(name, struct{}{})
 }
