@@ -5,7 +5,7 @@ command || command2 || command3
 #(RESULT)
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
@@ -120,7 +120,7 @@ command && command2 && command3
 #(RESULT)
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
@@ -236,7 +236,7 @@ command && command2 || command3
 #(RESULT)
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
@@ -355,7 +355,7 @@ command | command2 ||
 #(RESULT)
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {

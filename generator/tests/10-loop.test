@@ -7,7 +7,7 @@ done
 #(RESULT)
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
@@ -101,7 +101,7 @@ done >file.txt <input.txt
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
@@ -211,7 +211,7 @@ done | command
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
@@ -455,7 +455,7 @@ done
 #(RESULT)
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
@@ -549,7 +549,7 @@ done >file.txt <input.txt
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
@@ -659,7 +659,7 @@ done | command
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
@@ -903,7 +903,7 @@ done
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
@@ -966,7 +966,7 @@ done
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
@@ -1029,7 +1029,7 @@ done
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
@@ -1133,7 +1133,7 @@ done
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
@@ -1192,7 +1192,7 @@ done
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
@@ -1255,7 +1255,7 @@ done >file.txt <input.txt
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
@@ -1329,7 +1329,7 @@ done | cat
 
 package main
 
-import "bunster-build/runtime"
+import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {

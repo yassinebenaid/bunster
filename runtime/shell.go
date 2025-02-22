@@ -10,24 +10,9 @@ import (
 	"sync"
 )
 
-type PredefinedCommand func(shell *Shell, stdin, stdout, stderr Stream)
+func NewShell() *Shell {
+	shell := &Shell{}
 
-type Shell struct {
-	parent    *Shell
-	PID       int
-	ExitCode  int
-	Main      func(*Shell, *StreamManager)
-	Args      []string
-	WaitGroup sync.WaitGroup
-
-	vars         *repository[string]
-	env          *repository[string]
-	localVars    *repository[string]
-	exportedVars *repository[struct{}]
-	functions    *repository[PredefinedCommand]
-}
-
-func (shell *Shell) Run(streamManager *StreamManager) (exitCode int) {
 	shell.vars = newRepository[string]()
 	shell.env = newRepository[string]()
 	shell.localVars = newRepository[string]()
@@ -39,18 +24,29 @@ func (shell *Shell) Run(streamManager *StreamManager) (exitCode int) {
 		shell.env.set(envs[0], envs[1])
 	}
 
-	defer func() {
-		err := recover()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "crash: %v\n", err)
-			exitCode = 1
-		}
-	}()
+	return shell
+}
 
-	shell.Main(shell, streamManager)
-	exitCode = shell.ExitCode
+type ExitError int
 
-	return exitCode
+func (e ExitError) Error() string {
+	return fmt.Sprintf("exit code %d", e)
+}
+
+type PredefinedCommand func(shell *Shell, stdin, stdout, stderr Stream)
+
+type Shell struct {
+	parent    *Shell
+	PID       int
+	ExitCode  int
+	Args      []string
+	WaitGroup sync.WaitGroup
+
+	vars         *repository[string]
+	env          *repository[string]
+	localVars    *repository[string]
+	exportedVars *repository[struct{}]
+	functions    *repository[PredefinedCommand]
 }
 
 func (shell *Shell) ReadVar(name string) string {
@@ -146,6 +142,8 @@ func (shell *Shell) HandleError(sm *StreamManager, err error) {
 		fmt.Fprintf(stderr, "%q: %v\n", e.Path, e.Err)
 	case *exec.ExitError:
 		shell.ExitCode = e.ExitCode()
+	case ExitError:
+		shell.ExitCode = int(e)
 	default:
 		fmt.Fprintln(stderr, err)
 	}
@@ -235,6 +233,7 @@ func (cmd *Command) Start() error {
 		cmd.wg.Add(1)
 		go func() {
 			cmd.function(&shell, cmd.Stdin, cmd.Stdout, cmd.Stderr)
+			cmd.ExitCode = shell.ExitCode
 			cmd.wg.Done()
 		}()
 		return nil
@@ -263,6 +262,9 @@ func (cmd *Command) Start() error {
 func (cmd *Command) Wait() error {
 	if cmd.function != nil {
 		cmd.wg.Wait()
+		if cmd.ExitCode != 0 {
+			return ExitError(cmd.ExitCode)
+		}
 		return nil
 	}
 	return cmd.execCmd.Wait()

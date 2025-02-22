@@ -82,6 +82,7 @@ cases:
 
       foo >func2.txt <<<"foobar" 3>third2.txt 4>fourth.txt
     expect:
+      exit_code: 1
       stderr: "trying to duplicate bad file descriptor: 4\n"
       files:
         func.txt: "hello world\n"
@@ -227,6 +228,30 @@ cases:
       stdout: |
         1
         0
+
+  - name: "function's exit code is the last command's exit code"
+    script: |
+      func(){
+        true
+      }
+
+      func
+      echo $?
+
+      func2(){
+        false
+      }
+
+      func2
+      echo $?
+
+      true | func2
+      echo $?
+    expect:
+      stdout: |
+        0
+        1
+        1
 
   - name: "functions local variables"
     script: |

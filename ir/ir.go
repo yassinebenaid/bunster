@@ -16,7 +16,7 @@ func (p Program) String() string {
 	var str = `
 		package main
 
-		import "bunster-build/runtime"
+		import "github.com/yassinebenaid/bunster/runtime"
 
 		func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		`
