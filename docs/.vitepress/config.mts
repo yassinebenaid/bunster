@@ -22,11 +22,10 @@ export default defineConfig({
           { text: "Supported Features", link: "/supported-features" },
           { text: "CLI", link: "/cli" },
           {
-            text: "Language",
+            text: "Features",
             collapsed: false,
-
             items: [
-              { text: "Simple Commands", link: "/language/simple-commands" },
+              { text: "Simple Commands", link: "/features/simple-commands" },
             ],
           },
           { text: "Contributing", link: "/contributing" },
