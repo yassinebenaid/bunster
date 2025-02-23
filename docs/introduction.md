@@ -24,7 +24,7 @@ makes you feel happy when writing shell scripts. a feeling that shells usually d
 
 ## Get Started
 
-<img src="./bunster.gif"/>
+<img src="/bunster.gif"/>
 
 [Learn more about the usage of bunster.](/cli)
 
