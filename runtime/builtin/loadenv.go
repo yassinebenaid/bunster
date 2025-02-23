@@ -26,6 +26,7 @@ func Loadenv(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 		vars, err := readFile(filename)
 		if err != nil {
 			fmt.Fprintf(stderr, "loadenv: %s\n", err)
+			shell.ExitCode = 1
 			return
 		}
 
@@ -33,6 +34,8 @@ func Loadenv(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 			shell.SetVar(key, value)
 		}
 	}
+
+	shell.ExitCode = 0
 }
 
 const doubleQuoteSpecialChars = "\\\n\r\"!$`"

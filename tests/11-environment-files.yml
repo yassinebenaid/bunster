@@ -89,3 +89,23 @@ cases:
     expect:
       stdout: |
         value3 value2 value4
+
+  - name: "cannot load non-existing .env files"
+    script: |
+      loadenv
+      loadenv file.env
+    expect:
+      exit_code: 1
+      stderr: |
+        loadenv: open .env: no such file or directory
+        loadenv: open file.env: no such file or directory
+
+  - name: "exit code is zero on success"
+    files:
+      .env: |
+        KEY=value
+    script: |
+      false
+      loadenv
+    expect:
+      exit_code: 0
