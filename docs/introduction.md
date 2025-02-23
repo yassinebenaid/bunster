@@ -26,4 +26,19 @@ makes you feel happy when writing shell scripts. a feeling that shells usually d
 
 <img src="./bunster.gif"/>
 
-[Learn more about the usage of bunster.](https://bunster.netlify.app)
+[Learn more about the usage of bunster.](/cli)
+
+## Bunster VS Bash
+We are not trying to compete with `bash`. Because unlike `bash`, bunster is not a shell. it is a programming language dedicated for scripting. `bash`
+has a scripting plan where you can write commands in scripts. but it's primary use case is interactively.
+
+Bunster is trying to take all good things from `bash`. Add more features to them and make them available in a simple and familiar programming language.
+
+
+## Why do we have a separate documentation ?
+We use the [bash reference](https://www.gnu.org/software/bash/manual/bash.html) as a source of truth. and so you can.
+Becasue we have a promise to keep compatibility with bash, you are free to refer to that manual
+for feature documentation for features supported by bunster.
+
+However, we decided to go with our own documentation so that we can focus on features that we support.
+Also, the bash reference keeps mentioning things that we have nothing to do with them. like interactive command line. Which is kind of confusing for our users.
