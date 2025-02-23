@@ -26,6 +26,10 @@ export default defineConfig({
             collapsed: false,
             items: [
               { text: "Simple Commands", link: "/features/simple-commands" },
+              {
+                text: "Environment Files",
+                link: "/features/environment-files",
+              },
             ],
           },
           { text: "Contributing", link: "/contributing" },
