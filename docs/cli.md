@@ -1,5 +1,6 @@
-# Usage
+# CLI
 
+Consider this little script.
 _script.sh_:
 
 ```shell

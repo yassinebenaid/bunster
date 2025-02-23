@@ -1,0 +1,170 @@
+---
+cases:
+  - name: "can load .env file"
+    files:
+      .env: |
+        NAME=bunster # comment
+        DESCRIPTION="
+        A shell scripting programming language
+        "
+
+        # comment
+        REPO_NAME=${NAME}
+        PROJECT_NAME="${NAME}"
+        LANGUAGE_NAME=$NAME
+        COMPILER_NAME="$NAME"
+        # comment
+    script: |
+      loadenv
+
+      echo $NAME
+      echo $DESCRIPTION
+      echo $REPO_NAME
+      echo $PROJECT_NAME
+      echo $LANGUAGE_NAME
+      echo $COMPILER_NAME
+    expect:
+      stdout: |
+        bunster
+
+        A shell scripting programming language
+
+        bunster
+        bunster
+        bunster
+        bunster
+
+  - name: ".env with yaml syntax is supported"
+    files:
+      .env: |
+        NAME: bunster
+        DESCRIPTION: "
+        A shell scripting programming language
+        "
+        REPO_NAME: ${NAME}
+        PROJECT_NAME: "${NAME}"
+        LANGUAGE_NAME: $NAME
+        COMPILER_NAME: "$NAME"
+    script: |
+      loadenv
+
+      echo $NAME
+      echo $DESCRIPTION
+      echo $REPO_NAME
+      echo $PROJECT_NAME
+      echo $LANGUAGE_NAME
+      echo $COMPILER_NAME
+    expect:
+      stdout: |
+        bunster
+
+        A shell scripting programming language
+
+        bunster
+        bunster
+        bunster
+        bunster
+
+  - name: "can load custom .env file"
+    files:
+      custom.env: |
+        KEY=value
+    script: |
+      loadenv custom.env
+
+      echo $KEY
+    expect:
+      stdout: |
+        value
+
+  - name: "can load multiple  .env files"
+    files:
+      default.env: |
+        KEY1=value1
+        KEY2=value2
+      extra.env: |
+        KEY1=value3
+        KEY3=value4
+    script: |
+      loadenv default.env extra.env
+
+      echo $KEY1 $KEY2 $KEY3
+    expect:
+      stdout: |
+        value3 value2 value4
+
+  - name: "can load .env file and mark it as exported"
+    files:
+      .env: |
+        KEY=value
+    script: |
+      loadenv
+      sh -c 'echo env:$KEY'
+      echo var:$KEY
+
+      loadenv -X
+      sh -c 'echo env:$KEY'
+      echo var:$KEY
+    expect:
+      stdout: |
+        env:
+        var:value
+        env:value
+        var:value
+
+  - name: "cannot load non-existing .env files"
+    script: |
+      loadenv
+      loadenv file.env
+    expect:
+      exit_code: 1
+      stderr: |
+        loadenv: open .env: no such file or directory
+        loadenv: open file.env: no such file or directory
+
+  - name: "exit code is zero on success"
+    files:
+      .env: |
+        KEY=value
+    script: |
+      false
+      loadenv
+    expect:
+      exit_code: 0
+
+  - name: "loadenv cannot accept extra flags"
+    script: |
+      loadenv --undefined-flag
+    expect:
+      exit_code: 1
+      stderr: |
+        flag provided but not defined: -undefined-flag
+        Usage of loadenv:
+          -X	mark variables as exported
+
+  - name: "loadenv fails on syntax errors"
+    files:
+      1.env: |
+        KEY
+      2.env: |
+        KEY # =
+      3.env: |
+        INVALID-KEY=value
+      4.env: |
+        KEY="value
+      5.env: |
+        KEY='value
+    script: |
+      loadenv 1.env
+      loadenv 2.env
+      loadenv 3.env
+      loadenv 4.env
+      loadenv 5.env
+    expect:
+      exit_code: 1
+      stderr: |
+        loadenv: unexpected character "\n" in variable name near "KEY\n"
+        loadenv: unexpected character "#" in variable name near "KEY # =\n"
+        loadenv: unexpected character "-" in variable name near "INVALID-KEY=value\n"
+        loadenv: unterminated quoted value "value
+        loadenv: unterminated quoted value 'value
