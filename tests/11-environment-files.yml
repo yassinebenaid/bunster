@@ -1,0 +1,32 @@
+---
+cases:
+  - name: "can load .env file"
+    files:
+      .env: |
+        NAME=bunster
+        DESCRIPTION="
+        A shell scripting programming language
+        "
+        REPO_NAME=${NAME}
+        PROJECT_NAME="${NAME}"
+        LANGUAGE_NAME=$NAME
+        COMPILER_NAME="$NAME"
+    script: |
+      loadenv
+
+      echo $NAME
+      echo $DESCRIPTION
+      echo $REPO_NAME
+      echo $PROJECT_NAME
+      echo $LANGUAGE_NAME
+      echo $COMPILER_NAME
+    expect:
+      stdout: |
+        bunster
+
+        A shell scripting programming language
+
+        bunster
+        bunster
+        bunster
+        bunster
