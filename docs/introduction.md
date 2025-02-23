@@ -26,4 +26,4 @@ makes you feel happy when writing shell scripts. a feeling that shells usually d
 
 <img src="./bunster.gif"/>
 
-[Learn more about the usage of bunster.](https://bunster.netlify.app)
+[Learn more about the usage of bunster.](/cli)
