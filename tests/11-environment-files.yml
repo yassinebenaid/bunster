@@ -61,3 +61,31 @@ cases:
         bunster
         bunster
         bunster
+
+  - name: "can load custom .env file"
+    files:
+      custom.env: |
+        KEY=value
+    script: |
+      loadenv custom.env
+
+      echo $KEY
+    expect:
+      stdout: |
+        value
+
+  - name: "can load multiple  .env files"
+    files:
+      default.env: |
+        KEY1=value1
+        KEY2=value2
+      extra.env: |
+        KEY1=value3
+        KEY3=value4
+    script: |
+      loadenv default.env extra.env
+
+      echo $KEY1 $KEY2 $KEY3
+    expect:
+      stdout: |
+        value3 value2 value4

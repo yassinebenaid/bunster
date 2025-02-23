@@ -17,14 +17,21 @@ import (
 )
 
 func Loadenv(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
-	vars, err := readFile(".env")
-	if err != nil {
-		fmt.Fprintf(stderr, "loadenv: %s\n", err)
-		return
+	files := shell.Args[1:]
+	if len(files) == 0 {
+		files = append(files, ".env")
 	}
 
-	for key, value := range vars {
-		shell.SetVar(key, value)
+	for _, filename := range files {
+		vars, err := readFile(filename)
+		if err != nil {
+			fmt.Fprintf(stderr, "loadenv: %s\n", err)
+			return
+		}
+
+		for key, value := range vars {
+			shell.SetVar(key, value)
+		}
 	}
 }
 
