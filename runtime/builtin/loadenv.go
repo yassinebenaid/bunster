@@ -3,6 +3,7 @@ package builtin
 import (
 	"bytes"
 	"errors"
+	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -17,7 +18,15 @@ import (
 )
 
 func Loadenv(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
-	files := shell.Args[1:]
+	fs := flag.NewFlagSet("loadenv", flag.ContinueOnError)
+	fs.SetOutput(stderr)
+	export := fs.Bool("X", false, "mark variables as exported")
+	if err := fs.Parse(shell.Args[1:]); err != nil {
+		shell.ExitCode = 1
+		return
+	}
+
+	files := fs.Args()
 	if len(files) == 0 {
 		files = append(files, ".env")
 	}
@@ -32,6 +41,9 @@ func Loadenv(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 
 		for key, value := range vars {
 			shell.SetVar(key, value)
+			if *export {
+				shell.MarkVarAsExported(key)
+			}
 		}
 	}
 

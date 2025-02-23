@@ -90,6 +90,25 @@ cases:
       stdout: |
         value3 value2 value4
 
+  - name: "can load .env file and mark it as exported"
+    files:
+      .env: |
+        KEY=value
+    script: |
+      loadenv
+      sh -c 'echo env:$KEY'
+      echo var:$KEY
+
+      loadenv -X
+      sh -c 'echo env:$KEY'
+      echo var:$KEY
+    expect:
+      stdout: |
+        env:
+        var:value
+        env:value
+        var:value
+
   - name: "cannot load non-existing .env files"
     script: |
       loadenv
@@ -109,3 +128,13 @@ cases:
       loadenv
     expect:
       exit_code: 0
+
+  - name: "loadenv cannot accept extra flags"
+    script: |
+      loadenv --undefined-flag
+    expect:
+      exit_code: 1
+      stderr: |
+        flag provided but not defined: -undefined-flag
+        Usage of loadenv:
+          -X	mark variables as exported
