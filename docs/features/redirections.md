@@ -128,3 +128,50 @@ cat 0<<<"Hello World"
 # Or
 cat 3<<<"Hello World"
 ```
+
+## Duplicating file descriptors
+Duplication means to make a file descriptor refers to the same file that another file descriptor refers to. For example. Duplicating file descriptor `x` on `y` means to make the file descriptor `x` refers to the same file that file descriptor `y` refers to. 
+
+The format is:
+```sh
+[n]<&word
+```
+
+This format causes the file descriptor resulted from the expansion of `word` to be duplicated on file descriptor `n`. Or on standard input (file descriptor `0`) if `n` is not specified.
+
+It is possible to use this other format as well:
+```sh
+[n]>&word
+```
+
+The only difference is that when you omit `n`. The default is standard output (file descriptor `1`).
+
+### Example
+In this example, we will duplicate the file descriptor `1` on `2`. 
+
+```sh
+echo foobar 1>file.txt 2>&1
+```
+
+The file descriptor `1` is made to refer to the file `file.txt`. then we duplicated the file descriptor `1` on file descriptor `2`. This means that when the command `echo` writes to file descriptor `2`. It will write to the file `file.txt`. In other words. the file descriptor `2` is now a copy of the file descriptor `1`.
+
+## Closing file descriptors
+The syntax for closing file descriptors is 
+
+```sh
+[n]<&-
+```
+
+Notice the `-` at the end. This notation causes the file descriptor `n` to be closed. or standard input (file descriptor `0`) if `n` is not specified.
+
+It is possible to use this other format as well:
+```sh
+[n]>&-
+```
+The only difference is that when you omit `n`. The default is standard output (file descriptor `1`).
+
+### Example
+```sh
+echo foobar 1>&-
+```
+In this example, we closed the file descriptor `1`. when the command `echo` writes to file descriptor `1`. It will fail because the file descriptor is closed.
