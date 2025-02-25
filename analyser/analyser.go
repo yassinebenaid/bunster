@@ -187,6 +187,14 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.analyseExpression(r.Dst)
 			}
 		}
+	case ast.Test:
+		a.analyseExpression(v.Expr)
+
+		for _, r := range v.Redirections {
+			if r.Dst != nil {
+				a.analyseExpression(r.Dst)
+			}
+		}
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
@@ -209,6 +217,9 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 		for _, exp := range v {
 			a.analyseExpression(exp)
 		}
+	case ast.Binary:
+		a.analyseExpression(v.Left)
+		a.analyseExpression(v.Right)
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}

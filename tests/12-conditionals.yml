@@ -1,0 +1,14 @@
+---
+cases:
+  - name: "can test simple string equality [ x = y]"
+    script: |
+      name=bunster
+      [ $name = bunster ]
+      echo $?
+
+      [ $name = bunsters ]
+      echo $?
+    expect:
+      stdout: |
+        0
+        1
