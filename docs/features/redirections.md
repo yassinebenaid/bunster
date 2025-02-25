@@ -207,3 +207,25 @@ The format is:
 ```
 
 This notation causes the file whose name is the expansion of `word` to be opened for both reading and writing on file descriptor `n`, or on file descriptor 0 if `n` is not specified. If the file does not exist, it is created.
+
+## Internals of file descriptor management
+It is necessary to make something clear about how file descriptors are managed in bunster. `bash` users usually struggle when they see a bunster script using a redirection like this:
+
+```sh
+echo foobar 9999999>file.txt >&9999999
+```
+This code will fail in `bash` because `9999999` is not a valid file descriptor. This is logical because `bash` relies on the kernel to manage file descriptors. Which -- the kernel -- has a strict rules about the format of file descriptors. Also, when you run this code in bash:
+
+```sh
+cmd 5>file.txt
+```
+Bash literally opens the file descriptor `5`. As a result. the command `cmd`  will inherit that file descriptor and can read/write to it.
+
+Bunster is built differently. The following code is going to work totally fine in bunster :
+```sh
+echo foobar 9999999>file.txt  >&9999999
+```
+That's because file descriptors are managed by the bunster runtime. And are not real file descriptors. They're just an alias of a file handler. This means that in the above example. The command `echo` will not inherit the file descriptor `9999999` because that file descriptor is not open in reality. 
+
+### Why should I be concerned about file descriptor managment ?
+you shouldn't ! there is nothing to worry about regarding the managment of file descriptors. Because the behavior of your script is totally compatible between `bash` and `bunster`. You don't have to change anything in your `bash` scripts to work in bunster. And vice-versa. The only reason why we decided to mention all these information in the documentation is to clarify that while the behavior is similar. The internals are different. and so don't worry when you run `ls /proc/self/fd` and you see a different output in bunster than in bash. 
