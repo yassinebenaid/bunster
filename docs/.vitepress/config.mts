@@ -26,7 +26,7 @@ export default defineConfig({
             collapsed: false,
             items: [
               { text: "Simple Commands", link: "/features/simple-commands" },
-              { text: "redirections", link: "/features/redirections" },
+              { text: "Redirections", link: "/features/redirections" },
               {
                 text: "Environment Files",
                 link: "/features/environment-files",
