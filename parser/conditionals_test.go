@@ -81,6 +81,13 @@ var conditionalsTests = []testCase{
 		[[ file1 < file2 ]]
 		[[ file1 > file2 ]]
 		[[ file1 =~ ^(.*)/([[:alnum:]]+)-(.*)$ ]]
+
+		[[ 1 -eq 2 ]]
+		[[ 1 -ne 2 ]]
+		[[ 1 -lt 2 ]]
+		[[ 1 -le 2 ]]
+		[[ 1 -gt 2 ]]
+		[[ 1 -ge 2 ]]
 	`, ast.Script{
 		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
 		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "-nt", Right: ast.Word("file2")}},
@@ -91,6 +98,12 @@ var conditionalsTests = []testCase{
 		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "<", Right: ast.Word("file2")}},
 		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: ">", Right: ast.Word("file2")}},
 		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "=~", Right: ast.Word("^(.*)/([[:alnum:]]+)-(.*)$")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-eq", Right: ast.Word("2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-ne", Right: ast.Word("2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-lt", Right: ast.Word("2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-le", Right: ast.Word("2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-gt", Right: ast.Word("2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-ge", Right: ast.Word("2")}},
 	}},
 	{`
 		[[ file1 && file2 ]]
@@ -363,6 +376,13 @@ var conditionalsTests = []testCase{
 		[ file1 != file2 ]
 		[ file1 < file2 ]
 		[ file1 > file2 ]
+
+		[ 1 -eq 2 ]
+		[ 1 -ne 2 ]
+		[ 1 -lt 2 ]
+		[ 1 -le 2 ]
+		[ 1 -gt 2 ]
+		[ 1 -ge 2 ]
 	`, ast.Script{
 		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
 		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "-nt", Right: ast.Word("file2")}},
@@ -372,6 +392,12 @@ var conditionalsTests = []testCase{
 		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "!=", Right: ast.Word("file2")}},
 		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "<", Right: ast.Word("file2")}},
 		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: ">", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-eq", Right: ast.Word("2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-ne", Right: ast.Word("2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-lt", Right: ast.Word("2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-le", Right: ast.Word("2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-gt", Right: ast.Word("2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-ge", Right: ast.Word("2")}},
 	}},
 	{`
 		[ file1 -a file2 ]
@@ -625,6 +651,13 @@ var conditionalsTests = []testCase{
 		test file1 != file2
 		test file1 < file2
 		test file1 > file2
+
+		test  1  -eq  2
+		test  1  -ne  2
+		test  1  -lt  2
+		test  1  -le  2
+		test  1  -gt  2
+		test  1  -ge  2
 	`, ast.Script{
 		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "-ef", Right: ast.Word("file2")}},
 		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "-nt", Right: ast.Word("file2")}},
@@ -634,6 +667,12 @@ var conditionalsTests = []testCase{
 		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "!=", Right: ast.Word("file2")}},
 		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: "<", Right: ast.Word("file2")}},
 		ast.Test{Expr: ast.Binary{Left: ast.Word("file1"), Operator: ">", Right: ast.Word("file2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-eq", Right: ast.Word("2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-ne", Right: ast.Word("2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-lt", Right: ast.Word("2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-le", Right: ast.Word("2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-gt", Right: ast.Word("2")}},
+		ast.Test{Expr: ast.Binary{Left: ast.Word("1"), Operator: "-ge", Right: ast.Word("2")}},
 	}},
 	{`
 		test file1 -a file2
