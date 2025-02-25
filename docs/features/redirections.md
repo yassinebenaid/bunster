@@ -193,8 +193,17 @@ This means, duplicate the file descriptor `y` to `x`. then close `y`. if `x` is 
 The only difference is that when you omit `x`. The default is standard output (file descriptor `1`).
 
 ### Example
-In this example, we will mobe the file descriptor `2` to `1`.
+In this example, we will move the file descriptor `2` to `1`.
 
 ```sh
-
+echo foobar 1>&2-
 ```
+Now, the file descriptor `1` is made a copy of the file descriptor `2`. and the file descriptor `2` was closed. This means. when the command `echo` writes to file descriptor `1`. It will write to the same file to which file descriptor `2` was pointing to. and it will fail to write to file descriptor `2` because it was closed.
+
+## Open file for reading and writing
+The format is:
+```sh
+[n]<>word
+```
+
+This notation causes the file whose name is the expansion of `word` to be opened for both reading and writing on file descriptor `n`, or on file descriptor 0 if `n` is not specified. If the file does not exist, it is created.
