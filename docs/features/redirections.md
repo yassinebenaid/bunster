@@ -175,3 +175,26 @@ The only difference is that when you omit `n`. The default is standard output (f
 echo foobar 1>&-
 ```
 In this example, we closed the file descriptor `1`. when the command `echo` writes to file descriptor `1`. It will fail because the file descriptor is closed.
+
+## Moving file descriptors
+This notation is a combination of moving and closing file descriptors. In simple words, moving file descriptor `x` to `y` means to duplicate file descriptor `y` to `x`. then close the file descriptor `y`.
+
+The format is:
+
+```sh
+[x]<&y-
+```
+
+This means, duplicate the file descriptor `y` to `x`. then close `y`. if `x` is not specified, `0` is the default. An alternative syntax is available:
+
+```sh
+[x]>&y-
+```
+The only difference is that when you omit `x`. The default is standard output (file descriptor `1`).
+
+### Example
+In this example, we will mobe the file descriptor `2` to `1`.
+
+```sh
+
+```
