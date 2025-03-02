@@ -50,6 +50,26 @@ func (g *generator) handleTestBinary(buf *InstructionBuffer, test ast.Binary) {
 		r := g.handleExpression(buf, test.Right)
 
 		buf.add(ir.CompareArithmetics{Left: l, Operator: "!=", Right: r})
+	case "-lt":
+		l := g.handleExpression(buf, test.Left)
+		r := g.handleExpression(buf, test.Right)
+
+		buf.add(ir.CompareArithmetics{Left: l, Operator: "<", Right: r})
+	case "-le":
+		l := g.handleExpression(buf, test.Left)
+		r := g.handleExpression(buf, test.Right)
+
+		buf.add(ir.CompareArithmetics{Left: l, Operator: "<=", Right: r})
+	case "-gt":
+		l := g.handleExpression(buf, test.Left)
+		r := g.handleExpression(buf, test.Right)
+
+		buf.add(ir.CompareArithmetics{Left: l, Operator: ">", Right: r})
+	case "-ge":
+		l := g.handleExpression(buf, test.Left)
+		r := g.handleExpression(buf, test.Right)
+
+		buf.add(ir.CompareArithmetics{Left: l, Operator: ">=", Right: r})
 	default:
 		panic("we do not support the binary operator: " + test.Operator)
 	}

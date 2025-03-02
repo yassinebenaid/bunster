@@ -17,7 +17,15 @@ func NumberCompare(x, op, y string) bool {
 		return xv == yv
 	case "!=":
 		return xv != yv
+	case "<":
+		return xv < yv
+	case ">":
+		return xv > yv
+	case "<=":
+		return xv <= yv
+	case ">=":
+		return xv >= yv
 	default:
-		return false
+		panic("unsupported arithmetic operator: " + op)
 	}
 }

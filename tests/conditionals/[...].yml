@@ -49,22 +49,60 @@ cases:
 
   - name: "can test simple arithmetic comparison using the [...] syntax"
     script: |
-      name=100
-      [ $name -eq 100 ]
+      [ 100 -eq 100 ]
       echo '1': $?
 
-      [ $name -eq 2129 ]
+      [ 100 -eq 2129 ]
       echo '2': $?
 
-      name=100
-      [ $name -ne 100 ]
+      [ 100 -ne 100 ]
       echo '3': $?
 
-      [ $name -ne 2129 ]
+      [ 100 -ne 2129 ]
       echo '4': $?
+
+      [ 99 -lt 100 ]
+      echo '5': $?
+
+      [ 100 -lt 100 ]
+      echo '6': $?
+
+      [ 99 -le 100 ]
+      echo '7': $?
+
+      [ 100 -le 100 ]
+      echo '8': $?
+
+      [ 200 -le 100 ]
+      echo '9': $?
+
+      [ 100 -gt 100 ]
+      echo '10': $?
+
+      [ 200 -gt 100 ]
+      echo '11': $?
+
+      [ 99 -ge 100 ]
+      echo '12': $?
+
+      [ 100 -ge 100 ]
+      echo '13': $?
+
+      [ 200 -ge 100 ]
+      echo '14': $?
     expect:
       stdout: |
         1: 0
         2: 1
         3: 1
         4: 0
+        5: 0
+        6: 1
+        7: 0
+        8: 0
+        9: 1
+        10: 1
+        11: 0
+        12: 1
+        13: 0
+        14: 0
