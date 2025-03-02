@@ -46,3 +46,25 @@ cases:
         8: 0
         9: 0
         10: 1
+
+  - name: "can test simple arithmetic comparison using the [...] syntax"
+    script: |
+      name=100
+      [ $name -eq 100 ]
+      echo '1': $?
+
+      [ $name -eq 2129 ]
+      echo '2': $?
+
+      name=100
+      [ $name -ne 100 ]
+      echo '3': $?
+
+      [ $name -ne 2129 ]
+      echo '4': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+        4: 0
