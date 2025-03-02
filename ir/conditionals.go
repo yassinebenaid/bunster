@@ -50,3 +50,18 @@ func (c TestFilesHaveSameDevAndInoNumbers) togo() string {
 		}
 		`, c.File1.togo(), c.File2.togo())
 }
+
+type FileIsOlderThan struct {
+	File1 Instruction
+	File2 Instruction
+}
+
+func (c FileIsOlderThan) togo() string {
+	return fmt.Sprintf(
+		`if runtime.FileIsOlderThan(%s, %s) {
+			shell.ExitCode = 0 
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File1.togo(), c.File2.togo())
+}

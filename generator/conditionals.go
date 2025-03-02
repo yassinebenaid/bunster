@@ -75,6 +75,11 @@ func (g *generator) handleTestBinary(buf *InstructionBuffer, test ast.Binary) {
 		r := g.handleExpression(buf, test.Right)
 
 		buf.add(ir.TestFilesHaveSameDevAndInoNumbers{File1: l, File2: r})
+	case "-ot":
+		l := g.handleExpression(buf, test.Left)
+		r := g.handleExpression(buf, test.Right)
+
+		buf.add(ir.FileIsOlderThan{File1: l, File2: r})
 	default:
 		panic("we do not support the binary operator: " + test.Operator)
 	}
