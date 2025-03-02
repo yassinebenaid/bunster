@@ -1,14 +1,40 @@
 ---
 cases:
-  - name: "can test simple string equality [ x = y]"
+  - name: "can test simple string equality"
     script: |
       name=bunster
       [ $name = bunster ]
-      echo $?
+      echo '1': $?
 
       [ $name = bunsters ]
-      echo $?
+      echo '2': $?
+
+      name=bunster
+      [ $name != bunster ]
+      echo '3': $?
+
+      [ $name != bunsters ]
+      echo '4': $?
+
+
+      [ a < z ]
+      echo '5': $?
+
+      [ z < a ]
+      echo '6': $?
+
+      [ a > z ]
+      echo '7': $?
+
+      [ z > a ]
+      echo '8': $?
     expect:
       stdout: |
-        0
-        1
+        1: 0
+        2: 1
+        3: 1
+        4: 0
+        5: 0
+        6: 1
+        7: 1
+        8: 0

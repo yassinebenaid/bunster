@@ -30,5 +30,17 @@ func (g *generator) handleTestBinary(buf *InstructionBuffer, test ast.Binary) {
 		r := g.handleExpression(buf, test.Right)
 
 		buf.add(ir.Compare{Left: l, Operator: "==", Right: r})
+	case "==":
+		l := g.handleExpression(buf, test.Left)
+		r := g.handleExpression(buf, test.Right)
+
+		buf.add(ir.Compare{Left: l, Operator: "==", Right: r})
+	case "!=", "<", ">":
+		l := g.handleExpression(buf, test.Left)
+		r := g.handleExpression(buf, test.Right)
+
+		buf.add(ir.Compare{Left: l, Operator: test.Operator, Right: r})
+	default:
+		panic("we do not support the binary operator: " + test.Operator)
 	}
 }
