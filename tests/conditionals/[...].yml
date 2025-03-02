@@ -1,6 +1,6 @@
 ---
 cases:
-  - name: "can test simple string equality"
+  - name: "can test simple string comparison using the [...] syntax"
     script: |
       name=bunster
       [ $name = bunster ]
