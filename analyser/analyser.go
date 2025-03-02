@@ -113,7 +113,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			}
 		}
 		if !withinFunction {
-			a.report(fmt.Sprintf("The `local` keyword cannot be used outside functions"))
+			a.report("The `local` keyword cannot be used outside functions")
 		}
 
 		for _, pa := range v {
@@ -143,11 +143,11 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				break loop
 			case ast.List, ast.Break:
 			default:
-				a.report(fmt.Sprintf("The `break` keyword cannot be used here"))
+				a.report("The `break` keyword cannot be used here")
 			}
 		}
 		if !withinLoop {
-			a.report(fmt.Sprintf("The `break` keyword cannot be used here"))
+			a.report("The `break` keyword cannot be used here")
 		}
 	case ast.Continue:
 		var withinLoop bool
@@ -159,11 +159,11 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				break loop2
 			case ast.List, ast.Continue:
 			default:
-				a.report(fmt.Sprintf("The `continue` keyword cannot be used here"))
+				a.report("The `continue` keyword cannot be used here")
 			}
 		}
 		if !withinLoop {
-			a.report(fmt.Sprintf("The `continue` keyword cannot be used here"))
+			a.report("The `continue` keyword cannot be used here")
 		}
 	case ast.Pipeline:
 		a.analysePipeline(v)
@@ -218,6 +218,9 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 			a.analyseExpression(exp)
 		}
 	case ast.Binary:
+		if v.Operator == "=~" {
+			a.report(fmt.Sprintf("Unsupported test operator: %s", v.Operator))
+		}
 		a.analyseExpression(v.Left)
 		a.analyseExpression(v.Right)
 	default:
