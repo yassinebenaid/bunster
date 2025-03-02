@@ -29,10 +29,6 @@ func (g *generator) handleTestBinary(buf *InstructionBuffer, test ast.Binary) {
 		l := g.handleExpression(buf, test.Left)
 		r := g.handleExpression(buf, test.Right)
 
-		buf.add(ir.Compare{
-			Left:     l,
-			Operator: "==",
-			Right:    r,
-		})
+		buf.add(ir.Compare{Left: l, Operator: "==", Right: r})
 	}
 }
