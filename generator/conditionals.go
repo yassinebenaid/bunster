@@ -70,6 +70,11 @@ func (g *generator) handleTestBinary(buf *InstructionBuffer, test ast.Binary) {
 		r := g.handleExpression(buf, test.Right)
 
 		buf.add(ir.CompareArithmetics{Left: l, Operator: ">=", Right: r})
+	case "-ef":
+		l := g.handleExpression(buf, test.Left)
+		r := g.handleExpression(buf, test.Right)
+
+		buf.add(ir.TestFilesHaveSameDevAndInoNumbers{File1: l, File2: r})
 	default:
 		panic("we do not support the binary operator: " + test.Operator)
 	}

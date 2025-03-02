@@ -106,3 +106,19 @@ cases:
         12: 1
         13: 0
         14: 0
+
+  - name: "can test binary file comparison using the [...] syntax"
+    script: |
+      touch file1
+      ln file1 file2
+      touch file3
+
+      [ file1 -ef file2 ]
+      echo '1': $?
+
+      [ file1 -ef file23 ]
+      echo '2': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
