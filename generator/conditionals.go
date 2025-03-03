@@ -24,62 +24,34 @@ func (g *generator) handleTestExpression(buf *InstructionBuffer, test ast.Expres
 }
 
 func (g *generator) handleTestBinary(buf *InstructionBuffer, test ast.Binary) {
+	left := g.handleExpression(buf, test.Left)
+	right := g.handleExpression(buf, test.Right)
+
 	switch test.Operator {
 	case "=":
-		l := g.handleExpression(buf, test.Left)
-		r := g.handleExpression(buf, test.Right)
-
-		buf.add(ir.Compare{Left: l, Operator: "==", Right: r})
+		buf.add(ir.Compare{Left: left, Operator: "==", Right: right})
 	case "==":
-		l := g.handleExpression(buf, test.Left)
-		r := g.handleExpression(buf, test.Right)
-
-		buf.add(ir.Compare{Left: l, Operator: "==", Right: r})
+		buf.add(ir.Compare{Left: left, Operator: "==", Right: right})
 	case "!=", "<", ">":
-		l := g.handleExpression(buf, test.Left)
-		r := g.handleExpression(buf, test.Right)
-
-		buf.add(ir.Compare{Left: l, Operator: test.Operator, Right: r})
+		buf.add(ir.Compare{Left: left, Operator: test.Operator, Right: right})
 	case "-eq":
-		l := g.handleExpression(buf, test.Left)
-		r := g.handleExpression(buf, test.Right)
-
-		buf.add(ir.CompareArithmetics{Left: l, Operator: "==", Right: r})
+		buf.add(ir.CompareArithmetics{Left: left, Operator: "==", Right: right})
 	case "-ne":
-		l := g.handleExpression(buf, test.Left)
-		r := g.handleExpression(buf, test.Right)
-
-		buf.add(ir.CompareArithmetics{Left: l, Operator: "!=", Right: r})
+		buf.add(ir.CompareArithmetics{Left: left, Operator: "!=", Right: right})
 	case "-lt":
-		l := g.handleExpression(buf, test.Left)
-		r := g.handleExpression(buf, test.Right)
-
-		buf.add(ir.CompareArithmetics{Left: l, Operator: "<", Right: r})
+		buf.add(ir.CompareArithmetics{Left: left, Operator: "<", Right: right})
 	case "-le":
-		l := g.handleExpression(buf, test.Left)
-		r := g.handleExpression(buf, test.Right)
-
-		buf.add(ir.CompareArithmetics{Left: l, Operator: "<=", Right: r})
+		buf.add(ir.CompareArithmetics{Left: left, Operator: "<=", Right: right})
 	case "-gt":
-		l := g.handleExpression(buf, test.Left)
-		r := g.handleExpression(buf, test.Right)
-
-		buf.add(ir.CompareArithmetics{Left: l, Operator: ">", Right: r})
+		buf.add(ir.CompareArithmetics{Left: left, Operator: ">", Right: right})
 	case "-ge":
-		l := g.handleExpression(buf, test.Left)
-		r := g.handleExpression(buf, test.Right)
-
-		buf.add(ir.CompareArithmetics{Left: l, Operator: ">=", Right: r})
+		buf.add(ir.CompareArithmetics{Left: left, Operator: ">=", Right: right})
 	case "-ef":
-		l := g.handleExpression(buf, test.Left)
-		r := g.handleExpression(buf, test.Right)
-
-		buf.add(ir.TestFilesHaveSameDevAndInoNumbers{File1: l, File2: r})
+		buf.add(ir.TestFilesHaveSameDevAndInoNumbers{File1: left, File2: right})
 	case "-ot":
-		l := g.handleExpression(buf, test.Left)
-		r := g.handleExpression(buf, test.Right)
-
-		buf.add(ir.FileIsOlderThan{File1: l, File2: r})
+		buf.add(ir.FileIsOlderThan{File1: left, File2: right})
+	case "-nt":
+		buf.add(ir.FileIsOlderThan{File1: right, File2: left})
 	default:
 		panic("we do not support the binary operator: " + test.Operator)
 	}
