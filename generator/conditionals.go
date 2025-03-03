@@ -69,6 +69,8 @@ func (g *generator) handleTestUnary(buf *InstructionBuffer, test ast.Unary) {
 		buf.add(ir.TestAgainsStringLength{String: operand})
 	case "-z":
 		buf.add(ir.TestAgainsStringLength{String: operand, Zero: true})
+	case "-e", "-a":
+		buf.add(ir.TestFileExists{File: operand})
 	default:
 		panic("we do not support the unary operator: " + test.Operator)
 	}

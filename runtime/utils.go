@@ -72,3 +72,8 @@ func FileIsOlderThan(file1, file2 string) bool {
 	return file1Info.ModTime().Before(file2Info.ModTime())
 
 }
+
+func FileExists(file string) bool {
+	_, err := os.Stat(file)
+	return err == nil || !os.IsNotExist(err)
+}

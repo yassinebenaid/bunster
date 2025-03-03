@@ -215,3 +215,57 @@ cases:
         8: 0
         9: 0
         10: 1
+
+  - name: "can test the existence of a file or directory using the [...] syntax"
+    files:
+    script: |
+      mkdir dir
+      mkdir non-permitted-dir
+      touch non-permitted-dir/non-permitted-file
+      chmod 000 non-permitted-dir
+      touch file
+
+      [ -a non-existing-file ]
+      echo '1': $?
+
+      [ -a non-permitted-dir/non-permitted-file ]
+      echo '2': $?
+
+      [ -a non-permitted-dir ]
+      echo '3': $?
+
+      [ -a dir ]
+      echo '4': $?
+
+      [ -a file ]
+      echo '5': $?
+
+
+      [ -e non-existing-file ]
+      echo '6': $?
+
+      [ -e non-permitted-dir/non-permitted-file ]
+      echo '7': $?
+
+      [ -a non-permitted-dir ]
+      echo '8': $?
+
+      [ -a dir ]
+      echo '9': $?
+
+      [ -e file ]
+      echo '10': $?
+
+      chmod 777 non-permitted-dir
+    expect:
+      stdout: |
+        1: 1
+        2: 0
+        3: 0
+        4: 0
+        5: 0
+        6: 1
+        7: 0
+        8: 0
+        9: 0
+        10: 0

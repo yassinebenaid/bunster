@@ -85,3 +85,17 @@ func (c TestAgainsStringLength) togo() string {
 		}
 		`, c.String.togo(), operator)
 }
+
+type TestFileExists struct {
+	File Instruction
+}
+
+func (c TestFileExists) togo() string {
+	return fmt.Sprintf(
+		`if runtime.FileExists(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}
