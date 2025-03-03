@@ -23,7 +23,7 @@ func (g *generator) handleTestExpression(buf *InstructionBuffer, test ast.Expres
 	case ast.Unary:
 		g.handleTestUnary(buf, v)
 	default:
-		buf.add(ir.TestStringIsIsNotZero{String: g.handleExpression(buf, v)})
+		buf.add(ir.TestAgainsStringLength{String: g.handleExpression(buf, v)})
 	}
 }
 
@@ -66,8 +66,10 @@ func (g *generator) handleTestUnary(buf *InstructionBuffer, test ast.Unary) {
 
 	switch test.Operator {
 	case "-n":
-		buf.add(ir.TestStringIsIsNotZero{String: operand})
+		buf.add(ir.TestAgainsStringLength{String: operand})
+	case "-z":
+		buf.add(ir.TestAgainsStringLength{String: operand, Zero: true})
 	default:
-		panic("we do not support the binary operator: " + test.Operator)
+		panic("we do not support the unary operator: " + test.Operator)
 	}
 }

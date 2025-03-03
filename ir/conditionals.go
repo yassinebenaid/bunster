@@ -66,16 +66,22 @@ func (c FileIsOlderThan) togo() string {
 		`, c.File1.togo(), c.File2.togo())
 }
 
-type TestStringIsIsNotZero struct {
+type TestAgainsStringLength struct {
 	String Instruction
+	Zero   bool
 }
 
-func (c TestStringIsIsNotZero) togo() string {
+func (c TestAgainsStringLength) togo() string {
+	operator := "=="
+	if c.Zero {
+		operator = "!="
+	}
+
 	return fmt.Sprintf(
-		`if len(%s) == 0 {
+		`if len(%s) %s 0 {
 			shell.ExitCode = 1 
 		} else {
 			shell.ExitCode = 0
 		}
-		`, c.String.togo())
+		`, c.String.togo(), operator)
 }

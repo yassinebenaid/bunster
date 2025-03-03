@@ -194,6 +194,15 @@ cases:
 
       [ -n $var ]
       echo '7': $?
+
+      [ -n $greet ]
+      echo '8': $?
+
+      [ -z $var ]
+      echo '9': $?
+
+      [ -z $greet ]
+      echo '10': $?
     expect:
       stdout: |
         1: 0
@@ -203,3 +212,6 @@ cases:
         5: 0
         6: 1
         7: 1
+        8: 0
+        9: 0
+        10: 1
