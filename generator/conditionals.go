@@ -20,6 +20,8 @@ func (g *generator) handleTestExpression(buf *InstructionBuffer, test ast.Expres
 	switch v := test.(type) {
 	case ast.Binary:
 		g.handleTestBinary(buf, v)
+	case ast.Unary:
+		g.handleTestUnary(buf, v)
 	default:
 		buf.add(ir.TestStringIsIsNotZero{String: g.handleExpression(buf, v)})
 	}
@@ -54,6 +56,17 @@ func (g *generator) handleTestBinary(buf *InstructionBuffer, test ast.Binary) {
 		buf.add(ir.FileIsOlderThan{File1: left, File2: right})
 	case "-nt":
 		buf.add(ir.FileIsOlderThan{File1: right, File2: left})
+	default:
+		panic("we do not support the binary operator: " + test.Operator)
+	}
+}
+
+func (g *generator) handleTestUnary(buf *InstructionBuffer, test ast.Unary) {
+	operand := g.handleExpression(buf, test.Operand)
+
+	switch test.Operator {
+	case "-n":
+		buf.add(ir.TestStringIsIsNotZero{String: operand})
 	default:
 		panic("we do not support the binary operator: " + test.Operator)
 	}

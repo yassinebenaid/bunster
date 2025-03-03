@@ -191,6 +191,9 @@ cases:
 
       [ $( true ) ]
       echo '6': $?
+
+      [ -n $var ]
+      echo '7': $?
     expect:
       stdout: |
         1: 0
@@ -199,3 +202,4 @@ cases:
         4: 0
         5: 0
         6: 1
+        7: 1
