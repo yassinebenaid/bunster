@@ -65,3 +65,17 @@ func (c FileIsOlderThan) togo() string {
 		}
 		`, c.File1.togo(), c.File2.togo())
 }
+
+type TestStringIsIsNotZero struct {
+	String Instruction
+}
+
+func (c TestStringIsIsNotZero) togo() string {
+	return fmt.Sprintf(
+		`if len(%s) == 0 {
+			shell.ExitCode = 1 
+		} else {
+			shell.ExitCode = 0
+		}
+		`, c.String.togo())
+}

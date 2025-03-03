@@ -20,6 +20,8 @@ func (g *generator) handleTestExpression(buf *InstructionBuffer, test ast.Expres
 	switch v := test.(type) {
 	case ast.Binary:
 		g.handleTestBinary(buf, v)
+	default:
+		buf.add(ir.TestStringIsIsNotZero{String: g.handleExpression(buf, v)})
 	}
 }
 

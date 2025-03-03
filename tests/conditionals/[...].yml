@@ -168,3 +168,34 @@ cases:
         2: 0
         3: 0
         4: 1
+
+  - name: "can test against the length of a string using the [...] syntax"
+    script: |
+      greet="hello world"
+      var=
+
+      [ something ]
+      echo '1': $?
+
+      [ "" ]
+      echo '2': $?
+
+      [ $var ]
+      echo '3': $?
+
+      [ $greet ]
+      echo '4': $?
+
+      [ $( echo foo ) ]
+      echo '5': $?
+
+      [ $( true ) ]
+      echo '6': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+        4: 0
+        5: 0
+        6: 1
