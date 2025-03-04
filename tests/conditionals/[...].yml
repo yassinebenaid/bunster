@@ -331,6 +331,7 @@ cases:
     files:
     script: |
       DEVICE="/dev/$(diskutil list | grep '/dev/disk' | head -n 1 | awk '{print $1}')"
+      echo $DEVICE
 
       [ -b $DEVICE ]
       echo '1': $?
