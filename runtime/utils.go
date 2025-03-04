@@ -35,12 +35,12 @@ func NumberCompare(x, op, y string) bool {
 }
 
 func FilesHaveSameDevAndIno(file1, file2 string) bool {
-	file1Info, err := os.Stat(file1)
+	file1Info, err := os.Lstat(file1)
 	if err != nil {
 		return false
 	}
 
-	file2Info, err := os.Stat(file2)
+	file2Info, err := os.Lstat(file2)
 	if err != nil {
 		return false
 	}
@@ -59,12 +59,12 @@ func FilesHaveSameDevAndIno(file1, file2 string) bool {
 }
 
 func FileIsOlderThan(file1, file2 string) bool {
-	file2Info, err := os.Stat(file2)
+	file2Info, err := os.Lstat(file2)
 	if err != nil {
 		return false
 	}
 
-	file1Info, err := os.Stat(file1)
+	file1Info, err := os.Lstat(file1)
 	if err != nil {
 		return os.IsNotExist(err)
 	}
@@ -74,12 +74,12 @@ func FileIsOlderThan(file1, file2 string) bool {
 }
 
 func FileExists(file string) bool {
-	_, err := os.Stat(file)
+	_, err := os.Lstat(file)
 	return err == nil || (!os.IsNotExist(err) && !os.IsPermission(err))
 }
 
 func DirectoryExists(file string) bool {
-	info, err := os.Stat(file)
+	info, err := os.Lstat(file)
 	if err != nil {
 		return false
 	}
@@ -88,7 +88,7 @@ func DirectoryExists(file string) bool {
 }
 
 func BlockSpecialFileExists(file string) bool {
-	info, err := os.Stat(file)
+	info, err := os.Lstat(file)
 	if err != nil {
 		return false
 	}
@@ -102,7 +102,7 @@ func BlockSpecialFileExists(file string) bool {
 }
 
 func CharacterSpecialFileExists(file string) bool {
-	info, err := os.Stat(file)
+	info, err := os.Lstat(file)
 	if err != nil {
 		return false
 	}
@@ -111,7 +111,7 @@ func CharacterSpecialFileExists(file string) bool {
 }
 
 func RegularFileExists(file string) bool {
-	info, err := os.Stat(file)
+	info, err := os.Lstat(file)
 	if err != nil {
 		return false
 	}
@@ -120,7 +120,7 @@ func RegularFileExists(file string) bool {
 }
 
 func FileSGIDIsSet(file string) bool {
-	info, err := os.Stat(file)
+	info, err := os.Lstat(file)
 	if err != nil {
 		return false
 	}
@@ -144,4 +144,13 @@ func FileIsSticky(file string) bool {
 	}
 
 	return info.Mode()&os.ModeSticky != 0
+}
+
+func FileIsFIFO(file string) bool {
+	info, err := os.Lstat(file)
+	if err != nil {
+		return false
+	}
+
+	return info.Mode()&os.ModeNamedPipe != 0
 }

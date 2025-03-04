@@ -197,3 +197,17 @@ func (c TestFileIsSticky) togo() string {
 		}
 		`, c.File.togo())
 }
+
+type TestFileIsFIFO struct {
+	File Instruction
+}
+
+func (c TestFileIsFIFO) togo() string {
+	return fmt.Sprintf(
+		`if runtime.FileIsFIFO(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}
