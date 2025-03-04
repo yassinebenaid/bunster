@@ -127,3 +127,12 @@ func FileSGIDIsSet(file string) bool {
 
 	return info.Mode()&os.ModeSetgid != 0
 }
+
+func FileIsSymbolic(file string) bool {
+	info, err := os.Lstat(file)
+	if err != nil {
+		return false
+	}
+
+	return info.Mode()&os.ModeSymlink != 0
+}

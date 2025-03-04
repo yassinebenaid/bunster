@@ -217,7 +217,6 @@ cases:
         10: 1
 
   - name: "can test the existence of a file or directory using the [...] syntax"
-    files:
     script: |
       mkdir dir
       mkdir non-permitted-dir
@@ -271,7 +270,6 @@ cases:
         10: 0
 
   - name: "can test the existence of a directory using the [...] syntax"
-    files:
     script: |
       mkdir dir
       mkdir non-permitted-dir
@@ -307,7 +305,6 @@ cases:
 
   - name: "can test the existence of a block special file using the [...] syntax"
     runs_on: linux
-    files:
     script: |
       DEVICE=$(lsblk -nd -o PATH | head -n 1)
 
@@ -332,7 +329,6 @@ cases:
 
   - name: "can test the existence of a block special file using the [...] syntax"
     runs_on: darwin
-    files:
     script: |
       DEVICE=$(diskutil list | grep '/dev/disk' | head -n 1 | awk '{print $1}')
 
@@ -357,7 +353,6 @@ cases:
 
   - name: "can test the existence of a character special file using the [...] syntax"
     runs_on: linux
-    files:
     script: |
       [ -c /dev/null ]
       echo '1': $?
@@ -381,7 +376,6 @@ cases:
 
   - name: "can test the existence of a character special file using the [...] syntax"
     runs_on: darwin
-    files:
     script: |
       [ -c /dev/null ]
       echo '1': $?
@@ -404,7 +398,6 @@ cases:
         4: 1
 
   - name: "can test the existence of a regular file using the [...] syntax"
-    files:
     script: |
       [ -f /dev/null ]
       echo '1': $?
@@ -422,7 +415,6 @@ cases:
         3: 0
 
   - name: "can test that the SGID of a file is set using the [...] syntax"
-    files:
     script: |
       touch good-file bad-file
       chmod 2644 good-file
@@ -447,3 +439,35 @@ cases:
         2: 1
         3: 0
         4: 1
+
+  - name: "can test that a file is a symbolic link using the [...] syntax"
+    files:
+    script: |
+      touch file
+      ln -s file symb
+
+      [ -h symb ]
+      echo '1': $?
+
+      [ -h file ]
+      echo '2': $?
+
+      [ -h missing-file ]
+      echo '3': $?
+
+      [ -L symb ]
+      echo '4': $?
+
+      [ -L file ]
+      echo '5': $?
+
+      [ -L missing-file ]
+      echo '6': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+        4: 0
+        5: 1
+        6: 1
