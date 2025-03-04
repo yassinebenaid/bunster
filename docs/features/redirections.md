@@ -1,9 +1,9 @@
 # Redirections
-When you run a command. there are 3 file descriptors open by default. `0` which referes to the standard input of that command. `1` refers to standard output. And  `2` refers to standard error.
+When you run a command. There are 3 file descriptors open by default. `0` which refers to the standard input of that command. `1` refers to standard output. And  `2` refers to standard error.
 
-Before the command runs. you can use a special notation to redirect those file descriptors, duplicate them, close them, or make them refer to other files. 
+You can use a special notation to redirect those file descriptors to other files, duplicate them or close them. 
 
-## Input Redirection
+## Input redirection
 The general format is as follows:
 
 ```sh
@@ -23,7 +23,7 @@ cat 0<file.txt
 cat 3<file.txt 
 ```
 
-## Output Redirection
+## Output redirection
 The general format is as follows:
 
 ```sh
@@ -44,7 +44,7 @@ echo "Hello World" 1>file.txt
 echo "Hello World" 3>file.txt
 ```
 
-## Appending Redirected Output
+## Appending redirected output
 The general format for appending output is as follows:
 
 ```sh
@@ -64,7 +64,7 @@ echo "Hello World" 1>>file.txt
 echo "Hello World" 3>>file.txt
 ```
 
-## Redirecting Standard Output and Standard Error
+## Redirecting standard output and standard error
 
 This construct allows both the standard output (file descriptor `1`) and the standard error output (file descriptor `2`) to be redirected to the file whose name is the expansion of `word`.
 
@@ -87,7 +87,7 @@ echo "Hello World" &>file.txt
 echo "Hello World" 1>file.txt 2>&2
 ```
 
-## Appending Standard Output and Standard Error
+## Appending standard output and standard error
 This construct allows both the standard output (file descriptor `1`) and the standard error output (file descriptor `2`) to be appended to the file whose name is the expansion of `word`.
 
 The format of appending all output is:
@@ -110,7 +110,7 @@ echo "Hello World" &>>file.txt
 echo "Hello World" 1>>file.txt 2>&2
 ```
 
-## Here String
+## Here string
 The format is simple as:
 ```sh
 [n]<<<word
@@ -207,6 +207,27 @@ The format is:
 ```
 
 This notation causes the file whose name is the expansion of `word` to be opened for both reading and writing on file descriptor `n`, or on file descriptor 0 if `n` is not specified. If the file does not exist, it is created.
+
+## Redirections Order
+It's worth mentioning that the order of the redirection is significant. For example:
+```sh
+ls > list.txt 2>&1
+```
+directs both standard output (file descriptor `1`) and standard error (file descriptor `2`) to the file `list.txt`, while the command:
+```sh
+ls 2>&1 > list.txt
+```
+directs only the standard output to file `list.txt`, because the standard error was made a copy of the standard output before the standard output was redirected to `list.txt`.
+
+## Special files
+There are some files that are handled specially when used in redirections. These files are not necessarily available on the host system. Bunster will emulate them with the behavior described below.
+
+| File Name | Behavior | Example |
+|--|--|--|
+| `/dev/stdin` | Refers to the standard input of the command being run | `cmd </dev/stdin` is equivalent to `cmd <&0`|
+| `/dev/stdout` | Refers to the standard output of the command being run | `cmd >/dev/stdout` is equivalent to `cmd >&1`|
+| `/dev/stderr`  | Refers to the standard error of the command being run | `cmd </dev/stderr` is equivalent to `cmd >&2`|
+
 
 ## Internals of file descriptor management
 It is necessary to make something clear about how file descriptors are managed in bunster. `bash` users usually struggle when they see a bunster script using a redirection like this:
