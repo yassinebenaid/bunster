@@ -86,3 +86,17 @@ func DirectoryExists(file string) bool {
 
 	return info.IsDir()
 }
+
+func BlockSpecialFileExists(file string) bool {
+	info, err := os.Stat(file)
+	if err != nil {
+		return false
+	}
+
+	stat, ok := info.Sys().(*syscall.Stat_t)
+	if !ok {
+		return false
+	}
+
+	return (stat.Mode & syscall.S_IFMT) == syscall.S_IFBLK
+}

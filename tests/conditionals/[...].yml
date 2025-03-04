@@ -304,3 +304,23 @@ cases:
         3: 1
         4: 0
         5: 1
+
+  - name: "can test the existence of a block special file using the [...] syntax"
+    files:
+    script: |
+      DEVICE="/dev/$(lsblk -nd -o NAME | head -n 1)"
+
+      [ -b $DEVICE ]
+      echo '1': $?
+
+      [ -b non-existing-file ]
+      echo '2': $?
+
+      touch file
+      [ -b file ]
+      echo '3': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1

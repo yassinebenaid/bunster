@@ -113,3 +113,17 @@ func (c TestDirectoryExists) togo() string {
 		}
 		`, c.File.togo())
 }
+
+type TestBlockSpecialFileExists struct {
+	File Instruction
+}
+
+func (c TestBlockSpecialFileExists) togo() string {
+	return fmt.Sprintf(
+		`if runtime.BlockSpecialFileExists(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}
