@@ -99,3 +99,17 @@ func (c TestFileExists) togo() string {
 		}
 		`, c.File.togo())
 }
+
+type TestDirectoryExists struct {
+	File Instruction
+}
+
+func (c TestDirectoryExists) togo() string {
+	return fmt.Sprintf(
+		`if runtime.DirectoryExists(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}

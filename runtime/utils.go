@@ -77,3 +77,12 @@ func FileExists(file string) bool {
 	_, err := os.Stat(file)
 	return err == nil || (!os.IsNotExist(err) && !os.IsPermission(err))
 }
+
+func DirectoryExists(file string) bool {
+	info, err := os.Stat(file)
+	if err != nil {
+		return false
+	}
+
+	return info.IsDir()
+}
