@@ -309,7 +309,7 @@ cases:
     runs_on: linux
     files:
     script: |
-      DEVICE="/dev/$(lsblk -nd -o NAME | head -n 1)"
+      DEVICE=$(lsblk -nd -o PATH | head -n 1)
 
       [ -b $DEVICE ]
       echo '1': $?
@@ -330,8 +330,7 @@ cases:
     runs_on: darwin
     files:
     script: |
-      DEVICE="/dev/$(diskutil list | grep '/dev/disk' | head -n 1 | awk '{print $1}')"
-      echo $DEVICE
+      DEVICE=$(diskutil list | grep '/dev/disk' | head -n 1 | awk '{print $1}')
 
       [ -b $DEVICE ]
       echo '1': $?
