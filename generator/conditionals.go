@@ -83,6 +83,8 @@ func (g *generator) handleTestUnary(buf *InstructionBuffer, test ast.Unary) {
 		buf.add(ir.TestFileSGIDIsSet{File: operand})
 	case "-h", "-L":
 		buf.add(ir.TestFileIsSymbolic{File: operand})
+	case "-k":
+		buf.add(ir.TestFileIsSticky{File: operand})
 	default:
 		panic("we do not support the unary operator: " + test.Operator)
 	}

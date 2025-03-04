@@ -136,3 +136,12 @@ func FileIsSymbolic(file string) bool {
 
 	return info.Mode()&os.ModeSymlink != 0
 }
+
+func FileIsSticky(file string) bool {
+	info, err := os.Lstat(file)
+	if err != nil {
+		return false
+	}
+
+	return info.Mode()&os.ModeSticky != 0
+}

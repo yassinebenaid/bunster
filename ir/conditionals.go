@@ -183,3 +183,17 @@ func (c TestFileIsSymbolic) togo() string {
 		}
 		`, c.File.togo())
 }
+
+type TestFileIsSticky struct {
+	File Instruction
+}
+
+func (c TestFileIsSticky) togo() string {
+	return fmt.Sprintf(
+		`if runtime.FileIsSticky(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}

@@ -471,3 +471,24 @@ cases:
         4: 0
         5: 1
         6: 1
+
+  - name: "can test that a file/directory has sticky bit set using the [...] syntax"
+    files:
+    script: |
+      touch file file2
+      chmod +t file
+
+      [ -k file ]
+      echo '1': $?
+
+      [ -k file2 ]
+      echo '2': $?
+
+      [ -k missing-file ]
+      echo '3': $?
+
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
