@@ -75,6 +75,8 @@ func (g *generator) handleTestUnary(buf *InstructionBuffer, test ast.Unary) {
 		buf.add(ir.TestDirectoryExists{File: operand})
 	case "-b":
 		buf.add(ir.TestBlockSpecialFileExists{File: operand})
+	case "-c":
+		buf.add(ir.TestCharacterSpecialFileExists{File: operand})
 	default:
 		panic("we do not support the unary operator: " + test.Operator)
 	}

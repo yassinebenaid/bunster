@@ -317,14 +317,18 @@ cases:
       [ -b non-existing-file ]
       echo '2': $?
 
+      [ -b /dev/null ]
+      echo '3': $?
+
       touch file
       [ -b file ]
-      echo '3': $?
+      echo '4': $?
     expect:
       stdout: |
         1: 0
         2: 1
         3: 1
+        4: 1
 
   - name: "can test the existence of a block special file using the [...] syntax"
     runs_on: darwin
@@ -338,11 +342,63 @@ cases:
       [ -b non-existing-file ]
       echo '2': $?
 
+      [ -b /dev/null ]
+      echo '3': $?
+
       touch file
       [ -b file ]
-      echo '3': $?
+      echo '4': $?
     expect:
       stdout: |
         1: 0
         2: 1
         3: 1
+        4: 1
+
+  - name: "can test the existence of a character special file using the [...] syntax"
+    runs_on: linux
+    files:
+    script: |
+      [ -c /dev/null ]
+      echo '1': $?
+
+      [ -c non-existing-file ]
+      echo '2': $?
+
+      touch file
+      [ -c file ]
+      echo '3': $?
+
+      BLOCK_DEVICE=$(lsblk -nd -o PATH | head -n 1)
+      [ -c $BLOCK_DEVICE ]
+      echo '4': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+        4: 1
+
+  - name: "can test the existence of a character special file using the [...] syntax"
+    runs_on: darwin
+    files:
+    script: |
+      [ -c /dev/null ]
+      echo '1': $?
+
+      [ -c non-existing-file ]
+      echo '2': $?
+
+      touch file
+      [ -c file ]
+      echo '3': $?
+
+      BLOCK_DEVICE=$(diskutil list | grep '/dev/disk' | head -n 1 | awk '{print $1}')
+      [ -c $BLOCK_DEVICE ]
+      echo '4': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+        4: 1

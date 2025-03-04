@@ -100,3 +100,12 @@ func BlockSpecialFileExists(file string) bool {
 
 	return (stat.Mode & syscall.S_IFMT) == syscall.S_IFBLK
 }
+
+func CharacterSpecialFileExists(file string) bool {
+	info, err := os.Stat(file)
+	if err != nil {
+		return false
+	}
+
+	return info.Mode()&os.ModeCharDevice != 0
+}

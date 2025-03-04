@@ -127,3 +127,17 @@ func (c TestBlockSpecialFileExists) togo() string {
 		}
 		`, c.File.togo())
 }
+
+type TestCharacterSpecialFileExists struct {
+	File Instruction
+}
+
+func (c TestCharacterSpecialFileExists) togo() string {
+	return fmt.Sprintf(
+		`if runtime.CharacterSpecialFileExists(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}
