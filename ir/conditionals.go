@@ -141,3 +141,17 @@ func (c TestCharacterSpecialFileExists) togo() string {
 		}
 		`, c.File.togo())
 }
+
+type TestRegularFileExists struct {
+	File Instruction
+}
+
+func (c TestRegularFileExists) togo() string {
+	return fmt.Sprintf(
+		`if runtime.RegularFileExists(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}

@@ -109,3 +109,12 @@ func CharacterSpecialFileExists(file string) bool {
 
 	return info.Mode()&os.ModeCharDevice != 0
 }
+
+func RegularFileExists(file string) bool {
+	info, err := os.Stat(file)
+	if err != nil {
+		return false
+	}
+
+	return info.Mode().IsRegular()
+}
