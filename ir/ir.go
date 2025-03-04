@@ -32,7 +32,7 @@ func (p Program) String() string {
 type CloneShell struct{}
 
 func (c CloneShell) togo() string {
-	return fmt.Sprintf("shell := shell.Clone()\n")
+	return "shell := shell.Clone()\n"
 }
 
 type Declare struct {
@@ -331,13 +331,12 @@ func (i RangeLoop) togo() string {
 type InvertExitCode struct{}
 
 func (i InvertExitCode) togo() string {
-	return fmt.Sprintf(
-		`if shell.ExitCode == 0 {
+	return `if shell.ExitCode == 0 {
 			shell.ExitCode = 1
 		} else {
 			shell.ExitCode = 0
 		}
-		`)
+		`
 }
 
 type Function struct {

@@ -310,7 +310,7 @@ func (p *parser) parseConditionalBinaryOperator() string {
 		return operator
 	case token.MINUS:
 		switch p.next.Literal {
-		case "ef", "nt", "ot":
+		case "ef", "nt", "ot", "eq", "ne", "lt", "le", "gt", "ge":
 			if p.next2.Type != token.BLANK {
 				break
 			}
