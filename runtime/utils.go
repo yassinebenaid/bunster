@@ -118,3 +118,12 @@ func RegularFileExists(file string) bool {
 
 	return info.Mode().IsRegular()
 }
+
+func FileSGIDIsSet(file string) bool {
+	info, err := os.Stat(file)
+	if err != nil {
+		return false
+	}
+
+	return info.Mode()&os.ModeSetgid != 0
+}

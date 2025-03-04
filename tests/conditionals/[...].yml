@@ -420,3 +420,30 @@ cases:
         1: 1
         2: 1
         3: 0
+
+  - name: "can test that the SGID of a file is set using the [...] syntax"
+    files:
+    script: |
+      touch good-file bad-file
+      chmod 2644 good-file
+      chmod 0644 bad-file
+      mkdir dir dir2
+      chmod 2755 dir
+
+      [ -g good-file ]
+      echo '1': $?
+
+      [ -g bad-file ]
+      echo '2': $?
+
+      [ -g dir ]
+      echo '3': $?
+
+      [ -g dir2 ]
+      echo '4': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 0
+        4: 1

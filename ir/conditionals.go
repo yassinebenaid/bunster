@@ -155,3 +155,17 @@ func (c TestRegularFileExists) togo() string {
 		}
 		`, c.File.togo())
 }
+
+type TestFileSGIDIsSet struct {
+	File Instruction
+}
+
+func (c TestFileSGIDIsSet) togo() string {
+	return fmt.Sprintf(
+		`if runtime.FileSGIDIsSet(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}
