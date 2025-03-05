@@ -562,6 +562,7 @@ cases:
         3: 1
 
   - name: "can test that a file is a terminal using the [...] syntax"
+    runs_on: linux
     # by the way, we wrap the call within a group {...} because we don't want tests to fail if redirections on [...] is buggy.
     script: |
       {
@@ -584,3 +585,21 @@ cases:
         1: 1
         2: 0
         3: 1
+
+  - name: "can test that a file is a terminal using the [...] syntax"
+    runs_on: darwin
+    # by the way, we wrap the call within a group {...} because we don't want tests to fail if redirections on [...] is buggy.
+    script: |
+      {
+        [ -t 3 ]
+      } 3>/dev/null
+
+      echo '1': $?
+
+      [ -t invalid-fd ]
+      echo '2': $?
+
+    expect:
+      stdout: |
+        1: 1
+        2: 1
