@@ -540,3 +540,23 @@ cases:
         3: 1
         4: 1
         5: 0
+
+  - name: "can test that a file has a size greater than zero using the [...] syntax"
+    script: |
+      cat <<<foobar >file
+      touch file2
+
+      [ -s file ]
+      echo '1': $?
+
+      [ -s file2 ]
+      echo '2': $?
+
+      [ -s missing-file ]
+      echo '3': $?
+
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1

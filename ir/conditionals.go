@@ -225,3 +225,17 @@ func (c TestFileIsReadable) togo() string {
 		}
 		`, c.File.togo())
 }
+
+type TestFileHasAPositiveSize struct {
+	File Instruction
+}
+
+func (c TestFileHasAPositiveSize) togo() string {
+	return fmt.Sprintf(
+		`if runtime.FileHasAPositiveSize(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}

@@ -89,6 +89,8 @@ func (g *generator) handleTestUnary(buf *InstructionBuffer, test ast.Unary) {
 		buf.add(ir.TestFileIsFIFO{File: operand})
 	case "-r":
 		buf.add(ir.TestFileIsReadable{File: operand})
+	case "-s":
+		buf.add(ir.TestFileHasAPositiveSize{File: operand})
 	default:
 		panic("we do not support the unary operator: " + test.Operator)
 	}

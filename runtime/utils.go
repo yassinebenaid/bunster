@@ -163,3 +163,17 @@ func FileIsReadable(file string) bool {
 
 	return info.Mode()&0400 != 0
 }
+
+func FileHasAPositiveSize(file string) bool {
+	info, err := os.Lstat(file)
+	if err != nil {
+		return false
+	}
+
+	stat, ok := info.Sys().(*syscall.Stat_t)
+	if !ok {
+		return false
+	}
+
+	return stat.Size > 0
+}
