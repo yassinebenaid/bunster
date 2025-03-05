@@ -239,3 +239,17 @@ func (c TestFileHasAPositiveSize) togo() string {
 		}
 		`, c.File.togo())
 }
+
+type TestFileDescriptorIsTerminal struct {
+	File Instruction
+}
+
+func (c TestFileDescriptorIsTerminal) togo() string {
+	return fmt.Sprintf(
+		`if runtime.FileDescriptorIsTerminal(streamManager, %s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}
