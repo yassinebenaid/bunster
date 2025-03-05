@@ -154,3 +154,12 @@ func FileIsFIFO(file string) bool {
 
 	return info.Mode()&os.ModeNamedPipe != 0
 }
+
+func FileIsReadable(file string) bool {
+	info, err := os.Lstat(file)
+	if err != nil {
+		return false
+	}
+
+	return info.Mode()&0400 != 0
+}

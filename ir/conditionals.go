@@ -211,3 +211,17 @@ func (c TestFileIsFIFO) togo() string {
 		}
 		`, c.File.togo())
 }
+
+type TestFileIsReadable struct {
+	File Instruction
+}
+
+func (c TestFileIsReadable) togo() string {
+	return fmt.Sprintf(
+		`if runtime.FileIsReadable(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}

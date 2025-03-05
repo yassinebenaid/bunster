@@ -441,7 +441,6 @@ cases:
         4: 1
 
   - name: "can test that a file is a symbolic link using the [...] syntax"
-    files:
     script: |
       touch file
       ln -s file symb
@@ -473,7 +472,6 @@ cases:
         6: 1
 
   - name: "can test that a file/directory has sticky bit set using the [...] syntax"
-    files:
     script: |
       touch file file2
       chmod +t file
@@ -494,7 +492,6 @@ cases:
         3: 1
 
   - name: "can test that a file is a pipe (FIFO) using the [...] syntax"
-    files:
     script: |
       mkfifo file
       touch file2
@@ -513,3 +510,33 @@ cases:
         1: 0
         2: 1
         3: 1
+
+  - name: "can test that a file/directory is readable using the [...] syntax"
+    script: |
+      touch file file2
+      mkdir dir dir2
+      chmod 344 file
+      chmod 366 dir
+
+      [ -r file ]
+      echo '1': $?
+
+      [ -r file2 ]
+      echo '2': $?
+
+      [ -r missing-file ]
+      echo '3': $?
+
+      [ -r dir ]
+      echo '4': $?
+
+      [ -r dir2 ]
+      echo '5': $?
+
+    expect:
+      stdout: |
+        1: 1
+        2: 0
+        3: 1
+        4: 1
+        5: 0
