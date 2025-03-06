@@ -83,6 +83,8 @@ func (g *generator) handleTestUnary(buf *InstructionBuffer, test ast.Unary) {
 		buf.add(ir.TestFileSGIDIsSet{File: operand})
 	case "-G":
 		buf.add(ir.TestFileIsOwnedByEffectiveGroup{File: operand})
+	case "-O":
+		buf.add(ir.TestFileIsOwnedByEffectiveUser{File: operand})
 	case "-u":
 		buf.add(ir.TestFileSUIDIsSet{File: operand})
 	case "-h", "-L":

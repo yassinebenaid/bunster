@@ -151,6 +151,20 @@ func FileIsOwnedByEffectiveGroup(file string) bool {
 	return stat.Gid == uint32(os.Getgid())
 }
 
+func FileIsOwnedByEffectiveUser(file string) bool {
+	info, err := os.Lstat(file)
+	if err != nil {
+		return false
+	}
+
+	stat, ok := info.Sys().(*syscall.Stat_t)
+	if !ok {
+		return false
+	}
+
+	return stat.Uid == uint32(os.Getuid())
+}
+
 func FileIsSymbolic(file string) bool {
 	info, err := os.Lstat(file)
 	if err != nil {

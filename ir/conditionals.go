@@ -184,6 +184,20 @@ func (c TestFileIsOwnedByEffectiveGroup) togo() string {
 		`, c.File.togo())
 }
 
+type TestFileIsOwnedByEffectiveUser struct {
+	File Instruction
+}
+
+func (c TestFileIsOwnedByEffectiveUser) togo() string {
+	return fmt.Sprintf(
+		`if runtime.FileIsOwnedByEffectiveUser(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}
+
 type TestFileSUIDIsSet struct {
 	File Instruction
 }
