@@ -5,7 +5,7 @@ layout: home
 hero:
   name: "Bunster"
   text: "Compile shell scripts to native executable programs"
-  tagline: A shell compiler that turns your scripts into a self-contained executable programs
+  tagline: A shell compiler that turns your scripts into self-contained executable programs
   image:
     src: /logo.png
     alt: Bunster
@@ -17,11 +17,13 @@ hero:
       text: Documentation
       link: /introduction
 features:
-  - title: Native Program Generation
+  - title: Static binaries
     details: |
-      Scripts compiled with Bunster are not just wrappers around your script, nor do they rely on any external shells on your system.
-  - title: Write Once, Run Everywhere
-    details: Bunster offers static linking. Your scripts are compiled to a statically linked binary that runs on every machine.
+      Scripts compiled with bunster are not just wrappers around your script, nor do they rely on any external shells on your system.
   - title: Module System
-    details: Bunsters's module system makes it easy to shares and consume your scripts as libraries.
+    details: Bunsters aims to provide a module system makes it easy to share and consume scripts as libraries.
+  - title: Bash compatible
+    details: Bunsters aims to be compatible with bash. expecting that exising bash scripts do not have to be edited to work with bunster.
+  - title: Environment Files
+    details: We have a first class support for environment files. allowing you to load variables from .env files.
 ---
