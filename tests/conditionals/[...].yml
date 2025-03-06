@@ -656,3 +656,33 @@ cases:
         3: 1
         4: 1
         5: 0
+
+  - name: "can test that a file/directory is executable using the [...] syntax"
+    script: |
+      touch file file2
+      mkdir dir dir2
+      chmod 166 file
+      chmod 666 dir
+
+      [ -x file ]
+      echo '1': $?
+
+      [ -x file2 ]
+      echo '2': $?
+
+      [ -x missing-file ]
+      echo '3': $?
+
+      [ -x dir ]
+      echo '4': $?
+
+      [ -x dir2 ]
+      echo '5': $?
+
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+        4: 1
+        5: 0

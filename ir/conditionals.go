@@ -254,6 +254,20 @@ func (c TestFileIsWritable) togo() string {
 		`, c.File.togo())
 }
 
+type TestFileIsExecutable struct {
+	File Instruction
+}
+
+func (c TestFileIsExecutable) togo() string {
+	return fmt.Sprintf(
+		`if runtime.FileIsExecutable(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}
+
 type TestFileHasAPositiveSize struct {
 	File Instruction
 }

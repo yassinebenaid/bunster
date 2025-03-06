@@ -91,6 +91,8 @@ func (g *generator) handleTestUnary(buf *InstructionBuffer, test ast.Unary) {
 		buf.add(ir.TestFileIsFIFO{File: operand})
 	case "-r":
 		buf.add(ir.TestFileIsReadable{File: operand})
+	case "-x":
+		buf.add(ir.TestFileIsExecutable{File: operand})
 	case "-w":
 		buf.add(ir.TestFileIsWritable{File: operand})
 	case "-s":

@@ -182,6 +182,15 @@ func FileIsWritable(file string) bool {
 	return info.Mode()&0200 != 0
 }
 
+func FileIsExecutable(file string) bool {
+	info, err := os.Lstat(file)
+	if err != nil {
+		return false
+	}
+
+	return info.Mode()&0100 != 0
+}
+
 func FileHasAPositiveSize(file string) bool {
 	info, err := os.Lstat(file)
 	if err != nil {
