@@ -246,3 +246,18 @@ func FileHasBeenModifiedSinceLastRead(file string) bool {
 
 	return stat.Mtim.Nsec > stat.Atim.Nsec
 }
+
+func FileIsSocket(file string) bool {
+	info, err := os.Lstat(file)
+	if err != nil {
+		return false
+	}
+
+	return info.Mode()&os.ModeSocket != 0
+	// stat, ok := info.Sys().(*syscall.Stat_t)
+	// if !ok {
+	// 	return false
+	// }
+
+	// return stat.Mtim.Nsec > stat.Atim.Nsec
+}

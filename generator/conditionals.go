@@ -105,6 +105,8 @@ func (g *generator) handleTestUnary(buf *InstructionBuffer, test ast.Unary) {
 		buf.add(ir.TestFileDescriptorIsTerminal{File: operand})
 	case "-N":
 		buf.add(ir.TestFileHasBeenModifiedSinceLastRead{File: operand})
+	case "-S":
+		buf.add(ir.TestFileIsSocket{File: operand})
 	default:
 		panic("we do not support the unary operator: " + test.Operator)
 	}

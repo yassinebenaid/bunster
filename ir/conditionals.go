@@ -337,3 +337,17 @@ func (c TestFileDescriptorIsTerminal) togo() string {
 		}
 		`, c.File.togo())
 }
+
+type TestFileIsSocket struct {
+	File Instruction
+}
+
+func (c TestFileIsSocket) togo() string {
+	return fmt.Sprintf(
+		`if runtime.FileIsSocket(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}
