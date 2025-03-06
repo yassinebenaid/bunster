@@ -769,3 +769,52 @@ cases:
         1: 0
         2: 1
         3: 1
+
+  - name: "can test that a variable is set using the [...] syntax"
+    env:
+      - env_var=foo
+      - env_var2=
+    script: |
+      var=foo
+      var2=
+
+      [ -v var ]
+      echo '1': $?
+
+      [ -v var2 ]
+      echo '2': $?
+
+      [ -v unset_var ]
+      echo '3': $?
+
+      [ -v env_var ]
+      echo '4': $?
+
+      [ -v env_var2 ]
+      echo '5': $?
+
+      func(){
+        local var3=foo
+        
+        func2(){
+          local var4=foo
+          
+          [ -v var3 ]
+          echo '6': $?
+
+          [ -v var4 ]
+          echo '7': $?
+        }
+      }
+
+      func
+      func2
+    expect:
+      stdout: |
+        1: 0
+        2: 0
+        3: 1
+        4: 0
+        5: 0
+        6: 1
+        7: 0

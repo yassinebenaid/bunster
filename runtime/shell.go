@@ -65,6 +65,19 @@ func (shell *Shell) ReadVar(name string) string {
 	return ""
 }
 
+func (shell *Shell) VarIsSet(name string) bool {
+	if _, ok := shell.getLocalVar(name); ok {
+		return true
+	}
+	if _, ok := shell.vars.get(name); ok {
+		return true
+	}
+	if _, ok := shell.env.get(name); ok {
+		return true
+	}
+	return false
+}
+
 func (shell *Shell) setLocalVar(name, value string) bool {
 	if _, ok := shell.localVars.get(name); ok {
 		shell.localVars.set(name, value)
