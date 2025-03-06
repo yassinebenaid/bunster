@@ -725,3 +725,28 @@ cases:
         6: 1
         7: 0
         8: 1
+
+  - name: "can test that a file has been modified since it was last read using the [...] syntax"
+    script: |
+      touch file 
+
+      cat file >/dev/null
+
+      [ -N file ]
+      echo '1': $?
+
+      echo foo >file
+
+      [ -N file ]
+      echo '2': $?
+
+      cat file >/dev/null
+
+      [ -N file ]
+      echo '3': $?
+
+    expect:
+      stdout: |
+        1: 1
+        2: 0
+        3: 1

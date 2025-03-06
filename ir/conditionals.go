@@ -198,6 +198,20 @@ func (c TestFileIsOwnedByEffectiveUser) togo() string {
 		`, c.File.togo())
 }
 
+type TestFileHasBeenModifiedSinceLastRead struct {
+	File Instruction
+}
+
+func (c TestFileHasBeenModifiedSinceLastRead) togo() string {
+	return fmt.Sprintf(
+		`if runtime.FileHasBeenModifiedSinceLastRead(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}
+
 type TestFileSUIDIsSet struct {
 	File Instruction
 }

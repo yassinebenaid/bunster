@@ -232,3 +232,17 @@ func FileHasAPositiveSize(file string) bool {
 
 	return stat.Size > 0
 }
+
+func FileHasBeenModifiedSinceLastRead(file string) bool {
+	info, err := os.Lstat(file)
+	if err != nil {
+		return false
+	}
+
+	stat, ok := info.Sys().(*syscall.Stat_t)
+	if !ok {
+		return false
+	}
+
+	return stat.Mtim.Nsec > stat.Atim.Nsec
+}
