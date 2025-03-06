@@ -170,6 +170,20 @@ func (c TestFileSGIDIsSet) togo() string {
 		`, c.File.togo())
 }
 
+type TestFileIsOwnedByEffectiveGroup struct {
+	File Instruction
+}
+
+func (c TestFileIsOwnedByEffectiveGroup) togo() string {
+	return fmt.Sprintf(
+		`if runtime.FileIsOwnedByEffectiveGroup(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}
+
 type TestFileSUIDIsSet struct {
 	File Instruction
 }

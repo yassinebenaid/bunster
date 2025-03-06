@@ -137,6 +137,20 @@ func FileSUIDIsSet(file string) bool {
 	return info.Mode()&os.ModeSetuid != 0
 }
 
+func FileIsOwnedByEffectiveGroup(file string) bool {
+	info, err := os.Lstat(file)
+	if err != nil {
+		return false
+	}
+
+	stat, ok := info.Sys().(*syscall.Stat_t)
+	if !ok {
+		return false
+	}
+
+	return stat.Gid == uint32(os.Getgid())
+}
+
 func FileIsSymbolic(file string) bool {
 	info, err := os.Lstat(file)
 	if err != nil {
