@@ -626,3 +626,33 @@ cases:
         1: 0
         2: 1
         3: 0
+
+  - name: "can test that a file/directory is writable using the [...] syntax"
+    script: |
+      touch file file2
+      mkdir dir dir2
+      chmod 444 file
+      chmod 444 dir
+
+      [ -w file ]
+      echo '1': $?
+
+      [ -w file2 ]
+      echo '2': $?
+
+      [ -w missing-file ]
+      echo '3': $?
+
+      [ -w dir ]
+      echo '4': $?
+
+      [ -w dir2 ]
+      echo '5': $?
+
+    expect:
+      stdout: |
+        1: 1
+        2: 0
+        3: 1
+        4: 1
+        5: 0

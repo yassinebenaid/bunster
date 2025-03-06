@@ -240,6 +240,20 @@ func (c TestFileIsReadable) togo() string {
 		`, c.File.togo())
 }
 
+type TestFileIsWritable struct {
+	File Instruction
+}
+
+func (c TestFileIsWritable) togo() string {
+	return fmt.Sprintf(
+		`if runtime.FileIsWritable(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}
+
 type TestFileHasAPositiveSize struct {
 	File Instruction
 }
