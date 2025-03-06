@@ -170,6 +170,20 @@ func (c TestFileSGIDIsSet) togo() string {
 		`, c.File.togo())
 }
 
+type TestFileSUIDIsSet struct {
+	File Instruction
+}
+
+func (c TestFileSUIDIsSet) togo() string {
+	return fmt.Sprintf(
+		`if runtime.FileSUIDIsSet(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.File.togo())
+}
+
 type TestFileIsSymbolic struct {
 	File Instruction
 }

@@ -603,3 +603,26 @@ cases:
       stdout: |
         1: 1
         2: 1
+
+  - name: "can test that the SUID of a file is set using the [...] syntax"
+    script: |
+      touch good-file bad-file
+      chmod u+s good-file
+      chmod u-s bad-file
+      mkdir dir 
+      chmod u+s dir
+
+      [ -u good-file ]
+      echo '1': $?
+
+      [ -u bad-file ]
+      echo '2': $?
+
+      [ -u dir ]
+      echo '3': $?
+
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 0
