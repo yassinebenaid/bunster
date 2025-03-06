@@ -1,4 +1,4 @@
-//go:build linux
+//go:build linux || freebsd || openbsd || netbsd
 
 package runtime
 
