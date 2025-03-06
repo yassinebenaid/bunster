@@ -1,5 +1,9 @@
 ---
 sidebar: false
+lastUpdated: false
+editLink: false
+prev: false
+next: false
 ---
 
 <script setup>
@@ -20,6 +24,7 @@ const members = [
 </script>
 
 # Maintainers
+
 **Bunster** is an open source project driven by the public community, But we have a dedicated team
 that oversees the final decisions to ensure the project's direction aligns with its vision. The team also maintains open communication with the community
 to sustain a welcoming and collaborative environment for everyone.

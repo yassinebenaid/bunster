@@ -28,6 +28,7 @@ export default defineConfig({
 							{ text: "Simple Commands", link: "/features/simple-commands" },
 							{ text: "Redirections", link: "/features/redirections" },
 							{ text: "Pipelines", link: "/features/pipelines" },
+							{ text: "Lists", link: "/features/lists" },
 							{
 								text: "Environment Files",
 								link: "/features/environment-files",
