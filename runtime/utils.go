@@ -148,7 +148,7 @@ func FileIsOwnedByEffectiveGroup(file string) bool {
 		return false
 	}
 
-	return stat.Gid == uint32(os.Getgid())
+	return int(stat.Gid) == os.Getgid()
 }
 
 func FileIsOwnedByEffectiveUser(file string) bool {
@@ -162,7 +162,7 @@ func FileIsOwnedByEffectiveUser(file string) bool {
 		return false
 	}
 
-	return stat.Uid == uint32(os.Getuid())
+	return int(stat.Uid) == os.Getuid()
 }
 
 func FileIsSymbolic(file string) bool {
@@ -233,20 +233,6 @@ func FileHasAPositiveSize(file string) bool {
 	return stat.Size > 0
 }
 
-func FileHasBeenModifiedSinceLastRead(file string) bool {
-	info, err := os.Lstat(file)
-	if err != nil {
-		return false
-	}
-
-	stat, ok := info.Sys().(*syscall.Stat_t)
-	if !ok {
-		return false
-	}
-
-	return stat.Mtim.Nsec > stat.Atim.Nsec
-}
-
 func FileIsSocket(file string) bool {
 	info, err := os.Lstat(file)
 	if err != nil {
@@ -254,10 +240,4 @@ func FileIsSocket(file string) bool {
 	}
 
 	return info.Mode()&os.ModeSocket != 0
-	// stat, ok := info.Sys().(*syscall.Stat_t)
-	// if !ok {
-	// 	return false
-	// }
-
-	// return stat.Mtim.Nsec > stat.Atim.Nsec
 }
