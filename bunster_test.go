@@ -60,7 +60,7 @@ func TestBunster(t *testing.T) {
 		t.Fatalf("Failed to create workspace, %v", err)
 	}
 
-	testFiles, err := filepath.Glob("./tests/*.yml")
+	testFiles, err := globFiles("tests")
 	if err != nil {
 		t.Fatalf("Failed to `Glob` test files, %v", err)
 	}
@@ -80,7 +80,7 @@ func TestBunster(t *testing.T) {
 			}
 
 			for i, testCase := range test.Cases {
-				if !strings.Contains(testCase.Name, filter) {
+				if !strings.Contains(testCase.Name, filter) && !strings.Contains(testFile, filter) {
 					// we support filtering, someone would want to run specific tests.
 					continue
 				}
@@ -252,4 +252,18 @@ func cloneStubs(dst string) error {
 	}
 
 	return nil
+}
+
+func globFiles(path string) ([]string, error) {
+	var paths []string
+
+	err := filepath.WalkDir(path, func(path string, d fs.DirEntry, err error) error {
+		if err != nil || d.IsDir() {
+			return err
+		}
+		paths = append(paths, path)
+		return nil
+	})
+
+	return paths, err
 }
