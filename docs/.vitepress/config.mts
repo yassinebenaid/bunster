@@ -30,6 +30,10 @@ export default defineConfig({
 							{ text: "Pipelines", link: "/features/pipelines" },
 							{ text: "Lists", link: "/features/lists" },
 							{
+								text: "Asynchronous commands",
+								link: "/features/async-commands",
+							},
+							{
 								text: "Environment Files",
 								link: "/features/environment-files",
 							},
