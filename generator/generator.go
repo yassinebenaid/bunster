@@ -358,15 +358,20 @@ func (g *generator) handleExportParameterAssignment(buf *InstructionBuffer, p as
 func (g *generator) handleBackgroundConstruction(buf *InstructionBuffer, b ast.BackgroundConstruction) {
 	var scope InstructionBuffer
 
+	scope.add(ir.CloneStreamManager{})
+	scope.add(ir.OpenStream{Name: "stdin", Target: ir.String("/dev/null"), Mode: ir.FLAG_READ})
+	scope.add(ir.AddStream{Fd: "0", StreamName: "stdin"})
+
 	scope.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
 	scope.add(ir.Literal("shell.WaitGroup.Add(1)\n"))
 	scope.add(ir.Declare{Name: "done", Value: ir.Literal("shell.WaitGroup.Done")})
 	scope.add(ir.CloneShell{})
 
 	var body InstructionBuffer
+	body.add(ir.Literal("defer streamManager.Destroy()\n"))
 	body.add(ir.Literal("defer done()\n"))
 	g.generate(&body, b.Statement, &context{})
 	scope.add(ir.Gorouting(body))
 
-	buf.add(ir.Scope(scope))
+	buf.add(ir.Closure(scope))
 }

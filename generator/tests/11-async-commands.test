@@ -9,12 +9,20 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	{
+	func() {
+ 		streamManager := streamManager.Clone()
+ 		stdin, err := streamManager.OpenStream("/dev/null", runtime.STREAM_FLAG_READ)
+ 		if err != nil {
+ 			shell.HandleError(streamManager, err)
+ 			return
+ 		}
+ 		streamManager.Add("0", stdin)
 		shell.ExitCode = 0
 		shell.WaitGroup.Add(1)
 		var done = shell.WaitGroup.Done
 		shell := shell.Clone()
 		go func() {
+		    defer streamManager.Destroy()
 		    defer done()
     		func() {
     			var commandName = "command"
@@ -50,7 +58,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 		}()
 
-	}
+	}()
 }
 
 #(ENDTEST)
@@ -68,12 +76,20 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	{
+	func() {
+ 		streamManager := streamManager.Clone()
+ 		stdin, err := streamManager.OpenStream("/dev/null", runtime.STREAM_FLAG_READ)
+ 		if err != nil {
+ 			shell.HandleError(streamManager, err)
+ 			return
+ 		}
+ 		streamManager.Add("0", stdin)
 		shell.ExitCode = 0
 		shell.WaitGroup.Add(1)
 		var done = shell.WaitGroup.Done
 		shell := shell.Clone()
 		go func() {
+		    defer streamManager.Destroy()
 			defer done()
 			func() {
 				var pipelineWaitgroup []func() error
@@ -163,7 +179,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 		}()
 
-	}
+	}()
 }
 
 #(ENDTEST)
@@ -181,12 +197,20 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	{
+	func() {
+ 		streamManager := streamManager.Clone()
+ 		stdin, err := streamManager.OpenStream("/dev/null", runtime.STREAM_FLAG_READ)
+ 		if err != nil {
+ 			shell.HandleError(streamManager, err)
+ 			return
+ 		}
+ 		streamManager.Add("0", stdin)
 		shell.ExitCode = 0
 		shell.WaitGroup.Add(1)
 		var done = shell.WaitGroup.Done
 		shell := shell.Clone()
 		go func() {
+		    defer streamManager.Destroy()
 			defer done()
 			func() {
 				var commandName = "command"
@@ -256,7 +280,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 		}()
 
-	}
+	}()
 }
 
 #(ENDTEST)
@@ -277,12 +301,20 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	{
+	func() {
+ 		streamManager := streamManager.Clone()
+ 		stdin, err := streamManager.OpenStream("/dev/null", runtime.STREAM_FLAG_READ)
+ 		if err != nil {
+ 			shell.HandleError(streamManager, err)
+ 			return
+ 		}
+ 		streamManager.Add("0", stdin)
 		shell.ExitCode = 0
 		shell.WaitGroup.Add(1)
 		var done = shell.WaitGroup.Done
 		shell := shell.Clone()
 		go func() {
+		    defer streamManager.Destroy()
 		    defer done()
     		func() {
     			var commandName = "command"
@@ -318,7 +350,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 		}()
 
-	}
+	}()
 	shell.WaitGroup.Wait()
 }
 
