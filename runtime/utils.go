@@ -74,7 +74,7 @@ func FileIsOlderThan(file1, file2 string) bool {
 }
 
 func FileExists(file string) bool {
-	_, err := os.Lstat(file)
+	_, err := os.Stat(file)
 	return err == nil || (!os.IsNotExist(err) && !os.IsPermission(err))
 }
 

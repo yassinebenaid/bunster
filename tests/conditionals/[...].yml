@@ -240,7 +240,10 @@ cases:
       mkdir non-permitted-dir
       touch non-permitted-dir/non-permitted-file
       chmod 000 non-permitted-dir
-      touch file
+      touch file file2
+      ln -s file file_symbolic
+      ln -s file2 file2_symbolic
+      rm file2 # we remove this file so that the symbolic becomes broken
 
       [ -a non-existing-file ]
       echo '1': $?
@@ -257,21 +260,32 @@ cases:
       [ -a file ]
       echo '5': $?
 
-
-      [ -e non-existing-file ]
+      [ -a file_symbolic ]
       echo '6': $?
 
-      [ -e non-permitted-dir/non-permitted-file ]
+      [ -a file2_symbolic ]
       echo '7': $?
 
-      [ -e non-permitted-dir ]
+      [ -e non-existing-file ]
       echo '8': $?
 
-      [ -e dir ]
+      [ -e non-permitted-dir/non-permitted-file ]
       echo '9': $?
 
-      [ -e file ]
+      [ -e non-permitted-dir ]
       echo '10': $?
+
+      [ -e dir ]
+      echo '11': $?
+
+      [ -e file ]
+      echo '12': $?
+
+      [ -e file_symbolic ]
+      echo '13': $?
+
+      [ -e file2_symbolic ]
+      echo '14': $?
 
       chmod 777 non-permitted-dir
     expect:
@@ -281,11 +295,15 @@ cases:
         3: 0
         4: 0
         5: 0
-        6: 1
+        6: 0
         7: 1
-        8: 0
-        9: 0
+        8: 1
+        9: 1
         10: 0
+        11: 0
+        12: 0
+        13: 0
+        14: 1
 
   - name: "can test the existence of a directory using the [...] syntax"
     script: |
