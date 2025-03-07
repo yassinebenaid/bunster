@@ -733,6 +733,8 @@ cases:
       chmod u-s bad-file
       mkdir dir 
       chmod u+s dir
+      ln -s good-file good-file-symbolic
+      ln -s bad-file bad-file-symbolic
 
       [ -u good-file ]
       echo '1': $?
@@ -743,11 +745,18 @@ cases:
       [ -u dir ]
       echo '3': $?
 
+      [ -u good-file-symbolic ]
+      echo '4': $?
+
+      [ -u bad-file-symbolic ]
+      echo '5': $?
     expect:
       stdout: |
         1: 0
         2: 1
         3: 0
+        4: 0
+        5: 1
 
   - name: "can test that a file/directory is writable using the [...] syntax"
     script: |

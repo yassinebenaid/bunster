@@ -129,7 +129,7 @@ func FileSGIDIsSet(file string) bool {
 }
 
 func FileSUIDIsSet(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
