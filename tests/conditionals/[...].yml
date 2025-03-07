@@ -374,7 +374,9 @@ cases:
   - name: "can test the existence of a block special file using the [...] syntax"
     runs_on: darwin
     script: |
+      touch file
       DEVICE=$(diskutil list | grep '/dev/disk' | head -n 1 | awk '{print $1}')
+      ln -s $DEVICE device_symbolic
 
       [ -b $DEVICE ]
       echo '1': $?
@@ -385,9 +387,11 @@ cases:
       [ -b /dev/null ]
       echo '3': $?
 
-      touch file
       [ -b file ]
       echo '4': $?
+
+      [ -b device_symbolic ]
+      echo '5': $?
     expect:
       stdout: |
         1: 0
