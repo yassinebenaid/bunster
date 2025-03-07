@@ -11,7 +11,11 @@ func (g *generator) handleTest(buf *InstructionBuffer, test ast.Test, ctx *conte
 	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
 	g.handleRedirections(&cmdbuf, test.Redirections, ctx)
 
+	cmdbuf.add(ir.Declare{Name: "testResult", Value: ir.Literal("false")})
+
 	g.handleTestExpression(&cmdbuf, test.Expr)
+
+	cmdbuf.add(ir.Literal(`if testResult { shell.ExitCode = 0 } else { shell.ExitCode = 1  }`))
 
 	*buf = append(*buf, ir.Closure(cmdbuf))
 }
