@@ -3,7 +3,7 @@
 There is a special notation that when used, allows you to run a command, a pipeline or an entire list asyncronously in the background.
 When you run a command in the background. The program will continue executing without waiting the command to exit.
 
-Asynchronous commands run in a [`sub-shell`](todo).
+Asynchronous commands run in a `sub-shell`.
 
 The format is simple:
 
