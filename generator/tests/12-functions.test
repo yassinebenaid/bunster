@@ -395,8 +395,10 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		func() {
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
-			shell.ExitCode = 0
-			shell.SetLocalVar("key", "value")
+			func(){
+				shell.SetLocalVar("key", "value")
+
+			}()
 
 		}()
 
