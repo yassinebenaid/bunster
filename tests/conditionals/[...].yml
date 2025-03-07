@@ -764,6 +764,8 @@ cases:
       mkdir dir dir2
       chmod 444 file
       chmod 444 dir
+      ln -s file file_symbolic
+      ln -s file2 file2_symbolic
 
       [ -w file ]
       echo '1': $?
@@ -780,6 +782,11 @@ cases:
       [ -w dir2 ]
       echo '5': $?
 
+      [ -w file_symbolic ]
+      echo '6': $?
+
+      [ -w file2_symbolic ]
+      echo '7': $?
     expect:
       stdout: |
         1: 1
@@ -787,6 +794,8 @@ cases:
         3: 1
         4: 1
         5: 0
+        6: 1
+        7: 0
 
   - name: "can test that a file/directory is executable using the [...] syntax"
     script: |

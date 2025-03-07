@@ -202,7 +202,7 @@ func FileIsReadable(file string) bool {
 }
 
 func FileIsWritable(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
