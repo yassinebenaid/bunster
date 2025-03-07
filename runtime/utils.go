@@ -175,7 +175,7 @@ func FileIsSymbolic(file string) bool {
 }
 
 func FileIsSticky(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}

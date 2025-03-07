@@ -551,6 +551,8 @@ cases:
     script: |
       touch file file2
       chmod +t file
+      ln -s file file_symbolic
+      ln -s file2 file2_symbolic
 
       [ -k file ]
       echo '1': $?
@@ -561,11 +563,18 @@ cases:
       [ -k missing-file ]
       echo '3': $?
 
+      [ -k file_symbolic ]
+      echo '4': $?
+
+      [ -k file2_symbolic ]
+      echo '5': $?
     expect:
       stdout: |
         1: 0
         2: 1
         3: 1
+        4: 0
+        5: 1
 
   - name: "can test that a file is a pipe (FIFO) using the [...] syntax"
     script: |
