@@ -35,12 +35,12 @@ func NumberCompare(x, op, y string) bool {
 }
 
 func FilesHaveSameDevAndIno(file1, file2 string) bool {
-	file1Info, err := os.Lstat(file1)
+	file1Info, err := os.Stat(file1)
 	if err != nil {
 		return false
 	}
 
-	file2Info, err := os.Lstat(file2)
+	file2Info, err := os.Stat(file2)
 	if err != nil {
 		return false
 	}

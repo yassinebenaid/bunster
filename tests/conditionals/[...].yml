@@ -112,16 +112,22 @@ cases:
       touch file1
       ln file1 file2
       touch file3
+      ln -s file1 file1_sumbolic
+      ln -s file2 file2_sumbolic
 
       [ file1 -ef file2 ]
       echo '1': $?
 
-      [ file1 -ef file23 ]
+      [ file1 -ef file3 ]
       echo '2': $?
+
+      [ file1_sumbolic -ef file2_sumbolic ]
+      echo '3': $?
     expect:
       stdout: |
         1: 0
         2: 1
+        3: 0
 
   - name: "can test that a file is older than another by modification time using the [...] syntax"
     script: |
