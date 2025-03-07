@@ -803,6 +803,8 @@ cases:
       mkdir dir dir2
       chmod 166 file
       chmod 666 dir
+      ln -s file file_symbolic
+      ln -s file2 file2_symbolic
 
       [ -x file ]
       echo '1': $?
@@ -819,6 +821,11 @@ cases:
       [ -x dir2 ]
       echo '5': $?
 
+      [ -x file_symbolic ]
+      echo '6': $?
+
+      [ -x file2_symbolic ]
+      echo '7': $?
     expect:
       stdout: |
         1: 0
@@ -826,6 +833,8 @@ cases:
         3: 1
         4: 1
         5: 0
+        6: 0
+        7: 1
 
   - name: "can test that a file/directory is owned by current group and user using the [...] syntax"
     script: |
