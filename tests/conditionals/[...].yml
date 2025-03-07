@@ -580,6 +580,8 @@ cases:
     script: |
       mkfifo file
       touch file2
+      ln -s file file_symbolic
+      ln -s file2 file2_symbolic
 
       [ -p file ]
       echo '1': $?
@@ -590,11 +592,18 @@ cases:
       [ -p missing-file ]
       echo '3': $?
 
+      [ -p file_symbolic ]
+      echo '4': $?
+
+      [ -p file2_symbolic ]
+      echo '5': $?
     expect:
       stdout: |
         1: 0
         2: 1
         3: 1
+        4: 0
+        5: 1
 
   - name: "can test that a file/directory is readable using the [...] syntax"
     script: |
