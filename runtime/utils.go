@@ -234,7 +234,7 @@ func FileHasAPositiveSize(file string) bool {
 }
 
 func FileIsSocket(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}

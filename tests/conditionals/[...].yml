@@ -904,6 +904,8 @@ cases:
     script: |
       touch file
       python3 -c "import socket as s; sock = s.socket(s.AF_UNIX); sock.bind('file.sock')"
+      ln -s file file_symbolic
+      ln -s file.sock file_sock_symbolic
 
       [ -S file.sock ]
       echo '1': $?
@@ -913,11 +915,19 @@ cases:
 
       [ -S missing-file ]
       echo '3': $?
+
+      [ -S file_sock_symbolic ]
+      echo '4': $?
+
+      [ -S file_symbolic ]
+      echo '5': $?
     expect:
       stdout: |
         1: 0
         2: 1
         3: 1
+        4: 0
+        5: 1
 
   - name: "can test that a variable is set using the [...] syntax"
     env:
