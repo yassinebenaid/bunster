@@ -351,3 +351,17 @@ func (c TestFileIsSocket) togo() string {
 		}
 		`, c.File.togo())
 }
+
+type TestVarIsSet struct {
+	Name Instruction
+}
+
+func (c TestVarIsSet) togo() string {
+	return fmt.Sprintf(
+		`if shell.VarIsSet(%s) {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+		`, c.Name.togo())
+}

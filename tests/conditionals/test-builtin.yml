@@ -106,3 +106,715 @@ cases:
         12: 1
         13: 0
         14: 0
+
+  - name: "can test that two files have same DeviceId and InodeId using the `test` keyword"
+    script: |
+      touch file1
+      ln file1 file2
+      touch file3
+
+      test file1 -ef file2 
+      echo '1': $?
+
+      test file1 -ef file23 
+      echo '2': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+
+  - name: "can test that a file is older than another by modification time using the `test` keyword"
+    script: |
+      touch file1
+      touch file2
+
+      test file1 -ot file2 
+      echo '1': $?
+
+      test file2 -ot file1 
+      echo '2': $?
+
+      test file1 -ot file3 
+      echo '3': $?
+
+      test file3 -ot file1 
+      echo '4': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+        4: 0
+
+  - name: "can test that a file is newer than another by modification time using the `test` keyword"
+    script: |
+      touch file1
+      touch file2
+
+      test file1 -nt file2 
+      echo '1': $?
+
+      test file2 -nt file1 
+      echo '2': $?
+
+      test file1 -nt file3 
+      echo '3': $?
+
+      test file3 -nt file1 
+      echo '4': $?
+    expect:
+      stdout: |
+        1: 1
+        2: 0
+        3: 0
+        4: 1
+
+  - name: "can test against the length of a string using the `test` keyword"
+    script: |
+      greet="hello world"
+      var=
+
+      test something 
+      echo '1': $?
+
+      test "" 
+      echo '2': $?
+
+      test $var 
+      echo '3': $?
+
+      test $greet 
+      echo '4': $?
+
+      test $( echo foo ) 
+      echo '5': $?
+
+      test $( true ) 
+      echo '6': $?
+
+      test -n $var 
+      echo '7': $?
+
+      test -n $greet 
+      echo '8': $?
+
+      test -z $var 
+      echo '9': $?
+
+      test -z $greet 
+      echo '10': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+        4: 0
+        5: 0
+        6: 1
+        7: 1
+        8: 0
+        9: 0
+        10: 1
+
+  - name: "can test the existence of a file or directory using the `test` keyword"
+    script: |
+      mkdir dir
+      mkdir non-permitted-dir
+      touch non-permitted-dir/non-permitted-file
+      chmod 000 non-permitted-dir
+      touch file
+
+      test -a non-existing-file 
+      echo '1': $?
+
+      test -a non-permitted-dir/non-permitted-file 
+      echo '2': $?
+
+      test -a non-permitted-dir 
+      echo '3': $?
+
+      test -a dir 
+      echo '4': $?
+
+      test -a file 
+      echo '5': $?
+
+
+      test -e non-existing-file 
+      echo '6': $?
+
+      test -e non-permitted-dir/non-permitted-file 
+      echo '7': $?
+
+      test -e non-permitted-dir 
+      echo '8': $?
+
+      test -e dir 
+      echo '9': $?
+
+      test -e file 
+      echo '10': $?
+
+      chmod 777 non-permitted-dir
+    expect:
+      stdout: |
+        1: 1
+        2: 1
+        3: 0
+        4: 0
+        5: 0
+        6: 1
+        7: 1
+        8: 0
+        9: 0
+        10: 0
+
+  - name: "can test the existence of a directory using the `test` keyword"
+    script: |
+      mkdir dir
+      mkdir non-permitted-dir
+      mkdir non-permitted-dir/dir
+      chmod 000 non-permitted-dir
+      touch file
+
+      test -d non-existing-dir 
+      echo '1': $?
+
+      test -d non-permitted-dir 
+      echo '2': $?
+
+      test -d non-permitted-dir/dir 
+      echo '3': $?
+
+      test -d dir 
+      echo '4': $?
+
+      test -d file 
+      echo '5': $?
+
+
+
+      chmod 777 non-permitted-dir
+    expect:
+      stdout: |
+        1: 1
+        2: 0
+        3: 1
+        4: 0
+        5: 1
+
+  - name: "can test the existence of a block special file using the `test` keyword"
+    runs_on: linux
+    script: |
+      DEVICE=$(lsblk -nd -o PATH | head -n 1)
+
+      test -b $DEVICE 
+      echo '1': $?
+
+      test -b non-existing-file 
+      echo '2': $?
+
+      test -b /dev/null 
+      echo '3': $?
+
+      touch file
+      test -b file 
+      echo '4': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+        4: 1
+
+  - name: "can test the existence of a block special file using the `test` keyword"
+    runs_on: darwin
+    script: |
+      DEVICE=$(diskutil list | grep '/dev/disk' | head -n 1 | awk '{print $1}')
+
+      test -b $DEVICE 
+      echo '1': $?
+
+      test -b non-existing-file 
+      echo '2': $?
+
+      test -b /dev/null 
+      echo '3': $?
+
+      touch file
+      test -b file 
+      echo '4': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+        4: 1
+
+  - name: "can test the existence of a character special file using the `test` keyword"
+    runs_on: linux
+    script: |
+      test -c /dev/null 
+      echo '1': $?
+
+      test -c non-existing-file 
+      echo '2': $?
+
+      touch file
+      test -c file 
+      echo '3': $?
+
+      BLOCK_DEVICE=$(lsblk -nd -o PATH | head -n 1)
+      test -c $BLOCK_DEVICE 
+      echo '4': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+        4: 1
+
+  - name: "can test the existence of a character special file using the `test` keyword"
+    runs_on: darwin
+    script: |
+      test -c /dev/null 
+      echo '1': $?
+
+      test -c non-existing-file 
+      echo '2': $?
+
+      touch file
+      test -c file 
+      echo '3': $?
+
+      BLOCK_DEVICE=$(diskutil list | grep '/dev/disk' | head -n 1 | awk '{print $1}')
+      test -c $BLOCK_DEVICE 
+      echo '4': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+        4: 1
+
+  - name: "can test the existence of a regular file using the `test` keyword"
+    script: |
+      test -f /dev/null 
+      echo '1': $?
+
+      test -f non-existing-file 
+      echo '2': $?
+
+      touch file
+      test -f file 
+      echo '3': $?
+    expect:
+      stdout: |
+        1: 1
+        2: 1
+        3: 0
+
+  - name: "can test that the SGID of a file is set using the `test` keyword"
+    script: |
+      touch good-file bad-file
+      chmod 2644 good-file
+      chmod 0644 bad-file
+      mkdir dir dir2
+      chmod 2755 dir
+
+      test -g good-file 
+      echo '1': $?
+
+      test -g bad-file 
+      echo '2': $?
+
+      test -g dir 
+      echo '3': $?
+
+      test -g dir2 
+      echo '4': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 0
+        4: 1
+
+  - name: "can test that a file is a symbolic link using the `test` keyword"
+    script: |
+      touch file
+      ln -s file symb
+
+      test -h symb 
+      echo '1': $?
+
+      test -h file 
+      echo '2': $?
+
+      test -h missing-file 
+      echo '3': $?
+
+      test -L symb 
+      echo '4': $?
+
+      test -L file 
+      echo '5': $?
+
+      test -L missing-file 
+      echo '6': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+        4: 0
+        5: 1
+        6: 1
+
+  - name: "can test that a file/directory has sticky bit set using the `test` keyword"
+    script: |
+      touch file file2
+      chmod +t file
+
+      test -k file 
+      echo '1': $?
+
+      test -k file2 
+      echo '2': $?
+
+      test -k missing-file 
+      echo '3': $?
+
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+
+  - name: "can test that a file is a pipe (FIFO) using the `test` keyword"
+    script: |
+      mkfifo file
+      touch file2
+
+      test -p file 
+      echo '1': $?
+
+      test -p file2 
+      echo '2': $?
+
+      test -p missing-file 
+      echo '3': $?
+
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+
+  - name: "can test that a file/directory is readable using the `test` keyword"
+    script: |
+      touch file file2
+      mkdir dir dir2
+      chmod 344 file
+      chmod 366 dir
+
+      test -r file 
+      echo '1': $?
+
+      test -r file2 
+      echo '2': $?
+
+      test -r missing-file 
+      echo '3': $?
+
+      test -r dir 
+      echo '4': $?
+
+      test -r dir2 
+      echo '5': $?
+
+    expect:
+      stdout: |
+        1: 1
+        2: 0
+        3: 1
+        4: 1
+        5: 0
+
+  - name: "can test that a file has a size greater than zero using the `test` keyword"
+    script: |
+      cat <<<foobar >file
+      touch file2
+
+      test -s file 
+      echo '1': $?
+
+      test -s file2 
+      echo '2': $?
+
+      test -s missing-file 
+      echo '3': $?
+
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+
+  - name: "can test that a file is a terminal using the `test` keyword"
+    runs_on: linux
+    # by the way, we wrap the call within a group {...} because we don't want tests to fail if redirections on test...] is buggy
+    script: |
+      {
+        test -t 3 
+      } 3>/dev/null
+
+      echo '1': $?
+
+      {
+        test -t 3 
+      } 3>/dev/ptmx
+
+      echo '2': $?
+
+      test -t invalid-fd 
+      echo '3': $?
+
+    expect:
+      stdout: |
+        1: 1
+        2: 0
+        3: 1
+
+  - name: "can test that a file is a terminal using the `test` keyword"
+    runs_on: darwin
+    # by the way, we wrap the call within a group {...} because we don't want tests to fail if redirections on test...] is buggy
+    script: |
+      {
+        test -t 3 
+      } 3>/dev/null
+
+      echo '1': $?
+
+      test -t invalid-fd 
+      echo '2': $?
+
+    expect:
+      stdout: |
+        1: 1
+        2: 1
+
+  - name: "can test that the SUID of a file is set using the `test` keyword"
+    script: |
+      touch good-file bad-file
+      chmod u+s good-file
+      chmod u-s bad-file
+      mkdir dir 
+      chmod u+s dir
+
+      test -u good-file 
+      echo '1': $?
+
+      test -u bad-file 
+      echo '2': $?
+
+      test -u dir 
+      echo '3': $?
+
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 0
+
+  - name: "can test that a file/directory is writable using the `test` keyword"
+    script: |
+      touch file file2
+      mkdir dir dir2
+      chmod 444 file
+      chmod 444 dir
+
+      test -w file 
+      echo '1': $?
+
+      test -w file2 
+      echo '2': $?
+
+      test -w missing-file 
+      echo '3': $?
+
+      test -w dir 
+      echo '4': $?
+
+      test -w dir2 
+      echo '5': $?
+
+    expect:
+      stdout: |
+        1: 1
+        2: 0
+        3: 1
+        4: 1
+        5: 0
+
+  - name: "can test that a file/directory is executable using the `test` keyword"
+    script: |
+      touch file file2
+      mkdir dir dir2
+      chmod 166 file
+      chmod 666 dir
+
+      test -x file 
+      echo '1': $?
+
+      test -x file2 
+      echo '2': $?
+
+      test -x missing-file 
+      echo '3': $?
+
+      test -x dir 
+      echo '4': $?
+
+      test -x dir2 
+      echo '5': $?
+
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+        4: 1
+        5: 0
+
+  - name: "can test that a file/directory is owned by current group and user using the `test` keyword"
+    script: |
+      touch file 
+      mkdir dir 
+
+      test -G file 
+      echo '1': $?
+
+      test -G missing-file 
+      echo '2': $?
+
+      test -G dir 
+      echo '3': $?
+
+      test -G /root 
+      echo '4': $?
+
+      test -O file 
+      echo '5': $?
+
+      test -O missing-file 
+      echo '6': $?
+
+      test -O dir 
+      echo '7': $?
+
+      test -O /root 
+      echo '8': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 0
+        4: 1
+        5: 0
+        6: 1
+        7: 0
+        8: 1
+
+  - name: "can test that a file has been modified since it was last read using the `test` keyword"
+    script: |
+      touch file 
+
+      cat file >/dev/null
+
+      test -N file 
+      echo '1': $?
+
+      echo foo >file
+
+      test -N file 
+      echo '2': $?
+
+      cat file >/dev/null
+
+      test -N file 
+      echo '3': $?
+
+    expect:
+      stdout: |
+        1: 1
+        2: 0
+        3: 1
+
+  - name: "can test that a file is a socket using the `test` keyword"
+    script: |
+      touch file
+      python3 -c "import socket as s; sock = s.socket(s.AF_UNIX); sock.bind('file.sock')"
+
+      test -S file.sock 
+      echo '1': $?
+
+      test -S file 
+      echo '2': $?
+
+      test -S missing-file 
+      echo '3': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 1
+
+  - name: "can test that a variable is set using the `test` keyword"
+    env:
+      - env_var=foo
+      - env_var2=
+    script: |
+      var=foo
+      var2=
+
+      test -v var 
+      echo '1': $?
+
+      test -v var2 
+      echo '2': $?
+
+      test -v unset_var 
+      echo '3': $?
+
+      test -v env_var 
+      echo '4': $?
+
+      test -v env_var2 
+      echo '5': $?
+
+      func(){
+        local var3=foo
+        
+        func2(){
+          local var4=foo
+          
+          test -v var3 
+          echo '6': $?
+
+          test -v var4 
+          echo '7': $?
+        }
+      }
+
+      func
+      func2
+    expect:
+      stdout: |
+        1: 0
+        2: 0
+        3: 1
+        4: 0
+        5: 0
+        6: 1
+        7: 0
