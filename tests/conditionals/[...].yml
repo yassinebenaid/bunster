@@ -840,40 +840,49 @@ cases:
     script: |
       touch file 
       mkdir dir 
+      ln -s file file_symbolic
 
       [ -G file ]
       echo '1': $?
 
-      [ -G missing-file ]
+      [ -G file_symbolic ]
       echo '2': $?
 
-      [ -G dir ]
+      [ -G missing-file ]
       echo '3': $?
 
-      [ -G /root ]
+      [ -G dir ]
       echo '4': $?
 
-      [ -O file ]
+      [ -G /root ]
       echo '5': $?
 
-      [ -O missing-file ]
+      [ -O file ]
       echo '6': $?
 
-      [ -O dir ]
+      [ -O file_symbolic ]
       echo '7': $?
 
-      [ -O /root ]
+      [ -O missing-file ]
       echo '8': $?
+
+      [ -O dir ]
+      echo '9': $?
+
+      [ -O /root ]
+      echo '10': $?
     expect:
       stdout: |
         1: 0
-        2: 1
-        3: 0
-        4: 1
-        5: 0
-        6: 1
+        2: 0
+        3: 1
+        4: 0
+        5: 1
+        6: 0
         7: 0
         8: 1
+        9: 0
+        10: 1
 
   - name: "can test that a file has been modified since it was last read using the [...] syntax"
     script: |

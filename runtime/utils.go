@@ -138,7 +138,7 @@ func FileSUIDIsSet(file string) bool {
 }
 
 func FileIsOwnedByEffectiveGroup(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
@@ -152,7 +152,7 @@ func FileIsOwnedByEffectiveGroup(file string) bool {
 }
 
 func FileIsOwnedByEffectiveUser(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
