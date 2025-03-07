@@ -25,3 +25,11 @@ cases:
       stdout: |
         bazboo
         foobar
+
+  - name: "async commands read in put from the /dev/null"
+    stdin: "foobar"
+    script: |
+      cat &
+      wait
+    expect:
+      stdout: ""
