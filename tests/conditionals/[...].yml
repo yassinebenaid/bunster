@@ -112,21 +112,29 @@ cases:
       touch file1
       ln file1 file2
       touch file3
+      ln -s file1 file1_sumbolic
+      ln -s file2 file2_sumbolic
 
       [ file1 -ef file2 ]
       echo '1': $?
 
-      [ file1 -ef file23 ]
+      [ file1 -ef file3 ]
       echo '2': $?
+
+      [ file1_sumbolic -ef file2_sumbolic ]
+      echo '3': $?
     expect:
       stdout: |
         1: 0
         2: 1
+        3: 0
 
   - name: "can test that a file is older than another by modification time using the [...] syntax"
     script: |
       touch file1
       touch file2
+      ln -s file2 file2_sumbolic
+      ln -s file1 file1_sumbolic
 
       [ file1 -ot file2 ]
       echo '1': $?
@@ -139,17 +147,23 @@ cases:
 
       [ file3 -ot file1 ]
       echo '4': $?
+
+      [ file1_sumbolic -ot file2_sumbolic ]
+      echo '5': $?
     expect:
       stdout: |
         1: 0
         2: 1
         3: 1
         4: 0
+        5: 0
 
   - name: "can test that a file is newer than another by modification time using the [...] syntax"
     script: |
       touch file1
       touch file2
+      ln -s file1 file1_sumbolic
+      ln -s file2 file2_sumbolic
 
       [ file1 -nt file2 ]
       echo '1': $?
@@ -162,12 +176,16 @@ cases:
 
       [ file3 -nt file1 ]
       echo '4': $?
+
+      [ file2_sumbolic -nt file1_sumbolic ]
+      echo '5': $?
     expect:
       stdout: |
         1: 1
         2: 0
         3: 0
         4: 1
+        5: 0
 
   - name: "can test against the length of a string using the [...] syntax"
     script: |
@@ -222,7 +240,10 @@ cases:
       mkdir non-permitted-dir
       touch non-permitted-dir/non-permitted-file
       chmod 000 non-permitted-dir
-      touch file
+      touch file file2
+      ln -s file file_symbolic
+      ln -s file2 file2_symbolic
+      rm file2 # we remove this file so that the symbolic becomes broken
 
       [ -a non-existing-file ]
       echo '1': $?
@@ -239,21 +260,32 @@ cases:
       [ -a file ]
       echo '5': $?
 
-
-      [ -e non-existing-file ]
+      [ -a file_symbolic ]
       echo '6': $?
 
-      [ -e non-permitted-dir/non-permitted-file ]
+      [ -a file2_symbolic ]
       echo '7': $?
 
-      [ -e non-permitted-dir ]
+      [ -e non-existing-file ]
       echo '8': $?
 
-      [ -e dir ]
+      [ -e non-permitted-dir/non-permitted-file ]
       echo '9': $?
 
-      [ -e file ]
+      [ -e non-permitted-dir ]
       echo '10': $?
+
+      [ -e dir ]
+      echo '11': $?
+
+      [ -e file ]
+      echo '12': $?
+
+      [ -e file_symbolic ]
+      echo '13': $?
+
+      [ -e file2_symbolic ]
+      echo '14': $?
 
       chmod 777 non-permitted-dir
     expect:
@@ -263,11 +295,15 @@ cases:
         3: 0
         4: 0
         5: 0
-        6: 1
+        6: 0
         7: 1
-        8: 0
-        9: 0
+        8: 1
+        9: 1
         10: 0
+        11: 0
+        12: 0
+        13: 0
+        14: 1
 
   - name: "can test the existence of a directory using the [...] syntax"
     script: |
@@ -276,6 +312,7 @@ cases:
       mkdir non-permitted-dir/dir
       chmod 000 non-permitted-dir
       touch file
+      ln -s dir dir_symbolic
 
       [ -d non-existing-dir ]
       echo '1': $?
@@ -292,7 +329,8 @@ cases:
       [ -d file ]
       echo '5': $?
 
-
+      [ -d dir_symbolic ]
+      echo '6': $?
 
       chmod 777 non-permitted-dir
     expect:
@@ -302,11 +340,14 @@ cases:
         3: 1
         4: 0
         5: 1
+        6: 0
 
   - name: "can test the existence of a block special file using the [...] syntax"
     runs_on: linux
     script: |
+      touch file
       DEVICE=$(lsblk -nd -o PATH | head -n 1)
+      ln -s $DEVICE device_symbolic
 
       [ -b $DEVICE ]
       echo '1': $?
@@ -317,20 +358,25 @@ cases:
       [ -b /dev/null ]
       echo '3': $?
 
-      touch file
       [ -b file ]
       echo '4': $?
+
+      [ -b device_symbolic ]
+      echo '5': $?
     expect:
       stdout: |
         1: 0
         2: 1
         3: 1
         4: 1
+        5: 0
 
   - name: "can test the existence of a block special file using the [...] syntax"
     runs_on: darwin
     script: |
+      touch file
       DEVICE=$(diskutil list | grep '/dev/disk' | head -n 1 | awk '{print $1}')
+      ln -s $DEVICE device_symbolic
 
       [ -b $DEVICE ]
       echo '1': $?
@@ -341,78 +387,99 @@ cases:
       [ -b /dev/null ]
       echo '3': $?
 
-      touch file
       [ -b file ]
       echo '4': $?
+
+      [ -b device_symbolic ]
+      echo '5': $?
     expect:
       stdout: |
         1: 0
         2: 1
         3: 1
         4: 1
+        5: 0
 
   - name: "can test the existence of a character special file using the [...] syntax"
     runs_on: linux
     script: |
+      ln -s /dev/null null_symbolic
+
       [ -c /dev/null ]
       echo '1': $?
 
-      [ -c non-existing-file ]
+      [ -c null_symbolic ]
       echo '2': $?
+
+      [ -c non-existing-file ]
+      echo '3': $?
 
       touch file
       [ -c file ]
-      echo '3': $?
+      echo '4': $?
 
       BLOCK_DEVICE=$(lsblk -nd -o PATH | head -n 1)
       [ -c $BLOCK_DEVICE ]
-      echo '4': $?
+      echo '5': $?
     expect:
       stdout: |
         1: 0
-        2: 1
+        2: 0
         3: 1
         4: 1
+        5: 1
 
   - name: "can test the existence of a character special file using the [...] syntax"
     runs_on: darwin
     script: |
+      ln -s /dev/null null_symbolic
+
       [ -c /dev/null ]
       echo '1': $?
 
-      [ -c non-existing-file ]
+      [ -c null_symbolic ]
       echo '2': $?
+
+      [ -c non-existing-file ]
+      echo '3': $?
 
       touch file
       [ -c file ]
-      echo '3': $?
+      echo '4': $?
 
       BLOCK_DEVICE=$(diskutil list | grep '/dev/disk' | head -n 1 | awk '{print $1}')
       [ -c $BLOCK_DEVICE ]
-      echo '4': $?
+      echo '5': $?
     expect:
       stdout: |
         1: 0
-        2: 1
+        2: 0
         3: 1
         4: 1
+        5: 1
 
   - name: "can test the existence of a regular file using the [...] syntax"
     script: |
+      touch file
+      ln -s file file_symbolic
+
       [ -f /dev/null ]
       echo '1': $?
 
       [ -f non-existing-file ]
       echo '2': $?
 
-      touch file
       [ -f file ]
       echo '3': $?
+
+      [ -f file_symbolic ]
+      echo '4': $?
     expect:
       stdout: |
         1: 1
         2: 1
         3: 0
+        4: 0
 
   - name: "can test that the SGID of a file is set using the [...] syntax"
     script: |
@@ -421,6 +488,8 @@ cases:
       chmod 0644 bad-file
       mkdir dir dir2
       chmod 2755 dir
+      ln -s good-file good-file-symbolic
+      ln -s bad-file bad-file-symbolic
 
       [ -g good-file ]
       echo '1': $?
@@ -433,12 +502,20 @@ cases:
 
       [ -g dir2 ]
       echo '4': $?
+
+      [ -g good-file-symbolic ]
+      echo '5': $?
+
+      [ -g bad-file-symbolic ]
+      echo '6': $?
     expect:
       stdout: |
         1: 0
         2: 1
         3: 0
         4: 1
+        5: 0
+        6: 1
 
   - name: "can test that a file is a symbolic link using the [...] syntax"
     script: |
@@ -475,6 +552,8 @@ cases:
     script: |
       touch file file2
       chmod +t file
+      ln -s file file_symbolic
+      ln -s file2 file2_symbolic
 
       [ -k file ]
       echo '1': $?
@@ -485,16 +564,25 @@ cases:
       [ -k missing-file ]
       echo '3': $?
 
+      [ -k file_symbolic ]
+      echo '4': $?
+
+      [ -k file2_symbolic ]
+      echo '5': $?
     expect:
       stdout: |
         1: 0
         2: 1
         3: 1
+        4: 0
+        5: 1
 
   - name: "can test that a file is a pipe (FIFO) using the [...] syntax"
     script: |
       mkfifo file
       touch file2
+      ln -s file file_symbolic
+      ln -s file2 file2_symbolic
 
       [ -p file ]
       echo '1': $?
@@ -505,11 +593,18 @@ cases:
       [ -p missing-file ]
       echo '3': $?
 
+      [ -p file_symbolic ]
+      echo '4': $?
+
+      [ -p file2_symbolic ]
+      echo '5': $?
     expect:
       stdout: |
         1: 0
         2: 1
         3: 1
+        4: 0
+        5: 1
 
   - name: "can test that a file/directory is readable using the [...] syntax"
     script: |
@@ -517,6 +612,10 @@ cases:
       mkdir dir dir2
       chmod 344 file
       chmod 366 dir
+      ln -s file file_symbolic
+      ln -s file2 file2_symbolic
+      ln -s dir dir_symbolic
+      ln -s dir2 dir2_symbolic
 
       [ -r file ]
       echo '1': $?
@@ -533,6 +632,17 @@ cases:
       [ -r dir2 ]
       echo '5': $?
 
+      [ -r file_symbolic ]
+      echo '6': $?
+
+      [ -r file2_symbolic ]
+      echo '7': $?
+
+      [ -r dir_symbolic ]
+      echo '8': $?
+
+      [ -r dir2_symbolic ]
+      echo '9': $?
     expect:
       stdout: |
         1: 1
@@ -540,11 +650,17 @@ cases:
         3: 1
         4: 1
         5: 0
+        6: 1
+        7: 0
+        8: 1
+        9: 0
 
   - name: "can test that a file has a size greater than zero using the [...] syntax"
     script: |
       cat <<<foobar >file
       touch file2
+      ln -s file file_sumbolic
+      ln -s file2 file2_sumbolic
 
       [ -s file ]
       echo '1': $?
@@ -555,11 +671,18 @@ cases:
       [ -s missing-file ]
       echo '3': $?
 
+      [ -s file_sumbolic ]
+      echo '4': $?
+
+      [ -s file2_sumbolic ]
+      echo '5': $?
     expect:
       stdout: |
         1: 0
         2: 1
         3: 1
+        4: 0
+        5: 1
 
   - name: "can test that a file is a terminal using the [...] syntax"
     runs_on: linux
@@ -611,6 +734,8 @@ cases:
       chmod u-s bad-file
       mkdir dir 
       chmod u+s dir
+      ln -s good-file good-file-symbolic
+      ln -s bad-file bad-file-symbolic
 
       [ -u good-file ]
       echo '1': $?
@@ -621,11 +746,18 @@ cases:
       [ -u dir ]
       echo '3': $?
 
+      [ -u good-file-symbolic ]
+      echo '4': $?
+
+      [ -u bad-file-symbolic ]
+      echo '5': $?
     expect:
       stdout: |
         1: 0
         2: 1
         3: 0
+        4: 0
+        5: 1
 
   - name: "can test that a file/directory is writable using the [...] syntax"
     script: |
@@ -633,6 +765,8 @@ cases:
       mkdir dir dir2
       chmod 444 file
       chmod 444 dir
+      ln -s file file_symbolic
+      ln -s file2 file2_symbolic
 
       [ -w file ]
       echo '1': $?
@@ -649,6 +783,11 @@ cases:
       [ -w dir2 ]
       echo '5': $?
 
+      [ -w file_symbolic ]
+      echo '6': $?
+
+      [ -w file2_symbolic ]
+      echo '7': $?
     expect:
       stdout: |
         1: 1
@@ -656,6 +795,8 @@ cases:
         3: 1
         4: 1
         5: 0
+        6: 1
+        7: 0
 
   - name: "can test that a file/directory is executable using the [...] syntax"
     script: |
@@ -663,6 +804,8 @@ cases:
       mkdir dir dir2
       chmod 166 file
       chmod 666 dir
+      ln -s file file_symbolic
+      ln -s file2 file2_symbolic
 
       [ -x file ]
       echo '1': $?
@@ -679,6 +822,11 @@ cases:
       [ -x dir2 ]
       echo '5': $?
 
+      [ -x file_symbolic ]
+      echo '6': $?
+
+      [ -x file2_symbolic ]
+      echo '7': $?
     expect:
       stdout: |
         1: 0
@@ -686,75 +834,100 @@ cases:
         3: 1
         4: 1
         5: 0
+        6: 0
+        7: 1
 
   - name: "can test that a file/directory is owned by current group and user using the [...] syntax"
     script: |
       touch file 
       mkdir dir 
+      ln -s file file_symbolic
 
       [ -G file ]
       echo '1': $?
 
-      [ -G missing-file ]
+      [ -G file_symbolic ]
       echo '2': $?
 
-      [ -G dir ]
+      [ -G missing-file ]
       echo '3': $?
 
-      [ -G /root ]
+      [ -G dir ]
       echo '4': $?
 
-      [ -O file ]
+      [ -G /root ]
       echo '5': $?
 
-      [ -O missing-file ]
+      [ -O file ]
       echo '6': $?
 
-      [ -O dir ]
+      [ -O file_symbolic ]
       echo '7': $?
 
-      [ -O /root ]
+      [ -O missing-file ]
       echo '8': $?
+
+      [ -O dir ]
+      echo '9': $?
+
+      [ -O /root ]
+      echo '10': $?
     expect:
       stdout: |
         1: 0
-        2: 1
-        3: 0
-        4: 1
-        5: 0
-        6: 1
+        2: 0
+        3: 1
+        4: 0
+        5: 1
+        6: 0
         7: 0
         8: 1
+        9: 0
+        10: 1
 
   - name: "can test that a file has been modified since it was last read using the [...] syntax"
     script: |
       touch file 
+      ln -s file file_symbolic
 
       cat file >/dev/null
 
       [ -N file ]
       echo '1': $?
 
-      echo foo >file
-
-      [ -N file ]
+      [ -N file_symbolic ]
       echo '2': $?
 
-      cat file >/dev/null
+      echo foo >file
 
       [ -N file ]
       echo '3': $?
 
+      [ -N file_symbolic ]
+      echo '4': $?
+
+      cat file >/dev/null
+
+      [ -N file ]
+      echo '5': $?
+
+      [ -N file_symbolic ]
+      echo '6': $?
     expect:
       stdout: |
         1: 1
-        2: 0
-        3: 1
+        2: 1
+        3: 0
+        4: 0
+        5: 1
+        6: 1
 
   - name: "can test that a file is a socket using the [...] syntax"
     script: |
       touch file
       python3 -c "import socket as s; sock = s.socket(s.AF_UNIX); sock.bind('file.sock')"
+      ln -s file file_symbolic
+      ln -s file.sock file_sock_symbolic
 
       [ -S file.sock ]
       echo '1': $?
@@ -764,11 +937,19 @@ cases:
 
       [ -S missing-file ]
       echo '3': $?
+
+      [ -S file_sock_symbolic ]
+      echo '4': $?
+
+      [ -S file_symbolic ]
+      echo '5': $?
     expect:
       stdout: |
         1: 0
         2: 1
         3: 1
+        4: 0
+        5: 1
 
   - name: "can test that a variable is set using the [...] syntax"
     env:

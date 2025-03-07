@@ -27,7 +27,7 @@ func FileDescriptorIsTerminal(sm *StreamManager, fd string) bool {
 }
 
 func FileHasBeenModifiedSinceLastRead(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}

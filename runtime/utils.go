@@ -35,12 +35,12 @@ func NumberCompare(x, op, y string) bool {
 }
 
 func FilesHaveSameDevAndIno(file1, file2 string) bool {
-	file1Info, err := os.Lstat(file1)
+	file1Info, err := os.Stat(file1)
 	if err != nil {
 		return false
 	}
 
-	file2Info, err := os.Lstat(file2)
+	file2Info, err := os.Stat(file2)
 	if err != nil {
 		return false
 	}
@@ -59,12 +59,12 @@ func FilesHaveSameDevAndIno(file1, file2 string) bool {
 }
 
 func FileIsOlderThan(file1, file2 string) bool {
-	file2Info, err := os.Lstat(file2)
+	file2Info, err := os.Stat(file2)
 	if err != nil {
 		return false
 	}
 
-	file1Info, err := os.Lstat(file1)
+	file1Info, err := os.Stat(file1)
 	if err != nil {
 		return os.IsNotExist(err)
 	}
@@ -74,12 +74,12 @@ func FileIsOlderThan(file1, file2 string) bool {
 }
 
 func FileExists(file string) bool {
-	_, err := os.Lstat(file)
+	_, err := os.Stat(file)
 	return err == nil || (!os.IsNotExist(err) && !os.IsPermission(err))
 }
 
 func DirectoryExists(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
@@ -88,7 +88,7 @@ func DirectoryExists(file string) bool {
 }
 
 func BlockSpecialFileExists(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
@@ -102,7 +102,7 @@ func BlockSpecialFileExists(file string) bool {
 }
 
 func CharacterSpecialFileExists(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
@@ -111,7 +111,7 @@ func CharacterSpecialFileExists(file string) bool {
 }
 
 func RegularFileExists(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
@@ -120,7 +120,7 @@ func RegularFileExists(file string) bool {
 }
 
 func FileSGIDIsSet(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
@@ -129,7 +129,7 @@ func FileSGIDIsSet(file string) bool {
 }
 
 func FileSUIDIsSet(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
@@ -138,7 +138,7 @@ func FileSUIDIsSet(file string) bool {
 }
 
 func FileIsOwnedByEffectiveGroup(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
@@ -152,7 +152,7 @@ func FileIsOwnedByEffectiveGroup(file string) bool {
 }
 
 func FileIsOwnedByEffectiveUser(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
@@ -175,7 +175,7 @@ func FileIsSymbolic(file string) bool {
 }
 
 func FileIsSticky(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
@@ -184,7 +184,7 @@ func FileIsSticky(file string) bool {
 }
 
 func FileIsFIFO(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
@@ -193,7 +193,7 @@ func FileIsFIFO(file string) bool {
 }
 
 func FileIsReadable(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
@@ -202,7 +202,7 @@ func FileIsReadable(file string) bool {
 }
 
 func FileIsWritable(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
@@ -211,7 +211,7 @@ func FileIsWritable(file string) bool {
 }
 
 func FileIsExecutable(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
@@ -220,7 +220,7 @@ func FileIsExecutable(file string) bool {
 }
 
 func FileHasAPositiveSize(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
@@ -234,7 +234,7 @@ func FileHasAPositiveSize(file string) bool {
 }
 
 func FileIsSocket(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}
