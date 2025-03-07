@@ -133,6 +133,8 @@ cases:
     script: |
       touch file1
       touch file2
+      ln -s file2 file2_sumbolic
+      ln -s file1 file1_sumbolic
 
       [ file1 -ot file2 ]
       echo '1': $?
@@ -145,12 +147,16 @@ cases:
 
       [ file3 -ot file1 ]
       echo '4': $?
+
+      [ file1_sumbolic -ot file2_sumbolic ]
+      echo '5': $?
     expect:
       stdout: |
         1: 0
         2: 1
         3: 1
         4: 0
+        5: 0
 
   - name: "can test that a file is newer than another by modification time using the [...] syntax"
     script: |

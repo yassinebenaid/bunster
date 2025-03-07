@@ -59,12 +59,12 @@ func FilesHaveSameDevAndIno(file1, file2 string) bool {
 }
 
 func FileIsOlderThan(file1, file2 string) bool {
-	file2Info, err := os.Lstat(file2)
+	file2Info, err := os.Stat(file2)
 	if err != nil {
 		return false
 	}
 
-	file1Info, err := os.Lstat(file1)
+	file1Info, err := os.Stat(file1)
 	if err != nil {
 		return os.IsNotExist(err)
 	}
