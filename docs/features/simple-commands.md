@@ -20,7 +20,7 @@ command2 argument argument; command3 argument argument
 command4 argument argument;
 ```
 
-We will talk more about the `&&` and `||` operators in [Lists section](/features/lists). As well as the ampersand `&` in [Asynchronous commands](/features/async-comands).
+We will talk more about the `&&` and `||` operators in [Lists section](/features/lists). As well as the ampersand `&` in [Asynchronous commands](/features/async-commands).
 
 ## Quotes
 

@@ -8,8 +8,10 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-    shell.ExitCode = 0
-	shell.SetVar("key", "value")
+    func(){
+		shell.SetVar("key", "value")
+
+	}()
 }
 
 #(ENDTEST)
@@ -31,15 +33,21 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-    shell.ExitCode = 0
-	shell.SetVar("key1", "value")
-	shell.SetVar("key2", "value")
-	shell.SetVar("key3", "value")
-    shell.ExitCode = 0
-	shell.SetVar("key4", shell.ReadVar("value"))
-    shell.ExitCode = 0
-	shell.SetVar("key5", "value")
-	shell.SetVar("key6", "value")
+   	func(){
+		shell.SetVar("key1", "value")
+		shell.SetVar("key2", "value")
+		shell.SetVar("key3", "value")
+
+	}()
+    func(){
+		shell.SetVar("key4", shell.ReadVar("value"))
+
+	}()
+    func(){
+		shell.SetVar("key5", "value")
+		shell.SetVar("key6", "value")
+
+	}()
 }
 
 #(ENDTEST)
@@ -55,9 +63,11 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-    shell.ExitCode = 0
-	shell.SetVar("key1", "")
-	shell.SetVar("key2", "")
+    func(){
+		shell.SetVar("key1", "")
+		shell.SetVar("key2", "")
+
+	}()
 }
 
 #(ENDTEST)
@@ -73,9 +83,11 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-    shell.ExitCode = 0
-	shell.SetExportVar("key", "value")
-	shell.MarkVarAsExported("key2")
+    func(){
+		shell.SetExportVar("key", "value")
+		shell.MarkVarAsExported("key2")
+
+	}()
 }
 
 #(ENDTEST)

@@ -306,43 +306,53 @@ func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []as
 }
 
 func (g *generator) handleParameterAssignment(buf *InstructionBuffer, p ast.ParameterAssignement) {
-	buf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
+	var scope InstructionBuffer
+
 	for _, assignment := range p {
 		ins := ir.SetVar{
 			Key:   assignment.Name,
 			Value: ir.String(""),
 		}
 		if assignment.Value != nil {
-			ins.Value = g.handleExpression(buf, assignment.Value)
+			ins.Value = g.handleExpression(&scope, assignment.Value)
 		}
 
-		buf.add(ins)
+		scope.add(ins)
 	}
+
+	buf.add(ir.Closure(scope))
 }
 
 func (g *generator) handleLocalParameterAssignment(buf *InstructionBuffer, p ast.LocalParameterAssignement) {
-	buf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
+	var scope InstructionBuffer
+
 	for _, assignment := range p {
 		ins := ir.SetLocalVar{
 			Key:   assignment.Name,
 			Value: ir.String(""),
 		}
 		if assignment.Value != nil {
-			ins.Value = g.handleExpression(buf, assignment.Value)
+			ins.Value = g.handleExpression(&scope, assignment.Value)
 		}
 
-		buf.add(ins)
+		scope.add(ins)
 	}
+
+	buf.add(ir.Closure(scope))
 }
+
 func (g *generator) handleExportParameterAssignment(buf *InstructionBuffer, p ast.ExportParameterAssignement) {
-	buf.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
+	var scope InstructionBuffer
+
 	for _, assignment := range p {
 		if assignment.Value != nil {
-			buf.add(ir.SetExportVar{Key: assignment.Name, Value: g.handleExpression(buf, assignment.Value)})
+			scope.add(ir.SetExportVar{Key: assignment.Name, Value: g.handleExpression(&scope, assignment.Value)})
 		} else {
-			buf.add(ir.MarkVarAsExported(assignment.Name))
+			scope.add(ir.MarkVarAsExported(assignment.Name))
 		}
 	}
+
+	buf.add(ir.Closure(scope))
 }
 
 func (g *generator) handleBackgroundConstruction(buf *InstructionBuffer, b ast.BackgroundConstruction) {
