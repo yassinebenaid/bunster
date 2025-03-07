@@ -102,7 +102,7 @@ func BlockSpecialFileExists(file string) bool {
 }
 
 func CharacterSpecialFileExists(file string) bool {
-	info, err := os.Lstat(file)
+	info, err := os.Stat(file)
 	if err != nil {
 		return false
 	}

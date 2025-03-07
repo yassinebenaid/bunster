@@ -402,25 +402,31 @@ cases:
   - name: "can test the existence of a character special file using the [...] syntax"
     runs_on: linux
     script: |
+      ln -s /dev/null null_symbolic
+
       [ -c /dev/null ]
       echo '1': $?
 
-      [ -c non-existing-file ]
+      [ -c null_symbolic ]
       echo '2': $?
+
+      [ -c non-existing-file ]
+      echo '3': $?
 
       touch file
       [ -c file ]
-      echo '3': $?
+      echo '4': $?
 
       BLOCK_DEVICE=$(lsblk -nd -o PATH | head -n 1)
       [ -c $BLOCK_DEVICE ]
-      echo '4': $?
+      echo '5': $?
     expect:
       stdout: |
         1: 0
-        2: 1
+        2: 0
         3: 1
         4: 1
+        5: 1
 
   - name: "can test the existence of a character special file using the [...] syntax"
     runs_on: darwin
