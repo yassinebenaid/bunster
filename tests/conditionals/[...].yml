@@ -162,6 +162,8 @@ cases:
     script: |
       touch file1
       touch file2
+      ln -s file1 file1_sumbolic
+      ln -s file2 file2_sumbolic
 
       [ file1 -nt file2 ]
       echo '1': $?
@@ -174,12 +176,16 @@ cases:
 
       [ file3 -nt file1 ]
       echo '4': $?
+
+      [ file2_sumbolic -nt file1_sumbolic ]
+      echo '5': $?
     expect:
       stdout: |
         1: 1
         2: 0
         3: 0
         4: 1
+        5: 0
 
   - name: "can test against the length of a string using the [...] syntax"
     script: |
