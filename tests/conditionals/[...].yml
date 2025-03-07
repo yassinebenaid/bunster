@@ -611,6 +611,10 @@ cases:
       mkdir dir dir2
       chmod 344 file
       chmod 366 dir
+      ln -s file file_symbolic
+      ln -s file2 file2_symbolic
+      ln -s dir dir_symbolic
+      ln -s dir2 dir2_symbolic
 
       [ -r file ]
       echo '1': $?
@@ -627,6 +631,17 @@ cases:
       [ -r dir2 ]
       echo '5': $?
 
+      [ -r file_symbolic ]
+      echo '6': $?
+
+      [ -r file2_symbolic ]
+      echo '7': $?
+
+      [ -r dir_symbolic ]
+      echo '8': $?
+
+      [ -r dir2_symbolic ]
+      echo '9': $?
     expect:
       stdout: |
         1: 1
@@ -634,6 +649,10 @@ cases:
         3: 1
         4: 1
         5: 0
+        6: 1
+        7: 0
+        8: 1
+        9: 0
 
   - name: "can test that a file has a size greater than zero using the [...] syntax"
     script: |
