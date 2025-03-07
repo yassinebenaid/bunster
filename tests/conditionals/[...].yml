@@ -312,6 +312,7 @@ cases:
       mkdir non-permitted-dir/dir
       chmod 000 non-permitted-dir
       touch file
+      ln -s dir dir_symbolic
 
       [ -d non-existing-dir ]
       echo '1': $?
@@ -328,7 +329,8 @@ cases:
       [ -d file ]
       echo '5': $?
 
-
+      [ -d dir_symbolic ]
+      echo '6': $?
 
       chmod 777 non-permitted-dir
     expect:
@@ -338,6 +340,7 @@ cases:
         3: 1
         4: 0
         5: 1
+        6: 0
 
   - name: "can test the existence of a block special file using the [...] syntax"
     runs_on: linux
