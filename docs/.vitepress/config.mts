@@ -34,6 +34,10 @@ export default defineConfig({
 								link: "/features/async-commands",
 							},
 							{
+								text: "Variables & Environment",
+								link: "/features/variables-and-environment",
+							},
+							{
 								text: "Environment Files",
 								link: "/features/environment-files",
 							},
