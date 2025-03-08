@@ -886,6 +886,7 @@ cases:
         10: 1
 
   - name: "can test that a file has been modified since it was last read using the [...] syntax"
+    timeout: 3
     # we sleep a little bit so that time is different
     script: |
       touch file 
@@ -899,7 +900,7 @@ cases:
       [ -N file_symbolic ]
       echo '2': $?
 
-      sleep 0.1
+      sleep 1
       echo foo >file
 
       [ -N file ]
@@ -908,7 +909,7 @@ cases:
       [ -N file_symbolic ]
       echo '4': $?
 
-      sleep 0.1
+      sleep 1
       cat file >/dev/null
 
       [ -N file ]
