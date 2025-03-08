@@ -132,6 +132,7 @@ cases:
   - name: "can test that a file is older than another by modification time using the [[...]] syntax"
     script: |
       touch file1
+      sleep 0.5
       touch file2
       ln -s file2 file2_sumbolic
       ln -s file1 file1_sumbolic
@@ -161,6 +162,7 @@ cases:
   - name: "can test that a file is newer than another by modification time using the [[...]] syntax"
     script: |
       touch file1
+      sleep 0.5
       touch file2
       ln -s file1 file1_sumbolic
       ln -s file2 file2_sumbolic
