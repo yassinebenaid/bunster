@@ -1046,13 +1046,50 @@ cases:
         3: 0
         4: 0
 
-  - name: "the AND logical operator only evaluates second expression if the first expression is true in the the [...] syntax"
+  - name: "the AND logical operator only evaluates second expression if the first expression is true in the [...] syntax"
     script: |
-      touch file2
+      touch file
 
-      [ "" -a $(rm file2) ]
+      [ "" -a $(rm file) ]
 
-      [ -f file2 ]
+      [ -f file ]
+
+      echo $?
+    expect:
+      stdout: |
+        0
+
+  - name: "can use the OR logical operator in test expressions using the [...] syntax"
+    script: |
+      [ foo -o bar ]
+      echo '1': $?
+
+      [ "" -o bar ]
+      echo '2': $?
+
+      [ foo -o "" ]
+      echo '3': $?
+
+      [ "" -o "" ]
+      echo '4': $?
+
+      [ -f file -o ! -f file ]
+      echo '5': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 0
+        3: 0
+        4: 1
+        5: 0
+
+  - name: "the OR logical operator only evaluates second expression if the first expression is false in the [...] syntax"
+    script: |
+      touch file
+
+      [ foo -o $(rm file) ]
+
+      [ -f file ]
 
       echo $?
     expect:
