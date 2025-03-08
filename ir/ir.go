@@ -2,6 +2,7 @@ package ir
 
 import (
 	"fmt"
+	"strings"
 )
 
 type Instruction interface {
@@ -10,16 +11,36 @@ type Instruction interface {
 
 type Program struct {
 	Instructions []Instruction
+	Embeds       []string
 }
 
 func (p Program) String() string {
-	var str = `
-		package main
+	var str string
 
-		import "github.com/yassinebenaid/bunster/runtime"
+	if p.Embeds != nil {
 
-		func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-		`
+		str = fmt.Sprintf(`
+			package main
+
+			import (
+				"embed"
+				"github.com/yassinebenaid/bunster/runtime"
+			)
+
+			//go:embed %s
+			var embdFS embed.FS
+
+			func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+			`, strings.Join(p.Embeds, " "))
+	} else {
+		str = `
+			package main
+			
+			import "github.com/yassinebenaid/bunster/runtime"
+			
+			func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+			`
+	}
 
 	for _, in := range p.Instructions {
 		str += in.togo()
