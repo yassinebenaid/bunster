@@ -254,7 +254,7 @@ loop:
 			case ast.Word:
 				embed = append(embed, string(v))
 			default:
-				p.error("expected a valid file path, %v", v)
+				p.error("expected a valid file path")
 				return nil
 			}
 		}
@@ -263,7 +263,7 @@ loop:
 		}
 	}
 
-	if p.curr.Type != token.EOF && p.curr.Type != token.NEWLINE {
+	if embed == nil || (p.curr.Type != token.EOF && p.curr.Type != token.NEWLINE) {
 		p.error("unexpected token: %v", p.curr)
 	}
 

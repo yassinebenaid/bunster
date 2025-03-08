@@ -406,6 +406,7 @@ var errorHandlingTestCases = []struct {
 	{"Functions", functionsErrorHandlingCases},
 	{"Conditionals", conditionalsErrorHandlingCases},
 	{"Shell Parameters", parameterAssignmentErrorHandlingCases},
+	{"Embedding", embeddingErrorHandlingCases},
 }
 
 func TestParserErrorHandling(t *testing.T) {

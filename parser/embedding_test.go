@@ -18,9 +18,20 @@ var embeddingTests = []testCase{
 		@embed file
 
 		command
+		@ embed
+		\@embed
 	`, ast.Script{
 		ast.Embed{"file"},
 		ast.Embed{"file"},
 		ast.Command{Name: ast.Word("command")},
+		ast.Command{Name: ast.Word("@"), Args: []ast.Expression{ast.Word("embed")}},
+		ast.Command{Name: ast.Word("@embed")},
 	}},
+}
+
+var embeddingErrorHandlingCases = []errorHandlingTestCase{
+	{`@embed`, "syntax error: expected a blank after the @embed directive, found end of file. (line: 1, column: 7)"},
+	{`@embed `, "syntax error: unexpected token: end of file. (line: 1, column: 8)"},
+	{`@embed $var`, "syntax error: expected a valid file path. (line: 1, column: 12)"},
+	{`@embed "$var foo"`, "syntax error: expected a valid file path. (line: 1, column: 18)"},
 }
