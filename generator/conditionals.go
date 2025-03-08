@@ -17,7 +17,7 @@ func (g *generator) handleTest(buf *InstructionBuffer, test ast.Test, ctx *conte
 
 	if ctx.pipe == nil {
 		cmdbuf = append(cmdbuf, body...)
-		*buf = append(*buf, ir.Closure(body))
+		*buf = append(*buf, ir.Closure(cmdbuf))
 		return
 	}
 
