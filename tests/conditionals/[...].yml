@@ -1024,3 +1024,37 @@ cases:
         3: 0
         4: 0
         5: 1
+
+  - name: "can use the AND logical operator in test expressions using the [...] syntax"
+    script: |
+      [ foo -a bar ]
+      echo '1': $?
+
+      [ foo -a -f missin-file ]
+      echo '2': $?
+
+      touch file
+      [ foo -a -f file ]
+      echo '3': $?
+
+      [ ! "" -a ! "" ]
+      echo '4': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 0
+        4: 0
+
+  - name: "the AND logical operator only evaluates second expression if the first expression is true in the the [...] syntax"
+    script: |
+      touch file2
+
+      [ "" -a $(rm file2) ]
+
+      [ -f file2 ]
+
+      echo $?
+    expect:
+      stdout: |
+        0

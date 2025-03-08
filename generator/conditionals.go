@@ -35,6 +35,15 @@ func (g *generator) handleTestExpression(buf *InstructionBuffer, test ast.Expres
 }
 
 func (g *generator) handleTestBinary(buf *InstructionBuffer, test ast.Binary) {
+	switch test.Operator {
+	case "&&":
+		g.handleTestExpression(buf, test.Left)
+		var right InstructionBuffer
+		g.handleTestExpression(&right, test.Right)
+		buf.add(ir.If{Condition: ir.Literal("testResult"), Body: right})
+		return
+	}
+
 	left := g.handleExpression(buf, test.Left)
 	right := g.handleExpression(buf, test.Right)
 
