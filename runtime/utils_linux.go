@@ -39,5 +39,5 @@ func FileHasBeenModifiedSinceLastRead(file string) bool {
 		return false
 	}
 
-	return stat.Mtim.Nsec >= stat.Atim.Nsec
+	return stat.Mtim.Nsec > stat.Atim.Nsec
 }

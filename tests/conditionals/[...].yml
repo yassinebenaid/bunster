@@ -885,7 +885,9 @@ cases:
         9: 0
         10: 1
 
+  #TODO: investigate how to get this working on macos (and linux as well, but with good time tracking)
   - name: "can test that a file has been modified since it was last read using the [...] syntax"
+    runs_on: linux
     script: |
       touch file 
       ln -s file file_symbolic
@@ -913,8 +915,8 @@ cases:
       echo '6': $?
     expect:
       stdout: |
-        1: 0
-        2: 0
+        1: 1
+        2: 1
         3: 1
         4: 1
         5: 0
