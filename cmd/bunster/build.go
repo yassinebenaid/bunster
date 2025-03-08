@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"io/fs"
 	"os"
 	"os/exec"
@@ -60,6 +61,10 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
+	if err := cloneEmbeddedFiles(wd, program.Embeds); err != nil {
+		return err
+	}
+
 	// we ignore the error, because this is just an optional step that shouldn't stop us from building the binary
 	_ = exec.Command("gofmt", "-w", wd).Run()
 
@@ -79,6 +84,28 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 	gocmd.Dir = wd
 	if err := gocmd.Run(); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func cloneEmbeddedFiles(dst string, files []string) error {
+	for _, file := range files {
+		srcf, err := os.OpenFile(file, os.O_RDONLY, 000)
+		if err != nil {
+			return err
+		}
+		defer srcf.Close()
+
+		dstf, err := os.OpenFile(path.Join(dst, file), os.O_WRONLY|os.O_CREATE, 0666)
+		if err != nil {
+			return err
+		}
+		defer dstf.Close()
+
+		if _, err := io.Copy(dstf, srcf); err != nil {
+			return err
+		}
 	}
 
 	return nil
