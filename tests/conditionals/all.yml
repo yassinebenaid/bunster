@@ -1,0 +1,72 @@
+cases:
+  - name: can use redirections on the [...] command
+    script: |
+      [ $(cat) = "foo" ] <<<foo
+      echo 1: $?
+
+      [ ! $( echo foobar >&3 ) ] 3>file.txt
+    expect:
+      files:
+        file.txt: "foobar\n"
+      stdout: |
+        1: 0
+
+  - name: can use redirections on the [[...]] command
+    script: |
+      [[ $(cat) = "foo" ]] <<<foo
+      echo 1: $?
+
+      [[ ! $( echo foobar >&3 ) ]] 3>file.txt
+    expect:
+      files:
+        file.txt: "foobar\n"
+      stdout: |
+        1: 0
+
+  - name: can use redirections on the `test` builtin command
+    script: |
+      test $(cat) = "foo"  <<<foo
+      echo 1: $?
+
+      test ! $( echo foobar >&3 ) 3>file.txt
+    expect:
+      files:
+        file.txt: "foobar\n"
+      stdout: |
+        1: 0
+
+  - name: can use run the [...] command within pipeline
+    script: |
+      echo foobar | [ $( cat ) = foobar  ]
+      echo 1: $?
+
+      [ -n $(echo error >&2 ) ]  |&  [ $( cat ) = error  ]
+      echo 2: $?
+    expect:
+      stdout: |
+        1: 0
+        2: 0
+
+  - name: can use run the [[...]] command within pipeline
+    script: |
+      echo foobar | [[ $( cat ) = foobar  ]]
+      echo 1: $?
+
+      [[ -n $(echo error >&2 ) ]]  |&  [[ $( cat ) = error  ]]
+      echo 2: $?
+    expect:
+      stdout: |
+        1: 0
+        2: 0
+
+  - name: can use run the `test` builtin within pipeline
+    script: |
+      echo foobar | test $( cat ) = foobar
+      echo 1: $?
+
+      test -n $(echo error >&2 )   |&  test $( cat ) = error
+      echo 2: $?
+    expect:
+      stdout: |
+        1: 0
+        2: 0

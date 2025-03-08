@@ -6,17 +6,33 @@ import (
 )
 
 func (g *generator) handleTest(buf *InstructionBuffer, test ast.Test, ctx *context) {
-	var cmdbuf InstructionBuffer
+	var cmdbuf, body InstructionBuffer
 
 	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
 	g.handleRedirections(&cmdbuf, test.Redirections, ctx)
 
-	cmdbuf.add(ir.Declare{Name: "testResult", Value: ir.Literal("false")})
+	body.add(ir.Declare{Name: "testResult", Value: ir.Literal("false")})
+	g.handleTestExpression(&body, test.Expr)
+	body.add(ir.Literal("if testResult { shell.ExitCode = 0 } else { shell.ExitCode = 1  }\n"))
 
-	g.handleTestExpression(&cmdbuf, test.Expr)
+	if ctx.pipe == nil {
+		cmdbuf = append(cmdbuf, body...)
+		*buf = append(*buf, ir.Closure(body))
+		return
+	}
 
-	cmdbuf.add(ir.Literal(`if testResult { shell.ExitCode = 0 } else { shell.ExitCode = 1  }`))
+	cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
+	cmdbuf.add(ir.PushToPipelineWaitgroup{
+		Waitgroup: ctx.pipe.waitgroup,
+		Value: ir.Literal(`func() error {
+				<-done
+			 	streamManager.Destroy()
+				return nil
+			}`),
+	})
 
+	body.add(ir.Literal("done<-struct{}{}\n"))
+	cmdbuf.add(ir.Gorouting(body))
 	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
