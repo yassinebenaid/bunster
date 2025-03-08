@@ -2,7 +2,7 @@ package analyser
 
 import (
 	"fmt"
-	"os"
+	"path"
 
 	"github.com/yassinebenaid/bunster/ast"
 )
@@ -201,13 +201,11 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			a.report("using '@embed' directive is only valid in global scope")
 		}
 
-		for _, file := range v {
-			f, err := os.OpenFile(file, os.O_RDONLY, 0)
-			if err != nil {
-				a.report(fmt.Sprintf("embedding error: %v", err))
+		for _, p := range v {
+			if path.IsAbs(p) {
+				a.report(fmt.Sprintf("only relative paths can be embedded [%v]", p))
 				break
 			}
-			f.Close()
 		}
 
 	default:
