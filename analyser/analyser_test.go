@@ -32,6 +32,8 @@ var testCases = []testCase{
 			@embed file
 		}
 	`, "semantic error: using '@embed' directive is only valid in global scope. (line: 0, column: 0)"},
+	{`@embed undefined-file`, "semantic error: embedding error: open undefined-file: no such file or directory. (line: 0, column: 0)"},
+	{`@embed /root`, "semantic error: embedding error: open /root: permission denied. (line: 0, column: 0)"},
 }
 
 func TestErrors(t *testing.T) {

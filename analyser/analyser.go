@@ -2,6 +2,7 @@ package analyser
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/yassinebenaid/bunster/ast"
 )
@@ -199,6 +200,16 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 		if len(a.stack) != 1 {
 			a.report("using '@embed' directive is only valid in global scope")
 		}
+
+		for _, file := range v {
+			f, err := os.OpenFile(file, os.O_RDONLY, 0)
+			if err != nil {
+				a.report(fmt.Sprintf("embedding error: %v", err))
+				break
+			}
+			f.Close()
+		}
+
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
