@@ -1095,3 +1095,23 @@ cases:
     expect:
       stdout: |
         0
+
+  - name: "can group conditional expressions using the [...] syntax"
+    script: |
+      [ (foo) ]
+      echo 1: $?
+
+      [ (-n foo) ]
+      echo 2: $?
+
+      [ (-n foo -a -n bar) ]
+      echo 3: $?
+
+      [ ! ("" -o bar) ]
+      echo 4: $?
+    expect:
+      stdout: |
+        1: 0
+        2: 0
+        3: 0
+        4: 1
