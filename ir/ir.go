@@ -28,9 +28,10 @@ func (p Program) String() string {
 			)
 
 			//go:embed %s
-			var embdFS embed.FS
+			var embedFS embed.FS
 
 			func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+				shell.Embed = &embedFS
 			`, strings.Join(p.Embeds, " "))
 	} else {
 		str = `
