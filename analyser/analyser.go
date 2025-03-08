@@ -195,6 +195,10 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.analyseExpression(r.Dst)
 			}
 		}
+	case ast.Embed:
+		if len(a.stack) != 1 {
+			a.report("using '@embed' directive is only valid in global scope")
+		}
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
