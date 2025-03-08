@@ -39,6 +39,7 @@ const (
 	READONLY // `readonly`
 	UNSET    // `unset`
 	WAIT     // `wait`
+	EMBED    // `embed`
 
 	PLUS                 // `+`
 	MINUS                // `-`
@@ -156,6 +157,7 @@ var Keywords = map[string]TokenType{
 	"readonly": READONLY,
 	"unset":    UNSET,
 	"wait":     WAIT,
+	"embed":    EMBED,
 }
 
 func (t Token) String() string {

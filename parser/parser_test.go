@@ -309,6 +309,7 @@ var testCases = []struct {
 	{"Functions", functionsTests},
 	{"Parameter Assignment", parameterAssignmentTests},
 	{"Conditionals", conditionalsTests},
+	{"Embedding", embeddingTests},
 }
 
 func TestParser(t *testing.T) {
