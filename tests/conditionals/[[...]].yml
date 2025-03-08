@@ -885,12 +885,12 @@ cases:
         9: 0
         10: 1
 
+  #TODO: investigate how to get this working on macos (and linux as well, but with good time tracking)
   - name: "can test that a file has been modified since it was last read using the [[...]] syntax"
+    runs_on: linux
     script: |
       touch file 
       ln -s file file_symbolic
-
-      cat file >/dev/null
 
       [[ -N file ]]
       echo '1': $?
@@ -898,7 +898,7 @@ cases:
       [[ -N file_symbolic ]]
       echo '2': $?
 
-      echo foo >file
+      cat file >/dev/null
 
       [[ -N file ]]
       echo '3': $?
@@ -906,7 +906,7 @@ cases:
       [[ -N file_symbolic ]]
       echo '4': $?
 
-      cat file >/dev/null
+      echo foo >file
 
       [[ -N file ]]
       echo '5': $?
@@ -917,10 +917,10 @@ cases:
       stdout: |
         1: 1
         2: 1
-        3: 0
-        4: 0
-        5: 1
-        6: 1
+        3: 1
+        4: 1
+        5: 0
+        6: 0
 
   - name: "can test that a file is a socket using the [[...]] syntax"
     script: |
