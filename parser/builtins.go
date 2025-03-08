@@ -242,13 +242,29 @@ func (p *parser) parseEmbedDirective() ast.Statement {
 	var embed ast.Embed
 	var expr ast.Expression
 
-	expr = p.parseExpression()
+loop:
+	for {
+		switch p.curr.Type {
+		case token.EOF, token.NEWLINE:
+			break loop
+		default:
+			expr = p.parseExpression()
 
-	switch v := expr.(type) {
-	case ast.Word:
-		embed = append(embed, string(v))
-	default:
-		p.error("expected a valid file path")
+			switch v := expr.(type) {
+			case ast.Word:
+				embed = append(embed, string(v))
+			default:
+				p.error("expected a valid file path, %v", v)
+				return nil
+			}
+		}
+		if p.curr.Type != token.NEWLINE {
+			p.proceed()
+		}
+	}
+
+	if p.curr.Type != token.EOF && p.curr.Type != token.NEWLINE {
+		p.error("unexpected token: %v", p.curr)
 	}
 
 	return embed
