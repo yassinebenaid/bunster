@@ -1,0 +1,2191 @@
+#(TEST: can generate the [...] command)
+[ expr ]
+[ -a expr ]
+[ -a expr ]
+[ -b expr ]
+[ -c expr ]
+[ -d expr ]
+[ -e expr ]
+[ -f expr ]
+[ -g expr ]
+[ -h expr ]
+[ -k expr ]
+[ -p expr ]
+[ -r expr ]
+[ -s expr ]
+[ -t 1 ]
+[ -u expr ]
+[ -w expr ]
+[ -x expr ]
+[ -G expr ]
+[ -L expr ]
+[ -N expr ]
+[ -O expr ]
+[ -S expr ]
+[ -v expr ]
+[ -z expr ]
+[ -n expr ]
+
+[ expr -ef expr ]
+[ expr -nt expr ]
+[ expr -ot expr ]
+
+[ expr = expr ]
+[ expr == expr ]
+[ expr != expr ]
+[ expr > expr ]
+[ expr < expr ]
+
+[ expr -eq expr ]
+[ expr -ne expr ]
+[ expr -lt expr ]
+[ expr -le expr ]
+[ expr -gt expr ]
+[ expr -ge expr ]
+
+[ expr -a expr ]
+[ expr -o expr ]
+[ ! expr ]
+[ ( expr ) ]
+[ ( expr -a expr ) ]
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.BlockSpecialFileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.CharacterSpecialFileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.DirectoryExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.RegularFileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileSGIDIsSet("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsSymbolic("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsSticky("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsFIFO("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsReadable("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileHasAPositiveSize("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileDescriptorIsTerminal(streamManager, "1")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileSUIDIsSet("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsWritable("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsExecutable("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsOwnedByEffectiveGroup("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsSymbolic("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileHasBeenModifiedSinceLastRead("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsOwnedByEffectiveUser("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsSocket("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = shell.VarIsSet("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") == 0
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FilesHaveSameDevAndIno("expr", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsOlderThan("expr", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsOlderThan("expr", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = "expr" == "expr"
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = "expr" == "expr"
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = "expr" != "expr"
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = "expr" > "expr"
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = "expr" < "expr"
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", "==", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", "!=", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", "<", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", "<=", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", ">", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", ">=", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			testResult = len("expr") != 0
+		}
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if !testResult {
+			testResult = len("expr") != 0
+		}
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		testResult = !testResult
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			testResult = len("expr") != 0
+		}
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+}
+
+
+#(ENDTEST)
+
+
+#(TEST: can generate the [[...]] command)
+[[ expr ]]
+[[ -a expr ]]
+[[ -a expr ]]
+[[ -b expr ]]
+[[ -c expr ]]
+[[ -d expr ]]
+[[ -e expr ]]
+[[ -f expr ]]
+[[ -g expr ]]
+[[ -h expr ]]
+[[ -k expr ]]
+[[ -p expr ]]
+[[ -r expr ]]
+[[ -s expr ]]
+[[ -t 1 ]]
+[[ -u expr ]]
+[[ -w expr ]]
+[[ -x expr ]]
+[[ -G expr ]]
+[[ -L expr ]]
+[[ -N expr ]]
+[[ -O expr ]]
+[[ -S expr ]]
+[[ -v expr ]]
+[[ -z expr ]]
+[[ -n expr ]]
+
+[[ expr -ef expr ]]
+[[ expr -nt expr ]]
+[[ expr -ot expr ]]
+
+[[ expr = expr ]]
+[[ expr == expr ]]
+[[ expr != expr ]]
+[[ expr > expr ]]
+[[ expr < expr ]]
+
+[[ expr -eq expr ]]
+[[ expr -ne expr ]]
+[[ expr -lt expr ]]
+[[ expr -le expr ]]
+[[ expr -gt expr ]]
+[[ expr -ge expr ]]
+
+[[ expr && expr ]]
+[[ expr || expr ]]
+[[ ! expr ]]
+[[ ( expr ) ]]
+[[ ( expr && expr ) ]]
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.BlockSpecialFileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.CharacterSpecialFileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.DirectoryExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.RegularFileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileSGIDIsSet("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsSymbolic("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsSticky("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsFIFO("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsReadable("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileHasAPositiveSize("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileDescriptorIsTerminal(streamManager, "1")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileSUIDIsSet("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsWritable("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsExecutable("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsOwnedByEffectiveGroup("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsSymbolic("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileHasBeenModifiedSinceLastRead("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsOwnedByEffectiveUser("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsSocket("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = shell.VarIsSet("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") == 0
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FilesHaveSameDevAndIno("expr", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsOlderThan("expr", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsOlderThan("expr", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = "expr" == "expr"
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = "expr" == "expr"
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = "expr" != "expr"
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = "expr" > "expr"
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = "expr" < "expr"
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", "==", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", "!=", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", "<", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", "<=", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", ">", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", ">=", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			testResult = len("expr") != 0
+		}
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if !testResult {
+			testResult = len("expr") != 0
+		}
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		testResult = !testResult
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			testResult = len("expr") != 0
+		}
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+}
+
+
+#(ENDTEST)
+
+
+#(TEST: can generate the `test` builtin)
+test expr 
+test -a expr 
+test -a expr 
+test -b expr 
+test -c expr 
+test -d expr 
+test -e expr 
+test -f expr 
+test -g expr 
+test -h expr 
+test -k expr 
+test -p expr 
+test -r expr 
+test -s expr 
+test -t 1 
+test -u expr 
+test -w expr 
+test -x expr 
+test -G expr 
+test -L expr 
+test -N expr 
+test -O expr 
+test -S expr 
+test -v expr 
+test -z expr 
+test -n expr 
+
+test expr -ef expr 
+test expr -nt expr 
+test expr -ot expr 
+
+test expr = expr 
+test expr == expr 
+test expr != expr 
+test expr > expr 
+test expr < expr 
+
+test expr -eq expr 
+test expr -ne expr 
+test expr -lt expr 
+test expr -le expr 
+test expr -gt expr 
+test expr -ge expr 
+
+test expr -a expr 
+test expr -o expr 
+test ! expr 
+test ( expr ) 
+test ( expr -a expr ) 
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.BlockSpecialFileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.CharacterSpecialFileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.DirectoryExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.RegularFileExists("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileSGIDIsSet("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsSymbolic("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsSticky("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsFIFO("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsReadable("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileHasAPositiveSize("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileDescriptorIsTerminal(streamManager, "1")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileSUIDIsSet("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsWritable("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsExecutable("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsOwnedByEffectiveGroup("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsSymbolic("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileHasBeenModifiedSinceLastRead("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsOwnedByEffectiveUser("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsSocket("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = shell.VarIsSet("expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") == 0
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FilesHaveSameDevAndIno("expr", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsOlderThan("expr", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.FileIsOlderThan("expr", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = "expr" == "expr"
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = "expr" == "expr"
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = "expr" != "expr"
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = "expr" > "expr"
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = "expr" < "expr"
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", "==", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", "!=", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", "<", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", "<=", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", ">", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = runtime.NumberCompare("expr", ">=", "expr")
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			testResult = len("expr") != 0
+		}
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if !testResult {
+			testResult = len("expr") != 0
+		}
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		testResult = !testResult
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			testResult = len("expr") != 0
+		}
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+}
+
+
+#(ENDTEST)
+
+#(TEST: can generate redirections on [...])
+[ expr ] <foo >bar 
+#(RESULT)
+ 
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		stream0, err := streamManager.OpenStream("foo", runtime.STREAM_FLAG_READ)
+		if err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+		streamManager.Add("0", stream0)
+		stream1, err := streamManager.OpenStream("bar", runtime.STREAM_FLAG_WRITE)
+		if err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+		streamManager.Add("1", stream1)
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+}
+
+
+#(ENDTEST)
+
+#(TEST: can generate redirections on [...])
+
+[[ expr ]] <foo >bar 
+
+#(RESULT)
+ 
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		stream0, err := streamManager.OpenStream("foo", runtime.STREAM_FLAG_READ)
+		if err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+		streamManager.Add("0", stream0)
+		stream1, err := streamManager.OpenStream("bar", runtime.STREAM_FLAG_WRITE)
+		if err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+		streamManager.Add("1", stream1)
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+}
+
+
+#(ENDTEST)
+
+#(TEST: can generate redirections on [...])
+
+test expr  <foo >bar 
+
+#(RESULT)
+ 
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		stream0, err := streamManager.OpenStream("foo", runtime.STREAM_FLAG_READ)
+		if err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+		streamManager.Add("0", stream0)
+		stream1, err := streamManager.OpenStream("bar", runtime.STREAM_FLAG_WRITE)
+		if err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+		streamManager.Add("1", stream1)
+		var testResult = false
+		testResult = len("expr") != 0
+		if testResult {
+			shell.ExitCode = 0
+		} else {
+			shell.ExitCode = 1
+		}
+
+	}()
+}
+
+
+#(ENDTEST)
+
+
+
+
+#(TEST: can generate redirections on [...])
+
+[ expr ] | [ expr ]
+
+#(RESULT)
+ 
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		var pipelineWaitgroup []func() error
+		pipeReader1, pipeWriter1, err := runtime.NewPipe()
+		if err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+		func() {
+			streamManager := streamManager.Clone()
+			streamManager.Add("1", pipeWriter1)
+			var done = make(chan struct{}, 1)
+			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
+				<-done
+				streamManager.Destroy()
+				return nil
+			})
+			go func() {
+				var testResult = false
+				testResult = len("expr") != 0
+				if testResult {
+					shell.ExitCode = 0
+				} else {
+					shell.ExitCode = 1
+				}
+				done <- struct{}{}
+
+			}()
+
+		}()
+		func() {
+			streamManager := streamManager.Clone()
+			streamManager.Add("0", pipeReader1)
+			var done = make(chan struct{}, 1)
+			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
+				<-done
+				streamManager.Destroy()
+				return nil
+			})
+			go func() {
+				var testResult = false
+				testResult = len("expr") != 0
+				if testResult {
+					shell.ExitCode = 0
+				} else {
+					shell.ExitCode = 1
+				}
+				done <- struct{}{}
+
+			}()
+
+		}()
+		for i, wait := range pipelineWaitgroup {
+			if err := wait(); err != nil {
+				shell.HandleError(streamManager, err)
+			}
+			if i < (len(pipelineWaitgroup) - 1) {
+				shell.ExitCode = 0
+			}
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+
+
+#(TEST: can generate redirections on [...])
+
+[[ expr ]] | [[ expr ]]
+
+#(RESULT)
+ 
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		var pipelineWaitgroup []func() error
+		pipeReader1, pipeWriter1, err := runtime.NewPipe()
+		if err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+		func() {
+			streamManager := streamManager.Clone()
+			streamManager.Add("1", pipeWriter1)
+			var done = make(chan struct{}, 1)
+			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
+				<-done
+				streamManager.Destroy()
+				return nil
+			})
+			go func() {
+				var testResult = false
+				testResult = len("expr") != 0
+				if testResult {
+					shell.ExitCode = 0
+				} else {
+					shell.ExitCode = 1
+				}
+				done <- struct{}{}
+
+			}()
+
+		}()
+		func() {
+			streamManager := streamManager.Clone()
+			streamManager.Add("0", pipeReader1)
+			var done = make(chan struct{}, 1)
+			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
+				<-done
+				streamManager.Destroy()
+				return nil
+			})
+			go func() {
+				var testResult = false
+				testResult = len("expr") != 0
+				if testResult {
+					shell.ExitCode = 0
+				} else {
+					shell.ExitCode = 1
+				}
+				done <- struct{}{}
+
+			}()
+
+		}()
+		for i, wait := range pipelineWaitgroup {
+			if err := wait(); err != nil {
+				shell.HandleError(streamManager, err)
+			}
+			if i < (len(pipelineWaitgroup) - 1) {
+				shell.ExitCode = 0
+			}
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+
+
+
+#(TEST: can generate redirections on [...])
+
+test expr  | test expr 
+
+#(RESULT)
+ 
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	func() {
+		var pipelineWaitgroup []func() error
+		pipeReader1, pipeWriter1, err := runtime.NewPipe()
+		if err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+		func() {
+			streamManager := streamManager.Clone()
+			streamManager.Add("1", pipeWriter1)
+			var done = make(chan struct{}, 1)
+			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
+				<-done
+				streamManager.Destroy()
+				return nil
+			})
+			go func() {
+				var testResult = false
+				testResult = len("expr") != 0
+				if testResult {
+					shell.ExitCode = 0
+				} else {
+					shell.ExitCode = 1
+				}
+				done <- struct{}{}
+
+			}()
+
+		}()
+		func() {
+			streamManager := streamManager.Clone()
+			streamManager.Add("0", pipeReader1)
+			var done = make(chan struct{}, 1)
+			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
+				<-done
+				streamManager.Destroy()
+				return nil
+			})
+			go func() {
+				var testResult = false
+				testResult = len("expr") != 0
+				if testResult {
+					shell.ExitCode = 0
+				} else {
+					shell.ExitCode = 1
+				}
+				done <- struct{}{}
+
+			}()
+
+		}()
+		for i, wait := range pipelineWaitgroup {
+			if err := wait(); err != nil {
+				shell.HandleError(streamManager, err)
+			}
+			if i < (len(pipelineWaitgroup) - 1) {
+				shell.ExitCode = 0
+			}
+		}
+
+	}()
+}
+
+#(ENDTEST)
