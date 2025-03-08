@@ -999,3 +999,119 @@ cases:
         5: 0
         6: 1
         7: 0
+
+  - name: "can negate a test expression using the `test` builtin"
+    script: |
+      test ! foobar 
+      echo '1': $?
+
+      touch file
+      test ! -f file 
+      echo '2': $?
+
+      test ! -f missing-file 
+      echo '3': $?
+
+      test ! foo = bar 
+      echo '4': $?
+
+      test ! foo = foo 
+      echo '5': $?
+    expect:
+      stdout: |
+        1: 1
+        2: 1
+        3: 0
+        4: 0
+        5: 1
+
+  - name: "can use the AND logical operator in test expressions using the `test` builtin"
+    script: |
+      test foo -a bar 
+      echo '1': $?
+
+      test foo -a -f missin-file 
+      echo '2': $?
+
+      touch file
+      test foo -a -f file 
+      echo '3': $?
+
+      test ! "" -a ! "" 
+      echo '4': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 0
+        4: 0
+
+  - name: "the AND logical operator only evaluates second expression if the first expression is true in the `test` builtin"
+    script: |
+      touch file
+
+      test "" -a $(rm file) 
+
+      test -f file 
+
+      echo $?
+    expect:
+      stdout: |
+        0
+
+  - name: "can use the OR logical operator in test expressions using the `test` builtin"
+    script: |
+      test foo -o bar 
+      echo '1': $?
+
+      test "" -o bar 
+      echo '2': $?
+
+      test foo -o "" 
+      echo '3': $?
+
+      test "" -o "" 
+      echo '4': $?
+
+      test -f file -o ! -f file 
+      echo '5': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 0
+        3: 0
+        4: 1
+        5: 0
+
+  - name: "the OR logical operator only evaluates second expression if the first expression is false in the `test` builtin"
+    script: |
+      touch file
+
+      test foo -o $(rm file) 
+
+      test -f file 
+
+      echo $?
+    expect:
+      stdout: |
+        0
+
+  - name: "can group conditional expressions using the `test` builtin"
+    script: |
+      test (foo) 
+      echo 1: $?
+
+      test (-n foo) 
+      echo 2: $?
+
+      test (-n foo -a -n bar) 
+      echo 3: $?
+
+      test ! ("" -o bar) 
+      echo 4: $?
+    expect:
+      stdout: |
+        1: 0
+        2: 0
+        3: 0
+        4: 1
