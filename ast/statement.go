@@ -134,6 +134,8 @@ type Test struct {
 	Redirections []Redirection
 }
 
+type Embed []string
+
 func (Redirection) node()         {}
 func (Command) node()             {}
 func (Pipeline) node()            {}
@@ -153,6 +155,7 @@ func (Test) node()                {}
 func (Break) node()               {}
 func (Continue) node()            {}
 func (Wait) node()                {}
+func (Embed) node()               {}
 
 // Expressions
 func (CommandSubstitution) expr() {}
@@ -178,3 +181,4 @@ func (Test) stmt()           {}
 func (Break) stmt()          {}
 func (Continue) stmt()       {}
 func (Wait) stmt()           {}
+func (Embed) stmt()          {}
