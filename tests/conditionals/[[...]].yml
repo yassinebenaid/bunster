@@ -890,15 +890,13 @@ cases:
       touch file 
       ln -s file file_symbolic
 
-      cat file >/dev/null
-
       [[ -N file ]]
       echo '1': $?
 
       [[ -N file_symbolic ]]
       echo '2': $?
 
-      echo foo >file
+      cat file >/dev/null
 
       [[ -N file ]]
       echo '3': $?
@@ -906,7 +904,7 @@ cases:
       [[ -N file_symbolic ]]
       echo '4': $?
 
-      cat file >/dev/null
+      echo foo >file
 
       [[ -N file ]]
       echo '5': $?
@@ -915,12 +913,12 @@ cases:
       echo '6': $?
     expect:
       stdout: |
-        1: 1
-        2: 1
-        3: 0
-        4: 0
-        5: 1
-        6: 1
+        1: 0
+        2: 0
+        3: 1
+        4: 1
+        5: 0
+        6: 0
 
   - name: "can test that a file is a socket using the [[...]] syntax"
     script: |
