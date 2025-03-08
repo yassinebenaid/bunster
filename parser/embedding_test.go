@@ -27,6 +27,26 @@ var embeddingTests = []testCase{
 		ast.Command{Name: ast.Word("@"), Args: []ast.Expression{ast.Word("embed")}},
 		ast.Command{Name: ast.Word("@embed")},
 	}},
+	{`
+		@embed file; @embed file;
+
+	`, ast.Script{
+		ast.Embed{"file"},
+		ast.Embed{"file"},
+	}},
+	{`
+	function foo(){
+		
+		@embed file; @embed file;
+		
+	}`, ast.Script{
+		ast.Function{Name: "foo", Command: ast.Group{
+			Body: []ast.Statement{
+				ast.Embed{"file"},
+				ast.Embed{"file"},
+			},
+		}},
+	}},
 }
 
 var embeddingErrorHandlingCases = []errorHandlingTestCase{
@@ -34,4 +54,5 @@ var embeddingErrorHandlingCases = []errorHandlingTestCase{
 	{`@embed `, "syntax error: unexpected token: end of file. (line: 1, column: 8)"},
 	{`@embed $var`, "syntax error: expected a valid file path. (line: 1, column: 12)"},
 	{`@embed "$var foo"`, "syntax error: expected a valid file path. (line: 1, column: 18)"},
+	{`@embed file | cmd`, "syntax error: expected a valid file path. (line: 1, column: 13)"},
 }

@@ -245,7 +245,7 @@ func (p *parser) parseEmbedDirective() ast.Statement {
 loop:
 	for {
 		switch p.curr.Type {
-		case token.EOF, token.NEWLINE:
+		case token.EOF, token.NEWLINE, token.SEMICOLON:
 			break loop
 		default:
 			expr = p.parseExpression()
@@ -258,12 +258,12 @@ loop:
 				return nil
 			}
 		}
-		if p.curr.Type != token.NEWLINE {
+		if p.curr.Type != token.NEWLINE && p.curr.Type != token.SEMICOLON {
 			p.proceed()
 		}
 	}
 
-	if embed == nil || (p.curr.Type != token.EOF && p.curr.Type != token.NEWLINE) {
+	if embed == nil || (p.curr.Type != token.EOF && p.curr.Type != token.NEWLINE && p.curr.Type != token.SEMICOLON) {
 		p.error("unexpected token: %v", p.curr)
 	}
 
