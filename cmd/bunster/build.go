@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/urfave/cli/v3"
@@ -91,20 +92,19 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 
 func cloneEmbeddedFiles(dst string, files []string) error {
 	for _, file := range files {
-		srcf, err := os.OpenFile(file, os.O_RDONLY, 000)
+		info, err := os.Stat(file)
 		if err != nil {
 			return err
 		}
-		defer srcf.Close()
 
-		dstf, err := os.OpenFile(path.Join(dst, file), os.O_WRONLY|os.O_CREATE, 0666)
-		if err != nil {
-			return err
-		}
-		defer dstf.Close()
-
-		if _, err := io.Copy(dstf, srcf); err != nil {
-			return err
+		if info.IsDir() {
+			if err := copyDir(file, dst); err != nil {
+				return err
+			}
+		} else {
+			if err := copyFile(file, path.Join(dst, file)); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -144,4 +144,38 @@ func cloneStubs(dst string) error {
 	}
 
 	return nil
+}
+
+func copyFile(src, dst string) error {
+	srcf, err := os.OpenFile(src, os.O_RDONLY, 000)
+	if err != nil {
+		return err
+	}
+	defer srcf.Close()
+
+	dstf, err := os.OpenFile(dst, os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		return err
+	}
+	defer dstf.Close()
+
+	if _, err := io.Copy(dstf, srcf); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func copyDir(src, dst string) error {
+	return filepath.Walk(src, func(_path string, info fs.FileInfo, err error) error {
+		if err != nil {
+			return nil
+		}
+
+		if info.IsDir() {
+			return os.MkdirAll(path.Join(dst, _path), 0766)
+		}
+
+		return copyFile(_path, path.Join(dst, _path))
+	})
 }
