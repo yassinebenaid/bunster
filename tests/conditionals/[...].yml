@@ -999,3 +999,28 @@ cases:
         5: 0
         6: 1
         7: 0
+
+  - name: "can negate a test expression using the [...] syntax"
+    script: |
+      [ ! foobar ]
+      echo '1': $?
+
+      touch file
+      [ ! -f file ]
+      echo '2': $?
+
+      [ ! -f missing-file ]
+      echo '3': $?
+
+      [ ! foo = bar ]
+      echo '4': $?
+
+      [ ! foo = foo ]
+      echo '5': $?
+    expect:
+      stdout: |
+        1: 1
+        2: 1
+        3: 0
+        4: 0
+        5: 1

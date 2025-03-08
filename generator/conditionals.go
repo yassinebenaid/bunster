@@ -26,6 +26,9 @@ func (g *generator) handleTestExpression(buf *InstructionBuffer, test ast.Expres
 		g.handleTestBinary(buf, v)
 	case ast.Unary:
 		g.handleTestUnary(buf, v)
+	case ast.Negation:
+		g.handleTestExpression(buf, v.Operand)
+		buf.add(ir.Literal("testResult = !testResult \n"))
 	default:
 		buf.add(ir.TestAgainsStringLength{String: g.handleExpression(buf, v)})
 	}

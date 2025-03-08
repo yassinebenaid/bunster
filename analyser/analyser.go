@@ -225,6 +225,8 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 		a.analyseExpression(v.Right)
 	case ast.Unary:
 		a.analyseExpression(v.Operand)
+	case ast.Negation:
+		a.analyseExpression(v.Operand)
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
