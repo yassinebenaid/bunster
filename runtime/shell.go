@@ -41,6 +41,7 @@ type Shell struct {
 	ExitCode  int
 	Args      []string
 	WaitGroup sync.WaitGroup
+	Embed     fs.FS
 
 	vars         *repository[string]
 	env          *repository[string]
@@ -167,6 +168,7 @@ func (shell *Shell) Clone() *Shell {
 		PID:          shell.PID,
 		ExitCode:     shell.ExitCode,
 		Args:         shell.Args,
+		Embed:        shell.Embed,
 		functions:    shell.functions.clone(),
 		vars:         shell.vars.clone(),
 		localVars:    shell.localVars.clone(),
@@ -230,6 +232,7 @@ func (cmd *Command) Start() error {
 		shell := Shell{
 			parent:       cmd.shell,
 			PID:          cmd.shell.PID,
+			Embed:        cmd.shell.Embed,
 			Args:         append(cmd.shell.Args[:1], cmd.Args...),
 			functions:    cmd.shell.functions,
 			vars:         cmd.shell.vars,

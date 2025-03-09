@@ -34,12 +34,14 @@ func Generate(script ast.Script) ir.Program {
 
 	return ir.Program{
 		Instructions: buf,
+		Embeds:       g.embeds,
 	}
 }
 
 type generator struct {
 	expressionsCount int
 	scopesCount      int
+	embeds           []string
 }
 
 func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, ctx *context) {
@@ -86,6 +88,8 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, ct
 		g.handleRangeLoop(buf, v, ctx)
 	case ast.Test:
 		g.handleTest(buf, v, ctx)
+	case ast.Embed:
+		g.handleEmbed(buf, v)
 	default:
 		panic(fmt.Sprintf("Unsupported statement: %T", v))
 	}

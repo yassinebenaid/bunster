@@ -2,6 +2,7 @@ package analyser
 
 import (
 	"fmt"
+	"path"
 
 	"github.com/yassinebenaid/bunster/ast"
 )
@@ -195,6 +196,18 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.analyseExpression(r.Dst)
 			}
 		}
+	case ast.Embed:
+		if len(a.stack) != 1 {
+			a.report("using '@embed' directive is only valid in global scope")
+		}
+
+		for _, p := range v {
+			if path.IsAbs(p) {
+				a.report(fmt.Sprintf("only relative paths can be embedded [%v]", p))
+				break
+			}
+		}
+
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}

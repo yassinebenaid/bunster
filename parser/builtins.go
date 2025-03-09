@@ -19,6 +19,11 @@ func (p *parser) getBuiltinParser() func() ast.Statement {
 		return p.parseLocal
 	case token.EXPORT:
 		return p.parseExport
+	case token.AT:
+		if p.next.Type != token.EMBED {
+			return nil
+		}
+		return p.parseEmbedDirective
 	case token.THEN, token.ELIF, token.ELSE, token.FI, token.DO, token.DONE, token.ESAC:
 		p.error("`%s` is a reserved keyword, cannot be used a command name", p.curr)
 	}
@@ -222,4 +227,45 @@ func (p *parser) parseExport() ast.Statement {
 	}
 
 	return assignements
+}
+
+func (p *parser) parseEmbedDirective() ast.Statement {
+	p.proceed()
+	p.proceed()
+
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	} else {
+		p.error("expected a blank after the @embed directive, found %s", p.curr)
+	}
+
+	var embed ast.Embed
+	var expr ast.Expression
+
+loop:
+	for {
+		switch p.curr.Type {
+		case token.EOF, token.NEWLINE, token.SEMICOLON:
+			break loop
+		default:
+			expr = p.parseExpression()
+
+			switch v := expr.(type) {
+			case ast.Word:
+				embed = append(embed, string(v))
+			default:
+				p.error("expected a valid file path")
+				return nil
+			}
+		}
+		if p.curr.Type != token.NEWLINE && p.curr.Type != token.SEMICOLON {
+			p.proceed()
+		}
+	}
+
+	if embed == nil || (p.curr.Type != token.EOF && p.curr.Type != token.NEWLINE && p.curr.Type != token.SEMICOLON) {
+		p.error("unexpected token: %v", p.curr)
+	}
+
+	return embed
 }

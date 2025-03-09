@@ -16,3 +16,7 @@ func (g *generator) handleContinue(buf *InstructionBuffer, _ ast.Continue) {
 func (g *generator) handleWait(buf *InstructionBuffer, _ ast.Wait) {
 	buf.add(ir.Literal("shell.WaitGroup.Wait()\n"))
 }
+
+func (g *generator) handleEmbed(_ *InstructionBuffer, embed ast.Embed) {
+	g.embeds = append(g.embeds, embed...)
+}

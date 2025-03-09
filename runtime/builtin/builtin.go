@@ -8,6 +8,7 @@ func Register(shell *runtime.Shell) {
 	shell.RegisterFunction("true", True)
 	shell.RegisterFunction("false", False)
 	shell.RegisterFunction("loadenv", Loadenv)
+	shell.RegisterFunction("embed", Embed)
 }
 
 func True(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
