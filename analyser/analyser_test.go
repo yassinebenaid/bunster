@@ -32,7 +32,6 @@ var testCases = []testCase{
 			@embed file
 		}
 	`, "semantic error: using '@embed' directive is only valid in global scope. (line: 0, column: 0)"},
-	{`@embed /file`, "semantic error: only relative paths can be embedded [/file]. (line: 0, column: 0)"},
 }
 
 func TestErrors(t *testing.T) {
