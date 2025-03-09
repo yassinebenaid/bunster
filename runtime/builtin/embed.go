@@ -3,7 +3,6 @@ package builtin
 import (
 	"fmt"
 	"io"
-	"io/fs"
 	"strings"
 
 	"github.com/yassinebenaid/bunster/runtime"
@@ -31,19 +30,18 @@ func Embed(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 			return
 		}
 	case "ls":
-		var files []string
-		err := fs.WalkDir(shell.Embed, path, func(path string, d fs.DirEntry, err error) error {
-			if err != nil {
-				return err
-			}
-			files = append(files, path)
-			return err
-		})
+		de, err := shell.Embed.ReadDir(path)
 		if err != nil {
 			fmt.Fprintf(stderr, "embed: %v\n", err)
 			shell.ExitCode = 1
 			return
 		}
+
+		var files []string
+		for _, entry := range de {
+			files = append(files, entry.Name())
+		}
+
 		fmt.Fprintln(stdout, strings.Join(files, "\n"))
 	default:
 		fmt.Fprintf(stderr, "embed: %q is not a valid command\n", command)
