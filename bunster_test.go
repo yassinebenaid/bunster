@@ -54,6 +54,11 @@ func TestBunster(t *testing.T) {
 		t.Fatalf("Failed to `Glob` test files, %v", err)
 	}
 
+	currentWorkingDirectory, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("cannot get current working directory, %v", err)
+	}
+
 	for _, testFile := range testFiles {
 		t.Run(testFile, func(t *testing.T) {
 
@@ -106,7 +111,12 @@ func TestBunster(t *testing.T) {
 					}
 				}
 
-				binary, err := buildBinary(workdir, workdir, []byte(testCase.Script))
+				if err := os.Chdir(workdir); err != nil {
+					t.Fatalf("cannot change current working directory, %v", err)
+				}
+				defer os.Chdir(currentWorkingDirectory)
+
+				binary, err := buildBinary(workdir, []byte(testCase.Script))
 				if err != nil {
 					t.Fatalf("\nTest(#%d): %sBuild Error: %s", i, dump(testCase.Name), dump(err.Error()))
 				}
@@ -184,8 +194,8 @@ func TestBunster(t *testing.T) {
 	}
 }
 
-func buildBinary(cwd, workdir string, s []byte) (string, error) {
-	if err := bunster.Generate(cwd, workdir, s); err != nil {
+func buildBinary(workdir string, s []byte) (string, error) {
+	if err := bunster.Generate(workdir, s); err != nil {
 		return "", err
 	}
 
@@ -193,7 +203,6 @@ func buildBinary(cwd, workdir string, s []byte) (string, error) {
 	gocmd.Stdin = os.Stdin
 	gocmd.Stdout = os.Stdout
 	gocmd.Stderr = os.Stderr
-	gocmd.Dir = workdir
 	if err := gocmd.Run(); err != nil {
 		return "", err
 	}

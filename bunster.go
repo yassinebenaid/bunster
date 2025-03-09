@@ -28,7 +28,7 @@ var gomod []byte
 //go:embed stubs/main.go.stub
 var mainGo []byte
 
-func Generate(cwd, workdir string, s []byte) error {
+func Generate(workdir string, s []byte) error {
 	program, err := compile(s)
 	if err != nil {
 		return err
@@ -47,7 +47,7 @@ func Generate(cwd, workdir string, s []byte) error {
 		return err
 	}
 
-	if err := cloneEmbeddedFiles(cwd, workdir, program.Embeds); err != nil {
+	if err := cloneEmbeddedFiles(workdir, program.Embeds); err != nil {
 		return err
 	}
 
@@ -104,9 +104,13 @@ func cloneStubs(dst string) error {
 	return nil
 }
 
-func cloneEmbeddedFiles(cwd, dst string, files []string) error {
+func cloneEmbeddedFiles(dst string, files []string) error {
+	if err := os.MkdirAll(path.Join(dst, ir.EmbedDirectory), 0766); err != nil {
+		return err
+	}
+
 	for _, file := range files {
-		srcPath, dstPath := path.Join(cwd, file), path.Join(dst, file)
+		srcPath, dstPath := file, path.Join(dst, ir.EmbedDirectory, file)
 
 		info, err := os.Stat(srcPath)
 		if err != nil {
@@ -114,7 +118,7 @@ func cloneEmbeddedFiles(cwd, dst string, files []string) error {
 		}
 
 		if info.IsDir() {
-			if err := copyDir(srcPath, dst); err != nil {
+			if err := copyDir(srcPath, path.Join(dst, ir.EmbedDirectory)); err != nil {
 				return err
 			}
 		} else {

@@ -3,6 +3,7 @@ package builtin
 import (
 	"fmt"
 	"io"
+	"io/fs"
 	"strings"
 
 	"github.com/yassinebenaid/bunster/runtime"
@@ -37,7 +38,7 @@ func Embed(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 			return
 		}
 	case "ls":
-		de, err := shell.Embed.ReadDir(path)
+		de, err := fs.ReadDir(shell.Embed, path)
 		if err != nil {
 			fmt.Fprintf(stderr, "embed: %v\n", err)
 			shell.ExitCode = 1

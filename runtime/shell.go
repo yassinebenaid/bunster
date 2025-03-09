@@ -1,7 +1,6 @@
 package runtime
 
 import (
-	"embed"
 	"fmt"
 	"io/fs"
 	"os"
@@ -42,7 +41,7 @@ type Shell struct {
 	ExitCode  int
 	Args      []string
 	WaitGroup sync.WaitGroup
-	Embed     *embed.FS
+	Embed     fs.FS
 
 	vars         *repository[string]
 	env          *repository[string]

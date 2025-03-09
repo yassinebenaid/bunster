@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+const EmbedDirectory = "embed"
+
 type Instruction interface {
 	togo() string
 }
@@ -20,7 +22,7 @@ func (p Program) String() string {
 	if p.Embeds != nil {
 		var embeds []string
 		for _, path := range p.Embeds {
-			embeds = append(embeds, fmt.Sprintf("//go:embed %q", path))
+			embeds = append(embeds, fmt.Sprintf("//go:embed %q", EmbedDirectory+"/"+path))
 		}
 
 		str = fmt.Sprintf(`
@@ -28,6 +30,7 @@ func (p Program) String() string {
 
 			import (
 				"embed"
+				"io/fs"
 				"github.com/yassinebenaid/bunster/runtime"
 			)
 
@@ -35,8 +38,13 @@ func (p Program) String() string {
 			var embedFS embed.FS
 
 			func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-				shell.Embed = &embedFS
-			`, strings.Join(embeds, "\n"))
+				subfs, err := fs.Sub(&embedFS, %q)
+				if err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+				shell.Embed = subfs
+			`, strings.Join(embeds, "\n"), EmbedDirectory)
 	} else {
 		str = `
 			package main
