@@ -57,7 +57,6 @@ var embeddingErrorHandlingCases = []errorHandlingTestCase{
 	{`@embed file | cmd`, "syntax error: expected a valid file path. (line: 1, column: 13)"},
 	{`@embed /foo/bar`, `syntax error: path cannot start or end with slash, "/foo/bar". (line: 1, column: 16)`},
 	{`@embed foo/bar/`, `syntax error: path cannot start or end with slash, "foo/bar/". (line: 1, column: 16)`},
-	{`@embed .`, `syntax error: expected a valid file path, found ".". (line: 1, column: 9)`},
 	{`@embed \"`, `syntax error: expected a valid file path, found "\"". (line: 1, column: 10)`},
 	{`@embed *`, `syntax error: expected a valid file path, found "*". (line: 1, column: 9)`},
 	{`@embed \<`, `syntax error: expected a valid file path, found "<". (line: 1, column: 10)`},

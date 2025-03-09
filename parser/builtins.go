@@ -256,7 +256,7 @@ loop:
 			case ast.Word:
 				if v == "" {
 					p.error("expected a file path, found empty string")
-				} else if strings.ContainsAny(string(v), ".*\"'<>?|`\\:") {
+				} else if strings.ContainsAny(string(v), "*\"'<>?|`\\:") {
 					p.error("expected a valid file path, found %q", v)
 				} else if strings.HasPrefix(string(v), "/") || strings.HasSuffix(string(v), "/") {
 					p.error("path cannot start or end with slash, %q", v)
