@@ -46,8 +46,6 @@ func Loadenv(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 	shell.ExitCode = 0
 }
 
-const doubleQuoteSpecialChars = "\\\n\r\"!$`"
-
 func readFile(filename string) (envMap map[string]string, err error) {
 	content, err := os.ReadFile(filename)
 	if err != nil {
