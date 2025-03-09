@@ -1,30 +1,32 @@
 cases:
   - name: can embed a file
-    files:
-      file.txt: "foobar"
+    setup_shell: |
+      cat <<<"foobar" >file.txt
     script: |
       @embed file.txt
     expect:
       exit_code: 0
 
   - name: can embed a directory
-    files:
-      directory/file.txt: "foobar"
+    setup_shell: |
+      mkdir dir
+      cat <<<"foobar" >dir/file.txt
     script: |
-      @embed directory
+      @embed dir
     expect:
       exit_code: 0
 
   - name: can embed a multiple files and directories inline or using multiple embed directives
-    files:
-      directory1/file.txt: "foobar"
-      directory2/file.txt: "foobar"
-      directory3/file.txt: "foobar"
-      file.txt: "foobar"
-      file2.txt: "foobar"
+    setup_shell: |
+      mkdir dir1 dir2 dir3
+      cat <<<"foobar" >dir1/file.txt
+      cat <<<"foobar" >dir2/file.txt
+      cat <<<"foobar" >dir3/file.txt
+      cat <<<"foobar" >file.txt
+      cat <<<"foobar" >file2.txt
     script: |
-      @embed directory1 directory2 file.txt
-      @embed directory3
+      @embed dir1 dir2 file.txt
+      @embed dir3
       @embed file2.txt
     expect:
       exit_code: 0
@@ -37,20 +39,25 @@ cases:
       stderr: "embed: no files were embedded\n"
 
   - name: can read embedded files
-    files:
-      file.txt: "foo "
-      directory/file.txt: "bar"
+    setup_shell: |
+      mkdir dir
+      cat <<<"foobar" >dir/file.txt
+      cat <<<"foobar" >file.txt
+
     script: |
-      @embed file.txt directory
+      @embed file.txt dir
 
       embed cat file.txt
-      embed cat directory/file.txt
+      embed cat dir/file.txt
     expect:
-      stdout: "foo bar"
+      stdout: |
+        foobar
+        foobar
 
   - name: cannot read files that are not embedded
-    files:
-      file.txt: "foobar"
+    setup_shell: |
+      cat <<<"foobar" >file.txt
+
     script: |
       @embed file.txt
 
@@ -59,13 +66,15 @@ cases:
       exit_code: 1
       stderr: "embed: open file2.txt: file does not exist\n"
 
-  - name: can  list embeded directories
-    files:
-      file.txt: "foo "
-      dir/file.txt: "bar "
-      dir/file2.txt: "baz"
-      dir/dir2/file.txt: "baz"
-      dir/dir2/file2.txt: "baz"
+  - name: can list embeded directories
+    setup_shell: |
+      mkdir -p dir/dir2
+      cat <<<"foobar" >file.txt
+      cat <<<"foobar" >dir/file.txt
+      cat <<<"foobar" >dir/file2.txt
+      cat <<<"foobar" >dir/dir2/file.txt
+      cat <<<"foobar" >dir/dir2/file2.txt
+
     script: |
       @embed file.txt dir
 

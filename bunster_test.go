@@ -22,15 +22,16 @@ import (
 type Test struct {
 	NoParallel bool `yaml:"no-parallel"`
 	Cases      []struct {
-		Name    string            `yaml:"name"`
-		Stdin   string            `yaml:"stdin"`
-		RunsOn  string            `yaml:"runs_on"`
-		Env     []string          `yaml:"env"`
-		Args    []string          `yaml:"args"`
-		Files   map[string]string `yaml:"files"`
-		Timeout int               `yaml:"timeout"`
-		Script  string            `yaml:"script"`
-		Expect  struct {
+		Name       string            `yaml:"name"`
+		Stdin      string            `yaml:"stdin"`
+		RunsOn     string            `yaml:"runs_on"`
+		SetupShell string            `yaml:"setup_shell"`
+		Env        []string          `yaml:"env"`
+		Args       []string          `yaml:"args"`
+		Files      map[string]string `yaml:"files"`
+		Timeout    int               `yaml:"timeout"`
+		Script     string            `yaml:"script"`
+		Expect     struct {
 			Stdout   string            `yaml:"stdout"`
 			Stderr   string            `yaml:"stderr"`
 			ExitCode int               `yaml:"exit_code"`
@@ -89,13 +90,18 @@ func TestBunster(t *testing.T) {
 					t.Fatalf("Failed to create run workdir, %v", err)
 				}
 
-				for filename, content := range testCase.Files {
-					if dir := path.Dir(filename); dir != "" {
-						if err := os.MkdirAll(path.Join(workdir, dir), 0700); err != nil {
-							t.Fatalf("\nTest(#%d): %sFailed to make directory %q, %v", i, dump(testCase.Name), dir, err)
-						}
+				if testCase.SetupShell != "" {
+					var setupShellStderr bytes.Buffer
+					sh := exec.Command("bash", "-c", testCase.SetupShell)
+					sh.Stderr = &setupShellStderr
+					sh.Dir = workdir
+					if err := sh.Run(); err != nil {
+						t.Fatalf("\nTest(#%d): %sSetup Shell Error: %sStderr: %s", i, dump(testCase.Name), dump(err.Error()), dump(setupShellStderr.String()))
 					}
-					if err := os.WriteFile(path.Join(workdir, filename), []byte(content), 0600); err != nil {
+				}
+
+				for filename, content := range testCase.Files {
+					if err := os.WriteFile(path.Join(rundir, filename), []byte(content), 0600); err != nil {
 						t.Fatalf("\nTest(#%d): %sFailed to write file %q, %v", i, dump(testCase.Name), filename, err)
 					}
 				}
@@ -152,7 +158,7 @@ func TestBunster(t *testing.T) {
 						i, dump(testCase.Name), diff.DiffBG(testCase.Expect.Stdout, stdout.String()))
 				}
 
-				files, err := filepath.Glob(workdir + "/*")
+				files, err := filepath.Glob(rundir + "/*")
 				if err != nil {
 					t.Fatalf("\nTest(#%d): %sFailed to glob the working directory, %v", i, dump(testCase.Name), err)
 				}
@@ -162,7 +168,7 @@ func TestBunster(t *testing.T) {
 				}
 
 				for filename, expectedContent := range testCase.Expect.Files {
-					content, err := os.ReadFile(path.Join(workdir, filename))
+					content, err := os.ReadFile(path.Join(rundir, filename))
 					if err != nil {
 						t.Fatalf("\nTest(#%d): %sFailed to read file %q, %v", i, dump(testCase.Name), filename, err)
 					}
