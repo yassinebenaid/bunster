@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"path"
 
 	"github.com/urfave/cli/v3"
 	"github.com/yassinebenaid/bunster"
@@ -21,11 +20,6 @@ func geneateCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	program, err := bunster.Compile(v)
-	if err != nil {
-		return err
-	}
-
 	workdir := cmd.String("o")
 
 	if err := os.RemoveAll(workdir); err != nil {
@@ -36,12 +30,7 @@ func geneateCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	err = os.WriteFile(path.Join(workdir, "program.go"), []byte(program.String()), 0600)
-	if err != nil {
-		return err
-	}
-
-	if err := bunster.CloneAssets(workdir, program.Embeds); err != nil {
+	if err := bunster.Generate(workdir, v); err != nil {
 		return err
 	}
 

@@ -21,31 +21,21 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	program, err := bunster.Compile(v)
-	if err != nil {
+	workdir := path.Join(os.TempDir(), "bunster-build")
+	if err := os.RemoveAll(workdir); err != nil {
 		return err
 	}
 
-	wd := path.Join(os.TempDir(), "bunster-build")
-	if err := os.RemoveAll(wd); err != nil {
+	if err := os.MkdirAll(workdir, 0700); err != nil {
 		return err
 	}
 
-	if err := os.MkdirAll(wd, 0700); err != nil {
-		return err
-	}
-
-	err = os.WriteFile(path.Join(wd, "program.go"), []byte(program.String()), 0600)
-	if err != nil {
-		return err
-	}
-
-	if err := bunster.CloneAssets(wd, program.Embeds); err != nil {
+	if err := bunster.Generate(workdir, v); err != nil {
 		return err
 	}
 
 	// we ignore the error, because this is just an optional step that shouldn't stop us from building the binary
-	_ = exec.Command("gofmt", "-w", wd).Run()
+	_ = exec.Command("gofmt", "-w", workdir).Run()
 
 	destination := cmd.String("o")
 	if !path.IsAbs(destination) {
@@ -60,7 +50,7 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 	gocmd.Stdin = os.Stdin
 	gocmd.Stdout = os.Stdout
 	gocmd.Stderr = os.Stderr
-	gocmd.Dir = wd
+	gocmd.Dir = workdir
 	if err := gocmd.Run(); err != nil {
 		return err
 	}

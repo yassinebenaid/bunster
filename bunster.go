@@ -28,7 +28,33 @@ var gomod []byte
 //go:embed stubs/main.go.stub
 var mainGo []byte
 
-func Compile(s []byte) (*ir.Program, error) {
+func Generate(workdir string, s []byte) error {
+	program, err := compile(s)
+	if err != nil {
+		return err
+	}
+
+	err = os.WriteFile(path.Join(workdir, "program.go"), []byte(program.String()), 0600)
+	if err != nil {
+		return err
+	}
+
+	if err := cloneRuntime(workdir); err != nil {
+		return err
+	}
+
+	if err := cloneStubs(workdir); err != nil {
+		return err
+	}
+
+	if err := cloneEmbeddedFiles(workdir, program.Embeds); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func compile(s []byte) (*ir.Program, error) {
 	script, err := parser.Parse(lexer.New(s))
 	if err != nil {
 		return nil, err
@@ -41,22 +67,6 @@ func Compile(s []byte) (*ir.Program, error) {
 	program := generator.Generate(script)
 
 	return &program, nil
-}
-
-func CloneAssets(workdir string, embeds []string) error {
-	if err := cloneRuntime(workdir); err != nil {
-		return err
-	}
-
-	if err := cloneStubs(workdir); err != nil {
-		return err
-	}
-
-	if err := cloneEmbeddedFiles(workdir, embeds); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func cloneRuntime(dst string) error {

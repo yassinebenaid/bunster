@@ -179,17 +179,7 @@ func buildBinary(buildWorkdir string, s []byte) (string, string, error) {
 		return "", "", err
 	}
 
-	program, err := bunster.Compile(s)
-	if err != nil {
-		return "", "", err
-	}
-
-	err = os.WriteFile(path.Join(workdir, "program.go"), []byte(program.String()), 0600)
-	if err != nil {
-		return "", "", err
-	}
-
-	if err := bunster.CloneAssets(workdir, program.Embeds); err != nil {
+	if err := bunster.Generate(workdir, s); err != nil {
 		return "", "", err
 	}
 
