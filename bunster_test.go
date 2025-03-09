@@ -114,7 +114,11 @@ func TestBunster(t *testing.T) {
 				if err := os.Chdir(workdir); err != nil {
 					t.Fatalf("cannot change current working directory, %v", err)
 				}
-				defer os.Chdir(currentWorkingDirectory)
+				defer func() {
+					if err := os.Chdir(currentWorkingDirectory); err != nil {
+						t.Fatalf("cannot change current working directory, %v", err)
+					}
+				}()
 
 				binary, err := buildBinary(workdir, []byte(testCase.Script))
 				if err != nil {
@@ -122,7 +126,7 @@ func TestBunster(t *testing.T) {
 				}
 
 				var stdout, stderr bytes.Buffer
-				cmd := exec.Command(binary, testCase.Args...)
+				cmd := exec.Command(binary, testCase.Args...) //nolint:gosec
 				cmd.Stdin = strings.NewReader(testCase.Stdin)
 				cmd.Stdout = &stdout
 				cmd.Stderr = &stderr
