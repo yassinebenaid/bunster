@@ -2,6 +2,7 @@ package ir
 
 import (
 	"fmt"
+	"path"
 	"strings"
 )
 
@@ -21,8 +22,12 @@ func (p Program) String() string {
 
 	if p.Embeds != nil {
 		var embeds []string
-		for _, path := range p.Embeds {
-			embeds = append(embeds, fmt.Sprintf("//go:embed %q", EmbedDirectory+"/"+path))
+		for _, embed := range p.Embeds {
+			if embed == "." {
+				embed = "*"
+			}
+
+			embeds = append(embeds, fmt.Sprintf("//go:embed %q", path.Join(EmbedDirectory, embed)))
 		}
 
 		str = fmt.Sprintf(`
