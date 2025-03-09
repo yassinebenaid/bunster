@@ -97,7 +97,7 @@ func TestBunster(t *testing.T) {
 
 				if testCase.SetupShell != "" {
 					var setupShellStderr bytes.Buffer
-					sh := exec.Command("bash", "-c", testCase.SetupShell)
+					sh := exec.Command("bash", "-c", testCase.SetupShell) //nolint:gosec
 					sh.Stderr = &setupShellStderr
 					sh.Dir = workdir
 					if err := sh.Run(); err != nil {
@@ -126,7 +126,7 @@ func TestBunster(t *testing.T) {
 				}
 
 				var stdout, stderr bytes.Buffer
-				cmd := exec.Command(binary, testCase.Args...) //nolint:gosec
+				cmd := exec.Command(binary, testCase.Args...)
 				cmd.Stdin = strings.NewReader(testCase.Stdin)
 				cmd.Stdout = &stdout
 				cmd.Stderr = &stderr
