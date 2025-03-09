@@ -50,15 +50,7 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	if err := bunster.CloneRuntime(wd); err != nil {
-		return err
-	}
-
-	if err := bunster.CloneStubs(wd); err != nil {
-		return err
-	}
-
-	if err := bunster.CloneEmbeddedFiles(wd, program.Embeds); err != nil {
+	if err := bunster.CloneAssets(wd, program.Embeds); err != nil {
 		return err
 	}
 

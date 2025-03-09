@@ -183,14 +183,6 @@ func buildBinary(buildWorkdir string, s []byte) (string, string, error) {
 		return "", "", err
 	}
 
-	if err := bunster.CloneRuntime(workdir); err != nil {
-		return "", "", err
-	}
-
-	if err := bunster.CloneStubs(workdir); err != nil {
-		return "", "", err
-	}
-
 	script, err := parser.Parse(lexer.New(s))
 	if err != nil {
 		return "", "", err
@@ -207,7 +199,7 @@ func buildBinary(buildWorkdir string, s []byte) (string, string, error) {
 		return "", "", err
 	}
 
-	if err := bunster.CloneEmbeddedFiles(workdir, program.Embeds); err != nil {
+	if err := bunster.CloneAssets(workdir, program.Embeds); err != nil {
 		return "", "", err
 	}
 

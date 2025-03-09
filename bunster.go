@@ -22,7 +22,23 @@ var gomod []byte
 //go:embed stubs/main.go.stub
 var mainGo []byte
 
-func CloneRuntime(dst string) error {
+func CloneAssets(workdir string, embeds []string) error {
+	if err := cloneRuntime(workdir); err != nil {
+		return err
+	}
+
+	if err := cloneStubs(workdir); err != nil {
+		return err
+	}
+
+	if err := cloneEmbeddedFiles(workdir, embeds); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func cloneRuntime(dst string) error {
 	return fs.WalkDir(runtimeFS, "runtime", func(dpath string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return nil
@@ -45,7 +61,7 @@ func CloneRuntime(dst string) error {
 	})
 }
 
-func CloneStubs(dst string) error {
+func cloneStubs(dst string) error {
 	if err := os.WriteFile(path.Join(dst, "main.go"), mainGo, 0600); err != nil {
 		return err
 	}
@@ -57,7 +73,7 @@ func CloneStubs(dst string) error {
 	return nil
 }
 
-func CloneEmbeddedFiles(dst string, files []string) error {
+func cloneEmbeddedFiles(dst string, files []string) error {
 	for _, file := range files {
 		info, err := os.Stat(file)
 		if err != nil {
