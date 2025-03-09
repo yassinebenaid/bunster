@@ -18,6 +18,10 @@ func (p Program) String() string {
 	var str string
 
 	if p.Embeds != nil {
+		var embeds []string
+		for _, path := range p.Embeds {
+			embeds = append(embeds, fmt.Sprintf("//go:embed %q", path))
+		}
 
 		str = fmt.Sprintf(`
 			package main
@@ -27,12 +31,12 @@ func (p Program) String() string {
 				"github.com/yassinebenaid/bunster/runtime"
 			)
 
-			//go:embed %s
+			%s
 			var embedFS embed.FS
 
 			func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.Embed = &embedFS
-			`, strings.Join(p.Embeds, " "))
+			`, strings.Join(embeds, "\n"))
 	} else {
 		str = `
 			package main
