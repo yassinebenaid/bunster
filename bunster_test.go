@@ -14,10 +14,6 @@ import (
 	"time"
 
 	"github.com/yassinebenaid/bunster"
-	"github.com/yassinebenaid/bunster/analyser"
-	"github.com/yassinebenaid/bunster/generator"
-	"github.com/yassinebenaid/bunster/lexer"
-	"github.com/yassinebenaid/bunster/parser"
 	"github.com/yassinebenaid/bunster/pkg/diff"
 	"github.com/yassinebenaid/godump"
 	"gopkg.in/yaml.v3"
@@ -183,16 +179,10 @@ func buildBinary(buildWorkdir string, s []byte) (string, string, error) {
 		return "", "", err
 	}
 
-	script, err := parser.Parse(lexer.New(s))
+	program, err := bunster.Compile(s)
 	if err != nil {
 		return "", "", err
 	}
-
-	if err := analyser.Analyse(script); err != nil {
-		return "", "", err
-	}
-
-	program := generator.Generate(script)
 
 	err = os.WriteFile(path.Join(workdir, "program.go"), []byte(program.String()), 0600)
 	if err != nil {

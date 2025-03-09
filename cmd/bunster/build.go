@@ -9,10 +9,6 @@ import (
 
 	"github.com/urfave/cli/v3"
 	"github.com/yassinebenaid/bunster"
-	"github.com/yassinebenaid/bunster/analyser"
-	"github.com/yassinebenaid/bunster/generator"
-	"github.com/yassinebenaid/bunster/lexer"
-	"github.com/yassinebenaid/bunster/parser"
 )
 
 func buildCMD(_ context.Context, cmd *cli.Command) error {
@@ -25,16 +21,10 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	script, err := parser.Parse(lexer.New(v))
+	program, err := bunster.Compile(v)
 	if err != nil {
 		return err
 	}
-
-	if err := analyser.Analyse(script); err != nil {
-		return err
-	}
-
-	program := generator.Generate(script)
 
 	wd := path.Join(os.TempDir(), "bunster-build")
 	if err := os.RemoveAll(wd); err != nil {

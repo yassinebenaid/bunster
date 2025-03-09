@@ -8,6 +8,12 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+
+	"github.com/yassinebenaid/bunster/analyser"
+	"github.com/yassinebenaid/bunster/generator"
+	"github.com/yassinebenaid/bunster/ir"
+	"github.com/yassinebenaid/bunster/lexer"
+	"github.com/yassinebenaid/bunster/parser"
 )
 
 //go:embed VERSION
@@ -21,6 +27,21 @@ var gomod []byte
 
 //go:embed stubs/main.go.stub
 var mainGo []byte
+
+func Compile(s []byte) (*ir.Program, error) {
+	script, err := parser.Parse(lexer.New(s))
+	if err != nil {
+		return nil, err
+	}
+
+	if err := analyser.Analyse(script); err != nil {
+		return nil, err
+	}
+
+	program := generator.Generate(script)
+
+	return &program, nil
+}
 
 func CloneAssets(workdir string, embeds []string) error {
 	if err := cloneRuntime(workdir); err != nil {
