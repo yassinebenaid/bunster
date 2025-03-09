@@ -14,3 +14,74 @@ cases:
       @embed directory
     expect:
       exit_code: 0
+
+  - name: can embed a multiple files and directories inline or using multiple embed directives
+    files:
+      directory1/file.txt: "foobar"
+      directory2/file.txt: "foobar"
+      directory3/file.txt: "foobar"
+      file.txt: "foobar"
+      file2.txt: "foobar"
+    script: |
+      @embed directory1 directory2 file.txt
+      @embed directory3
+      @embed file2.txt
+    expect:
+      exit_code: 0
+
+  - name: cannot use 'embed' command when no files are embedded
+    script: |
+      embed cat file.txt
+    expect:
+      exit_code: 1
+      stderr: "embed: no files were embedded\n"
+
+  - name: can read embedded files
+    files:
+      file.txt: "foo "
+      directory/file.txt: "bar"
+    script: |
+      @embed file.txt directory
+
+      embed cat file.txt
+      embed cat directory/file.txt
+    expect:
+      stdout: "foo bar"
+
+  - name: cannot read files that are not embedded
+    files:
+      file.txt: "foobar"
+    script: |
+      @embed file.txt
+
+      embed cat file2.txt
+    expect:
+      exit_code: 1
+      stderr: "embed: open file2.txt: file does not exist\n"
+
+  - name: can  list embeded directories
+    files:
+      file.txt: "foo "
+      dir/file.txt: "bar "
+      dir/file2.txt: "baz"
+      dir/dir2/file.txt: "baz"
+      dir/dir2/file2.txt: "baz"
+    script: |
+      @embed file.txt dir
+
+      embed ls .
+      echo "---"
+      embed ls dir
+      echo "---"
+      embed ls dir/dir2
+    expect:
+      stdout: |
+        dir
+        file.txt
+        ---
+        dir2
+        file.txt
+        file2.txt
+        ---
+        file.txt
+        file2.txt

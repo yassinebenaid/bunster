@@ -48,18 +48,6 @@ func TestBunster(t *testing.T) {
 	var logger = log.New(os.Stdout, "", log.Ltime)
 	filter := os.Getenv("FILTER")
 
-	workdir := path.Join(os.TempDir(), "bunster-testing")
-	if err := os.RemoveAll(workdir); err != nil {
-		t.Fatalf("Failed to clean old workspace, %v", err)
-	}
-	if err := os.MkdirAll(workdir, 0700); err != nil {
-		t.Fatalf("Failed to create workspace, %v", err)
-	}
-	rundir := path.Join(workdir, "run")
-	if err := os.MkdirAll(rundir, 0700); err != nil {
-		t.Fatalf("Failed to create run workdir, %v", err)
-	}
-
 	testFiles, err := globFiles("tests")
 	if err != nil {
 		t.Fatalf("Failed to `Glob` test files, %v", err)
@@ -87,6 +75,18 @@ func TestBunster(t *testing.T) {
 				if testCase.RunsOn != "" && testCase.RunsOn != runtime.GOOS {
 					// some tests only run on specific platforms.
 					continue
+				}
+
+				workdir := path.Join(os.TempDir(), "bunster-testing")
+				if err := os.RemoveAll(workdir); err != nil {
+					t.Fatalf("Failed to clean old workspace, %v", err)
+				}
+				if err := os.MkdirAll(workdir, 0700); err != nil {
+					t.Fatalf("Failed to create workspace, %v", err)
+				}
+				rundir := path.Join(workdir, "run")
+				if err := os.MkdirAll(rundir, 0700); err != nil {
+					t.Fatalf("Failed to create run workdir, %v", err)
 				}
 
 				for filename, content := range testCase.Files {

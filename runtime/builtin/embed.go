@@ -9,9 +9,16 @@ import (
 )
 
 func Embed(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
+	if shell.Embed == nil {
+		fmt.Fprintf(stderr, "embed: no files were embedded\n")
+		shell.ExitCode = 1
+		return
+	}
+
 	if len(shell.Args) != 3 {
 		fmt.Fprintf(stderr, "embed: expected 2 arguments, got %d\n", len(shell.Args))
 		shell.ExitCode = 1
+		return
 	}
 
 	command, path := shell.Args[1], shell.Args[2]
