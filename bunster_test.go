@@ -183,11 +183,11 @@ func buildBinary(buildWorkdir string, s []byte) (string, string, error) {
 		return "", "", err
 	}
 
-	if err := cloneRuntime(workdir); err != nil {
+	if err := bunster.CloneRuntime(workdir); err != nil {
 		return "", "", err
 	}
 
-	if err := cloneStubs(workdir); err != nil {
+	if err := bunster.CloneStubs(workdir); err != nil {
 		return "", "", err
 	}
 
@@ -207,6 +207,10 @@ func buildBinary(buildWorkdir string, s []byte) (string, string, error) {
 		return "", "", err
 	}
 
+	if err := bunster.CloneEmbeddedFiles(workdir, program.Embeds); err != nil {
+		return "", "", err
+	}
+
 	gocmd := exec.Command("go", "build", "-o", "build.bin")
 	gocmd.Stdin = os.Stdin
 	gocmd.Stdout = os.Stdout
@@ -217,41 +221,6 @@ func buildBinary(buildWorkdir string, s []byte) (string, string, error) {
 	}
 
 	return path.Join(workdir, "build.bin"), rundir, nil
-}
-
-func cloneRuntime(dst string) error {
-	return fs.WalkDir(bunster.RuntimeFS, "runtime", func(dpath string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return nil
-		}
-
-		if d.IsDir() {
-			return os.MkdirAll(path.Join(dst, dpath), 0766)
-		}
-
-		if strings.HasSuffix(dpath, "_test.go") {
-			return nil
-		}
-
-		content, err := bunster.RuntimeFS.ReadFile(dpath)
-		if err != nil {
-			return err
-		}
-
-		return os.WriteFile(path.Join(dst, dpath), content, 0600)
-	})
-}
-
-func cloneStubs(dst string) error {
-	if err := os.WriteFile(path.Join(dst, "main.go"), bunster.MainGoStub, 0600); err != nil {
-		return err
-	}
-
-	if err := os.WriteFile(path.Join(dst, "go.mod"), bunster.GoModStub, 0600); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func globFiles(path string) ([]string, error) {

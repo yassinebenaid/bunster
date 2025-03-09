@@ -3,13 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"io"
-	"io/fs"
 	"os"
 	"os/exec"
 	"path"
-	"path/filepath"
-	"strings"
 
 	"github.com/urfave/cli/v3"
 	"github.com/yassinebenaid/bunster"
@@ -54,15 +50,15 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	if err := cloneRuntime(wd); err != nil {
+	if err := bunster.CloneRuntime(wd); err != nil {
 		return err
 	}
 
-	if err := cloneStubs(wd); err != nil {
+	if err := bunster.CloneStubs(wd); err != nil {
 		return err
 	}
 
-	if err := cloneEmbeddedFiles(wd, program.Embeds); err != nil {
+	if err := bunster.CloneEmbeddedFiles(wd, program.Embeds); err != nil {
 		return err
 	}
 
@@ -88,94 +84,4 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 	}
 
 	return nil
-}
-
-func cloneEmbeddedFiles(dst string, files []string) error {
-	for _, file := range files {
-		info, err := os.Stat(file)
-		if err != nil {
-			return err
-		}
-
-		if info.IsDir() {
-			if err := copyDir(file, dst); err != nil {
-				return err
-			}
-		} else {
-			if err := copyFile(file, path.Join(dst, file)); err != nil {
-				return err
-			}
-		}
-	}
-
-	return nil
-}
-
-func cloneRuntime(dst string) error {
-	return fs.WalkDir(bunster.RuntimeFS, "runtime", func(dpath string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return nil
-		}
-
-		if d.IsDir() {
-			return os.MkdirAll(path.Join(dst, dpath), 0766)
-		}
-
-		if strings.HasSuffix(dpath, "_test.go") {
-			return nil
-		}
-
-		content, err := bunster.RuntimeFS.ReadFile(dpath)
-		if err != nil {
-			return err
-		}
-
-		return os.WriteFile(path.Join(dst, dpath), content, 0600)
-	})
-}
-
-func cloneStubs(dst string) error {
-	if err := os.WriteFile(path.Join(dst, "main.go"), bunster.MainGoStub, 0600); err != nil {
-		return err
-	}
-
-	if err := os.WriteFile(path.Join(dst, "go.mod"), bunster.GoModStub, 0600); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func copyFile(src, dst string) error {
-	srcf, err := os.OpenFile(src, os.O_RDONLY, 000)
-	if err != nil {
-		return err
-	}
-	defer srcf.Close()
-
-	dstf, err := os.OpenFile(dst, os.O_WRONLY|os.O_CREATE, 0666)
-	if err != nil {
-		return err
-	}
-	defer dstf.Close()
-
-	if _, err := io.Copy(dstf, srcf); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func copyDir(src, dst string) error {
-	return filepath.Walk(src, func(_path string, info fs.FileInfo, err error) error {
-		if err != nil {
-			return nil
-		}
-
-		if info.IsDir() {
-			return os.MkdirAll(path.Join(dst, _path), 0766)
-		}
-
-		return copyFile(_path, path.Join(dst, _path))
-	})
 }

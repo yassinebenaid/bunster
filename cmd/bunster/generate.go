@@ -8,6 +8,7 @@ import (
 	"path"
 
 	"github.com/urfave/cli/v3"
+	"github.com/yassinebenaid/bunster"
 	"github.com/yassinebenaid/bunster/analyser"
 	"github.com/yassinebenaid/bunster/generator"
 	"github.com/yassinebenaid/bunster/lexer"
@@ -49,11 +50,11 @@ func geneateCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	if err := cloneRuntime(workdir); err != nil {
+	if err := bunster.CloneRuntime(workdir); err != nil {
 		return err
 	}
 
-	if err := cloneStubs(workdir); err != nil {
+	if err := bunster.CloneStubs(workdir); err != nil {
 		return err
 	}
 
