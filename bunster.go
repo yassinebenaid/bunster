@@ -28,7 +28,7 @@ var gomod []byte
 //go:embed stubs/main.go.stub
 var mainGo []byte
 
-func Generate(workdir string, s []byte) error {
+func Generate(cwd, workdir string, s []byte) error {
 	program, err := compile(s)
 	if err != nil {
 		return err
@@ -47,7 +47,7 @@ func Generate(workdir string, s []byte) error {
 		return err
 	}
 
-	if err := cloneEmbeddedFiles(workdir, program.Embeds); err != nil {
+	if err := cloneEmbeddedFiles(cwd, workdir, program.Embeds); err != nil {
 		return err
 	}
 
@@ -104,9 +104,9 @@ func cloneStubs(dst string) error {
 	return nil
 }
 
-func cloneEmbeddedFiles(dst string, files []string) error {
+func cloneEmbeddedFiles(cwd, dst string, files []string) error {
 	for _, file := range files {
-		info, err := os.Stat(file)
+		info, err := os.Stat(path.Join(cwd, file))
 		if err != nil {
 			return err
 		}
@@ -116,7 +116,7 @@ func cloneEmbeddedFiles(dst string, files []string) error {
 				return err
 			}
 		} else {
-			if err := copyFile(file, path.Join(dst, file)); err != nil {
+			if err := copyFile(path.Join(cwd, file), path.Join(dst, file)); err != nil {
 				return err
 			}
 		}

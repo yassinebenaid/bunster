@@ -1,0 +1,16 @@
+cases:
+  - name: can embed a file
+    files:
+      file.txt: "foobar"
+    script: |
+      @embed file.txt
+    expect:
+      exit_code: 0
+
+  - name: can embed a directory
+    files:
+      directory/file.txt: "foobar"
+    script: |
+      @embed directory
+    expect:
+      exit_code: 0

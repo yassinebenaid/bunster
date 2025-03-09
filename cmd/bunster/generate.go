@@ -30,7 +30,7 @@ func geneateCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	if err := bunster.Generate(workdir, v); err != nil {
+	if err := bunster.Generate(".", workdir, v); err != nil {
 		return err
 	}
 
