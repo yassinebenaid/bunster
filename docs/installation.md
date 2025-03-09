@@ -12,7 +12,6 @@ The absence of [the Go toolchain](https://go.dev/dl) does not affect the working
 If you only care about the generated Go code, and don't want **Bunster** to automatically compile the exectuable for you.
 That is totally fine and you can go for it.
 
-
 ## Linux/Mac
 We have bash script that installs `bunster` and adds it to your `$PATH`.
 
@@ -28,7 +27,6 @@ curl -f https://bunster.netlify.app/install.sh | GLOBAL=1 bash
 
 > [!warning]
 > Do not trust scripts downloaded from the interne. take a look at the code before running it.
-
 
  ## Docker Image
 The easiest way to get **Bunster** is through our official [Docker Image](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-an-image/).
@@ -49,7 +47,6 @@ You can get the latest version of `bunster` from [github releases](https://githu
 
 > [!warning]
 Only `linux` and `macos` binaries are available at the moment. `windows` support is coming soon.
-
 
 ## Using Go
 If you already have [the Go toolchain](https://go.dev/dl) installed. You can use the `go install` command to get **Bunster** on your machine.
@@ -72,3 +69,32 @@ mv $HOME/go/bin/bunster /usr/local/bin # you may need to use `sudo`.
 > [!info]
 If you choose to install using `go install`. make sure that `$HOME/go/bin` is added to your `PATH`. If not yet, Please add
 `export PATH=$PATH:$HOME/go/bin` to one of your profile files. eg. *`~/.bashrc` if you're using `bash`, or `~/.zshrc` if you're using `zsh`*.
+
+## Nixpkgs (NixOS & Nix)
+If you use [Nix](https://nixos.org), you can install **[Bunster](https://search.nixos.org/packages?channel=unstable&show=bunster&from=0&size=50&sort=relevance&type=packages&query=bunster)** from the `unstable` branch of `nixpkgs`:
+### NixOS Config
+Add the following Nix code to your NixOS Configuration, usually located in `/etc/nixos/configuration.nix`
+```
+  environment.systemPackages = [
+    pkgs.bunster
+  ];
+```
+### Nix Shell
+A nix-shell will temporarily modify your `$PATH` environment variable. This can be used to try a piece of software before deciding to permanently install it.
+```shell
+nix-shell -p bunster
+```
+### Nix Env (not recommended)
+#### On NixOS
+```shell
+nix-env -iA nixos.bunster
+```
+#### On Non-NixOS
+```shell
+# without flakes:
+nix-env -iA nixpkgs.bunster
+# with flakes:
+nix profile install nixpkgs#bunster
+```
+> [!warning]
+> **Bunster** is currently only available in the `unstable` branch of Nixpkgs but will be coming to the `stable` branch soon.
