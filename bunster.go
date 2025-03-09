@@ -106,17 +106,19 @@ func cloneStubs(dst string) error {
 
 func cloneEmbeddedFiles(cwd, dst string, files []string) error {
 	for _, file := range files {
-		info, err := os.Stat(path.Join(cwd, file))
+		srcPath, dstPath := path.Join(cwd, file), path.Join(dst, file)
+
+		info, err := os.Stat(srcPath)
 		if err != nil {
 			return err
 		}
 
 		if info.IsDir() {
-			if err := copyDir(file, dst); err != nil {
+			if err := copyDir(srcPath, dst); err != nil {
 				return err
 			}
 		} else {
-			if err := copyFile(path.Join(cwd, file), path.Join(dst, file)); err != nil {
+			if err := copyFile(srcPath, dstPath); err != nil {
 				return err
 			}
 		}
@@ -128,7 +130,7 @@ func cloneEmbeddedFiles(cwd, dst string, files []string) error {
 func copyDir(src, dst string) error {
 	return filepath.Walk(src, func(_path string, info fs.FileInfo, err error) error {
 		if err != nil {
-			return nil
+			return err
 		}
 
 		if info.IsDir() {
