@@ -10,20 +10,20 @@ import (
 	"strings"
 )
 
-//go:embed runtime
-var RuntimeFS embed.FS
-
-//go:embed stubs/go.mod.stub
-var GoModStub []byte
-
-//go:embed stubs/main.go.stub
-var MainGoStub []byte
-
 //go:embed VERSION
 var Version string
 
+//go:embed runtime
+var runtimeFS embed.FS
+
+//go:embed stubs/go.mod.stub
+var gomod []byte
+
+//go:embed stubs/main.go.stub
+var mainGo []byte
+
 func CloneRuntime(dst string) error {
-	return fs.WalkDir(RuntimeFS, "runtime", func(dpath string, d fs.DirEntry, err error) error {
+	return fs.WalkDir(runtimeFS, "runtime", func(dpath string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return nil
 		}
@@ -36,7 +36,7 @@ func CloneRuntime(dst string) error {
 			return nil
 		}
 
-		content, err := RuntimeFS.ReadFile(dpath)
+		content, err := runtimeFS.ReadFile(dpath)
 		if err != nil {
 			return err
 		}
@@ -46,11 +46,11 @@ func CloneRuntime(dst string) error {
 }
 
 func CloneStubs(dst string) error {
-	if err := os.WriteFile(path.Join(dst, "main.go"), MainGoStub, 0600); err != nil {
+	if err := os.WriteFile(path.Join(dst, "main.go"), mainGo, 0600); err != nil {
 		return err
 	}
 
-	if err := os.WriteFile(path.Join(dst, "go.mod"), GoModStub, 0600); err != nil {
+	if err := os.WriteFile(path.Join(dst, "go.mod"), gomod, 0600); err != nil {
 		return err
 	}
 
@@ -78,6 +78,20 @@ func CloneEmbeddedFiles(dst string, files []string) error {
 	return nil
 }
 
+func copyDir(src, dst string) error {
+	return filepath.Walk(src, func(_path string, info fs.FileInfo, err error) error {
+		if err != nil {
+			return nil
+		}
+
+		if info.IsDir() {
+			return os.MkdirAll(path.Join(dst, _path), 0766)
+		}
+
+		return copyFile(_path, path.Join(dst, _path))
+	})
+}
+
 func copyFile(src, dst string) error {
 	srcf, err := os.OpenFile(src, os.O_RDONLY, 000)
 	if err != nil {
@@ -96,18 +110,4 @@ func copyFile(src, dst string) error {
 	}
 
 	return nil
-}
-
-func copyDir(src, dst string) error {
-	return filepath.Walk(src, func(_path string, info fs.FileInfo, err error) error {
-		if err != nil {
-			return nil
-		}
-
-		if info.IsDir() {
-			return os.MkdirAll(path.Join(dst, _path), 0766)
-		}
-
-		return copyFile(_path, path.Join(dst, _path))
-	})
 }
