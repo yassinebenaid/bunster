@@ -61,3 +61,34 @@ function foo() {
 ```
 
 The path (s) given to the `@embed` directive must be relative and local to the current working directory. And it must not contain the character `\`, `"`, `'`, `<`, `>`, `|`, `?`, `*` or `:`.
+
+> [!TIP]
+> If you want to embed the current working directory, you can use the dot `@embed .`
+
+## Accessing embedded files
+
+The `embed` builtin command provides and interface to access files embedded in your program.
+
+```sh
+├── file
+└── src
+	├── main.js
+	└── utils.js
+```
+
+```sh
+@embed file src
+```
+
+1. Read a file
+
+```sh
+embed cat file
+embed cat src/main.js
+```
+
+2. List content of a directory
+
+```sh
+embed ls src
+```
