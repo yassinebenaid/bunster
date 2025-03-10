@@ -206,6 +206,8 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.report(fmt.Sprintf("the path %q is not local", path))
 			}
 		}
+	case ast.Defer:
+		a.analyseStatement(v.Command)
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
