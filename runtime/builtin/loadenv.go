@@ -17,7 +17,7 @@ func Loadenv(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 	fs := flag.NewFlagSet("loadenv", flag.ContinueOnError)
 	fs.SetOutput(stderr)
 	export := fs.Bool("X", false, "mark variables as exported")
-	if err := fs.Parse(shell.Args[1:]); err != nil {
+	if err := fs.Parse(shell.Args); err != nil {
 		shell.ExitCode = 1
 		return
 	}

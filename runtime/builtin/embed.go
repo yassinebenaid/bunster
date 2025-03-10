@@ -16,13 +16,13 @@ func Embed(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 		return
 	}
 
-	if len(shell.Args) != 3 {
+	if len(shell.Args) != 2 {
 		fmt.Fprintf(stderr, "embed: expected 2 arguments, got %d\n", len(shell.Args))
 		shell.ExitCode = 1
 		return
 	}
 
-	command, path := shell.Args[1], shell.Args[2]
+	command, path := shell.Args[0], shell.Args[1]
 
 	switch command {
 	case "cat":
@@ -52,7 +52,7 @@ func Embed(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 
 		fmt.Fprintln(stdout, strings.Join(files, "\n"))
 	default:
-		fmt.Fprintf(stderr, "embed: %q is not a valid command\n", command)
+		fmt.Fprintf(stderr, "embed: %q is not a valid embed command\n", command)
 		shell.ExitCode = 1
 	}
 }
