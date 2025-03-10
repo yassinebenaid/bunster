@@ -5,13 +5,9 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"path"
 
 	"github.com/urfave/cli/v3"
-	"github.com/yassinebenaid/bunster/analyser"
-	"github.com/yassinebenaid/bunster/generator"
-	"github.com/yassinebenaid/bunster/lexer"
-	"github.com/yassinebenaid/bunster/parser"
+	"github.com/yassinebenaid/bunster"
 )
 
 func geneateCMD(_ context.Context, cmd *cli.Command) error {
@@ -24,16 +20,6 @@ func geneateCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	script, err := parser.Parse(lexer.New(v))
-	if err != nil {
-		return err
-	}
-
-	if err := analyser.Analyse(script); err != nil {
-		return err
-	}
-
-	program := generator.Generate(script)
 	workdir := cmd.String("o")
 
 	if err := os.RemoveAll(workdir); err != nil {
@@ -44,16 +30,7 @@ func geneateCMD(_ context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	err = os.WriteFile(path.Join(workdir, "program.go"), []byte(program.String()), 0600)
-	if err != nil {
-		return err
-	}
-
-	if err := cloneRuntime(workdir); err != nil {
-		return err
-	}
-
-	if err := cloneStubs(workdir); err != nil {
+	if err := bunster.Generate(workdir, v); err != nil {
 		return err
 	}
 

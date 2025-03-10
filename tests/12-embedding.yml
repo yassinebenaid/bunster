@@ -1,0 +1,122 @@
+cases:
+  - name: can embed a file
+    setup_shell: |
+      cat <<<"foobar" >file.txt
+    script: |
+      @embed file.txt
+    expect:
+      exit_code: 0
+
+  - name: can embed a directory
+    setup_shell: |
+      mkdir dir
+      cat <<<"foobar" >dir/file.txt
+    script: |
+      @embed dir
+    expect:
+      exit_code: 0
+
+  - name: can embed a multiple files and directories inline or using multiple embed directives
+    setup_shell: |
+      mkdir dir1 dir2 dir3
+      cat <<<"foobar" >dir1/file.txt
+      cat <<<"foobar" >dir2/file.txt
+      cat <<<"foobar" >dir3/file.txt
+      cat <<<"foobar" >file.txt
+      cat <<<"foobar" >file2.txt
+    script: |
+      @embed dir1 dir2 file.txt
+      @embed dir3
+      @embed file2.txt
+    expect:
+      exit_code: 0
+
+  - name: cannot use 'embed' command when no files are embedded
+    script: |
+      embed cat file.txt
+    expect:
+      exit_code: 1
+      stderr: "embed: no files were embedded\n"
+
+  - name: can read embedded files
+    setup_shell: |
+      mkdir dir
+      cat <<<"foobar" >dir/file.txt
+      cat <<<"foobar" >file.txt
+
+    script: |
+      @embed file.txt dir
+
+      embed cat file.txt
+      embed cat dir/file.txt
+    expect:
+      stdout: |
+        foobar
+        foobar
+
+  - name: cannot read files that are not embedded
+    setup_shell: |
+      cat <<<"foobar" >file.txt
+
+    script: |
+      @embed file.txt
+
+      embed cat file2.txt
+    expect:
+      exit_code: 1
+      stderr: "embed: open file2.txt: file does not exist\n"
+
+  - name: can list embeded directories
+    setup_shell: |
+      mkdir -p dir/dir2
+      cat <<<"foobar" >file.txt
+      cat <<<"foobar" >dir/file.txt
+      cat <<<"foobar" >dir/file2.txt
+      cat <<<"foobar" >dir/dir2/file.txt
+      cat <<<"foobar" >dir/dir2/file2.txt
+
+    script: |
+      @embed file.txt dir
+
+      embed ls .
+      echo "---"
+      embed ls dir
+      echo "---"
+      embed ls dir/dir2
+    expect:
+      stdout: |
+        dir
+        file.txt
+        ---
+        dir2
+        file.txt
+        file2.txt
+        ---
+        file.txt
+        file2.txt
+
+  - name: embed command expects exactly 2 arguments
+    setup_shell: |
+      cat <<<"foobar" >file.txt
+    script: |
+      @embed file.txt
+
+      embed arg1 arg2 arg3
+      embed arg1
+    expect:
+      exit_code: 1
+      stderr: |
+        embed: expected 2 arguments, got 3
+        embed: expected 2 arguments, got 1
+
+  - name: embed command expects valid arguments
+    setup_shell: |
+      cat <<<"foobar" >file.txt
+    script: |
+      @embed file.txt
+
+      embed cmd file.txt
+    expect:
+      exit_code: 1
+      stderr: |
+        embed: "cmd" is not a valid embed command

@@ -14,10 +14,6 @@ import (
 	"time"
 
 	"github.com/yassinebenaid/bunster"
-	"github.com/yassinebenaid/bunster/analyser"
-	"github.com/yassinebenaid/bunster/generator"
-	"github.com/yassinebenaid/bunster/lexer"
-	"github.com/yassinebenaid/bunster/parser"
 	"github.com/yassinebenaid/bunster/pkg/diff"
 	"github.com/yassinebenaid/godump"
 	"gopkg.in/yaml.v3"
@@ -26,15 +22,16 @@ import (
 type Test struct {
 	NoParallel bool `yaml:"no-parallel"`
 	Cases      []struct {
-		Name    string            `yaml:"name"`
-		Stdin   string            `yaml:"stdin"`
-		RunsOn  string            `yaml:"runs_on"`
-		Env     []string          `yaml:"env"`
-		Args    []string          `yaml:"args"`
-		Files   map[string]string `yaml:"files"`
-		Timeout int               `yaml:"timeout"`
-		Script  string            `yaml:"script"`
-		Expect  struct {
+		Name       string            `yaml:"name"`
+		Stdin      string            `yaml:"stdin"`
+		RunsOn     string            `yaml:"runs_on"`
+		SetupShell string            `yaml:"setup_shell"`
+		Env        []string          `yaml:"env"`
+		Args       []string          `yaml:"args"`
+		Files      map[string]string `yaml:"files"`
+		Timeout    int               `yaml:"timeout"`
+		Script     string            `yaml:"script"`
+		Expect     struct {
 			Stdout   string            `yaml:"stdout"`
 			Stderr   string            `yaml:"stderr"`
 			ExitCode int               `yaml:"exit_code"`
@@ -52,17 +49,14 @@ func TestBunster(t *testing.T) {
 	var logger = log.New(os.Stdout, "", log.Ltime)
 	filter := os.Getenv("FILTER")
 
-	buildWorkdir := path.Join(os.TempDir(), "bunster-testing")
-	if err := os.RemoveAll(buildWorkdir); err != nil {
-		t.Fatalf("Failed to clean old workspace, %v", err)
-	}
-	if err := os.MkdirAll(buildWorkdir, 0700); err != nil {
-		t.Fatalf("Failed to create workspace, %v", err)
-	}
-
 	testFiles, err := globFiles("tests")
 	if err != nil {
 		t.Fatalf("Failed to `Glob` test files, %v", err)
+	}
+
+	currentWorkingDirectory, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("cannot get current working directory, %v", err)
 	}
 
 	for _, testFile := range testFiles {
@@ -85,19 +79,50 @@ func TestBunster(t *testing.T) {
 					continue
 				}
 				if testCase.RunsOn != "" && testCase.RunsOn != runtime.GOOS {
-					// some tests only run on spesific platforms.
+					// some tests only run on specific platforms.
 					continue
 				}
 
-				binary, workdir, err := buildBinary(buildWorkdir, []byte(testCase.Script))
-				if err != nil {
-					t.Fatalf("\nTest(#%d): %sBuild Error: %s", i, dump(testCase.Name), dump(err.Error()))
+				workdir := path.Join(os.TempDir(), "bunster-testing")
+				if err := os.RemoveAll(workdir); err != nil {
+					t.Fatalf("Failed to clean old workspace, %v", err)
+				}
+				if err := os.MkdirAll(workdir, 0700); err != nil {
+					t.Fatalf("Failed to create workspace, %v", err)
+				}
+				rundir := path.Join(workdir, "run")
+				if err := os.MkdirAll(rundir, 0700); err != nil {
+					t.Fatalf("Failed to create run workdir, %v", err)
+				}
+
+				if testCase.SetupShell != "" {
+					var setupShellStderr bytes.Buffer
+					sh := exec.Command("bash", "-c", testCase.SetupShell) //nolint:gosec
+					sh.Stderr = &setupShellStderr
+					sh.Dir = workdir
+					if err := sh.Run(); err != nil {
+						t.Fatalf("\nTest(#%d): %sSetup Shell Error: %sStderr: %s", i, dump(testCase.Name), dump(err.Error()), dump(setupShellStderr.String()))
+					}
 				}
 
 				for filename, content := range testCase.Files {
-					if err := os.WriteFile(path.Join(workdir, filename), []byte(content), 0600); err != nil {
+					if err := os.WriteFile(path.Join(rundir, filename), []byte(content), 0600); err != nil {
 						t.Fatalf("\nTest(#%d): %sFailed to write file %q, %v", i, dump(testCase.Name), filename, err)
 					}
+				}
+
+				if err := os.Chdir(workdir); err != nil {
+					t.Fatalf("cannot change current working directory, %v", err)
+				}
+				defer func() {
+					if err := os.Chdir(currentWorkingDirectory); err != nil {
+						t.Fatalf("cannot change current working directory, %v", err)
+					}
+				}()
+
+				binary, err := buildBinary(workdir, []byte(testCase.Script))
+				if err != nil {
+					t.Fatalf("\nTest(#%d): %sBuild Error: %s", i, dump(testCase.Name), dump(err.Error()))
 				}
 
 				var stdout, stderr bytes.Buffer
@@ -105,7 +130,7 @@ func TestBunster(t *testing.T) {
 				cmd.Stdin = strings.NewReader(testCase.Stdin)
 				cmd.Stdout = &stdout
 				cmd.Stderr = &stderr
-				cmd.Dir = workdir
+				cmd.Dir = rundir
 				cmd.Env = append(os.Environ(), testCase.Env...)
 				if err := cmd.Start(); err != nil {
 					t.Fatalf("\nTest(#%d): %sRuntime Error: %s", i, dump(testCase.Name), dump(err.Error()))
@@ -147,7 +172,7 @@ func TestBunster(t *testing.T) {
 						i, dump(testCase.Name), diff.DiffBG(testCase.Expect.Stdout, stdout.String()))
 				}
 
-				files, err := filepath.Glob(workdir + "/*")
+				files, err := filepath.Glob(rundir + "/*")
 				if err != nil {
 					t.Fatalf("\nTest(#%d): %sFailed to glob the working directory, %v", i, dump(testCase.Name), err)
 				}
@@ -157,7 +182,7 @@ func TestBunster(t *testing.T) {
 				}
 
 				for filename, expectedContent := range testCase.Expect.Files {
-					content, err := os.ReadFile(path.Join(workdir, filename))
+					content, err := os.ReadFile(path.Join(rundir, filename))
 					if err != nil {
 						t.Fatalf("\nTest(#%d): %sFailed to read file %q, %v", i, dump(testCase.Name), filename, err)
 					}
@@ -173,85 +198,20 @@ func TestBunster(t *testing.T) {
 	}
 }
 
-func buildBinary(buildWorkdir string, s []byte) (string, string, error) {
-	workdir, err := os.MkdirTemp(buildWorkdir, "*")
-	if err != nil {
-		return "", "", err
-	}
-	rundir := path.Join(workdir, "rundir")
-	if err := os.MkdirAll(rundir, 0700); err != nil {
-		return "", "", err
-	}
-
-	if err := cloneRuntime(workdir); err != nil {
-		return "", "", err
-	}
-
-	if err := cloneStubs(workdir); err != nil {
-		return "", "", err
-	}
-
-	script, err := parser.Parse(lexer.New(s))
-	if err != nil {
-		return "", "", err
-	}
-
-	if err := analyser.Analyse(script); err != nil {
-		return "", "", err
-	}
-
-	program := generator.Generate(script)
-
-	err = os.WriteFile(path.Join(workdir, "program.go"), []byte(program.String()), 0600)
-	if err != nil {
-		return "", "", err
+func buildBinary(workdir string, s []byte) (string, error) {
+	if err := bunster.Generate(workdir, s); err != nil {
+		return "", err
 	}
 
 	gocmd := exec.Command("go", "build", "-o", "build.bin")
 	gocmd.Stdin = os.Stdin
 	gocmd.Stdout = os.Stdout
 	gocmd.Stderr = os.Stderr
-	gocmd.Dir = workdir
 	if err := gocmd.Run(); err != nil {
-		return "", "", err
+		return "", err
 	}
 
-	return path.Join(workdir, "build.bin"), rundir, nil
-}
-
-func cloneRuntime(dst string) error {
-	return fs.WalkDir(bunster.RuntimeFS, "runtime", func(dpath string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return nil
-		}
-
-		if d.IsDir() {
-			return os.MkdirAll(path.Join(dst, dpath), 0766)
-		}
-
-		if strings.HasSuffix(dpath, "_test.go") {
-			return nil
-		}
-
-		content, err := bunster.RuntimeFS.ReadFile(dpath)
-		if err != nil {
-			return err
-		}
-
-		return os.WriteFile(path.Join(dst, dpath), content, 0600)
-	})
-}
-
-func cloneStubs(dst string) error {
-	if err := os.WriteFile(path.Join(dst, "main.go"), bunster.MainGoStub, 0600); err != nil {
-		return err
-	}
-
-	if err := os.WriteFile(path.Join(dst, "go.mod"), bunster.GoModStub, 0600); err != nil {
-		return err
-	}
-
-	return nil
+	return path.Join(workdir, "build.bin"), nil
 }
 
 func globFiles(path string) ([]string, error) {

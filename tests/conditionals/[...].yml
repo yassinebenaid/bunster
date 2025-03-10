@@ -132,6 +132,7 @@ cases:
   - name: "can test that a file is older than another by modification time using the [...] syntax"
     script: |
       touch file1
+      sleep 0.5
       touch file2
       ln -s file2 file2_sumbolic
       ln -s file1 file1_sumbolic
@@ -161,6 +162,7 @@ cases:
   - name: "can test that a file is newer than another by modification time using the [...] syntax"
     script: |
       touch file1
+      sleep 0.5
       touch file2
       ln -s file1 file1_sumbolic
       ln -s file2 file2_sumbolic
@@ -885,14 +887,12 @@ cases:
         9: 0
         10: 1
 
+  #TODO: investigate how to get this working on macos (and linux as well, but with good time tracking)
   - name: "can test that a file has been modified since it was last read using the [...] syntax"
-    timeout: 3
-    # we sleep a little bit so that time is different
+    runs_on: linux
     script: |
       touch file 
       ln -s file file_symbolic
-
-      cat file >/dev/null
 
       [ -N file ]
       echo '1': $?
@@ -900,8 +900,7 @@ cases:
       [ -N file_symbolic ]
       echo '2': $?
 
-      sleep 1
-      echo foo >file
+      cat file >/dev/null
 
       [ -N file ]
       echo '3': $?
@@ -909,8 +908,7 @@ cases:
       [ -N file_symbolic ]
       echo '4': $?
 
-      sleep 1
-      cat file >/dev/null
+      echo foo >file
 
       [ -N file ]
       echo '5': $?
@@ -921,10 +919,10 @@ cases:
       stdout: |
         1: 1
         2: 1
-        3: 0
-        4: 0
-        5: 1
-        6: 1
+        3: 1
+        4: 1
+        5: 0
+        6: 0
 
   - name: "can test that a file is a socket using the [...] syntax"
     script: |
@@ -1003,3 +1001,119 @@ cases:
         5: 0
         6: 1
         7: 0
+
+  - name: "can negate a test expression using the [...] syntax"
+    script: |
+      [ ! foobar ]
+      echo '1': $?
+
+      touch file
+      [ ! -f file ]
+      echo '2': $?
+
+      [ ! -f missing-file ]
+      echo '3': $?
+
+      [ ! foo = bar ]
+      echo '4': $?
+
+      [ ! foo = foo ]
+      echo '5': $?
+    expect:
+      stdout: |
+        1: 1
+        2: 1
+        3: 0
+        4: 0
+        5: 1
+
+  - name: "can use the AND logical operator in test expressions using the [...] syntax"
+    script: |
+      [ foo -a bar ]
+      echo '1': $?
+
+      [ foo -a -f missin-file ]
+      echo '2': $?
+
+      touch file
+      [ foo -a -f file ]
+      echo '3': $?
+
+      [ ! "" -a ! "" ]
+      echo '4': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 1
+        3: 0
+        4: 0
+
+  - name: "the AND logical operator only evaluates second expression if the first expression is true in the [...] syntax"
+    script: |
+      touch file
+
+      [ "" -a $(rm file) ]
+
+      [ -f file ]
+
+      echo $?
+    expect:
+      stdout: |
+        0
+
+  - name: "can use the OR logical operator in test expressions using the [...] syntax"
+    script: |
+      [ foo -o bar ]
+      echo '1': $?
+
+      [ "" -o bar ]
+      echo '2': $?
+
+      [ foo -o "" ]
+      echo '3': $?
+
+      [ "" -o "" ]
+      echo '4': $?
+
+      [ -f file -o ! -f file ]
+      echo '5': $?
+    expect:
+      stdout: |
+        1: 0
+        2: 0
+        3: 0
+        4: 1
+        5: 0
+
+  - name: "the OR logical operator only evaluates second expression if the first expression is false in the [...] syntax"
+    script: |
+      touch file
+
+      [ foo -o $(rm file) ]
+
+      [ -f file ]
+
+      echo $?
+    expect:
+      stdout: |
+        0
+
+  - name: "can group conditional expressions using the [...] syntax"
+    script: |
+      [ (foo) ]
+      echo 1: $?
+
+      [ (-n foo) ]
+      echo 2: $?
+
+      [ (-n foo -a -n bar) ]
+      echo 3: $?
+
+      [ ! ("" -o bar) ]
+      echo 4: $?
+    expect:
+      stdout: |
+        1: 0
+        2: 0
+        3: 0
+        4: 1

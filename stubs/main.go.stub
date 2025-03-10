@@ -11,7 +11,8 @@ import (
 func main() {
 	shell := runtime.NewShell()
 	shell.PID = os.Getpid()
-	shell.Args = os.Args
+	shell.Path = os.Args[0]
+	shell.Args = os.Args[1:]
 
     builtin.Register(shell)
 
