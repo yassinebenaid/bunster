@@ -220,7 +220,7 @@ func (g *generator) handleRangeLoop(buf *InstructionBuffer, loop ast.RangeLoop, 
 		g.generate(&body, statement, &context{})
 	}
 
-	var members = ir.Literal("shell.Args[1:]")
+	var members = ir.Literal("shell.Args")
 	if len(loop.Operands) > 0 {
 		cmdbuf.add(ir.DeclareSlice{Name: "members"})
 

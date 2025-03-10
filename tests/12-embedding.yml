@@ -94,3 +94,29 @@ cases:
         ---
         file.txt
         file2.txt
+
+  - name: embed command expects exactly 2 arguments
+    setup_shell: |
+      cat <<<"foobar" >file.txt
+    script: |
+      @embed file.txt
+
+      embed arg1 arg2 arg3
+      embed arg1
+    expect:
+      exit_code: 1
+      stderr: |
+        embed: expected 2 arguments, got 3
+        embed: expected 2 arguments, got 1
+
+  - name: embed command expects valid arguments
+    setup_shell: |
+      cat <<<"foobar" >file.txt
+    script: |
+      @embed file.txt
+
+      embed cmd file.txt
+    expect:
+      exit_code: 1
+      stderr: |
+        embed: "cmd" is not a valid embed command
