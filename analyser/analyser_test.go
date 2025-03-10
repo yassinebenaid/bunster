@@ -28,10 +28,11 @@ var testCases = []testCase{
 	{`func(){ local var | cmd; }`, "semantic error: using 'local' command within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines. (line: 0, column: 0)"},
 	{`export var | cmd;`, "semantic error: using 'export' command within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines. (line: 0, column: 0)"},
 	{`
-		func(){
-			@embed file
+	func(){
+		@embed file
 		}
-	`, "semantic error: using '@embed' directive is only valid in global scope. (line: 0, column: 0)"},
+		`, "semantic error: using '@embed' directive is only valid in global scope. (line: 0, column: 0)"},
+	{`@embed ../file`, "semantic error: the path \"../file\" is not local. (line: 0, column: 0)"},
 }
 
 func TestErrors(t *testing.T) {
