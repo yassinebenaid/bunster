@@ -19,13 +19,13 @@ export default defineConfig({
 				items: [
 					{ text: "Introduction", link: "/introduction" },
 					{ text: "Installation", link: "/installation" },
-					{ text: "Supported Features", link: "/supported-features" },
+					{ text: "Supported features", link: "/supported-features" },
 					{ text: "CLI", link: "/cli" },
 					{
 						text: "Features",
 						collapsed: false,
 						items: [
-							{ text: "Simple Commands", link: "/features/simple-commands" },
+							{ text: "Simple commands", link: "/features/simple-commands" },
 							{ text: "Redirections", link: "/features/redirections" },
 							{ text: "Pipelines", link: "/features/pipelines" },
 							{ text: "Lists", link: "/features/lists" },
@@ -38,17 +38,18 @@ export default defineConfig({
 								link: "/features/variables-and-environment",
 							},
 							{
-								text: "Environment Files",
+								text: "Environment files",
 								link: "/features/environment-files",
 							},
 							{
-								text: "Test Commands",
+								text: "Test commands",
 								link: "/features/test-commands",
 							},
 							{
 								text: "Embedding",
 								link: "/features/embedding",
 							},
+							{ text: "Builtin commands", link: "/features/builtins" },
 						],
 					},
 					{ text: "Contributing", link: "/contributing" },
