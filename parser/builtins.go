@@ -15,6 +15,8 @@ func (p *parser) getBuiltinParser() func() ast.Statement {
 		return p.parseContinue
 	case token.FUNCTION:
 		return p.parseFunction
+	case token.DEFER:
+		return p.parseDefer
 	case token.WAIT:
 		return p.parseWait
 	case token.LOCAL:
@@ -82,6 +84,29 @@ func (p *parser) parseFunction() ast.Statement {
 	default:
 		p.error("unexpected token `%s`", p.curr)
 		return nil
+	}
+
+	return fn
+}
+
+func (p *parser) parseDefer() ast.Statement {
+	p.proceed()
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
+	compound := p.getCompoundParser()
+	if compound == nil {
+		p.error("expected a group or subshell after `defer`, found `%s`", p.curr)
+		return nil
+	}
+
+	fn := ast.Defer{Command: compound()}
+
+	switch fn.Command.(type) {
+	case ast.Group, ast.SubShell:
+	default:
+		p.error("expected a group or subshell after `defer`")
 	}
 
 	return fn

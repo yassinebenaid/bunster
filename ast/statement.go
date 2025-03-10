@@ -129,6 +129,10 @@ type Function struct {
 	Command Statement
 }
 
+type Defer struct {
+	Command Statement
+}
+
 type Test struct {
 	Expr         Expression
 	Redirections []Redirection
@@ -156,6 +160,7 @@ func (Break) node()               {}
 func (Continue) node()            {}
 func (Wait) node()                {}
 func (Embed) node()               {}
+func (Defer) node()               {}
 
 // Expressions
 func (CommandSubstitution) expr() {}
@@ -182,3 +187,4 @@ func (Break) stmt()          {}
 func (Continue) stmt()       {}
 func (Wait) stmt()           {}
 func (Embed) stmt()          {}
+func (Defer) stmt()          {}

@@ -40,6 +40,7 @@ const (
 	UNSET    // `unset`
 	WAIT     // `wait`
 	EMBED    // `embed`
+	DEFER    // `embed`
 
 	PLUS                 // `+`
 	MINUS                // `-`
@@ -158,6 +159,7 @@ var Keywords = map[string]TokenType{
 	"unset":    UNSET,
 	"wait":     WAIT,
 	"embed":    EMBED,
+	"defer":    DEFER,
 }
 
 func (t Token) String() string {

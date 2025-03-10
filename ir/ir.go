@@ -43,6 +43,8 @@ func (p Program) String() string {
 			var embedFS embed.FS
 
 			func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+				defer shell.Terminate()
+
 				subfs, err := fs.Sub(&embedFS, %q)
 				if err != nil {
 					shell.HandleError(streamManager, err)
@@ -57,6 +59,7 @@ func (p Program) String() string {
 			import "github.com/yassinebenaid/bunster/runtime"
 			
 			func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+				defer shell.Terminate()
 			`
 	}
 
@@ -398,5 +401,23 @@ func (f Function) togo() string {
 			%s
 		`+"})\n",
 		f.Name, body,
+	)
+}
+
+type Defer struct {
+	Body []Instruction
+}
+
+func (f Defer) togo() string {
+	var body string
+	for _, ins := range f.Body {
+		body += ins.togo()
+	}
+
+	return fmt.Sprintf(
+		"shell.Defer(func(_ *runtime.Shell, _ *runtime.StreamManager){"+`
+			%s
+		`+"})\n",
+		body,
 	)
 }

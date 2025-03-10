@@ -49,6 +49,7 @@ type Shell struct {
 	localVars    *repository[string]
 	exportedVars *repository[struct{}]
 	functions    *repository[PredefinedCommand]
+	defered      []func(*Shell, *StreamManager)
 }
 
 func (shell *Shell) Shift(n int) {
@@ -193,6 +194,17 @@ func (shell *Shell) Clone() *Shell {
 
 func (shell *Shell) RegisterFunction(name string, handler PredefinedCommand) {
 	shell.functions.set(name, handler)
+}
+
+func (shell *Shell) Defer(handler func(*Shell, *StreamManager)) {
+	shell.defered = append(shell.defered, handler)
+}
+
+func (shell *Shell) Terminate() {
+	// defered commands run in LIFO order
+	for i := len(shell.defered) - 1; i >= 0; i-- {
+		shell.defered[i](shell, nil)
+	}
 }
 
 func (shell *Shell) Command(name string, args ...string) *Command {

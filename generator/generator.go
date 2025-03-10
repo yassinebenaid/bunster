@@ -84,6 +84,10 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, ct
 			Name: v.Name,
 			Body: body,
 		})
+	case ast.Defer:
+		var body InstructionBuffer
+		g.generate(&body, v.Command, &context{})
+		buf.add(ir.Defer{Body: body})
 	case ast.RangeLoop:
 		g.handleRangeLoop(buf, v, ctx)
 	case ast.Test:
