@@ -2,6 +2,7 @@ package analyser
 
 import (
 	"fmt"
+	"path/filepath"
 
 	"github.com/yassinebenaid/bunster/ast"
 )
@@ -198,6 +199,12 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 	case ast.Embed:
 		if len(a.stack) != 1 {
 			a.report("using '@embed' directive is only valid in global scope")
+		}
+
+		for _, path := range v {
+			if !filepath.IsLocal(path) {
+				a.report(fmt.Sprintf("the path %q is not local", path))
+			}
 		}
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
