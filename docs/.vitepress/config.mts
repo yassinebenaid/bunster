@@ -42,6 +42,10 @@ export default defineConfig({
 								link: "/features/environment-files",
 							},
 							{
+								text: "Test Commands",
+								link: "/features/test-commands",
+							},
+							{
 								text: "Embedding",
 								link: "/features/embedding",
 							},
