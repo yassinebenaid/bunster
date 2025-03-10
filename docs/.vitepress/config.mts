@@ -41,6 +41,10 @@ export default defineConfig({
 								text: "Environment Files",
 								link: "/features/environment-files",
 							},
+							{
+								text: "Embedding",
+								link: "/features/embedding",
+							},
 						],
 					},
 					{ text: "Contributing", link: "/contributing" },
