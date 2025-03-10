@@ -38,6 +38,7 @@ type PredefinedCommand func(shell *Shell, stdin, stdout, stderr Stream)
 type Shell struct {
 	parent    *Shell
 	PID       int
+	Path      string
 	ExitCode  int
 	Args      []string
 	WaitGroup sync.WaitGroup
@@ -51,13 +52,11 @@ type Shell struct {
 }
 
 func (shell *Shell) Shift(n int) {
-	args := shell.parent.Args[1:]
-
-	if n <= len(args) {
-		args = args[n:]
+	if n <= len(shell.parent.Args) {
+		shell.parent.Args = shell.parent.Args[n:]
+	} else {
+		shell.parent.Args = nil
 	}
-
-	shell.parent.Args = append(shell.parent.Args[:1], args...)
 }
 
 func (shell *Shell) ReadVar(name string) string {
@@ -131,21 +130,23 @@ func (shell *Shell) MarkVarAsExported(name string) {
 
 func (shell *Shell) ReadSpecialVar(name string) string {
 	switch name {
+	case "0":
+		return shell.Path
 	case "$":
 		return strconv.FormatInt(int64(shell.PID), 10)
 	case "#":
-		return strconv.FormatInt(int64(len(shell.Args)-1), 10)
+		return strconv.FormatInt(int64(len(shell.Args)), 10)
 	case "?":
 		return strconv.FormatInt(int64(shell.ExitCode), 10)
 	case "*", "@":
-		return strings.Join(shell.Args[1:], " ")
+		return strings.Join(shell.Args, " ")
 	default:
 		index, err := strconv.ParseUint(name, 10, 64)
 		if err != nil {
 			return ""
 		}
-		if index < uint64(len(shell.Args)) {
-			return shell.Args[index]
+		if index <= uint64(len(shell.Args)) {
+			return shell.Args[index-1]
 		}
 		return ""
 	}
@@ -176,6 +177,7 @@ func (shell *Shell) HandleError(sm *StreamManager, err error) {
 func (shell *Shell) Clone() *Shell {
 	sh := &Shell{
 		PID:          shell.PID,
+		Path:         shell.Path,
 		ExitCode:     shell.ExitCode,
 		Args:         shell.Args,
 		Embed:        shell.Embed,
@@ -241,9 +243,10 @@ func (cmd *Command) Start() error {
 	if cmd.function != nil {
 		shell := Shell{
 			parent:       cmd.shell,
+			Path:         cmd.shell.Path,
 			PID:          cmd.shell.PID,
 			Embed:        cmd.shell.Embed,
-			Args:         append(cmd.shell.Args[:1], cmd.Args...),
+			Args:         cmd.Args[:],
 			functions:    cmd.shell.functions,
 			vars:         cmd.shell.vars,
 			env:          cmd.shell.env.clone(),

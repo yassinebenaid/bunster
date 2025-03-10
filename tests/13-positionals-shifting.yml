@@ -42,3 +42,142 @@ cases:
         1:foo 2:bar 3:baz
         1:baz 2: 3:
         1: 2: 3:
+
+  - name: can shift positional arguments with a degree out of range
+    args: [foo, bar, baz]
+    script: |
+
+      echo "1:$1 2:$2 3:$3"
+
+      shift 99
+
+      echo "1:$1 2:$2 3:$3"
+
+      shift
+
+      echo "1:$1 2:$2 3:$3"
+
+    expect:
+      stdout: |
+        1:foo 2:bar 3:baz
+        1: 2: 3:
+        1: 2: 3:
+
+  - name: can shift positional arguments within a function
+    script: |
+
+      function func() {
+          echo "1:$1 2:$2 3:$3"
+
+          shift
+
+          echo "1:$1 2:$2 3:$3"
+
+          shift
+
+          echo "1:$1 2:$2 3:$3"
+
+          shift
+
+          echo "1:$1 2:$2 3:$3"
+      }
+
+      func foo bar baz
+
+    expect:
+      stdout: |
+        1:foo 2:bar 3:baz
+        1:bar 2:baz 3:
+        1:baz 2: 3:
+        1: 2: 3:
+
+  - name: can shift positional arguments within a function with specific degree
+    script: |
+
+      function func() {
+          echo "1:$1 2:$2 3:$3"
+
+          shift 2
+
+          echo "1:$1 2:$2 3:$3"
+
+          shift
+
+          echo "1:$1 2:$2 3:$3"
+      }
+
+      func foo bar baz
+
+    expect:
+      stdout: |
+        1:foo 2:bar 3:baz
+        1:baz 2: 3:
+        1: 2: 3:
+
+  - name: can shift positional arguments with a degree out of range in functions
+    script: |
+
+      function func() {
+
+          echo "1:$1 2:$2 3:$3"
+
+          shift 99
+
+          echo "1:$1 2:$2 3:$3"
+
+          shift
+
+          echo "1:$1 2:$2 3:$3"
+      }
+
+      func foo bar baz
+    expect:
+      stdout: |
+        1:foo 2:bar 3:baz
+        1: 2: 3:
+        1: 2: 3:
+
+  - name: shifting positional arguments withing a function does not affect global args
+    args: [foo, bar]
+    script: |
+      echo $@
+
+      function func() {
+          echo $@
+
+          shift 
+
+          echo $@
+      }
+
+      func boo baz
+      echo $@
+
+    expect:
+      stdout: |
+        foo bar
+        boo baz
+        baz
+        foo bar
+
+  - name: shifting positional arguments withing a sub-shell does not affect global args
+    args: [foo, bar]
+    script: |
+      echo $@
+
+      (
+          echo $@
+
+          shift 
+
+          echo $@
+      )
+
+      echo $@
+
+    expect:
+      stdout: |
+        foo bar
+        foo bar
+        bar
+        foo bar
