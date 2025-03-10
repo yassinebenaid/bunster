@@ -181,3 +181,17 @@ cases:
         foo bar
         bar
         foo bar
+
+  - name: shift command expects 0 or 1 arguments only
+    script: |
+      shift 1 2 3
+    expect:
+      exit_code: 1
+      stderr: "embed: expected 1 or 0 arguments, got 3\n"
+
+  - name: shift command expects valid integer
+    script: |
+      shift foo
+    expect:
+      exit_code: 1
+      stderr: "embed: \"foo\" is not a valid integer\n"

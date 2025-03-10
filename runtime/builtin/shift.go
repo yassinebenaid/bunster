@@ -20,7 +20,7 @@ func Shift(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 	}
 
 	if n, err := strconv.Atoi(shell.Args[0]); err != nil {
-		fmt.Fprintf(stderr, "embed: bad argument, %v\n", err)
+		fmt.Fprintf(stderr, "embed: %q is not a valid integer\n", shell.Args[0])
 		shell.ExitCode = 1
 		return
 	} else {
