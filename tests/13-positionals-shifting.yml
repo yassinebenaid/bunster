@@ -1,0 +1,44 @@
+cases:
+  - name: can shift positional arguments
+    args: [foo, bar, baz]
+    script: |
+
+      echo "1:$1 2:$2 3:$3"
+
+      shift
+
+      echo "1:$1 2:$2 3:$3"
+
+      shift
+
+      echo "1:$1 2:$2 3:$3"
+
+      shift
+
+      echo "1:$1 2:$2 3:$3"
+    expect:
+      stdout: |
+        1:foo 2:bar 3:baz
+        1:bar 2:baz 3:
+        1:baz 2: 3:
+        1: 2: 3:
+
+  - name: can shift positional arguments with a specific degree
+    args: [foo, bar, baz]
+    script: |
+
+      echo "1:$1 2:$2 3:$3"
+
+      shift 2
+
+      echo "1:$1 2:$2 3:$3"
+
+      shift
+
+      echo "1:$1 2:$2 3:$3"
+
+    expect:
+      stdout: |
+        1:foo 2:bar 3:baz
+        1:baz 2: 3:
+        1: 2: 3:

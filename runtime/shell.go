@@ -50,6 +50,16 @@ type Shell struct {
 	functions    *repository[PredefinedCommand]
 }
 
+func (shell *Shell) Shift(n int) {
+	args := shell.parent.Args[1:]
+
+	if n <= len(args) {
+		args = args[n:]
+	}
+
+	shell.parent.Args = append(shell.parent.Args[:1], args...)
+}
+
 func (shell *Shell) ReadVar(name string) string {
 	if value, ok := shell.getLocalVar(name); ok {
 		return value
