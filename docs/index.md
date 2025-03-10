@@ -20,10 +20,14 @@ features:
   - title: Static binaries
     details: |
       Scripts compiled with bunster are not just wrappers around your script, nor do they rely on any external shells on your system.
-  - title: Module System
-    details: Bunsters aims to provide a module system makes it easy to share and consume scripts as libraries.
   - title: Bash compatible
     details: Bunsters aims to be compatible with bash. expecting that exising bash scripts do not have to be edited to work with bunster.
   - title: Environment Files
-    details: We have a first class support for environment files. allowing you to load variables from .env files.
+    details: .env files are nativily supported in bunster. Allowing you to load variables from .env files at runtime.
+  - title: Static Asset Embedding
+    details: You can embed files and directories within your compiled program. And use them as if they were normal files in the system at runtime.
+  - title: Deferred commands
+    details: Bunster allows you to defer the execution of a command to the end of the program or function. Useful for commands that perform clean up.
+  - title: Module System (TODO)
+    details: Bunsters aims to provide a module system makes it easy to share and consume scripts as libraries.
 ---
