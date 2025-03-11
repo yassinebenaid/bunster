@@ -42,6 +42,10 @@ export default defineConfig({
 								link: "/features/environment-files",
 							},
 							{
+								text: "Groups And Sub-Shells",
+								link: "/features/groups-and-subshells",
+							},
+							{
 								text: "Test commands",
 								link: "/features/test-commands",
 							},

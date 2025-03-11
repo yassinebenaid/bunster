@@ -12,15 +12,15 @@ The `command-name` can be a full path to a program. or just the name of the bina
 
 ## Separator
 
-You can separate the command list by a new line. a semicolon `;`, an ampersand `&` or logical operators `&&` and `||`.
+You can separate the command list by a new line. a semicolon `;`, or ampersand `&`.
 
 ```sh
-command argument argument
-command2 argument argument; command3 argument argument
-command4 argument argument;
+command
+command2; command3
+command4 & command5
 ```
 
-We will talk more about the `&&` and `||` operators in [Lists section](/features/lists). As well as the ampersand `&` in [Asynchronous commands](/features/async-commands).
+We will talk more about the ampersand `&` in [Asynchronous commands](/features/async-commands).
 
 ## Quotes
 
