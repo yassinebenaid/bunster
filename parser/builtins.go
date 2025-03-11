@@ -95,19 +95,15 @@ func (p *parser) parseDefer() ast.Statement {
 		p.proceed()
 	}
 
-	compound := p.getCompoundParser()
-	if compound == nil {
-		p.error("expected a group or subshell after `defer`, found `%s`", p.curr)
-		return nil
-	}
+	command := p.parseCommand()
 
-	fn := ast.Defer{Command: compound()}
-
-	switch fn.Command.(type) {
-	case ast.Group, ast.SubShell:
+	switch command.(type) {
+	case ast.Command, ast.Group, ast.SubShell:
 	default:
-		p.error("expected a group or subshell after `defer`")
+		p.error("expected a simple command, group or subshell after `defer`")
 	}
+
+	fn := ast.Defer{Command: command}
 
 	return fn
 }

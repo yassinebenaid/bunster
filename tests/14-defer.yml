@@ -1,0 +1,49 @@
+cases:
+  - name: can defer a simple command
+    script: |
+      defer echo foo
+      echo bar
+    expect:
+      stdout: |
+        bar
+        foo
+
+  - name: can defer a group of commanda
+    script: |
+      defer {
+        echo foo
+      }
+
+      echo bar
+    expect:
+      stdout: |
+        bar
+        foo
+
+  - name: can defer a sub-shell
+    script: |
+      defer (
+        echo foo
+      )
+
+      echo bar
+    expect:
+      stdout: |
+        bar
+        foo
+
+  - name: defered commands run in LIFO order
+    script: |
+      defer echo first
+      defer echo second
+      defer echo third
+
+      echo normal command 
+      echo normal command2
+    expect:
+      stdout: |
+        normal command
+        normal command2
+        third
+        second
+        first
