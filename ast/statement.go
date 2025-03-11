@@ -125,8 +125,10 @@ type ProcessSubstitution struct {
 }
 
 type Function struct {
-	Name    string
-	Command Statement
+	Name         string
+	SubShell     bool
+	Body         []Statement
+	Redirections []Redirection
 }
 
 type Defer struct {

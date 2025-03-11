@@ -5,6 +5,14 @@ import (
 	"github.com/yassinebenaid/bunster/ir"
 )
 
+func (g *generator) handleFunction(buf *InstructionBuffer, function ast.Function) {
+	g.handleRedirections(buf, function.Redirections, &context{})
+
+	for _, cmd := range function.Body {
+		g.generate(buf, cmd, &context{})
+	}
+}
+
 func (g *generator) handleBreak(buf *InstructionBuffer, _ ast.Break) {
 	buf.add(ir.Literal("break\n"))
 }

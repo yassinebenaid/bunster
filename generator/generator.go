@@ -79,11 +79,8 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, ct
 		g.handleWait(buf, v)
 	case ast.Function:
 		var body InstructionBuffer
-		g.generate(&body, v.Command, &context{})
-		buf.add(ir.Function{
-			Name: v.Name,
-			Body: body,
-		})
+		g.handleFunction(&body, v)
+		buf.add(ir.Function{Name: v.Name, Body: body})
 	case ast.Defer:
 		var body InstructionBuffer
 		g.generate(&body, v.Command, &context{})

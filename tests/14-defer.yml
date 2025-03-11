@@ -124,29 +124,29 @@ cases:
         function:deferred
         global-shell:end
 
-  # - name: deferring commands in function use the function IO streams
-  #   script: |
-  #     func(){
-  #       echo function:start
-  #       defer echo function:deferred
-  #       echo function:end
-  #     } >function-stdout.txt
+  - name: deferring commands in function use the function IO streams
+    script: |
+      func(){
+        echo function:start
+        defer echo function:deferred
+        echo function:end
+      } >function-stdout.txt
 
-  #     func
-  #     # (
-  #     #   echo function:start >&3
-  #     #   defer echo function:deferred >&3
-  #     #   echo function:end >&3
-  #     # ) 3>function-custom-file.txt >&3
+      func
+      # (
+      #   echo function:start >&3
+      #   defer echo function:deferred >&3
+      #   echo function:end >&3
+      # ) 3>function-custom-file.txt >&3
 
-  #     # echo global-shell:end
-  #   expect:
-  #     files:
-  #       function-stdout.txt: |
-  #         function:start
-  #         function:end
-  #         function:deferred
-  #       # function-custom-file.txt: |
-  #       #   function:start
-  #       #   function:end
-  #       #   function:deferred
+      # echo global-shell:end
+    expect:
+      files:
+        function-stdout.txt: |
+          function:start
+          function:end
+          function:deferred
+        # function-custom-file.txt: |
+        #   function:start
+        #   function:end
+        #   function:deferred
