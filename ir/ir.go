@@ -43,7 +43,7 @@ func (p Program) String() string {
 			var embedFS embed.FS
 
 			func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-				defer shell.Terminate()
+				defer shell.Terminate(streamManager)
 
 				subfs, err := fs.Sub(&embedFS, %q)
 				if err != nil {
@@ -74,7 +74,9 @@ func (p Program) String() string {
 type CloneShell struct{}
 
 func (c CloneShell) togo() string {
-	return "shell := shell.Clone()\n"
+	return `shell := shell.Clone()
+			defer shell.Terminate(streamManager)
+		`
 }
 
 type Declare struct {

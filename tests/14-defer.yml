@@ -32,7 +32,7 @@ cases:
         bar
         foo
 
-  - name: defered commands run in LIFO order
+  - name: deferred commands run in LIFO order
     script: |
       defer echo first
       defer echo second
@@ -48,7 +48,7 @@ cases:
         second
         first
 
-  - name: defered commands read and write from and to the shell's IO files. ignoring all redirections in the place where they were pushed
+  - name: deferred commands read and write from and to the shell's IO files. ignoring all redirections in the place where they were pushed
     stdin: "global-input"
     script: |
       {
@@ -58,3 +58,53 @@ cases:
       files:
         file.txt: ""
       stdout: global-input
+
+  - name: deferring commands in sub-shell are called when the sub-shell returns
+    script: |
+      echo global-shell:start
+
+      (
+        echo sub-shell:start
+        defer echo sub-shell:deferred
+        echo sub-shell:end
+      )
+
+      echo global-shell:end
+    expect:
+      stdout: |
+        global-shell:start
+        sub-shell:start
+        sub-shell:end
+        sub-shell:deferred
+        global-shell:end
+
+  - name: deferring commands in sub-shell use the sub-shell IO streams
+    script: |
+      echo global-shell:start
+
+      (
+        echo sub-shell:start
+        defer echo sub-shell:deferred
+        echo sub-shell:end
+      ) >sub-shell-stdout.txt
+
+      (
+        echo sub-shell:start >&3
+        defer echo sub-shell:deferred >&3
+        echo sub-shell:end >&3
+      ) 3>sub-shell-custom-file.txt >&3
+
+      echo global-shell:end
+    expect:
+      files:
+        sub-shell-stdout.txt: |
+          sub-shell:start
+          sub-shell:end
+          sub-shell:deferred
+        sub-shell-custom-file.txt: |
+          sub-shell:start
+          sub-shell:end
+          sub-shell:deferred
+      stdout: |
+        global-shell:start
+        global-shell:end

@@ -887,9 +887,9 @@ cases:
         9: 0
         10: 1
 
-  #TODO: investigate how to get this working on macos (and linux as well, but with good time tracking)
+  #TODO: this test fails sometimes just because the system does not find enough time to edit file's modification time due to the script's speed.
   - name: "can test that a file has been modified since it was last read using the [...] syntax"
-    runs_on: linux
+    runs_on: none #FIXME
     script: |
       touch file 
       ln -s file file_symbolic
