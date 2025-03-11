@@ -400,6 +400,7 @@ func (f Function) togo() string {
 			streamManager.Add("0", stdin)
 			streamManager.Add("1", stdout)
 			streamManager.Add("2", stderr)
+			defer shell.Terminate(streamManager)
 			%s
 		`+"})\n",
 		f.Name, body,

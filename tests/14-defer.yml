@@ -80,7 +80,6 @@ cases:
 
   - name: deferring commands in sub-shell use the sub-shell IO streams
     script: |
-      echo global-shell:start
 
       (
         echo sub-shell:start
@@ -94,7 +93,6 @@ cases:
         echo sub-shell:end >&3
       ) 3>sub-shell-custom-file.txt >&3
 
-      echo global-shell:end
     expect:
       files:
         sub-shell-stdout.txt: |
@@ -105,6 +103,50 @@ cases:
           sub-shell:start
           sub-shell:end
           sub-shell:deferred
+
+  - name: deferring commands in functions are called when the function returns
+    script: |
+      func() {
+        echo function:start
+        defer echo function:deferred
+        echo function:end
+      }
+
+
+      echo global-shell:start
+      func
+      echo global-shell:end
+    expect:
       stdout: |
         global-shell:start
+        function:start
+        function:end
+        function:deferred
         global-shell:end
+
+  # - name: deferring commands in function use the function IO streams
+  #   script: |
+  #     func(){
+  #       echo function:start
+  #       defer echo function:deferred
+  #       echo function:end
+  #     } >function-stdout.txt
+
+  #     func
+  #     # (
+  #     #   echo function:start >&3
+  #     #   defer echo function:deferred >&3
+  #     #   echo function:end >&3
+  #     # ) 3>function-custom-file.txt >&3
+
+  #     # echo global-shell:end
+  #   expect:
+  #     files:
+  #       function-stdout.txt: |
+  #         function:start
+  #         function:end
+  #         function:deferred
+  #       # function-custom-file.txt: |
+  #       #   function:start
+  #       #   function:end
+  #       #   function:deferred
