@@ -200,10 +200,10 @@ func (shell *Shell) Defer(handler func(*Shell, *StreamManager)) {
 	shell.defered = append(shell.defered, handler)
 }
 
-func (shell *Shell) Terminate() {
+func (shell *Shell) Terminate(streamManager *StreamManager) {
 	// defered commands run in LIFO order
 	for i := len(shell.defered) - 1; i >= 0; i-- {
-		shell.defered[i](shell, nil)
+		shell.defered[i](shell, streamManager)
 	}
 }
 

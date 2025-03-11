@@ -59,7 +59,7 @@ func (p Program) String() string {
 			import "github.com/yassinebenaid/bunster/runtime"
 			
 			func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-				defer shell.Terminate()
+				defer shell.Terminate(streamManager)
 			`
 	}
 
@@ -415,7 +415,7 @@ func (f Defer) togo() string {
 	}
 
 	return fmt.Sprintf(
-		"shell.Defer(func(_ *runtime.Shell, _ *runtime.StreamManager){"+`
+		"shell.Defer(func(shell *runtime.Shell, streamManager *runtime.StreamManager){"+`
 			%s
 		`+"})\n",
 		body,

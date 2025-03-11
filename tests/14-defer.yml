@@ -47,3 +47,14 @@ cases:
         third
         second
         first
+
+  - name: defered commands read and write from and to the shell's IO files. ignoring all redirections in the place where they were pushed
+    stdin: "global-input"
+    script: |
+      {
+        defer cat
+      } >file.txt <<<local-input
+    expect:
+      files:
+        file.txt: ""
+      stdout: global-input
