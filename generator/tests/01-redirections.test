@@ -11,6 +11,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
     func() {
   		var commandName = "git"
   		var arguments []string
@@ -83,6 +84,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
     func() {
   		var commandName = "git"
   		var arguments []string
@@ -154,6 +156,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
     func() {
   		var commandName = "git"
   		var arguments []string
@@ -217,6 +220,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
     func() {
   		var commandName = "git"
   		var arguments []string
@@ -293,6 +297,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
     func() {
   		var commandName = "git"
   		var arguments []string
@@ -364,6 +369,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
     func() {
   		var commandName = "git"
   		var arguments []string
@@ -426,6 +432,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
     func() {
   		var commandName = "git"
   		var arguments []string
@@ -501,6 +508,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
     func() {
   		var commandName = "git"
   		var arguments []string

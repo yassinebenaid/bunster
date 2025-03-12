@@ -9,11 +9,13 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
 		expr2, exitCode := func() (string, int) {
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
 			shell := shell.Clone()
+			defer shell.Terminate(streamManager)
 			var buffer = runtime.NewBuffer("", false)
 			streamManager.Add("1", buffer)
 			func() {
@@ -98,11 +100,13 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
 		expr4, exitCode := func() (string, int) {
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
 			shell := shell.Clone()
+			defer shell.Terminate(streamManager)
 			var buffer = runtime.NewBuffer("", false)
 			streamManager.Add("1", buffer)
 			func() {
@@ -188,6 +192,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
 		var commandName = "cmd"
 		var arguments []string
@@ -195,6 +200,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
 			shell := shell.Clone()
+			defer shell.Terminate(streamManager)
 			var buffer = runtime.NewBuffer("", false)
 			streamManager.Add("1", buffer)
 			func() {
@@ -280,6 +286,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
 		var commandName = "cat"
 		var arguments []string
@@ -290,6 +297,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
 			shell := shell.Clone()
+			defer shell.Terminate(streamManager)
 			var buffer = runtime.NewBuffer("", false)
 			streamManager.Add("1", buffer)
 			func() {

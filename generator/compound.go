@@ -44,7 +44,7 @@ func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell
 	g.handleRedirections(&cmdbuf, subshell.Redirections, ctx)
 
 	cmdbuf.add(ir.Declare{Name: "parentShell", Value: ir.Literal("shell")})
-	cmdbuf.add(ir.CloneShell{})
+	cmdbuf.add(ir.CloneShell{DontTerminate: ctx.pipe != nil})
 	cmdbuf.add(ir.Literal("defer func() { parentShell.ExitCode = shell.ExitCode }()\n"))
 
 	if ctx.pipe == nil {
@@ -57,6 +57,7 @@ func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell
 			Waitgroup: ctx.pipe.waitgroup,
 			Value: ir.Literal(`func() error {
 				<-done
+				shell.Terminate(streamManager)
 			 	streamManager.Destroy()
 				return nil
 			}`),

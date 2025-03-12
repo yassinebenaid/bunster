@@ -44,7 +44,6 @@ func (p Program) String() string {
 
 			func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				defer shell.Terminate(streamManager)
-
 				subfs, err := fs.Sub(&embedFS, %q)
 				if err != nil {
 					shell.HandleError(streamManager, err)
@@ -71,12 +70,24 @@ func (p Program) String() string {
 	return str
 }
 
-type CloneShell struct{}
+type CloneShell struct {
+	DontTerminate bool
+}
 
 func (c CloneShell) togo() string {
+	if c.DontTerminate {
+		return "shell := shell.Clone()\n"
+	}
+
 	return `shell := shell.Clone()
-			defer shell.Terminate(streamManager)
+		defer shell.Terminate(streamManager)
 		`
+}
+
+type DeferTerminateShell struct{}
+
+func (c DeferTerminateShell) togo() string {
+	return "defer shell.Terminate(streamManager)\n"
 }
 
 type Declare struct {

@@ -9,6 +9,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
  		streamManager := streamManager.Clone()
  		stdin, err := streamManager.OpenStream("/dev/null", runtime.STREAM_FLAG_READ)
@@ -22,8 +23,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		var done = shell.WaitGroup.Done
 		shell := shell.Clone()
 		go func() {
-		    defer streamManager.Destroy()
 		    defer done()
+		    defer streamManager.Destroy()
+			defer shell.Terminate(streamManager)
     		func() {
     			var commandName = "command"
     			var arguments []string
@@ -76,6 +78,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
  		streamManager := streamManager.Clone()
  		stdin, err := streamManager.OpenStream("/dev/null", runtime.STREAM_FLAG_READ)
@@ -89,8 +92,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		var done = shell.WaitGroup.Done
 		shell := shell.Clone()
 		go func() {
-		    defer streamManager.Destroy()
 			defer done()
+		    defer streamManager.Destroy()
+			defer shell.Terminate(streamManager)
 			func() {
 				var pipelineWaitgroup []func() error
 				pipeReader1, pipeWriter1, err := runtime.NewPipe()
@@ -197,6 +201,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
  		streamManager := streamManager.Clone()
  		stdin, err := streamManager.OpenStream("/dev/null", runtime.STREAM_FLAG_READ)
@@ -210,8 +215,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		var done = shell.WaitGroup.Done
 		shell := shell.Clone()
 		go func() {
+		    defer done()
 		    defer streamManager.Destroy()
-			defer done()
+			defer shell.Terminate(streamManager)
 			func() {
 				var commandName = "command"
 				var arguments []string
@@ -301,6 +307,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
  		streamManager := streamManager.Clone()
  		stdin, err := streamManager.OpenStream("/dev/null", runtime.STREAM_FLAG_READ)
@@ -314,8 +321,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		var done = shell.WaitGroup.Done
 		shell := shell.Clone()
 		go func() {
-		    defer streamManager.Destroy()
 		    defer done()
+		    defer streamManager.Destroy()
+			defer shell.Terminate(streamManager)
     		func() {
     			var commandName = "command"
     			var arguments []string

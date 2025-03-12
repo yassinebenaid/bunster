@@ -12,12 +12,14 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
-	    var parentShell = shell
-	    shell := shell.Clone()
-        defer func() { parentShell.ExitCode = shell.ExitCode }()
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
+	    var parentShell = shell
+	    shell := shell.Clone()
+		defer shell.Terminate(streamManager)
+        defer func() { parentShell.ExitCode = shell.ExitCode }()
 		func() {
 			var commandName = "echo"
 			var arguments []string
@@ -104,10 +106,8 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
-	    var parentShell = shell
-	    shell := shell.Clone()
-        defer func() { parentShell.ExitCode = shell.ExitCode }()
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		stream0, err := streamManager.OpenStream("output.txt", runtime.STREAM_FLAG_WRITE)
@@ -122,6 +122,10 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			return
 		}
 		streamManager.Add("0", stream1)
+	    var parentShell = shell
+	    shell := shell.Clone()
+		defer shell.Terminate(streamManager)
+        defer func() { parentShell.ExitCode = shell.ExitCode }()
 		func() {
 			var commandName = "echo"
 			var arguments []string
@@ -207,12 +211,14 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
-	    var parentShell = shell
-	    shell := shell.Clone()
-        defer func() { parentShell.ExitCode = shell.ExitCode }()
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
+	    var parentShell = shell
+	    shell := shell.Clone()
+		defer shell.Terminate(streamManager)
+        defer func() { parentShell.ExitCode = shell.ExitCode }()
 		func() {
 			var pipelineWaitgroup []func() error
 			pipeReader1, pipeWriter1, err := runtime.NewPipe()
@@ -415,18 +421,21 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
-	    var parentShell = shell
-	    shell := shell.Clone()
-        defer func() { parentShell.ExitCode = shell.ExitCode }()
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
+	    var parentShell = shell
+	    shell := shell.Clone()
+		defer shell.Terminate(streamManager)
+        defer func() { parentShell.ExitCode = shell.ExitCode }()
 		func() {
-    	    var parentShell = shell
-    	    shell := shell.Clone()
-            defer func() { parentShell.ExitCode = shell.ExitCode }()
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
+    	    var parentShell = shell
+    	    shell := shell.Clone()
+			defer shell.Terminate(streamManager)
+            defer func() { parentShell.ExitCode = shell.ExitCode }()
 			func() {
 				var commandName = "echo"
 				var arguments []string
@@ -462,11 +471,12 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 		}()
 		func() {
-    	    var parentShell = shell
-    	    shell := shell.Clone()
-            defer func() { parentShell.ExitCode = shell.ExitCode }()
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
+    	    var parentShell = shell
+    	    shell := shell.Clone()
+			defer shell.Terminate(streamManager)
+            defer func() { parentShell.ExitCode = shell.ExitCode }()
 			func() {
 				var commandName = "echo"
 				var arguments []string
@@ -520,6 +530,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
 		var pipelineWaitgroup []func() error
 		pipeReader1, pipeWriter1, err := runtime.NewPipe()
@@ -528,14 +539,15 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			return
 		}
 		func() {
+			streamManager := streamManager.Clone()
+			streamManager.Add("1", pipeWriter1)
     	    var parentShell = shell
     	    shell := shell.Clone()
             defer func() { parentShell.ExitCode = shell.ExitCode }()
-			streamManager := streamManager.Clone()
-			streamManager.Add("1", pipeWriter1)
 			var done = make(chan struct{}, 1)
 			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
 				<-done
+			    shell.Terminate(streamManager)
 				streamManager.Destroy()
 				return nil
 			})
@@ -578,14 +590,15 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 		}()
 		func() {
+			streamManager := streamManager.Clone()
+			streamManager.Add("0", pipeReader1)
     	    var parentShell = shell
     	    shell := shell.Clone()
             defer func() { parentShell.ExitCode = shell.ExitCode }()
-			streamManager := streamManager.Clone()
-			streamManager.Add("0", pipeReader1)
 			var done = make(chan struct{}, 1)
 			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
 				<-done
+				shell.Terminate(streamManager)
 				streamManager.Destroy()
 				return nil
 			})
