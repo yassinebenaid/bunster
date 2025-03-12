@@ -8,6 +8,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
     func(){
 		shell.SetVar("key", "value")
 
@@ -33,6 +34,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
    	func(){
 		shell.SetVar("key1", "value")
 		shell.SetVar("key2", "value")
@@ -63,6 +65,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
     func(){
 		shell.SetVar("key1", "")
 		shell.SetVar("key2", "")
@@ -83,6 +86,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
     func(){
 		shell.SetExportVar("key", "value")
 		shell.MarkVarAsExported("key2")

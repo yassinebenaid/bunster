@@ -125,7 +125,13 @@ type ProcessSubstitution struct {
 }
 
 type Function struct {
-	Name    string
+	Name         string
+	SubShell     bool
+	Body         []Statement
+	Redirections []Redirection
+}
+
+type Defer struct {
 	Command Statement
 }
 
@@ -156,6 +162,7 @@ func (Break) node()               {}
 func (Continue) node()            {}
 func (Wait) node()                {}
 func (Embed) node()               {}
+func (Defer) node()               {}
 
 // Expressions
 func (CommandSubstitution) expr() {}
@@ -182,3 +189,4 @@ func (Break) stmt()          {}
 func (Continue) stmt()       {}
 func (Wait) stmt()           {}
 func (Embed) stmt()          {}
+func (Defer) stmt()          {}

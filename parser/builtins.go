@@ -15,6 +15,8 @@ func (p *parser) getBuiltinParser() func() ast.Statement {
 		return p.parseContinue
 	case token.FUNCTION:
 		return p.parseFunction
+	case token.DEFER:
+		return p.parseDefer
 	case token.WAIT:
 		return p.parseWait
 	case token.LOCAL:
@@ -71,11 +73,21 @@ func (p *parser) parseFunction() ast.Statement {
 
 	compound := p.getCompoundParser()
 	if compound == nil {
-		p.error("function body is expected to be a compound command, found `%s`", p.curr)
+		p.error("function body is expected, found `%s`", p.curr)
 		return nil
 	}
+	body := compound()
+	fn := ast.Function{Name: string(name)}
 
-	fn := ast.Function{Name: string(name), Command: compound()}
+	switch v := body.(type) {
+	case ast.Group:
+		fn.Body, fn.Redirections = v.Body, v.Redirections
+	case ast.SubShell:
+		fn.Body, fn.Redirections, fn.SubShell = v.Body, v.Redirections, true
+	default:
+		p.error("function body is expected to be a group or subshell")
+		return nil
+	}
 
 	switch p.curr.Type {
 	case token.SEMICOLON, token.NEWLINE, token.EOF, token.AND, token.OR:
@@ -83,6 +95,25 @@ func (p *parser) parseFunction() ast.Statement {
 		p.error("unexpected token `%s`", p.curr)
 		return nil
 	}
+
+	return fn
+}
+
+func (p *parser) parseDefer() ast.Statement {
+	p.proceed()
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
+	command := p.parseCommand()
+
+	switch command.(type) {
+	case ast.Command, ast.Group, ast.SubShell:
+	default:
+		p.error("expected a simple command, group or subshell after `defer`")
+	}
+
+	fn := ast.Defer{Command: command}
 
 	return fn
 }

@@ -1,0 +1,179 @@
+cases:
+  - name: can defer a simple command
+    script: |
+      defer echo foo
+      echo bar
+    expect:
+      stdout: |
+        bar
+        foo
+
+  - name: can defer a group of commanda
+    script: |
+      defer {
+        echo foo
+      }
+
+      echo bar
+    expect:
+      stdout: |
+        bar
+        foo
+
+  - name: can defer a sub-shell
+    script: |
+      defer (
+        echo foo
+      )
+
+      echo bar
+    expect:
+      stdout: |
+        bar
+        foo
+
+  - name: deferred commands run in LIFO order
+    script: |
+      defer echo first
+      defer echo second
+      defer echo third
+
+      echo normal command 
+      echo normal command2
+    expect:
+      stdout: |
+        normal command
+        normal command2
+        third
+        second
+        first
+
+  - name: deferred commands read and write from and to the shell's IO files. ignoring all redirections in the place where they were pushed
+    stdin: "global-input"
+    script: |
+      {
+        defer cat
+      } >file.txt <<<local-input
+    expect:
+      files:
+        file.txt: ""
+      stdout: global-input
+
+  - name: deferring commands in sub-shell are called when the sub-shell returns
+    script: |
+      echo global-shell:start
+
+      (
+        echo sub-shell:start
+        defer echo sub-shell:deferred
+        echo sub-shell:end
+      )
+
+      echo global-shell:end
+    expect:
+      stdout: |
+        global-shell:start
+        sub-shell:start
+        sub-shell:end
+        sub-shell:deferred
+        global-shell:end
+
+  - name: deferring commands in sub-shell use the sub-shell IO streams
+    script: |
+
+      (
+        echo sub-shell:start
+        defer echo sub-shell:deferred
+        echo sub-shell:end
+      ) >sub-shell-stdout.txt
+
+      (
+        echo sub-shell:start >&3
+        defer echo sub-shell:deferred >&3
+        echo sub-shell:end >&3
+      ) 3>sub-shell-custom-file.txt >&3
+
+    expect:
+      files:
+        sub-shell-stdout.txt: |
+          sub-shell:start
+          sub-shell:end
+          sub-shell:deferred
+        sub-shell-custom-file.txt: |
+          sub-shell:start
+          sub-shell:end
+          sub-shell:deferred
+
+  - name: deferring commands in functions are called when the function returns
+    script: |
+      func() {
+        echo function:start
+        defer echo function:deferred
+        echo function:end
+      }
+
+
+      echo global-shell:start
+      func
+      echo global-shell:end
+    expect:
+      stdout: |
+        global-shell:start
+        function:start
+        function:end
+        function:deferred
+        global-shell:end
+
+  - name: deferring commands in function use the function IO streams
+    script: |
+      func(){
+        echo function:start
+        defer echo function:deferred
+        echo function:end
+      } >file1.txt
+
+      func
+
+
+      func2(){
+        echo function:start
+        defer echo function:deferred
+        echo function:end
+      } 
+
+      func2 >file2.txt
+
+      func3(){
+        echo function:start >&3
+        defer echo function:deferred >&3
+        echo function:end >&3
+      } 3>file3.txt
+
+      func3
+
+
+      func4(){
+        echo function:start >&2
+        defer echo function:deferred >&2
+        echo function:end >&2
+      } 
+
+      func4 2>file4.txt
+    expect:
+      files:
+        file1.txt: |
+          function:start
+          function:end
+          function:deferred
+        file2.txt: |
+          function:start
+          function:end
+          function:deferred
+        file3.txt: |
+          function:start
+          function:end
+          function:deferred
+        file4.txt: |
+          function:start
+          function:end
+          function:deferred

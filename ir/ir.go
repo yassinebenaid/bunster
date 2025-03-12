@@ -43,6 +43,7 @@ func (p Program) String() string {
 			var embedFS embed.FS
 
 			func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+				defer shell.Terminate(streamManager)
 				subfs, err := fs.Sub(&embedFS, %q)
 				if err != nil {
 					shell.HandleError(streamManager, err)
@@ -57,6 +58,7 @@ func (p Program) String() string {
 			import "github.com/yassinebenaid/bunster/runtime"
 			
 			func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+				defer shell.Terminate(streamManager)
 			`
 	}
 
@@ -68,10 +70,24 @@ func (p Program) String() string {
 	return str
 }
 
-type CloneShell struct{}
+type CloneShell struct {
+	DontTerminate bool
+}
 
 func (c CloneShell) togo() string {
-	return "shell := shell.Clone()\n"
+	if c.DontTerminate {
+		return "shell := shell.Clone()\n"
+	}
+
+	return `shell := shell.Clone()
+		defer shell.Terminate(streamManager)
+		`
+}
+
+type DeferTerminateShell struct{}
+
+func (c DeferTerminateShell) togo() string {
+	return "defer shell.Terminate(streamManager)\n"
 }
 
 type Declare struct {
@@ -395,8 +411,27 @@ func (f Function) togo() string {
 			streamManager.Add("0", stdin)
 			streamManager.Add("1", stdout)
 			streamManager.Add("2", stderr)
+			defer shell.Terminate(streamManager)
 			%s
 		`+"})\n",
 		f.Name, body,
+	)
+}
+
+type Defer struct {
+	Body []Instruction
+}
+
+func (f Defer) togo() string {
+	var body string
+	for _, ins := range f.Body {
+		body += ins.togo()
+	}
+
+	return fmt.Sprintf(
+		"shell.Defer(func(shell *runtime.Shell, streamManager *runtime.StreamManager){"+`
+			%s
+		`+"})\n",
+		body,
 	)
 }

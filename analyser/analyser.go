@@ -175,7 +175,14 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 	case ast.InvertExitCode:
 		a.analyseStatement(v.Statement)
 	case ast.Function:
-		a.analyseStatement(v.Command)
+		for _, s := range v.Body {
+			a.analyseStatement(s)
+		}
+		for _, r := range v.Redirections {
+			if r.Dst != nil {
+				a.analyseExpression(r.Dst)
+			}
+		}
 	case ast.RangeLoop:
 		for _, expr := range v.Operands {
 			a.analyseExpression(expr)
@@ -206,6 +213,8 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.report(fmt.Sprintf("the path %q is not local", path))
 			}
 		}
+	case ast.Defer:
+		a.analyseStatement(v.Command)
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}

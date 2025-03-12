@@ -354,11 +354,21 @@ func (p *parser) parseNakedFunction(nameExpr ast.Expression) ast.Statement {
 
 	compound := p.getCompoundParser()
 	if compound == nil {
-		p.error("function body is expected to be a compound command, found `%s`", p.curr)
+		p.error("function body is expected, found `%s`", p.curr)
 		return nil
 	}
+	body := compound()
+	fn := ast.Function{Name: string(name)}
 
-	fn := ast.Function{Name: string(name), Command: compound()}
+	switch v := body.(type) {
+	case ast.Group:
+		fn.Body, fn.Redirections = v.Body, v.Redirections
+	case ast.SubShell:
+		fn.Body, fn.Redirections, fn.SubShell = v.Body, v.Redirections, true
+	default:
+		p.error("function body is expected to be a group or subshell")
+		return nil
+	}
 
 	switch p.curr.Type {
 	case token.SEMICOLON, token.NEWLINE, token.EOF, token.AND, token.OR:

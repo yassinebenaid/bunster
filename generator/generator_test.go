@@ -53,12 +53,12 @@ func TestGenerator(t *testing.T) {
 				program := generator.Generate(script)
 				formattedProgram, gofmtErr, err := gofmt(program.String())
 				if err != nil {
-					t.Fatalf("\n#%d: error when trying to format the generated program.\nError: %s.\nStderr: %s", i, err, gofmtErr)
+					t.Fatalf("gofmt error in generated program -- #%sError: %sStderr: %s", dump(i), dump(err.Error()), dump(gofmtErr))
 				}
 
 				formattedTestOutput, gofmtErr, err := gofmt(test.Output)
 				if err != nil {
-					t.Fatalf("\n#%d: error when trying to format the test expected output.\nError: %s.\nStderr: %s", i, err, gofmtErr)
+					t.Fatalf("gofmt error in test program -- #%sError: %sStderr: %s", dump(i), dump(err.Error()), dump(gofmtErr))
 				}
 
 				if formattedProgram != formattedTestOutput {

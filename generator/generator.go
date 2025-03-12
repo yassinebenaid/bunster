@@ -79,11 +79,12 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, ct
 		g.handleWait(buf, v)
 	case ast.Function:
 		var body InstructionBuffer
+		g.handleFunction(&body, v)
+		buf.add(ir.Function{Name: v.Name, Body: body})
+	case ast.Defer:
+		var body InstructionBuffer
 		g.generate(&body, v.Command, &context{})
-		buf.add(ir.Function{
-			Name: v.Name,
-			Body: body,
-		})
+		buf.add(ir.Defer{Body: body})
 	case ast.RangeLoop:
 		g.handleRangeLoop(buf, v, ctx)
 	case ast.Test:
@@ -369,11 +370,12 @@ func (g *generator) handleBackgroundConstruction(buf *InstructionBuffer, b ast.B
 	scope.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
 	scope.add(ir.Literal("shell.WaitGroup.Add(1)\n"))
 	scope.add(ir.Declare{Name: "done", Value: ir.Literal("shell.WaitGroup.Done")})
-	scope.add(ir.CloneShell{})
+	scope.add(ir.CloneShell{DontTerminate: true})
 
 	var body InstructionBuffer
-	body.add(ir.Literal("defer streamManager.Destroy()\n"))
 	body.add(ir.Literal("defer done()\n"))
+	body.add(ir.Literal("defer streamManager.Destroy()\n"))
+	body.add(ir.DeferTerminateShell{})
 	g.generate(&body, b.Statement, &context{})
 	scope.add(ir.Gorouting(body))
 

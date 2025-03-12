@@ -40,12 +40,13 @@ var embeddingTests = []testCase{
 		@embed file; @embed file;
 		
 	}`, ast.Script{
-		ast.Function{Name: "foo", Command: ast.Group{
+		ast.Function{
+			Name: "foo",
 			Body: []ast.Statement{
 				ast.Embed{"file"},
 				ast.Embed{"file"},
 			},
-		}},
+		},
 	}},
 }
 

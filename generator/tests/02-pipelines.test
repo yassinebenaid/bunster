@@ -8,6 +8,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
 		var pipelineWaitgroup []func() error
 		pipeReader1, pipeWriter1, err := runtime.NewPipe()
@@ -113,6 +114,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
 		var pipelineWaitgroup []func() error
 		pipeReader1, pipeWriter1, err := runtime.NewPipe()
@@ -296,6 +298,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
 		var pipelineWaitgroup []func() error
 		pipeReader1, pipeWriter1, err := runtime.NewPipe()
@@ -397,6 +400,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
 		var commandName = "command"
 		var arguments []string
@@ -447,6 +451,7 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	func() {
 		var commandName = "command"
 		var arguments []string

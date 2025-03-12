@@ -1,4 +1,4 @@
-#(TEST: can generate the [...] command)
+#(TEST: can embed one or more paths)
 
 @embed path/to/file path/to/directory 
 
@@ -17,6 +17,39 @@ import (
 var embedFS embed.FS
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
+	subfs, err := fs.Sub(&embedFS, "embed")
+	if err != nil {
+		shell.HandleError(streamManager, err)
+		return
+	}
+	shell.Embed = subfs
+}
+
+
+#(ENDTEST)
+
+
+
+#(TEST: can embed one or more paths)
+
+@embed .
+
+#(RESULT)
+
+package main
+
+import (
+	"embed"
+	"github.com/yassinebenaid/bunster/runtime"
+	"io/fs"
+)
+
+//go:embed "embed/*"
+var embedFS embed.FS
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+    defer shell.Terminate(streamManager)
 	subfs, err := fs.Sub(&embedFS, "embed")
 	if err != nil {
 		shell.HandleError(streamManager, err)
