@@ -68,7 +68,7 @@ func astCMD(_ context.Context, cmd *cli.Command) error {
 	}
 
 	script, err := parser.Parse(
-		lexer.New(v),
+		lexer.New([]rune(string(v))),
 	)
 
 	if err != nil {

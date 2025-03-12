@@ -538,7 +538,7 @@ var arithmeticsPrecedenceTests = []struct {
 func TestArithmeticsPrecedence(t *testing.T) {
 	for i, tc := range arithmeticsPrecedenceTests {
 		script, err := parser.Parse(
-			lexer.New([]byte(tc.input)),
+			lexer.New([]rune(tc.input)),
 		)
 
 		if err != nil {

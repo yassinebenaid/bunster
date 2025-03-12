@@ -12,16 +12,16 @@ const (
 )
 
 type Lexer struct {
-	input    []byte
+	input    []rune
 	pos      int
-	curr     byte
-	next     byte
+	curr     rune
+	next     rune
 	ctx      context
 	line     int
 	position int
 }
 
-func New(in []byte) Lexer {
+func New(in []rune) Lexer {
 	l := Lexer{input: in, line: 1}
 
 	// read twice so that 'curr' and 'next' get initialized
@@ -385,7 +385,7 @@ switch_beginning:
 	return tok
 }
 
-func isLetter(b byte) bool {
+func isLetter(b rune) bool {
 	return (b >= 'A' && b <= 'Z') || (b >= 'a' && b <= 'z') || b == '_'
 }
 

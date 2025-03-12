@@ -28,7 +28,7 @@ var gomod []byte
 //go:embed stubs/main.go.stub
 var mainGo []byte
 
-func Generate(workdir string, s []byte) error {
+func Generate(workdir string, s []rune) error {
 	program, err := compile(s)
 	if err != nil {
 		return err
@@ -54,7 +54,7 @@ func Generate(workdir string, s []byte) error {
 	return nil
 }
 
-func compile(s []byte) (*ir.Program, error) {
+func compile(s []rune) (*ir.Program, error) {
 	script, err := parser.Parse(lexer.New(s))
 	if err != nil {
 		return nil, err
