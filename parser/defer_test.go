@@ -33,7 +33,7 @@ var deferTests = []testCase{
 			Command: ast.Command{
 				Name: ast.Word("cmd"),
 				Env: []ast.Assignement{
-					ast.Assignement{Name: "VAR", Value: ast.Word("value")},
+					{Name: "VAR", Value: ast.Word("value")},
 				},
 			},
 		},
