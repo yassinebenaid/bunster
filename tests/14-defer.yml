@@ -130,23 +130,50 @@ cases:
         echo function:start
         defer echo function:deferred
         echo function:end
-      } >function-stdout.txt
+      } >file1.txt
 
       func
-      # (
-      #   echo function:start >&3
-      #   defer echo function:deferred >&3
-      #   echo function:end >&3
-      # ) 3>function-custom-file.txt >&3
 
-      # echo global-shell:end
+
+      func2(){
+        echo function:start
+        defer echo function:deferred
+        echo function:end
+      } 
+
+      func2 >file2.txt
+
+      func3(){
+        echo function:start >&3
+        defer echo function:deferred >&3
+        echo function:end >&3
+      } 3>file3.txt
+
+      func3
+
+
+      func4(){
+        echo function:start >&3
+        defer echo function:deferred >&3
+        echo function:end >&3
+      } 
+
+      func4 3>file4.txt
     expect:
       files:
-        function-stdout.txt: |
+        file1.txt: |
           function:start
           function:end
           function:deferred
-        # function-custom-file.txt: |
-        #   function:start
-        #   function:end
-        #   function:deferred
+        file2.txt: |
+          function:start
+          function:end
+          function:deferred
+        file3.txt: |
+          function:start
+          function:end
+          function:deferred
+        file4.txt: |
+          function:start
+          function:end
+          function:deferred
