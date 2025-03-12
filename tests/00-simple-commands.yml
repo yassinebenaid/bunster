@@ -83,3 +83,9 @@ cases:
       stderr: |
         "foobar": executable file not found in $PATH
         "/path/to/foobar": no such file or directory
+
+  - name: UTF-8 is supported
+    script: |
+      echo "雷卷是一个好程序员！"
+    expect:
+      stdout: "雷卷是一个好程序员！\n"
