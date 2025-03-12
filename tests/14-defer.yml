@@ -153,12 +153,12 @@ cases:
 
 
       func4(){
-        echo function:start >&3
-        defer echo function:deferred >&3
-        echo function:end >&3
+        echo function:start >&2
+        defer echo function:deferred >&2
+        echo function:end >&2
       } 
 
-      func4 3>file4.txt
+      func4 2>file4.txt
     expect:
       files:
         file1.txt: |
