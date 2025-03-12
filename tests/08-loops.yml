@@ -2,13 +2,40 @@
 cases:
   - name: "simple `while` command"
     script: |
-      while true; do
-        echo foo
-        break
+      n=0
+
+      while [ $n < 5 ]; do
+        echo $n
+
+        n=$(expr $n + 1)
       done
     expect:
       stdout: |
-        foo
+        0
+        1
+        2
+        3
+        4
+
+  - name: "`while` command only cares about last command's exit code"
+    script: |
+      n=0
+
+      while
+        false 
+        [ $n < 5 ]
+      do
+        echo $n
+
+        n=$(expr $n + 1)
+      done
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
 
   - name: "`while` loop within pipeline"
     script: |
