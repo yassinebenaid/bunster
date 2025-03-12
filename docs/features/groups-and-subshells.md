@@ -60,3 +60,27 @@ The second way of grouping commands is by wrapping commands within parentheses `
 
 Grouping commands this way is called a `sub-shell`. It has the same posibilities as [the `{...}` groups](#groups). Except one difference.
 Commands that run in a sub-shell are executed in a separate context. This means that all variables mutated or declared within the sub-shell do not affect the global scope.
+
+For example:
+
+```sh
+var=foo
+
+(
+	var2=bar
+	var3=baz
+)
+
+echo var:$var var2:$var2 var3:$var3
+
+```
+
+Will output:
+
+```txt
+echo var:foo var2: var3:
+
+```
+
+> [!TIP]
+> Unlike groups, sub-shells do not require any separator before the closing parenthese.
