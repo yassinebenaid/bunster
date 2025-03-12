@@ -14,6 +14,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
+		var condition = true
 		for {
     		func() {
     			var commandName = "true"
@@ -46,7 +47,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     			shell.ExitCode = command.ExitCode
 
     		}()
-    		var condition = shell.ExitCode == 0
+    		condition = shell.ExitCode == 0
     		shell.ExitCode = 0
             if !condition {
                 break
@@ -121,6 +122,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			return
 		}
 		streamManager.Add("0", stream1)
+		var condition = true
 		for {
     		func() {
     			var commandName = "true"
@@ -153,7 +155,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     			shell.ExitCode = command.ExitCode
 
     		}()
-      		var condition = shell.ExitCode == 0
+      		condition = shell.ExitCode == 0
       		shell.ExitCode = 0
             if !condition {
                 break
@@ -227,6 +229,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		func() {
 			streamManager := streamManager.Clone()
 			streamManager.Add("1", pipeWriter1)
+			var condition = true
 			var done = make(chan struct{}, 1)
 			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
 				<-done
@@ -266,7 +269,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     					shell.ExitCode = command.ExitCode
 
     				}()
-                    var condition = shell.ExitCode == 0
+                    condition = shell.ExitCode == 0
               		shell.ExitCode = 0
                     if !condition {
                         break
@@ -318,6 +321,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			streamManager := streamManager.Clone()
 			streamManager.Add("1", pipeWriter2)
 			streamManager.Add("0", pipeReader1)
+			var condition = true
 			var done = make(chan struct{}, 1)
 			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
 				<-done
@@ -357,7 +361,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     					shell.ExitCode = command.ExitCode
 
     				}()
-                    var condition = shell.ExitCode == 0
+                    condition = shell.ExitCode == 0
               		shell.ExitCode = 0
                     if !condition {
                         break
@@ -465,6 +469,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
+		var condition = true
 		for {
     		func() {
     			var commandName = "true"
@@ -497,7 +502,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     			shell.ExitCode = command.ExitCode
 
     		}()
-    		var condition = shell.ExitCode == 0
+    		condition = shell.ExitCode == 0
     		shell.ExitCode = 0
             if condition {
                 break
@@ -572,6 +577,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			return
 		}
 		streamManager.Add("0", stream1)
+		var condition = true
 		for {
     		func() {
     			var commandName = "true"
@@ -604,7 +610,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     			shell.ExitCode = command.ExitCode
 
     		}()
-      		var condition = shell.ExitCode == 0
+      		condition = shell.ExitCode == 0
       		shell.ExitCode = 0
             if condition {
                 break
@@ -678,6 +684,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		func() {
 			streamManager := streamManager.Clone()
 			streamManager.Add("1", pipeWriter1)
+			var condition = true
 			var done = make(chan struct{}, 1)
 			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
 				<-done
@@ -717,7 +724,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     					shell.ExitCode = command.ExitCode
 
     				}()
-                    var condition = shell.ExitCode == 0
+                    condition = shell.ExitCode == 0
               		shell.ExitCode = 0
                     if condition {
                         break
@@ -769,6 +776,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			streamManager := streamManager.Clone()
 			streamManager.Add("1", pipeWriter2)
 			streamManager.Add("0", pipeReader1)
+			var condition = true
 			var done = make(chan struct{}, 1)
 			pipelineWaitgroup = append(pipelineWaitgroup, func() error {
 				<-done
@@ -808,7 +816,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
     					shell.ExitCode = command.ExitCode
 
     				}()
-                    var condition = shell.ExitCode == 0
+                    condition = shell.ExitCode == 0
               		shell.ExitCode = 0
                     if condition {
                         break
@@ -916,6 +924,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
+		var condition = true
 		for {
 			func() {
 				var commandName = "true"
@@ -948,7 +957,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.ExitCode = command.ExitCode
 
 			}()
-			var condition = shell.ExitCode == 0
+			condition = shell.ExitCode == 0
 			shell.ExitCode = 0
 			if !condition {
 				break
@@ -980,6 +989,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
+		var condition = true
 		for {
 			func() {
 				var commandName = "true"
@@ -1012,7 +1022,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.ExitCode = command.ExitCode
 
 			}()
-			var condition = shell.ExitCode == 0
+			condition = shell.ExitCode == 0
 			shell.ExitCode = 0
 			if !condition {
 				break
@@ -1044,6 +1054,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
+		var condition = true
 		for {
 			func() {
 				var commandName = "true"
@@ -1076,7 +1087,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				shell.ExitCode = command.ExitCode
 
 			}()
-			var condition = shell.ExitCode == 0
+			condition = shell.ExitCode == 0
 			shell.ExitCode = 0
 			if !condition {
 				break
