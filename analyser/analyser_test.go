@@ -38,7 +38,7 @@ var testCases = []testCase{
 func TestErrors(t *testing.T) {
 	for i, tc := range testCases {
 		script, err := parser.Parse(
-			lexer.New([]byte(tc.input)),
+			lexer.New([]rune(tc.input)),
 		)
 
 		if err != nil {

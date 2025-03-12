@@ -327,7 +327,7 @@ func TestParser(t *testing.T) {
 			}
 
 			script, err := parser.Parse(
-				lexer.New([]byte(tc.input)),
+				lexer.New([]rune(tc.input)),
 			)
 
 			if err != nil {
@@ -425,7 +425,7 @@ func TestParserErrorHandling(t *testing.T) {
 			}
 
 			_, err := parser.Parse(
-				lexer.New([]byte(tc.input)),
+				lexer.New([]rune(tc.input)),
 			)
 
 			if err == nil {

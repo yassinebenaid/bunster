@@ -120,7 +120,7 @@ func TestBunster(t *testing.T) {
 					}
 				}()
 
-				binary, err := buildBinary(workdir, []byte(testCase.Script))
+				binary, err := buildBinary(workdir, []rune(testCase.Script))
 				if err != nil {
 					t.Fatalf("\nTest(#%d): %sBuild Error: %s", i, dump(testCase.Name), dump(err.Error()))
 				}
@@ -198,7 +198,7 @@ func TestBunster(t *testing.T) {
 	}
 }
 
-func buildBinary(workdir string, s []byte) (string, error) {
+func buildBinary(workdir string, s []rune) (string, error) {
 	if err := bunster.Generate(workdir, s); err != nil {
 		return "", err
 	}

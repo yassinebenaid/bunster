@@ -41,7 +41,7 @@ func TestGenerator(t *testing.T) {
 			}
 
 			for i, test := range tests {
-				script, err := parser.Parse(lexer.New([]byte(test.Input)))
+				script, err := parser.Parse(lexer.New([]rune(test.Input)))
 				if err != nil {
 					t.Fatalf("\nTest: %sError: %s", dump(test.Label), dump(err.Error()))
 				}

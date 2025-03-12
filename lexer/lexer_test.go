@@ -331,7 +331,7 @@ func TestLexer(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		l := lexer.New([]byte(tc.input))
+		l := lexer.New([]rune(tc.input))
 
 		for j, tn := range tc.tokens {
 			result := l.NextToken()
