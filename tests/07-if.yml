@@ -128,3 +128,11 @@ cases:
       echo $?
     expect:
       stdout: "0\n"
+
+  - name: "`if` only cares about last command's exit code to run"
+    script: |
+      if false; false; true; then
+        echo foobar
+      fi
+    expect:
+      stdout: "foobar\n"
