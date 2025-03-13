@@ -46,6 +46,10 @@ export default defineConfig({
 								link: "/features/groups-and-subshells",
 							},
 							{
+								text: "Deferred Commands",
+								link: "/features/deferred-commands",
+							},
+							{
 								text: "Test commands",
 								link: "/features/test-commands",
 							},
