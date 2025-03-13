@@ -83,6 +83,88 @@ cases:
         1
         2
 
+  - name: "can break out of `while` loop"
+    script: |
+      n=0
+
+      while true; do
+          echo $n:start
+
+          break
+
+          echo $n:end
+      done | cat
+    expect:
+      stdout: |
+        0:start
+
+  - name: "`break` can be in list within `while` loop"
+    script: |
+      n=0
+
+      while true; do
+          echo $n:start
+
+          [ $n -ge 3 ] && break
+
+          echo $n:end
+
+          n=$(expr $n + 1)
+      done | cat
+    expect:
+      stdout: |
+        0:start
+        0:end
+        1:start
+        1:end
+        2:start
+        2:end
+        3:start
+
+  - name: "can continue a `while` loop"
+    script: |
+      n=0
+
+      while [ $n -lt 3 ]; do
+          echo $n:start
+
+          n=$(expr $n + 1)
+
+          continue
+
+          echo $n:end
+      done | cat
+    expect:
+      stdout: |
+        0:start
+        1:start
+        2:start
+
+  - name: "`continue` can be in list within `while` loop"
+    script: |
+      n=0
+
+      while  [ $n -lt 5 ] ; do
+          n=$(expr $n + 1)
+
+          echo $n:start
+
+          [ $n -eq 3 ] && continue
+
+          echo $n:end
+      done | cat
+    expect:
+      stdout: |
+        1:start
+        1:end
+        2:start
+        2:end
+        3:start
+        4:start
+        4:end
+        5:start
+        5:end
+
   - name: "simple `until` command"
     script: |
       n=0
@@ -165,6 +247,88 @@ cases:
         0
         1
         2
+
+  - name: "can break out of `until` loop"
+    script: |
+      n=0
+
+      until false; do
+          echo $n:start
+
+          break
+
+          echo $n:end
+      done | cat
+    expect:
+      stdout: |
+        0:start
+
+  - name: "`break` can be in list within `until` loop"
+    script: |
+      n=0
+
+      until false; do
+          echo $n:start
+
+          [ $n -ge 3 ] && break
+
+          echo $n:end
+
+          n=$(expr $n + 1)
+      done | cat
+    expect:
+      stdout: |
+        0:start
+        0:end
+        1:start
+        1:end
+        2:start
+        2:end
+        3:start
+
+  - name: "can continue a `until` loop"
+    script: |
+      n=0
+
+      until [ $n -ge 3 ]; do
+          echo $n:start
+
+          n=$(expr $n + 1)
+
+          continue
+
+          echo $n:end
+      done | cat
+    expect:
+      stdout: |
+        0:start
+        1:start
+        2:start
+
+  - name: "`continue` can be in list within `until` loop"
+    script: |
+      n=0
+
+      until  [ $n -ge 5 ] ; do
+          n=$(expr $n + 1)
+
+          echo $n:start
+
+          [ $n -eq 3 ] && continue
+
+          echo $n:end
+      done | cat
+    expect:
+      stdout: |
+        1:start
+        1:end
+        2:start
+        2:end
+        3:start
+        4:start
+        4:end
+        5:start
+        5:end
 
   - name: "simple `for` loop"
     args: ["foo", "bar", "baz"]
