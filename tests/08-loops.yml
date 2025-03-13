@@ -4,7 +4,7 @@ cases:
     script: |
       n=0
 
-      while [ $n < 5 ]; do
+      while [ $n -lt 5 ]; do
         echo $n
 
         n=$(expr $n + 1)
@@ -23,7 +23,7 @@ cases:
 
       while
         false 
-        [ $n < 5 ]
+        [ $n -lt 5 ]
       do
         echo $n
 
@@ -37,35 +37,134 @@ cases:
         3
         4
 
+  - name: "`while` command header does not affect the shell's status code"
+    script: |
+      while  false ; do
+        echo foo
+      done
+    expect:
+      exit_code: 0
+
+  - name: "can use redirctions on `while` loop"
+    script: |
+      n=0
+
+      while  [ $n -lt 3 ] ; do
+        cat
+          echo error >&2
+          echo alternative output >&3
+
+          n=$(expr $n + 1)
+      done <<<"Hello World" >output.txt 2>error.txt 3>alternate.txt
+    expect:
+      files:
+        output.txt: "Hello World\n"
+        error.txt: |
+          error
+          error
+          error
+        alternate.txt: |
+          alternative output
+          alternative output
+          alternative output
+
   - name: "`while` loop within pipeline"
     script: |
-      while true; do
-        echo foo
-        break
+      n=0
+
+      while  [ $n -lt 3 ] ; do
+           echo $n
+
+          n=$(expr $n + 1)
       done | cat
     expect:
       stdout: |
-        foo
+        0
+        1
+        2
 
   - name: "simple `until` command"
     script: |
-      until false; do
-        echo foo
-        break
-      done | cat
-    expect:
-      stdout: |
-        foo
+      n=0
 
-  - name: "`until` loop within pipeline"
-    script: |
-      until false; do
-        echo foo
-        break
+      until [ $n -ge 5 ]; do
+        echo $n
+
+        n=$(expr $n + 1)
       done
     expect:
       stdout: |
-        foo
+        0
+        1
+        2
+        3
+        4
+
+  - name: "`until` command only cares about last command's exit code"
+    script: |
+      n=0
+
+      until
+        false 
+        [ $n -ge 5 ]
+      do
+        echo $n
+
+        n=$(expr $n + 1)
+      done
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+
+  - name: "`until` command header does not affect the shell's status code"
+    script: |
+      until  true ; do
+        echo foo
+      done
+    expect:
+      exit_code: 0
+
+  - name: "can use redirctions on `until` loop"
+    script: |
+      n=0
+
+      until  [ $n -ge 3 ] ; do
+        cat
+          echo error >&2
+          echo alternative output >&3
+
+          n=$(expr $n + 1)
+      done <<<"Hello World" >output.txt 2>error.txt 3>alternate.txt
+    expect:
+      files:
+        output.txt: "Hello World\n"
+        error.txt: |
+          error
+          error
+          error
+        alternate.txt: |
+          alternative output
+          alternative output
+          alternative output
+
+  - name: "`until` loop within pipeline"
+    script: |
+      n=0
+
+      until  [ $n -ge 3 ] ; do
+           echo $n
+
+          n=$(expr $n + 1)
+      done | cat
+    expect:
+      stdout: |
+        0
+        1
+        2
 
   - name: "simple `for` loop"
     args: ["foo", "bar", "baz"]
