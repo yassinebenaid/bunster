@@ -165,8 +165,13 @@ func (g *generator) handleLoop(buf *InstructionBuffer, loop ast.Loop, ctx *conte
 
 	var innerBuf, body InstructionBuffer
 
-	for _, statement := range loop.Head {
+	for i, statement := range loop.Head {
 		g.generate(&body, statement, &context{})
+
+		if i < len(loop.Head)-1 {
+			continue
+		}
+
 		body.add(ir.Declare{Name: "condition", Value: ir.Literal("shell.ExitCode == 0")})
 		body.add(ir.Set{Name: "shell.ExitCode", Value: ir.Literal("0")})
 

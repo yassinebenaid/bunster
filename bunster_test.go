@@ -2,6 +2,7 @@ package bunster_test
 
 import (
 	"bytes"
+	"fmt"
 	"io/fs"
 	"log"
 	"os"
@@ -122,7 +123,7 @@ func TestBunster(t *testing.T) {
 
 				binary, err := buildBinary(workdir, []rune(testCase.Script))
 				if err != nil {
-					t.Fatalf("\nTest(#%d): %sBuild Error: %s", i, dump(testCase.Name), dump(err.Error()))
+					t.Fatalf("\nTest(#%d): %sBuild Error: %s", i, dump(testCase.Name), err.Error())
 				}
 
 				var stdout, stderr bytes.Buffer
@@ -203,12 +204,12 @@ func buildBinary(workdir string, s []rune) (string, error) {
 		return "", err
 	}
 
+	var stdout, stderr bytes.Buffer
 	gocmd := exec.Command("go", "build", "-o", "build.bin")
-	gocmd.Stdin = os.Stdin
-	gocmd.Stdout = os.Stdout
-	gocmd.Stderr = os.Stderr
+	gocmd.Stdout = &stdout
+	gocmd.Stderr = &stderr
 	if err := gocmd.Run(); err != nil {
-		return "", err
+		return "", fmt.Errorf("go build failed\nError: %sStderr: %sStdout: %s", dump(err.Error()), dump(stderr.String()), dump(stdout.String()))
 	}
 
 	return path.Join(workdir, "build.bin"), nil
