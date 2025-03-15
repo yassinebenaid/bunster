@@ -191,19 +191,7 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 	cmdbuf.add(ir.SetStream{Name: "command.Stdout", Fd: ir.String("1")})
 	cmdbuf.add(ir.SetStream{Name: "command.Stderr", Fd: ir.String("2")})
 
-	if ctx.pipe != nil {
-		cmdbuf.add(ir.StartCommand("command"))
-		cmdbuf.add(ir.PushToPipelineWaitgroup{
-			Waitgroup: ctx.pipe.waitgroup,
-			Value: ir.Literal(`func() error {
-			 	defer streamManager.Destroy()
-				return command.Wait()
-			}`),
-		})
-	} else {
-		cmdbuf.add(ir.RunCommand("command"))
-	}
-
+	cmdbuf.add(ir.RunCommand("command"))
 	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
@@ -238,21 +226,6 @@ func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expr
 }
 
 func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []ast.Redirection, ctx *context) {
-
-	// if we're inside a pipline, we need to connect the pipe to the command.(before any other redirection)
-	if ctx.pipe != nil {
-		if ctx.pipe.writer != "" {
-			buf.add(ir.AddStream{Fd: "1", StreamName: ctx.pipe.writer})
-
-			if ctx.pipe.stderr {
-				buf.add(ir.AddStream{Fd: "2", StreamName: ctx.pipe.writer})
-			}
-		}
-
-		if ctx.pipe.reader != "" {
-			buf.add(ir.AddStream{Fd: "0", StreamName: ctx.pipe.reader})
-		}
-	}
 
 	for i, redirection := range redirections {
 		switch redirection.Method {

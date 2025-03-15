@@ -11,27 +11,8 @@ func (g *generator) handleGroup(buf *InstructionBuffer, group ast.Group, ctx *co
 	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
 	g.handleRedirections(&cmdbuf, group.Redirections, ctx)
 
-	if ctx.pipe == nil {
-		for _, cmd := range group.Body {
-			g.generate(&cmdbuf, cmd, &context{})
-		}
-	} else {
-		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
-		cmdbuf.add(ir.PushToPipelineWaitgroup{
-			Waitgroup: ctx.pipe.waitgroup,
-			Value: ir.Literal(`func() error {
-				<-done
-			 	streamManager.Destroy()
-				return nil
-			}`),
-		})
-
-		var go_routing InstructionBuffer
-		for _, cmd := range group.Body {
-			g.generate(&go_routing, cmd, &context{})
-		}
-		go_routing.add(ir.Literal("done<-struct{}{}\n"))
-		cmdbuf.add(ir.Gorouting(go_routing))
+	for _, cmd := range group.Body {
+		g.generate(&cmdbuf, cmd, &context{})
 	}
 
 	*buf = append(*buf, ir.Closure(cmdbuf))
@@ -47,28 +28,8 @@ func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell
 	cmdbuf.add(ir.CloneShell{DontTerminate: ctx.pipe != nil})
 	cmdbuf.add(ir.Literal("defer func() { parentShell.ExitCode = shell.ExitCode }()\n"))
 
-	if ctx.pipe == nil {
-		for _, cmd := range subshell.Body {
-			g.generate(&cmdbuf, cmd, &context{})
-		}
-	} else {
-		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
-		cmdbuf.add(ir.PushToPipelineWaitgroup{
-			Waitgroup: ctx.pipe.waitgroup,
-			Value: ir.Literal(`func() error {
-				<-done
-				shell.Terminate(streamManager)
-			 	streamManager.Destroy()
-				return nil
-			}`),
-		})
-
-		var go_routing InstructionBuffer
-		for _, cmd := range subshell.Body {
-			g.generate(&go_routing, cmd, &context{})
-		}
-		go_routing.add(ir.Literal("done<-struct{}{}\n"))
-		cmdbuf.add(ir.Gorouting(go_routing))
+	for _, cmd := range subshell.Body {
+		g.generate(&cmdbuf, cmd, &context{})
 	}
 
 	*buf = append(*buf, ir.Closure(cmdbuf))
@@ -108,25 +69,7 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, ctx *context) 
 		innerBuf.add(ir.If{Condition: ir.Literal("!condition"), Body: alt})
 	}
 
-	if ctx.pipe == nil {
-		cmdbuf = append(cmdbuf, innerBuf...)
-		*buf = append(*buf, ir.Closure(cmdbuf))
-		return
-	}
-
-	cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
-	cmdbuf.add(ir.PushToPipelineWaitgroup{
-		Waitgroup: ctx.pipe.waitgroup,
-		Value: ir.Literal(`func() error {
-				<-done
-			 	streamManager.Destroy()
-				return nil
-			}`),
-	})
-
-	innerBuf.add(ir.Literal("done<-struct{}{}\n"))
-	cmdbuf.add(ir.Gorouting(innerBuf))
-
+	cmdbuf = append(cmdbuf, innerBuf...)
 	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
@@ -195,23 +138,7 @@ func (g *generator) handleLoop(buf *InstructionBuffer, loop ast.Loop, ctx *conte
 		Body:      body,
 	})
 
-	if ctx.pipe == nil {
-		cmdbuf = append(cmdbuf, innerBuf...)
-	} else {
-		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
-		cmdbuf.add(ir.PushToPipelineWaitgroup{
-			Waitgroup: ctx.pipe.waitgroup,
-			Value: ir.Literal(`func() error {
-				<-done
-			 	streamManager.Destroy()
-				return nil
-			}`),
-		})
-
-		innerBuf.add(ir.Literal("done<-struct{}{}\n"))
-		cmdbuf.add(ir.Gorouting(innerBuf))
-	}
-
+	cmdbuf = append(cmdbuf, innerBuf...)
 	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
@@ -243,21 +170,6 @@ func (g *generator) handleRangeLoop(buf *InstructionBuffer, loop ast.RangeLoop, 
 		Body:    body,
 	})
 
-	if ctx.pipe == nil {
-		cmdbuf = append(cmdbuf, innerBuf...)
-	} else {
-		cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
-		cmdbuf.add(ir.PushToPipelineWaitgroup{
-			Waitgroup: ctx.pipe.waitgroup,
-			Value: ir.Literal(`func() error {
-				<-done
-			 	streamManager.Destroy()
-				return nil
-			}`),
-		})
-
-		innerBuf.add(ir.Literal("done<-struct{}{}\n"))
-		cmdbuf.add(ir.Gorouting(innerBuf))
-	}
+	cmdbuf = append(cmdbuf, innerBuf...)
 	*buf = append(*buf, ir.Closure(cmdbuf))
 }
