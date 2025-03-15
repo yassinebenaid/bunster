@@ -115,7 +115,7 @@ func (p *parser) parsePrefix() ast.Expression {
 		}
 		switch p.curr.Type {
 		case token.INCREMENT, token.DECREMENT:
-			exp = ast.PostIncDecArithmetic{Operand: exp, Operator: p.curr.Literal}
+			exp = ast.PostIncDecArithmetic{Operand: string(exp.(ast.Var)), Operator: p.curr.Literal}
 			p.proceed()
 		}
 		return exp

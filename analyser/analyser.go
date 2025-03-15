@@ -215,6 +215,15 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 		}
 	case ast.Defer:
 		a.analyseStatement(v.Command)
+	case ast.ArithmeticCommand:
+		for _, expr := range v.Arithmetic {
+			a.analyseArithmeticExpression(expr)
+		}
+		for _, r := range v.Redirections {
+			if r.Dst != nil {
+				a.analyseExpression(r.Dst)
+			}
+		}
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
@@ -289,4 +298,13 @@ func (a *analyser) report(err string) {
 	a.errors = append(a.errors, SemanticError{
 		Err: err,
 	})
+}
+
+func (a *analyser) analyseArithmeticExpression(s ast.Expression) {
+	switch v := s.(type) {
+	case ast.PostIncDecArithmetic:
+		// switch
+	default:
+		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
+	}
 }
