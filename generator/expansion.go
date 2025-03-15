@@ -10,7 +10,7 @@ import (
 func (g *generator) handleCommandSubstitution(buf *InstructionBuffer, statements ast.CommandSubstitution) ir.Instruction {
 	var cmdbuf InstructionBuffer
 
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: true})
+	cmdbuf.add(ir.CloneStreamManager{})
 	cmdbuf.add(ir.CloneShell{})
 	cmdbuf.add(ir.Declare{
 		Name:  "buffer",
@@ -19,12 +19,11 @@ func (g *generator) handleCommandSubstitution(buf *InstructionBuffer, statements
 	cmdbuf.add(ir.AddStream{Fd: "1", StreamName: "buffer"})
 
 	for _, statement := range statements {
-		g.generate(&cmdbuf, statement, &context{})
+		g.generate(&cmdbuf, statement)
 	}
 
 	cmdbuf.add(ir.Literal("return buffer.String(true), shell.ExitCode"))
 
-	// TODO: add support for labels here
 	name := fmt.Sprintf("expr%d", g.expressionsCount)
 	buf.add(ir.ExpressionClosure{
 		Body: cmdbuf,

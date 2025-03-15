@@ -177,3 +177,30 @@ cases:
           function:start
           function:end
           function:deferred
+
+  - name: deferring commands in pipleine are called when the pipeline returns
+    script: |
+      echo global-shell:start
+
+      {
+        echo pipeline:start
+        defer echo pipeline:deferred
+        echo pipeline:end
+      } | {
+          cat
+          echo pipeline:start
+          defer echo pipeline:deferred
+          echo pipeline:end
+      }
+
+      echo global-shell:end
+    expect:
+      stdout: |
+        global-shell:start
+        pipeline:start
+        pipeline:end
+        pipeline:deferred
+        pipeline:start
+        pipeline:end
+        pipeline:deferred
+        global-shell:end

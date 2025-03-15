@@ -21,7 +21,7 @@ func (p NewPipe) togo() string {
 type NewPipelineWaitgroup string
 
 func (p NewPipelineWaitgroup) togo() string {
-	return fmt.Sprintf("var %s []func() error\n", p)
+	return fmt.Sprintf("var %s []func() int\n", p)
 }
 
 type PushToPipelineWaitgroup struct {
@@ -37,13 +37,8 @@ type WaitPipelineWaitgroup string
 
 func (w WaitPipelineWaitgroup) togo() string {
 	return fmt.Sprintf(
-		`for i, wait := range %s {
-			if err := wait(); err != nil {
-				shell.HandleError(streamManager, err)
-			}
-			if i < (len(%s) - 1){
-				shell.ExitCode = 0
-			}
+		`for _, wait := range %s {
+			shell.ExitCode = wait()
 		}
-		`, w, w)
+		`, w)
 }

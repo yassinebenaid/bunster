@@ -72,3 +72,12 @@ cases:
       stdout: |
         1
         0
+
+  - name: "commands in pipeline run in a sub-shell"
+    script: |
+      var=foo
+      { var=bar; } | true
+      echo $var
+    expect:
+      stdout: |
+        foo

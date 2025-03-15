@@ -6,10 +6,10 @@ import (
 )
 
 func (g *generator) handleFunction(buf *InstructionBuffer, function ast.Function) {
-	g.handleRedirections(buf, function.Redirections, &context{})
+	g.handleRedirections(buf, function.Redirections)
 
 	for _, cmd := range function.Body {
-		g.generate(buf, cmd, &context{})
+		g.generate(buf, cmd)
 	}
 }
 

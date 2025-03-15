@@ -356,181 +356,228 @@ command | command2 ||
 
 
 #(RESULT)
+
 package main
 
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-    defer shell.Terminate(streamManager)
+	defer shell.Terminate(streamManager)
 	func() {
-		var pipelineWaitgroup []func() error
+		var pipelineWaitgroup []func() int
 		pipeReader1, pipeWriter1, err := runtime.NewPipe()
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return
 		}
 		func() {
-			var commandName = "command"
-			var arguments []string
-			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
 			streamManager.Add("1", pipeWriter1)
-			if stream, err := streamManager.Get("0"); err != nil {
-                shell.HandleError(streamManager, err)
-                return
-            } else {
-                command.Stdin = stream
-            }
-            if stream, err := streamManager.Get("1"); err != nil {
-                shell.HandleError(streamManager, err)
-                return
-            } else {
-                command.Stdout = stream
-            }
-            if stream, err := streamManager.Get("2"); err != nil {
-                shell.HandleError(streamManager, err)
-                return
-            } else {
-                command.Stderr = stream
-            }
-			if err := command.Start(); err != nil {
-				shell.HandleError(streamManager, err)
-				return
-			}
-			pipelineWaitgroup = append(pipelineWaitgroup, func() error{
-			     defer streamManager.Destroy()
-			     return command.Wait()
+			shell := shell.Clone()
+			var done = make(chan struct{}, 1)
+			pipelineWaitgroup = append(pipelineWaitgroup, func() int {
+				<-done
+				shell.Terminate(streamManager)
+				streamManager.Destroy()
+				return shell.ExitCode
 			})
+			go func() {
+				defer func() { done <- struct{}{} }()
+				func() {
+					var commandName = "command"
+					var arguments []string
+					var command = shell.Command(commandName, arguments...)
+					streamManager := streamManager.Clone()
+					defer streamManager.Destroy()
+					if stream, err := streamManager.Get("0"); err != nil {
+						shell.HandleError(streamManager, err)
+						return
+					} else {
+						command.Stdin = stream
+					}
+					if stream, err := streamManager.Get("1"); err != nil {
+						shell.HandleError(streamManager, err)
+						return
+					} else {
+						command.Stdout = stream
+					}
+					if stream, err := streamManager.Get("2"); err != nil {
+						shell.HandleError(streamManager, err)
+						return
+					} else {
+						command.Stderr = stream
+					}
+					if err := command.Run(); err != nil {
+						shell.HandleError(streamManager, err)
+						return
+					}
+					shell.ExitCode = command.ExitCode
+
+				}()
+
+			}()
 
 		}()
 		func() {
-			var commandName = "command2"
-			var arguments []string
-			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
 			streamManager.Add("0", pipeReader1)
-			if stream, err := streamManager.Get("0"); err != nil {
-                shell.HandleError(streamManager, err)
-                return
-            } else {
-                command.Stdin = stream
-            }
-            if stream, err := streamManager.Get("1"); err != nil {
-                shell.HandleError(streamManager, err)
-                return
-            } else {
-                command.Stdout = stream
-            }
-            if stream, err := streamManager.Get("2"); err != nil {
-                shell.HandleError(streamManager, err)
-                return
-            } else {
-                command.Stderr = stream
-            }
-			if err := command.Start(); err != nil {
-				shell.HandleError(streamManager, err)
-				return
-			}
-			pipelineWaitgroup = append(pipelineWaitgroup, func() error{
-			     defer streamManager.Destroy()
-			     return command.Wait()
+			shell := shell.Clone()
+			var done = make(chan struct{}, 1)
+			pipelineWaitgroup = append(pipelineWaitgroup, func() int {
+				<-done
+				shell.Terminate(streamManager)
+				streamManager.Destroy()
+				return shell.ExitCode
 			})
+			go func() {
+				defer func() { done <- struct{}{} }()
+				func() {
+					var commandName = "command2"
+					var arguments []string
+					var command = shell.Command(commandName, arguments...)
+					streamManager := streamManager.Clone()
+					defer streamManager.Destroy()
+					if stream, err := streamManager.Get("0"); err != nil {
+						shell.HandleError(streamManager, err)
+						return
+					} else {
+						command.Stdin = stream
+					}
+					if stream, err := streamManager.Get("1"); err != nil {
+						shell.HandleError(streamManager, err)
+						return
+					} else {
+						command.Stdout = stream
+					}
+					if stream, err := streamManager.Get("2"); err != nil {
+						shell.HandleError(streamManager, err)
+						return
+					} else {
+						command.Stderr = stream
+					}
+					if err := command.Run(); err != nil {
+						shell.HandleError(streamManager, err)
+						return
+					}
+					shell.ExitCode = command.ExitCode
+
+				}()
+
+			}()
 
 		}()
-		for i, wait := range pipelineWaitgroup {
-			if err := wait(); err != nil {
-				shell.HandleError(streamManager, err)
-			}
-			if i < (len(pipelineWaitgroup) - 1) {
-				shell.ExitCode = 0
-			}
+		for _, wait := range pipelineWaitgroup {
+			shell.ExitCode = wait()
 		}
 
 	}()
 	if shell.ExitCode != 0 {
 		func() {
-			var pipelineWaitgroup []func() error
+			var pipelineWaitgroup []func() int
 			pipeReader1, pipeWriter1, err := runtime.NewPipe()
 			if err != nil {
 				shell.HandleError(streamManager, err)
 				return
 			}
 			func() {
-				var commandName = "command3"
-				var arguments []string
-				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				streamManager.Add("1", pipeWriter1)
 				streamManager.Add("2", pipeWriter1)
-    			if stream, err := streamManager.Get("0"); err != nil {
-                    shell.HandleError(streamManager, err)
-                    return
-                } else {
-                    command.Stdin = stream
-                }
-                if stream, err := streamManager.Get("1"); err != nil {
-                    shell.HandleError(streamManager, err)
-                    return
-                } else {
-                    command.Stdout = stream
-                }
-                if stream, err := streamManager.Get("2"); err != nil {
-                    shell.HandleError(streamManager, err)
-                    return
-                } else {
-                    command.Stderr = stream
-                }
-				if err := command.Start(); err != nil {
-					shell.HandleError(streamManager, err)
-					return
-				}
-    			pipelineWaitgroup = append(pipelineWaitgroup, func() error{
-    			     defer streamManager.Destroy()
-    			     return command.Wait()
-    			})
+				shell := shell.Clone()
+				var done = make(chan struct{}, 1)
+				pipelineWaitgroup = append(pipelineWaitgroup, func() int {
+					<-done
+					shell.Terminate(streamManager)
+					streamManager.Destroy()
+					return shell.ExitCode
+				})
+				go func() {
+					defer func() { done <- struct{}{} }()
+					func() {
+						var commandName = "command3"
+						var arguments []string
+						var command = shell.Command(commandName, arguments...)
+						streamManager := streamManager.Clone()
+						defer streamManager.Destroy()
+						if stream, err := streamManager.Get("0"); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						} else {
+							command.Stdin = stream
+						}
+						if stream, err := streamManager.Get("1"); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						} else {
+							command.Stdout = stream
+						}
+						if stream, err := streamManager.Get("2"); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						} else {
+							command.Stderr = stream
+						}
+						if err := command.Run(); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						}
+						shell.ExitCode = command.ExitCode
+
+					}()
+
+				}()
 
 			}()
 			func() {
-				var commandName = "command4"
-				var arguments []string
-				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				streamManager.Add("0", pipeReader1)
-    			if stream, err := streamManager.Get("0"); err != nil {
-                    shell.HandleError(streamManager, err)
-                    return
-                } else {
-                    command.Stdin = stream
-                }
-                if stream, err := streamManager.Get("1"); err != nil {
-                    shell.HandleError(streamManager, err)
-                    return
-                } else {
-                    command.Stdout = stream
-                }
-                if stream, err := streamManager.Get("2"); err != nil {
-                    shell.HandleError(streamManager, err)
-                    return
-                } else {
-                    command.Stderr = stream
-                }
-				if err := command.Start(); err != nil {
-					shell.HandleError(streamManager, err)
-					return
-				}
-    			pipelineWaitgroup = append(pipelineWaitgroup, func() error{
-    			     defer streamManager.Destroy()
-    			     return command.Wait()
-    			})
+				shell := shell.Clone()
+				var done = make(chan struct{}, 1)
+				pipelineWaitgroup = append(pipelineWaitgroup, func() int {
+					<-done
+					shell.Terminate(streamManager)
+					streamManager.Destroy()
+					return shell.ExitCode
+				})
+				go func() {
+					defer func() { done <- struct{}{} }()
+					func() {
+						var commandName = "command4"
+						var arguments []string
+						var command = shell.Command(commandName, arguments...)
+						streamManager := streamManager.Clone()
+						defer streamManager.Destroy()
+						if stream, err := streamManager.Get("0"); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						} else {
+							command.Stdin = stream
+						}
+						if stream, err := streamManager.Get("1"); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						} else {
+							command.Stdout = stream
+						}
+						if stream, err := streamManager.Get("2"); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						} else {
+							command.Stderr = stream
+						}
+						if err := command.Run(); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						}
+						shell.ExitCode = command.ExitCode
+
+					}()
+
+				}()
 
 			}()
-			for i, wait := range pipelineWaitgroup {
-				if err := wait(); err != nil {
-					shell.HandleError(streamManager, err)
-				}
-				if i < (len(pipelineWaitgroup) - 1) {
-					shell.ExitCode = 0
-				}
+			for _, wait := range pipelineWaitgroup {
+				shell.ExitCode = wait()
 			}
 
 		}()
@@ -538,87 +585,110 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	}
 	if shell.ExitCode == 0 {
 		func() {
-			var pipelineWaitgroup []func() error
+			var pipelineWaitgroup []func() int
 			pipeReader1, pipeWriter1, err := runtime.NewPipe()
 			if err != nil {
 				shell.HandleError(streamManager, err)
 				return
 			}
 			func() {
-				var commandName = "command5"
-				var arguments []string
-				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				streamManager.Add("1", pipeWriter1)
-    			if stream, err := streamManager.Get("0"); err != nil {
-                    shell.HandleError(streamManager, err)
-                    return
-                } else {
-                    command.Stdin = stream
-                }
-                if stream, err := streamManager.Get("1"); err != nil {
-                    shell.HandleError(streamManager, err)
-                    return
-                } else {
-                    command.Stdout = stream
-                }
-                if stream, err := streamManager.Get("2"); err != nil {
-                    shell.HandleError(streamManager, err)
-                    return
-                } else {
-                    command.Stderr = stream
-                }
-				if err := command.Start(); err != nil {
-					shell.HandleError(streamManager, err)
-					return
-				}
-    			pipelineWaitgroup = append(pipelineWaitgroup, func() error{
-    			     defer streamManager.Destroy()
-    			     return command.Wait()
-    			})
+				shell := shell.Clone()
+				var done = make(chan struct{}, 1)
+				pipelineWaitgroup = append(pipelineWaitgroup, func() int {
+					<-done
+					shell.Terminate(streamManager)
+					streamManager.Destroy()
+					return shell.ExitCode
+				})
+				go func() {
+					defer func() { done <- struct{}{} }()
+					func() {
+						var commandName = "command5"
+						var arguments []string
+						var command = shell.Command(commandName, arguments...)
+						streamManager := streamManager.Clone()
+						defer streamManager.Destroy()
+						if stream, err := streamManager.Get("0"); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						} else {
+							command.Stdin = stream
+						}
+						if stream, err := streamManager.Get("1"); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						} else {
+							command.Stdout = stream
+						}
+						if stream, err := streamManager.Get("2"); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						} else {
+							command.Stderr = stream
+						}
+						if err := command.Run(); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						}
+						shell.ExitCode = command.ExitCode
+
+					}()
+
+				}()
 
 			}()
 			func() {
-				var commandName = "command6"
-				var arguments []string
-				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				streamManager.Add("0", pipeReader1)
-    			if stream, err := streamManager.Get("0"); err != nil {
-                    shell.HandleError(streamManager, err)
-                    return
-                } else {
-                    command.Stdin = stream
-                }
-                if stream, err := streamManager.Get("1"); err != nil {
-                    shell.HandleError(streamManager, err)
-                    return
-                } else {
-                    command.Stdout = stream
-                }
-                if stream, err := streamManager.Get("2"); err != nil {
-                    shell.HandleError(streamManager, err)
-                    return
-                } else {
-                    command.Stderr = stream
-                }
-				if err := command.Start(); err != nil {
-					shell.HandleError(streamManager, err)
-					return
-				}
-    			pipelineWaitgroup = append(pipelineWaitgroup, func() error{
-    			     defer streamManager.Destroy()
-    			     return command.Wait()
-    			})
+				shell := shell.Clone()
+				var done = make(chan struct{}, 1)
+				pipelineWaitgroup = append(pipelineWaitgroup, func() int {
+					<-done
+					shell.Terminate(streamManager)
+					streamManager.Destroy()
+					return shell.ExitCode
+				})
+				go func() {
+					defer func() { done <- struct{}{} }()
+					func() {
+						var commandName = "command6"
+						var arguments []string
+						var command = shell.Command(commandName, arguments...)
+						streamManager := streamManager.Clone()
+						defer streamManager.Destroy()
+						if stream, err := streamManager.Get("0"); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						} else {
+							command.Stdin = stream
+						}
+						if stream, err := streamManager.Get("1"); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						} else {
+							command.Stdout = stream
+						}
+						if stream, err := streamManager.Get("2"); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						} else {
+							command.Stderr = stream
+						}
+						if err := command.Run(); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						}
+						shell.ExitCode = command.ExitCode
+
+					}()
+
+				}()
 
 			}()
-			for i, wait := range pipelineWaitgroup {
-				if err := wait(); err != nil {
-					shell.HandleError(streamManager, err)
-				}
-				if i < (len(pipelineWaitgroup) - 1) {
-					shell.ExitCode = 0
-				}
+			for _, wait := range pipelineWaitgroup {
+				shell.ExitCode = wait()
 			}
 
 		}()

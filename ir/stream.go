@@ -51,12 +51,12 @@ func (b NewPipeBuffer) togo() string {
 }
 
 type CloneStreamManager struct {
-	DeferDestroy bool
+	DontDestroy bool
 }
 
 func (c CloneStreamManager) togo() string {
 	var deferDestroy string
-	if c.DeferDestroy {
+	if !c.DontDestroy {
 		deferDestroy = "defer streamManager.Destroy()\n"
 	}
 	return fmt.Sprintf("streamManager := streamManager.Clone() \n %s", deferDestroy)

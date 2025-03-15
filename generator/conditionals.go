@@ -5,35 +5,19 @@ import (
 	"github.com/yassinebenaid/bunster/ir"
 )
 
-func (g *generator) handleTest(buf *InstructionBuffer, test ast.Test, ctx *context) {
+func (g *generator) handleTest(buf *InstructionBuffer, test ast.Test) {
 	var cmdbuf, body InstructionBuffer
 
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
-	g.handleRedirections(&cmdbuf, test.Redirections, ctx)
+	cmdbuf.add(ir.CloneStreamManager{})
+	g.handleRedirections(&cmdbuf, test.Redirections)
 
 	body.add(ir.Declare{Name: "testResult", Value: ir.Literal("false")})
 	g.handleTestExpression(&body, test.Expr)
 	body.add(ir.Literal("if testResult { shell.ExitCode = 0 } else { shell.ExitCode = 1  }\n"))
 
-	if ctx.pipe == nil {
-		cmdbuf = append(cmdbuf, body...)
-		*buf = append(*buf, ir.Closure(cmdbuf))
-		return
-	}
-
-	cmdbuf.add(ir.Literal("var done = make(chan struct{},1)\n"))
-	cmdbuf.add(ir.PushToPipelineWaitgroup{
-		Waitgroup: ctx.pipe.waitgroup,
-		Value: ir.Literal(`func() error {
-				<-done
-			 	streamManager.Destroy()
-				return nil
-			}`),
-	})
-
-	body.add(ir.Literal("done<-struct{}{}\n"))
-	cmdbuf.add(ir.Gorouting(body))
+	cmdbuf = append(cmdbuf, body...)
 	*buf = append(*buf, ir.Closure(cmdbuf))
+
 }
 
 func (g *generator) handleTestExpression(buf *InstructionBuffer, test ast.Expression) {
