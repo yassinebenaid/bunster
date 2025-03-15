@@ -152,6 +152,11 @@ func copyFile(src, dst string) error {
 	}
 	defer srcf.Close()
 
+	dir, _ := path.Split(dst)
+	if err := os.MkdirAll(dir, 0777); err != nil {
+		return err
+	}
+
 	dstf, err := os.OpenFile(dst, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		return err
