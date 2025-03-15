@@ -7,17 +7,6 @@ import (
 	"github.com/yassinebenaid/bunster/ir"
 )
 
-type pipeContext struct {
-	writer    string
-	reader    string
-	waitgroup string
-	stderr    bool
-}
-
-type context struct {
-	pipe *pipeContext
-}
-
 type InstructionBuffer []ir.Instruction
 
 func (ib *InstructionBuffer) add(ins ir.Instruction) {
@@ -29,7 +18,7 @@ func Generate(script ast.Script) ir.Program {
 
 	var buf InstructionBuffer
 	for _, statement := range script {
-		g.generate(&buf, statement, &context{})
+		g.generate(&buf, statement)
 	}
 
 	return ir.Program{
@@ -44,14 +33,14 @@ type generator struct {
 	embeds           []string
 }
 
-func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, ctx *context) {
+func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement) {
 	switch v := statement.(type) {
 	case ast.List:
 		g.handleList(buf, v)
 	case ast.Pipeline:
 		g.handlePipeline(buf, v)
 	case ast.Command:
-		g.handleSimpleCommand(buf, v, ctx)
+		g.handleSimpleCommand(buf, v)
 	case ast.ParameterAssignement:
 		g.handleParameterAssignment(buf, v)
 	case ast.LocalParameterAssignement:
@@ -59,21 +48,21 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, ct
 	case ast.ExportParameterAssignement:
 		g.handleExportParameterAssignment(buf, v)
 	case ast.Group:
-		g.handleGroup(buf, v, ctx)
+		g.handleGroup(buf, v)
 	case ast.SubShell:
-		g.handleSubshell(buf, v, ctx)
+		g.handleSubshell(buf, v)
 	case ast.If:
-		g.handleIf(buf, v, ctx)
+		g.handleIf(buf, v)
 	case ast.Break:
 		g.handleBreak(buf, v)
 	case ast.Continue:
 		g.handleContinue(buf, v)
 	case ast.Loop:
-		g.handleLoop(buf, v, ctx)
+		g.handleLoop(buf, v)
 	case ast.BackgroundConstruction:
 		g.handleBackgroundConstruction(buf, v)
 	case ast.InvertExitCode:
-		g.generate(buf, v.Statement, &context{})
+		g.generate(buf, v.Statement)
 		buf.add(ir.InvertExitCode{})
 	case ast.Wait:
 		g.handleWait(buf, v)
@@ -83,12 +72,12 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, ct
 		buf.add(ir.Function{Name: v.Name, Body: body})
 	case ast.Defer:
 		var body InstructionBuffer
-		g.generate(&body, v.Command, &context{})
+		g.generate(&body, v.Command)
 		buf.add(ir.Defer{Body: body})
 	case ast.RangeLoop:
-		g.handleRangeLoop(buf, v, ctx)
+		g.handleRangeLoop(buf, v)
 	case ast.Test:
-		g.handleTest(buf, v, ctx)
+		g.handleTest(buf, v)
 	case ast.Embed:
 		g.handleEmbed(buf, v)
 	default:
@@ -97,10 +86,10 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement, ct
 }
 
 func (g *generator) handleList(buf *InstructionBuffer, l ast.List) {
-	g.generate(buf, l.Left, &context{})
+	g.generate(buf, l.Left)
 
 	var bodybuf InstructionBuffer
-	g.generate(&bodybuf, l.Right, &context{})
+	g.generate(&bodybuf, l.Right)
 
 	buf.add(ir.IfLastExitCode{
 		Zero: l.Operator == "&&",
@@ -152,7 +141,7 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 		})
 
 		gorouting.add(ir.Literal("defer func(){ done<-struct{}{} }()\n"))
-		g.generate(&gorouting, cmd.Command, &context{})
+		g.generate(&gorouting, cmd.Command)
 		body.add(ir.Gorouting(gorouting))
 		cmdbuf.add(ir.Closure(body))
 	}
@@ -162,7 +151,7 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
-func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command, ctx *context) {
+func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command) {
 	var cmdbuf InstructionBuffer
 
 	cmdbuf.add(ir.Declare{Name: "commandName", Value: g.handleExpression(&cmdbuf, cmd.Name)})
@@ -186,7 +175,7 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 	}
 
 	cmdbuf.add(ir.CloneStreamManager{})
-	g.handleRedirections(&cmdbuf, cmd.Redirections, ctx)
+	g.handleRedirections(&cmdbuf, cmd.Redirections)
 	cmdbuf.add(ir.SetStream{Name: "command.Stdin", Fd: ir.String("0")})
 	cmdbuf.add(ir.SetStream{Name: "command.Stdout", Fd: ir.String("1")})
 	cmdbuf.add(ir.SetStream{Name: "command.Stderr", Fd: ir.String("2")})
@@ -225,7 +214,7 @@ func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expr
 	}
 }
 
-func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []ast.Redirection, ctx *context) {
+func (g *generator) handleRedirections(buf *InstructionBuffer, redirections []ast.Redirection) {
 
 	for i, redirection := range redirections {
 		switch redirection.Method {
@@ -364,7 +353,7 @@ func (g *generator) handleBackgroundConstruction(buf *InstructionBuffer, b ast.B
 	body.add(ir.Literal("defer done()\n"))
 	body.add(ir.Literal("defer streamManager.Destroy()\n"))
 	body.add(ir.DeferTerminateShell{})
-	g.generate(&body, b.Statement, &context{})
+	g.generate(&body, b.Statement)
 	scope.add(ir.Gorouting(body))
 
 	buf.add(ir.Closure(scope))

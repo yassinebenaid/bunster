@@ -5,11 +5,11 @@ import (
 	"github.com/yassinebenaid/bunster/ir"
 )
 
-func (g *generator) handleTest(buf *InstructionBuffer, test ast.Test, ctx *context) {
+func (g *generator) handleTest(buf *InstructionBuffer, test ast.Test) {
 	var cmdbuf, body InstructionBuffer
 
 	cmdbuf.add(ir.CloneStreamManager{})
-	g.handleRedirections(&cmdbuf, test.Redirections, ctx)
+	g.handleRedirections(&cmdbuf, test.Redirections)
 
 	body.add(ir.Declare{Name: "testResult", Value: ir.Literal("false")})
 	g.handleTestExpression(&body, test.Expr)

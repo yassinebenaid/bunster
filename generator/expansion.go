@@ -19,7 +19,7 @@ func (g *generator) handleCommandSubstitution(buf *InstructionBuffer, statements
 	cmdbuf.add(ir.AddStream{Fd: "1", StreamName: "buffer"})
 
 	for _, statement := range statements {
-		g.generate(&cmdbuf, statement, &context{})
+		g.generate(&cmdbuf, statement)
 	}
 
 	cmdbuf.add(ir.Literal("return buffer.String(true), shell.ExitCode"))
