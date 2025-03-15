@@ -4,7 +4,13 @@ There are two ways to group a list of commands to be executed as a unit. When co
 
 The exit status of grouped commands is the exit code of the last command within the list.
 
+## Subshell
+
+A subshell is an abstract definition that refers to an isolated environment in which commands run without affecting the global scope. Commands that run in a sub-shell are executed in a separate context. This means that all variables mutated or declared within the sub-shell do not affect the global scope.
+
 ## Groups
+
+### Ordinary groups
 
 The format is :
 
@@ -45,7 +51,7 @@ Because the command group is a single unit, you can treat it just like a simple 
 > [!WARNING]
 > The closing brace must be preceeded by a separator (`;`, `\n`...) to be recognized as end of group. For example this is not valid: `{ command }`.
 
-## Sub-Shells
+### Subshell groups
 
 The second way of grouping commands is by wrapping commands within parentheses `(...)`. like this:
 
@@ -58,8 +64,7 @@ The second way of grouping commands is by wrapping commands within parentheses `
 
 ```
 
-Grouping commands this way is called a `sub-shell`. It has the same posibilities as [the `{...}` groups](#groups). Except one difference.
-Commands that run in a sub-shell are executed in a separate context. This means that all variables mutated or declared within the sub-shell do not affect the global scope.
+Grouping commands this way has the same posibilities as [the ordinary groups](#ordinary-groups). Except that commands run in a [subshell](#subshell).
 
 For example:
 

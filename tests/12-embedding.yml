@@ -1,9 +1,11 @@
 cases:
   - name: can embed a file
     setup_shell: |
+      mkdir dir
       cat <<<"foobar" >file.txt
+      cat <<<"foobar" >dir/file.txt
     script: |
-      @embed file.txt
+      @embed file.txt dir/file.txt
     expect:
       exit_code: 0
 
@@ -40,17 +42,20 @@ cases:
 
   - name: can read embedded files
     setup_shell: |
-      mkdir dir
+      mkdir dir dir2
       cat <<<"foobar" >dir/file.txt
+      cat <<<"foobar" >dir2/file.txt
       cat <<<"foobar" >file.txt
 
     script: |
-      @embed file.txt dir
+      @embed file.txt dir dir2/file.txt
 
       embed cat file.txt
       embed cat dir/file.txt
+      embed cat dir2/file.txt
     expect:
       stdout: |
+        foobar
         foobar
         foobar
 
@@ -68,24 +73,28 @@ cases:
 
   - name: can list embeded directories
     setup_shell: |
-      mkdir -p dir/dir2
+      mkdir -p dir/dir2 dir3
       cat <<<"foobar" >file.txt
       cat <<<"foobar" >dir/file.txt
       cat <<<"foobar" >dir/file2.txt
       cat <<<"foobar" >dir/dir2/file.txt
       cat <<<"foobar" >dir/dir2/file2.txt
+      cat <<<"foobar" >dir3/file.txt
 
     script: |
-      @embed file.txt dir
+      @embed file.txt dir dir3/file.txt
 
       embed ls .
       echo "---"
       embed ls dir
       echo "---"
       embed ls dir/dir2
+      echo "---"
+      embed ls dir3
     expect:
       stdout: |
         dir
+        dir3
         file.txt
         ---
         dir2
@@ -94,6 +103,8 @@ cases:
         ---
         file.txt
         file2.txt
+        ---
+        file.txt
 
   - name: embed command expects exactly 2 arguments
     setup_shell: |
@@ -120,3 +131,19 @@ cases:
       exit_code: 1
       stderr: |
         embed: "cmd" is not a valid embed command
+
+  - name: special files are not embeded
+    setup_shell: |
+      mkdir dir
+      touch dir/file
+
+      mkdir dir/.git
+      touch dir/.git/file
+      touch dir/go.mod
+    script: |
+      @embed dir
+
+      embed ls dir
+    expect:
+      stdout: |
+        file

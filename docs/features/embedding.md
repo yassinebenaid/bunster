@@ -65,6 +65,10 @@ The path (s) given to the `@embed` directive must be relative and local to the c
 > [!TIP]
 > If you want to embed the current working directory, you can use the dot `@embed .`
 
+> [!WARNING]
+> There are special paths that are ignored and cannot be embedded. This might change in future but for now, the following paths will be ignored from embedding:
+> `go.mod`, `.git/*`
+
 ## Accessing embedded files
 
 The `embed` builtin command provides and interface to access files embedded in your program.
