@@ -131,3 +131,19 @@ cases:
       exit_code: 1
       stderr: |
         embed: "cmd" is not a valid embed command
+
+  - name: special files are not embeded
+    setup_shell: |
+      mkdir dir
+      touch dir/file
+
+      mkdir dir/.git
+      touch dir/.git/file
+      touch dir/go.mod
+    script: |
+      @embed dir
+
+      embed ls dir
+    expect:
+      stdout: |
+        file

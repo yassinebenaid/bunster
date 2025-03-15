@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/yassinebenaid/bunster/analyser"
@@ -131,10 +132,16 @@ func cloneEmbeddedFiles(dst string, files []string) error {
 	return nil
 }
 
+var specialPathRegex = regexp.MustCompile(`^(.*\.git.*)|(.*go\.mod.*)$`)
+
 func copyDir(src, dst string) error {
 	return filepath.Walk(src, func(_path string, info fs.FileInfo, err error) error {
 		if err != nil {
 			return err
+		}
+
+		if specialPathRegex.MatchString(_path) {
+			return nil
 		}
 
 		if info.IsDir() {
