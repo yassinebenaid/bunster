@@ -120,26 +120,41 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 			})
 		}
 
-		var pc pipeContext
+		var body, gorouting InstructionBuffer
+		body.add(ir.CloneStreamManager{})
+
 		if i == 0 {
-			pc = pipeContext{
-				writer: fmt.Sprintf("pipeWriter%d", i+1),
-				stderr: cmd.Stderr,
+			body.add(ir.AddStream{Fd: "1", StreamName: fmt.Sprintf("pipeWriter%d", i+1)})
+
+			if cmd.Stderr {
+				body.add(ir.AddStream{Fd: "2", StreamName: fmt.Sprintf("pipeWriter%d", i+1)})
 			}
 		} else if i == (len(p) - 1) {
-			pc = pipeContext{
-				reader: fmt.Sprintf("pipeReader%d", i),
-			}
+			body.add(ir.AddStream{Fd: "0", StreamName: fmt.Sprintf("pipeReader%d", i)})
 		} else {
-			pc = pipeContext{
-				writer: fmt.Sprintf("pipeWriter%d", i+1),
-				reader: fmt.Sprintf("pipeReader%d", i),
-				stderr: cmd.Stderr,
+			body.add(ir.AddStream{Fd: "0", StreamName: fmt.Sprintf("pipeReader%d", i)})
+			body.add(ir.AddStream{Fd: "1", StreamName: fmt.Sprintf("pipeWriter%d", i+1)})
+			if cmd.Stderr {
+				body.add(ir.AddStream{Fd: "2", StreamName: fmt.Sprintf("pipeWriter%d", i+1)})
 			}
 		}
 
-		pc.waitgroup = "pipelineWaitgroup"
-		g.generate(&cmdbuf, cmd.Command, &context{pipe: &pc})
+		body.add(ir.CloneShell{DontTerminate: true})
+		body.add(ir.Literal("var done = make(chan struct{},1)\n"))
+		body.add(ir.PushToPipelineWaitgroup{
+			Waitgroup: "pipelineWaitgroup",
+			Value: ir.Literal(`func() int {
+				<-done
+				shell.Terminate(streamManager)
+			 	streamManager.Destroy()
+				return shell.ExitCode
+			}`),
+		})
+
+		gorouting.add(ir.Literal("defer func(){ done<-struct{}{} }()\n"))
+		g.generate(&gorouting, cmd.Command, &context{})
+		body.add(ir.Gorouting(gorouting))
+		cmdbuf.add(ir.Closure(body))
 	}
 
 	cmdbuf.add(ir.WaitPipelineWaitgroup("pipelineWaitgroup"))
