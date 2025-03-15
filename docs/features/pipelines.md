@@ -11,7 +11,7 @@ The format for a pipeline is:
 The output of each command in the pipeline is connected via a pipe to the input of the next command.
 That is, each command reads the previous command’s output. This connection is performed before any redirections specified by `command1`.
 
-Each command in the pipeline runs asynchronously in the background. The pipeline waits for all commands to finish before it exits.
+Each command in the pipeline runs asynchronously in a [sub-shell](/features/groups-and-subshells). The pipeline waits for all commands to finish before it exits.
 
 An example of a pipeline can be illustrated as follows:
 
