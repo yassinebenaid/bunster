@@ -77,13 +77,13 @@ var arithmeticsTests = []testCase{
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.PostIncDecArithmetic{
-						Operand:  ast.Var("var"),
+						Operand:  "var",
 						Operator: "++",
 					},
 				},
 				ast.Arithmetic{
 					ast.PostIncDecArithmetic{
-						Operand:  ast.Var("var"),
+						Operand:  "var",
 						Operator: "--",
 					},
 				},
@@ -101,7 +101,7 @@ var arithmeticsTests = []testCase{
 				},
 				ast.Arithmetic{
 					ast.PostIncDecArithmetic{
-						Operand:  ast.Var("var"),
+						Operand:  "var",
 						Operator: "++",
 					},
 				},

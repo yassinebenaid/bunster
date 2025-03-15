@@ -414,6 +414,7 @@ var functionsErrorHandlingCases = []errorHandlingTestCase{
 	{`cmd arg )`, "syntax error: token `)` cannot be placed here. (line: 1, column: 9)"},
 	{`cmd arg(arg`, "syntax error: token `(` cannot be placed here. (line: 1, column: 8)"},
 	{`cmd arg)arg`, "syntax error: token `)` cannot be placed here. (line: 1, column: 8)"},
+	{`func() if true; then cmd;fi`, "syntax error: function body is expected to be a group or subshell. (line: 1, column: 28)"},
 
 	{`function`, "syntax error: function name is required. (line: 1, column: 9)"},
 	{`function foo ()`, "syntax error: function body is expected, found `end of file`. (line: 1, column: 16)"},
@@ -424,4 +425,5 @@ var functionsErrorHandlingCases = []errorHandlingTestCase{
 	{`function cmd () function foo() {cmd;}`, "syntax error: function body is expected, found `function`. (line: 1, column: 17)"},
 	{`function func() {cmd;} | cat`, "syntax error: unexpected token `|`. (line: 1, column: 24)"},
 	{`func() {cmd;} | cat`, "syntax error: unexpected token `|`. (line: 1, column: 15)"},
+	{`function func() if true; then cmd;fi`, "syntax error: function body is expected to be a group or subshell. (line: 1, column: 37)"},
 }
