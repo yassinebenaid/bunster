@@ -8,7 +8,7 @@ import (
 func (g *generator) handleTest(buf *InstructionBuffer, test ast.Test, ctx *context) {
 	var cmdbuf, body InstructionBuffer
 
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
+	cmdbuf.add(ir.CloneStreamManager{})
 	g.handleRedirections(&cmdbuf, test.Redirections, ctx)
 
 	body.add(ir.Declare{Name: "testResult", Value: ir.Literal("false")})

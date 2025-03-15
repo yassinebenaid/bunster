@@ -121,7 +121,7 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 		}
 
 		var body, gorouting InstructionBuffer
-		body.add(ir.CloneStreamManager{})
+		body.add(ir.CloneStreamManager{DontDestroy: true})
 
 		if i == 0 {
 			body.add(ir.AddStream{Fd: "1", StreamName: fmt.Sprintf("pipeWriter%d", i+1)})
@@ -185,7 +185,7 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command,
 		cmdbuf.add(ir.SetCmdEnv{Command: "command", Key: env.Name, Value: value})
 	}
 
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
+	cmdbuf.add(ir.CloneStreamManager{})
 	g.handleRedirections(&cmdbuf, cmd.Redirections, ctx)
 	cmdbuf.add(ir.SetStream{Name: "command.Stdin", Fd: ir.String("0")})
 	cmdbuf.add(ir.SetStream{Name: "command.Stdout", Fd: ir.String("1")})
@@ -351,7 +351,7 @@ func (g *generator) handleExportParameterAssignment(buf *InstructionBuffer, p as
 func (g *generator) handleBackgroundConstruction(buf *InstructionBuffer, b ast.BackgroundConstruction) {
 	var scope InstructionBuffer
 
-	scope.add(ir.CloneStreamManager{})
+	scope.add(ir.CloneStreamManager{DontDestroy: true})
 	scope.add(ir.OpenStream{Name: "stdin", Target: ir.String("/dev/null"), Mode: ir.FLAG_READ})
 	scope.add(ir.AddStream{Fd: "0", StreamName: "stdin"})
 

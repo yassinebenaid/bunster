@@ -10,7 +10,7 @@ import (
 func (g *generator) handleCommandSubstitution(buf *InstructionBuffer, statements ast.CommandSubstitution) ir.Instruction {
 	var cmdbuf InstructionBuffer
 
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: true})
+	cmdbuf.add(ir.CloneStreamManager{})
 	cmdbuf.add(ir.CloneShell{})
 	cmdbuf.add(ir.Declare{
 		Name:  "buffer",

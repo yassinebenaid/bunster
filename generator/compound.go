@@ -8,7 +8,7 @@ import (
 func (g *generator) handleGroup(buf *InstructionBuffer, group ast.Group, ctx *context) {
 	var cmdbuf InstructionBuffer
 
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
+	cmdbuf.add(ir.CloneStreamManager{})
 	g.handleRedirections(&cmdbuf, group.Redirections, ctx)
 
 	for _, cmd := range group.Body {
@@ -21,7 +21,7 @@ func (g *generator) handleGroup(buf *InstructionBuffer, group ast.Group, ctx *co
 func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell, ctx *context) {
 	var cmdbuf InstructionBuffer
 
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
+	cmdbuf.add(ir.CloneStreamManager{})
 	g.handleRedirections(&cmdbuf, subshell.Redirections, ctx)
 
 	cmdbuf.add(ir.Declare{Name: "parentShell", Value: ir.Literal("shell")})
@@ -41,7 +41,7 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If, ctx *context) 
 	var cmdbuf, innerBuf InstructionBuffer
 
 	cmdbuf.add(ir.Declare{Name: "condition", Value: ir.Literal("false")})
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
+	cmdbuf.add(ir.CloneStreamManager{})
 
 	g.handleRedirections(&cmdbuf, cond.Redirections, ctx)
 
@@ -102,7 +102,7 @@ func (g *generator) handleElif(elifs []ast.Elif) []ir.Instruction {
 
 func (g *generator) handleLoop(buf *InstructionBuffer, loop ast.Loop, ctx *context) {
 	var cmdbuf InstructionBuffer
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
+	cmdbuf.add(ir.CloneStreamManager{})
 
 	g.handleRedirections(&cmdbuf, loop.Redirections, ctx)
 
@@ -144,7 +144,7 @@ func (g *generator) handleLoop(buf *InstructionBuffer, loop ast.Loop, ctx *conte
 
 func (g *generator) handleRangeLoop(buf *InstructionBuffer, loop ast.RangeLoop, ctx *context) {
 	var cmdbuf InstructionBuffer
-	cmdbuf.add(ir.CloneStreamManager{DeferDestroy: ctx.pipe == nil})
+	cmdbuf.add(ir.CloneStreamManager{})
 
 	g.handleRedirections(&cmdbuf, loop.Redirections, ctx)
 
