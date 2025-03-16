@@ -104,7 +104,11 @@ func (g *generator) handleArithmeticExpression(buf *InstructionBuffer, expr ast.
 			Body:      g.handleArithmeticExpression(buf, v.Body),
 			Alternate: g.handleArithmeticExpression(buf, v.Alternate),
 		})
+	case ast.Number:
+		return ir.Literal(v)
+	case ast.Var:
+		return ir.ParseInt{Value: ir.ReadVar(v)}
 	default:
-		return (ir.ParseInt{Value: g.handleExpression(buf, v)})
+		panic(fmt.Sprintf("unsupported arithmetic expression: %T", v))
 	}
 }

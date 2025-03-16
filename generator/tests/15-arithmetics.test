@@ -1,0 +1,779 @@
+#(TEST: simple binary arithmetic command)
+
+(( 1 ))
+(( var ))
+(( $var ))
+(( --var ))
+(( ++var ))
+(( var-- ))
+(( var++ ))
+(( -1 ))
+(( +2 ))
+(( !2 ))
+(( ~2 ))
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = 1
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.ParseInt(shell.ReadVar("var"))
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.ParseInt(shell.ReadVar("var"))
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.VarIncrement(shell, "var", -1, false)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.VarIncrement(shell, "var", 1, false)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.VarIncrement(shell, "var", -1, true)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.VarIncrement(shell, "var", 1, true)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = (-1)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = (+2)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.NegateInt(2)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = (^2)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+#(TEST: binary arithmetic command)
+
+(( 1 + 1 ))
+(( 3 - 2 ))
+(( 3 * 4 ))
+(( 9 / 3 ))
+(( 9 % 2 ))
+(( 2 ** 3 ))
+(( 10 | 3 ))
+(( 10 & 6 ))
+(( 10 ^ 8 ))
+(( 1 << 3 ))
+(( 8 >> 2 ))
+(( 8 > 2 ))
+(( 8 < 2 ))
+(( 8 >= 2 ))
+(( 2 >= 2 ))
+(( 2 <= 8 ))
+(( 2 <= 2 ))
+(( 2 == 2 ))
+(( 2 != 2 ))
+(( 1 && -1 ))
+(( 1 || 1 ))
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = (1 + 1)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = (3 - 2)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = (3 * 4)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = (9 / 3)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = (9 % 2)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.IntPower(2, 3)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = (10 | 3)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = (10 & 6)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = (10 ^ 8)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = (1 << 3)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = (8 >> 2)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.CompareInt(8, ">", 2)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.CompareInt(8, "<", 2)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.CompareInt(8, ">=", 2)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.CompareInt(2, ">=", 2)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.CompareInt(2, "<=", 8)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.CompareInt(2, "<=", 2)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.CompareInt(2, "==", 2)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.CompareInt(2, "!=", 2)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.CompareInt(1, "&&", (-1))
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.CompareInt(1, "||", 1)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+
+#(TEST: assignment operations)
+
+(( var = 100 ))
+(( var2 = 40 ))
+(( var += 20 ))
+(( var -= 20 ))
+(( var *= 20 ))
+(( var /= 20 ))
+(( var %= 20 ))
+(( var |= 20 ))
+(( var ^= 20 ))
+(( var &= 20 ))
+(( var <<= 3 ))
+(( var >>= 3 ))
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		shell.SetVar("var", runtime.FormatInt(100))
+		arithmeticResult = runtime.ParseInt(shell.ReadVar("var"))
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		shell.SetVar("var2", runtime.FormatInt(40))
+		arithmeticResult = runtime.ParseInt(shell.ReadVar("var2"))
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		shell.SetVar("var", runtime.FormatInt((runtime.ParseInt(shell.ReadVar("var")) + 20)))
+		arithmeticResult = runtime.ParseInt(shell.ReadVar("var"))
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		shell.SetVar("var", runtime.FormatInt((runtime.ParseInt(shell.ReadVar("var")) - 20)))
+		arithmeticResult = runtime.ParseInt(shell.ReadVar("var"))
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		shell.SetVar("var", runtime.FormatInt((runtime.ParseInt(shell.ReadVar("var")) * 20)))
+		arithmeticResult = runtime.ParseInt(shell.ReadVar("var"))
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		shell.SetVar("var", runtime.FormatInt((runtime.ParseInt(shell.ReadVar("var")) / 20)))
+		arithmeticResult = runtime.ParseInt(shell.ReadVar("var"))
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		shell.SetVar("var", runtime.FormatInt((runtime.ParseInt(shell.ReadVar("var")) % 20)))
+		arithmeticResult = runtime.ParseInt(shell.ReadVar("var"))
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		shell.SetVar("var", runtime.FormatInt((runtime.ParseInt(shell.ReadVar("var")) | 20)))
+		arithmeticResult = runtime.ParseInt(shell.ReadVar("var"))
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		shell.SetVar("var", runtime.FormatInt((runtime.ParseInt(shell.ReadVar("var")) ^ 20)))
+		arithmeticResult = runtime.ParseInt(shell.ReadVar("var"))
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		shell.SetVar("var", runtime.FormatInt((runtime.ParseInt(shell.ReadVar("var")) & 20)))
+		arithmeticResult = runtime.ParseInt(shell.ReadVar("var"))
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		shell.SetVar("var", runtime.FormatInt((runtime.ParseInt(shell.ReadVar("var")) << 3)))
+		arithmeticResult = runtime.ParseInt(shell.ReadVar("var"))
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		shell.SetVar("var", runtime.FormatInt((runtime.ParseInt(shell.ReadVar("var")) >> 3)))
+		arithmeticResult = runtime.ParseInt(shell.ReadVar("var"))
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+#(TEST: conditional expression)
+
+(( 1 ? 2 : 3 ))
+(( 0 ? 2 : 3 ))
+(( (-1) ? 2 : 3 ))
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.ConditionalInt(1, 2, 3)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.ConditionalInt(0, 2, 3)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var arithmeticResult = 0
+		arithmeticResult = runtime.ConditionalInt((-1), 2, 3)
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+
+
+
+#(TEST: redirections on arithmetic command)
+
+(( 1 )) >/dev/null
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		stream0, err := streamManager.OpenStream("/dev/null", runtime.STREAM_FLAG_WRITE)
+		if err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+		streamManager.Add("1", stream0)
+		var arithmeticResult = 0
+		arithmeticResult = 1
+		if arithmeticResult == 0 {
+			shell.ExitCode = 1
+		} else {
+			shell.ExitCode = 0
+		}
+
+	}()
+}
+
+
+#(ENDTEST)
+
+
+#(TEST: arithmetic substitution)
+
+$(( 1 ))
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		expr1, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 1
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		var commandName = expr1
+		var arguments []string
+		var command = shell.Command(commandName, arguments...)
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		if stream, err := streamManager.Get("0"); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		} else {
+			command.Stdin = stream
+		}
+		if stream, err := streamManager.Get("1"); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		} else {
+			command.Stdout = stream
+		}
+		if stream, err := streamManager.Get("2"); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		} else {
+			command.Stderr = stream
+		}
+		if err := command.Run(); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+		shell.ExitCode = command.ExitCode
+
+	}()
+}
+
+
+#(ENDTEST)
