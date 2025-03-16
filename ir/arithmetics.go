@@ -25,6 +25,14 @@ func (c ParseInt) togo() string {
 	return fmt.Sprintf("runtime.ParseInt(%s)", c.Value.togo())
 }
 
+type FormatInt struct {
+	Value Instruction
+}
+
+func (c FormatInt) togo() string {
+	return fmt.Sprintf("runtime.FormatInt(%s)", c.Value.togo())
+}
+
 type UnaryArithmetic struct {
 	Operator string
 	Operand  Instruction

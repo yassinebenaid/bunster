@@ -71,6 +71,26 @@ func (g *generator) handleArithmeticExpression(buf *InstructionBuffer, expr ast.
 				Right:    g.handleArithmeticExpression(buf, v.Right),
 				Operator: v.Operator,
 			})
+		case "=":
+			name := string(v.Left.(ast.Var))
+			buf.add(ir.SetVar{
+				Key:   name,
+				Value: ir.FormatInt{Value: g.handleArithmeticExpression(buf, v.Right)},
+			})
+
+			return ir.ParseInt{Value: ir.ReadVar(name)}
+		case "+=", "-=", "*=", "/=", "%=", "|=", "&=", "^=", "<<=", ">>=":
+			name := string(v.Left.(ast.Var))
+			buf.add(ir.SetVar{
+				Key: name,
+				Value: ir.FormatInt{Value: ir.BinaryArithmetic{
+					Left:     g.handleArithmeticExpression(buf, v.Left),
+					Right:    g.handleArithmeticExpression(buf, v.Right),
+					Operator: v.Operator[:len(v.Operator)-1],
+				}},
+			})
+
+			return ir.ParseInt{Value: ir.ReadVar(name)}
 		default:
 			panic("unsupported binary arithmetic: " + v.Operator)
 		}

@@ -138,3 +138,33 @@ cases:
         2
         3
         2
+
+  - name: assignment operations
+    script: |
+      echo $(( var = 100 )) $var
+      var2=30;  echo $var2 $(( var2 = 40 )) $var2
+      var=10; echo $var $(( var += 20 )) $var
+      var=10; echo $var $(( var -= 20 )) $var
+      var=10; echo $var $(( var *= 20 )) $var
+      var=100; echo $var $(( var /= 20 )) $var
+      var=99; echo $var $(( var %= 20 )) $var
+      var=99; echo $var $(( var |= 20 )) $var
+      var=100; echo $var $(( var ^= 20 )) $var
+      var=100; echo $var $(( var &= 20 )) $var
+      var=1; echo $var $(( var <<= 3 )) $var
+      var=8; echo $var $(( var >>= 3 )) $var
+
+    expect:
+      stdout: |
+        100 100
+        30 40 40
+        10 30 30
+        10 -10 -10
+        10 200 200
+        100 5 5
+        99 19 19
+        99 119 119
+        100 112 112
+        100 4 4
+        1 8 8
+        8 1 1
