@@ -1,3 +1,4 @@
+![IMG_2898](https://github.com/user-attachments/assets/4e9f6f26-8251-4285-81f7-52966a5279ac)
 # Installation
 
 By default, **Bunster** is an independent utility that you can install and start using right away. However,
