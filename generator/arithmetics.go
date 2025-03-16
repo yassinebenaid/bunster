@@ -25,6 +25,8 @@ func (g *generator) handleArithmeticExpression(buf *InstructionBuffer, arithmeti
 
 		switch v := arithmetic.(type) {
 		case ast.PostIncDecArithmetic:
+			buf.add(ir.VarIncDec{Operand: v.Operand, Operator: v.Operator, Post: true})
+		case ast.PreIncDecArithmetic:
 			buf.add(ir.VarIncDec{Operand: v.Operand, Operator: v.Operator})
 		default:
 			panic(fmt.Sprintf("what the f**k is this shit: %T", v))

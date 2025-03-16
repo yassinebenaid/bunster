@@ -5,6 +5,7 @@ import "fmt"
 type VarIncDec struct {
 	Operator string
 	Operand  string
+	Post     bool
 }
 
 func (c VarIncDec) togo() string {
@@ -14,7 +15,7 @@ func (c VarIncDec) togo() string {
 	}
 
 	return fmt.Sprintf(
-		`arithmeticResult = runtime.VarAdd(shell, %q, %s)
-		`, c.Operand, op,
+		`arithmeticResult = runtime.VarIncrement(shell, %q, %s, %t)
+		`, c.Operand, op, c.Post,
 	)
 }
