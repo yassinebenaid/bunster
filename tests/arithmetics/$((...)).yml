@@ -1,0 +1,170 @@
+cases:
+  - name: simple expressions
+    script: |
+      echo $(( 1 ))
+
+      var=10
+      echo $(( $var ))
+      echo $(( $unknown_var ))
+
+      var=5.6
+      echo $(( $var ))
+
+      echo $(( 1, 2, 3 ))
+    expect:
+      stdout: |
+        1
+        10
+        0
+        5
+        3
+
+  - name: unary arithmetics
+    script: |
+      echo $(( -1 ))
+      echo $(( - - 1 ))
+      echo $(( +1 ))
+      echo $(( + +1 ))
+      echo $(( + -1 ))
+      echo $(( - +1 ))
+    expect:
+      stdout: |
+        -1
+        1
+        1
+        1
+        -1
+        -1
+
+  - name: increment and decrement operations
+    script: |
+      var=10
+      echo pre:$(( --var ))  pre:$var
+
+      var=10
+      echo pre:$(( ++var ))  pre:$var
+
+      var=10
+      echo post:$(( var-- ))  post:$var
+
+      var=10
+      echo post:$(( var++ ))  post:$var
+
+      var=10
+      echo multi:$(( var++, var )) multi:$(( var--, var ))
+    expect:
+      stdout: |
+        pre:9 pre:9
+        pre:11 pre:11
+        post:10 post:9
+        post:10 post:11
+        multi:11 multi:10
+
+  - name: flip and negation operations
+    script: |
+      var=10
+      echo negate:$(( !10 )) negate:$(( !var )) negate:$(( !var2 )) negate:$(( !0 )) negate:$(( !-1 ))
+
+      echo flip:$(( ~0 )) flip:$(( ~1 )) flip:$(( ~-1 )) flip:$(( ~5 ))
+    expect:
+      stdout: |
+        negate:0 negate:0 negate:1 negate:1 negate:0
+        flip:-1 flip:-2 flip:0 flip:-6
+
+  - name: binary operations
+    script: |
+      echo "+:$(( 1 + 1 ))"
+      echo "-:$(( 3 - 2 ))"
+      echo "*:$(( 3 * 4 ))"
+      echo "/:$(( 9 / 3 ))"
+      echo "%:$(( 9 % 2 ))"
+      echo "**:$(( 2 ** 3 ))"
+      echo "|:$(( 10 | 3 ))"
+      echo "&:$(( 10 & 6 ))"
+      echo "^:$(( 10 ^ 8 ))"
+      echo "<<:$(( 1 << 3 ))"
+      echo ">>:$(( 8 >> 2 ))"
+      echo ">:$(( 8 > 2 ))"
+      echo "<:$(( 8 < 2 ))"
+      echo ">=:$(( 8 >= 2 ))"
+      echo ">=:$(( 2 >= 2 ))"
+      echo "<=:$(( 2 <= 8 ))"
+      echo "<=:$(( 2 <= 2 ))"
+      echo "==:$(( 2 == 2 ))"
+      echo "!=:$(( 2 != 2 ))"
+      echo "&&:$(( 1 && 1 ))"
+      echo "&&:$(( 1 && -1 ))"
+      echo "&&:$(( 1 && 0 ))"
+      echo "||:$(( 1 || 1 ))"
+      echo "||:$(( 0 || 1 ))"
+      echo "||:$(( 0 || -1 ))"
+      echo "||:$(( 0 || 0 ))"
+    expect:
+      stdout: |
+        +:2
+        -:1
+        *:12
+        /:3
+        %:1
+        **:8
+        |:11
+        &:2
+        ^:2
+        <<:8
+        >>:2
+        >:1
+        <:0
+        >=:1
+        >=:1
+        <=:1
+        <=:1
+        ==:1
+        !=:0
+        &&:1
+        &&:1
+        &&:0
+        ||:1
+        ||:1
+        ||:1
+        ||:0
+
+  - name: conditional operations
+    script: |
+      echo $(( 1 ? 2 : 3 ))
+      echo $(( 0 ? 2 : 3 ))
+      echo $(( (-1) ? 2 : 3 ))
+    expect:
+      stdout: |
+        2
+        3
+        2
+
+  - name: assignment operations
+    script: |
+      echo $(( var = 100 )) $var
+      var2=30;  echo $var2 $(( var2 = 40 )) $var2
+      var=10; echo $var $(( var += 20 )) $var
+      var=10; echo $var $(( var -= 20 )) $var
+      var=10; echo $var $(( var *= 20 )) $var
+      var=100; echo $var $(( var /= 20 )) $var
+      var=99; echo $var $(( var %= 20 )) $var
+      var=99; echo $var $(( var |= 20 )) $var
+      var=100; echo $var $(( var ^= 20 )) $var
+      var=100; echo $var $(( var &= 20 )) $var
+      var=1; echo $var $(( var <<= 3 )) $var
+      var=8; echo $var $(( var >>= 3 )) $var
+
+    expect:
+      stdout: |
+        100 100
+        30 40 40
+        10 30 30
+        10 -10 -10
+        10 200 200
+        100 5 5
+        99 19 19
+        99 119 119
+        100 112 112
+        100 4 4
+        1 8 8
+        8 1 1

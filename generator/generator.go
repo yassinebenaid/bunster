@@ -80,6 +80,8 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement) {
 		g.handleTest(buf, v)
 	case ast.Embed:
 		g.handleEmbed(buf, v)
+	case ast.ArithmeticCommand:
+		g.handleArithmeticCommand(buf, v)
 	default:
 		panic(fmt.Sprintf("Unsupported statement: %T", v))
 	}
@@ -209,6 +211,8 @@ func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expr
 		return concat
 	case ast.CommandSubstitution:
 		return g.handleCommandSubstitution(buf, v)
+	case ast.Arithmetic:
+		return g.handleArithmeticSubstitution(buf, v)
 	default:
 		panic(fmt.Sprintf("Unsupported expression: %T", v))
 	}

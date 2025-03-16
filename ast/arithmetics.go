@@ -14,12 +14,12 @@ type ArithmeticCommand struct {
 }
 
 type PostIncDecArithmetic struct {
-	Operand  Expression
+	Operand  string
 	Operator string
 }
 
 type PreIncDecArithmetic struct {
-	Operand  Expression
+	Operand  string
 	Operator string
 }
 
@@ -55,11 +55,11 @@ func (n Number) string() string {
 }
 
 func (p PostIncDecArithmetic) string() string {
-	return "(" + p.Operand.string() + p.Operator + ")"
+	return "(" + p.Operand + p.Operator + ")"
 }
 
 func (p PreIncDecArithmetic) string() string {
-	return "(" + p.Operator + p.Operand.string() + ")"
+	return "(" + p.Operator + p.Operand + ")"
 
 }
 

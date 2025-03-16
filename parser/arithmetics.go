@@ -115,7 +115,7 @@ func (p *parser) parsePrefix() ast.Expression {
 		}
 		switch p.curr.Type {
 		case token.INCREMENT, token.DECREMENT:
-			exp = ast.PostIncDecArithmetic{Operand: exp, Operator: p.curr.Literal}
+			exp = ast.PostIncDecArithmetic{Operand: string(exp.(ast.Var)), Operator: p.curr.Literal}
 			p.proceed()
 		}
 		return exp
@@ -133,7 +133,12 @@ func (p *parser) parsePrefix() ast.Expression {
 		}
 		p.proceed()
 
-		exp.Operand = p.parseArithmeticExpresion(pPRE_INCREMENT)
+		op := p.parseArithmeticExpresion(pPRE_INCREMENT)
+		if v, ok := op.(ast.Var); !ok {
+			p.error("expected a variable name after `%s`", exp.Operator)
+		} else {
+			exp.Operand = string(v)
+		}
 		return exp
 	case token.PLUS, token.MINUS:
 		exp := ast.Unary{
@@ -200,6 +205,10 @@ func (p *parser) parsePostfix(left ast.Expression) ast.Expression {
 	case token.ASSIGN, token.STAR_ASSIGN, token.SLASH_ASSIGN, token.PLUS_ASSIGN, token.MINUS_ASSIGN,
 		token.CIRCUMFLEX_ASSIGN, token.PERCENT_ASSIGN, token.DOUBLE_GT_ASSIGN, token.DOUBLE_LT_ASSIGN,
 		token.AMPERSAND_ASSIGN, token.PIPE_ASSIGN:
+		if _, ok := left.(ast.Var); !ok {
+			p.error("the operator %q expects a variable name on the left", p.curr)
+		}
+
 		exp := ast.Binary{
 			Left:     left,
 			Operator: p.curr.Literal,

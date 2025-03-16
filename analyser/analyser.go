@@ -215,6 +215,15 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 		}
 	case ast.Defer:
 		a.analyseStatement(v.Command)
+	case ast.ArithmeticCommand:
+		for _, expr := range v.Arithmetic {
+			a.analyseArithmeticExpression(expr)
+		}
+		for _, r := range v.Redirections {
+			if r.Dst != nil {
+				a.analyseExpression(r.Dst)
+			}
+		}
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
@@ -247,6 +256,10 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 		a.analyseExpression(v.Operand)
 	case ast.Negation:
 		a.analyseExpression(v.Operand)
+	case ast.Arithmetic:
+		for _, expr := range v {
+			a.analyseArithmeticExpression(expr)
+		}
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
@@ -289,4 +302,25 @@ func (a *analyser) report(err string) {
 	a.errors = append(a.errors, SemanticError{
 		Err: err,
 	})
+}
+
+func (a *analyser) analyseArithmeticExpression(s ast.Expression) {
+	switch v := s.(type) {
+	case ast.PostIncDecArithmetic, ast.PreIncDecArithmetic, ast.Number, ast.Var:
+	case ast.Unary:
+		a.analyseArithmeticExpression(v.Operand)
+	case ast.Negation:
+		a.analyseArithmeticExpression(v.Operand)
+	case ast.BitFlip:
+		a.analyseArithmeticExpression(v.Operand)
+	case ast.Binary:
+		a.analyseArithmeticExpression(v.Left)
+		a.analyseArithmeticExpression(v.Right)
+	case ast.Conditional:
+		a.analyseArithmeticExpression(v.Test)
+		a.analyseArithmeticExpression(v.Body)
+		a.analyseArithmeticExpression(v.Alternate)
+	default:
+		a.report(fmt.Sprintf("Unsupported arithmetic expression type: %T", v))
+	}
 }

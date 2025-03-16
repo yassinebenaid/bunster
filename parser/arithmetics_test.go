@@ -77,31 +77,31 @@ var arithmeticsTests = []testCase{
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.PostIncDecArithmetic{
-						Operand:  ast.Var("var"),
+						Operand:  "var",
 						Operator: "++",
 					},
 				},
 				ast.Arithmetic{
 					ast.PostIncDecArithmetic{
-						Operand:  ast.Var("var"),
+						Operand:  "var",
 						Operator: "--",
 					},
 				},
 				ast.Arithmetic{
 					ast.PreIncDecArithmetic{
-						Operand:  ast.Var("var"),
+						Operand:  "var",
 						Operator: "++",
 					},
 				},
 				ast.Arithmetic{
 					ast.PreIncDecArithmetic{
-						Operand:  ast.Var("var"),
+						Operand:  "var",
 						Operator: "--",
 					},
 				},
 				ast.Arithmetic{
 					ast.PostIncDecArithmetic{
-						Operand:  ast.Var("var"),
+						Operand:  "var",
 						Operator: "++",
 					},
 				},
@@ -512,27 +512,26 @@ var arithmeticsPrecedenceTests = []struct {
 	19: {`$((a + b * c + d))`, `((a + (b * c)) + d)`},
 	20: {`$(((a + b) * (c + d)))`, `((a + b) * (c + d))`},
 
-	21: {`$(( --id++, --id--, ++id++, ++id--))`, `(--(id++)), (--(id--)), (++(id++)), (++(id--))`},
-	22: {`$(( - --id, - ++id, + --id, + ++id ))`, `(-(--id)), (-(++id)), (+(--id)), (+(++id))`},
-	23: {`$(( !-id, !+id, ~-id, ~+id ))`, `(!(-id)), (!(+id)), (~(-id)), (~(+id))`},
-	24: {`$(( !x ** !y, ~x ** ~y ))`, `((!x) ** (!y)), ((~x) ** (~y))`},
-	25: {`$(( a * b ** c, a / b ** c, a % b ** c ))`, `(a * (b ** c)), (a / (b ** c)), (a % (b ** c))`},
-	26: {`$(( a + b * c, a + b / c, a + b % c, a - b * c, a - b / c, a - b % c ))`,
+	21: {`$(( - --id, - ++id, + --id, + ++id ))`, `(-(--id)), (-(++id)), (+(--id)), (+(++id))`},
+	22: {`$(( !-id, !+id, ~-id, ~+id ))`, `(!(-id)), (!(+id)), (~(-id)), (~(+id))`},
+	23: {`$(( !x ** !y, ~x ** ~y ))`, `((!x) ** (!y)), ((~x) ** (~y))`},
+	24: {`$(( a * b ** c, a / b ** c, a % b ** c ))`, `(a * (b ** c)), (a / (b ** c)), (a % (b ** c))`},
+	25: {`$(( a + b * c, a + b / c, a + b % c, a - b * c, a - b / c, a - b % c ))`,
 		`(a + (b * c)), (a + (b / c)), (a + (b % c)), (a - (b * c)), (a - (b / c)), (a - (b % c))`},
-	27: {`$(( a << b + c, a << b - c, a >> b + c, a >> b - c ))`, `(a << (b + c)), (a << (b - c)), (a >> (b + c)), (a >> (b - c))`},
-	28: {`$(( a <= b << c, a >= b << c, a < b  << c, a > b  << c, a <= b >> c, a >= b >> c, a < b >> c, a > b >> c))`,
+	26: {`$(( a << b + c, a << b - c, a >> b + c, a >> b - c ))`, `(a << (b + c)), (a << (b - c)), (a >> (b + c)), (a >> (b - c))`},
+	27: {`$(( a <= b << c, a >= b << c, a < b  << c, a > b  << c, a <= b >> c, a >= b >> c, a < b >> c, a > b >> c))`,
 		`(a <= (b << c)), (a >= (b << c)), (a < (b << c)), (a > (b << c)), (a <= (b >> c)), (a >= (b >> c)), (a < (b >> c)), (a > (b >> c))`},
-	29: {`$(( a == b <= c, a == b >= c, a == b < c, a == b > c, a != b <= c, a != b >= c, a != b < c, a != b > c ))`,
+	28: {`$(( a == b <= c, a == b >= c, a == b < c, a == b > c, a != b <= c, a != b >= c, a != b < c, a != b > c ))`,
 		`(a == (b <= c)), (a == (b >= c)), (a == (b < c)), (a == (b > c)), (a != (b <= c)), (a != (b >= c)), (a != (b < c)), (a != (b > c))`},
-	30: {`$(( a & b == c, a & b != c))`, `(a & (b == c)), (a & (b != c))`},
-	31: {`$(( a ^ b & c))`, `(a ^ (b & c))`},
-	32: {`$(( a | b ^ c))`, `(a | (b ^ c))`},
-	33: {`$(( a && b | c))`, `(a && (b | c))`},
-	34: {`$(( a || b && c))`, `(a || (b && c))`},
-	35: {`$(( a ? b : c || a ? b : c))`, `(a ? b : (c || (a ? b : c)))`},
-	36: {`$(( a = b?c:d, a *= b?c:d, a /= b?c:d, a %= b?c:d, a += b?c:d, a -= b?c:d, a <<= b?c:d, a >>= b?c:d, a &= b?c:d, a ^= b?c:d, a |= b?c:d ))`,
+	29: {`$(( a & b == c, a & b != c))`, `(a & (b == c)), (a & (b != c))`},
+	30: {`$(( a ^ b & c))`, `(a ^ (b & c))`},
+	31: {`$(( a | b ^ c))`, `(a | (b ^ c))`},
+	32: {`$(( a && b | c))`, `(a && (b | c))`},
+	33: {`$(( a || b && c))`, `(a || (b && c))`},
+	34: {`$(( a ? b : c || a ? b : c))`, `(a ? b : (c || (a ? b : c)))`},
+	35: {`$(( a = b?c:d, a *= b?c:d, a /= b?c:d, a %= b?c:d, a += b?c:d, a -= b?c:d, a <<= b?c:d, a >>= b?c:d, a &= b?c:d, a ^= b?c:d, a |= b?c:d ))`,
 		`(a = (b ? c : d)), (a *= (b ? c : d)), (a /= (b ? c : d)), (a %= (b ? c : d)), (a += (b ? c : d)), (a -= (b ? c : d)), (a <<= (b ? c : d)), (a >>= (b ? c : d)), (a &= (b ? c : d)), (a ^= (b ? c : d)), (a |= (b ? c : d))`},
-	37: {`$((x ? v=2: y))`, `(x ? (v = 2) : y)`},
+	36: {`$((x ? v=2: y))`, `(x ? (v = 2) : y)`},
 }
 
 func TestArithmeticsPrecedence(t *testing.T) {
@@ -574,6 +573,7 @@ var arithmeticsErrorHandlingCases = []errorHandlingTestCase{
 	{`$((1 `, "syntax error: expected `))` to close arithmetic expression, found `end of file`. (line: 1, column: 6)"},
 	{`$((1++))`, "syntax error: expected `))` to close arithmetic expression, found `++`. (line: 1, column: 5)"},
 	{`$((--))`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 6)"},
+	{`$((--1))`, "syntax error: expected a variable name after `--`. (line: 1, column: 7)"},
 	{`$((-))`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 5)"},
 	{`$((1+))`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 6)"},
 	{`$(( (1 x))`, "syntax error: expected a closing `)`, found `x`. (line: 1, column: 8)"},
@@ -585,6 +585,7 @@ var arithmeticsErrorHandlingCases = []errorHandlingTestCase{
 	{`((,))`, "syntax error: bad arithmetic expression, unexpected token `,`. (line: 1, column: 3)"},
 	{`((1 `, "syntax error: expected `))` to close arithmetic expression, found `end of file`. (line: 1, column: 5)"},
 	{`((1++))`, "syntax error: expected `))` to close arithmetic expression, found `++`. (line: 1, column: 4)"},
+	{`((--1))`, "syntax error: expected a variable name after `--`. (line: 1, column: 6)"},
 	{`((--))`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 5)"},
 	{`((-))`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 4)"},
 	{`((1+))`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 5)"},
@@ -593,4 +594,16 @@ var arithmeticsErrorHandlingCases = []errorHandlingTestCase{
 
 	{`(( x )) arg`, "syntax error: unexpected token `arg`. (line: 1, column: 9)"},
 	{`(( x )) <in >out <<<etc arg`, "syntax error: unexpected token `arg`. (line: 1, column: 25)"},
+
+	{`(( 1 = foo ))`, `syntax error: the operator "=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 += foo ))`, `syntax error: the operator "+=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 -= foo ))`, `syntax error: the operator "-=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 *= foo ))`, `syntax error: the operator "*=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 /= foo ))`, `syntax error: the operator "/=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 <<= foo ))`, `syntax error: the operator "<<=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 >>= foo ))`, `syntax error: the operator ">>=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 |= foo ))`, `syntax error: the operator "|=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 &= foo ))`, `syntax error: the operator "&=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 ^= foo ))`, `syntax error: the operator "^=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 %= foo ))`, `syntax error: the operator "%=" expects a variable name on the left. (line: 1, column: 6)`},
 }
