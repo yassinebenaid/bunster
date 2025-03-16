@@ -205,6 +205,10 @@ func (p *parser) parsePostfix(left ast.Expression) ast.Expression {
 	case token.ASSIGN, token.STAR_ASSIGN, token.SLASH_ASSIGN, token.PLUS_ASSIGN, token.MINUS_ASSIGN,
 		token.CIRCUMFLEX_ASSIGN, token.PERCENT_ASSIGN, token.DOUBLE_GT_ASSIGN, token.DOUBLE_LT_ASSIGN,
 		token.AMPERSAND_ASSIGN, token.PIPE_ASSIGN:
+		if _, ok := left.(ast.Var); !ok {
+			p.error("the operator %q expects a variable name on the left", p.curr)
+		}
+
 		exp := ast.Binary{
 			Left:     left,
 			Operator: p.curr.Literal,

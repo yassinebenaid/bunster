@@ -594,4 +594,16 @@ var arithmeticsErrorHandlingCases = []errorHandlingTestCase{
 
 	{`(( x )) arg`, "syntax error: unexpected token `arg`. (line: 1, column: 9)"},
 	{`(( x )) <in >out <<<etc arg`, "syntax error: unexpected token `arg`. (line: 1, column: 25)"},
+
+	{`(( 1 = foo ))`, `syntax error: the operator "=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 += foo ))`, `syntax error: the operator "+=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 -= foo ))`, `syntax error: the operator "-=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 *= foo ))`, `syntax error: the operator "*=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 /= foo ))`, `syntax error: the operator "/=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 <<= foo ))`, `syntax error: the operator "<<=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 >>= foo ))`, `syntax error: the operator ">>=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 |= foo ))`, `syntax error: the operator "|=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 &= foo ))`, `syntax error: the operator "&=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 ^= foo ))`, `syntax error: the operator "^=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 %= foo ))`, `syntax error: the operator "%=" expects a variable name on the left. (line: 1, column: 6)`},
 }
