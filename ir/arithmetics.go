@@ -60,3 +60,13 @@ type IntPower struct {
 func (c IntPower) togo() string {
 	return fmt.Sprintf("runtime.IntPower(%s, %s)", c.Operand.togo(), c.Pow.togo())
 }
+
+type CompareInt struct {
+	Left     Instruction
+	Operator string
+	Right    Instruction
+}
+
+func (c CompareInt) togo() string {
+	return fmt.Sprintf("runtime.CompareInt(%s, %q, %s)", c.Left.togo(), c.Operator, c.Right.togo())
+}

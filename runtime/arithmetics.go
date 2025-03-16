@@ -35,3 +35,26 @@ func NegateInt(value int) int {
 func IntPower(operand, pow int) int {
 	return int(math.Pow(float64(operand), float64(pow)))
 }
+
+func CompareInt(x int, op string, y int) int {
+	var result bool
+	switch op {
+	case "==":
+		result = x == y
+	case "!=":
+		result = x != y
+	case "<":
+		result = x < y
+	case ">":
+		result = x > y
+	case "<=":
+		result = x <= y
+	case ">=":
+		result = x >= y
+	}
+
+	if result {
+		return 1
+	}
+	return 0
+}

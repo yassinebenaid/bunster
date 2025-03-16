@@ -16,22 +16,7 @@ func NumberCompare(x, op, y string) bool {
 		return false
 	}
 
-	switch op {
-	case "==":
-		return xv == yv
-	case "!=":
-		return xv != yv
-	case "<":
-		return xv < yv
-	case ">":
-		return xv > yv
-	case "<=":
-		return xv <= yv
-	case ">=":
-		return xv >= yv
-	default:
-		panic("unsupported arithmetic operator: " + op)
-	}
+	return CompareInt(int(xv), op, int(yv)) == 1
 }
 
 func FilesHaveSameDevAndIno(file1, file2 string) bool {
