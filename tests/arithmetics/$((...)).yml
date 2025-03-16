@@ -35,3 +35,27 @@ cases:
         1
         -1
         -1
+
+  - name: increment and decrement operations
+    script: |
+      var=10
+      echo pre:$(( --var ))  pre:$var
+
+      var=10
+      echo pre:$(( ++var ))  pre:$var
+
+      var=10
+      echo post:$(( var-- ))  post:$var
+
+      var=10
+      echo post:$(( var++ ))  post:$var
+
+      var=10
+      echo multi:$(( var++, var )) multi:$(( var--, var ))
+    expect:
+      stdout: |
+        pre:9 pre:9
+        pre:11 pre:11
+        post:10 post:9
+        post:10 post:11
+        multi:11 multi:10
