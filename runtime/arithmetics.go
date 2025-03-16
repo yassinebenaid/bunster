@@ -1,6 +1,9 @@
 package runtime
 
-import "strconv"
+import (
+	"math"
+	"strconv"
+)
 
 func ParseInt(value string) int {
 	valueFloat, _ := strconv.ParseFloat(value, 64)
@@ -27,4 +30,8 @@ func NegateInt(value int) int {
 		return 1
 	}
 	return 0
+}
+
+func IntPower(operand, pow int) int {
+	return int(math.Pow(float64(operand), float64(pow)))
 }

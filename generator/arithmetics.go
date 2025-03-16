@@ -54,11 +54,16 @@ func (g *generator) handleArithmeticExpression(buf *InstructionBuffer, expr ast.
 		return (ir.NegateArithmetic{Value: g.handleArithmeticExpression(buf, v.Operand)})
 	case ast.Binary:
 		switch v.Operator {
-		case "+":
+		case "+", "-", "*", "/", "%", "|", "&", "^", "<<", ">>":
 			return (ir.BinaryArithmetic{
 				Left:     g.handleArithmeticExpression(buf, v.Left),
 				Right:    g.handleArithmeticExpression(buf, v.Right),
 				Operator: v.Operator,
+			})
+		case "**":
+			return (ir.IntPower{
+				Operand: g.handleArithmeticExpression(buf, v.Left),
+				Pow:     g.handleArithmeticExpression(buf, v.Right),
 			})
 		default:
 			panic("unsupported binary arithmetic: " + v.Operator)

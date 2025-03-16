@@ -51,3 +51,12 @@ type NegateArithmetic struct {
 func (c NegateArithmetic) togo() string {
 	return fmt.Sprintf("runtime.NegateInt(%s)", c.Value.togo())
 }
+
+type IntPower struct {
+	Operand Instruction
+	Pow     Instruction
+}
+
+func (c IntPower) togo() string {
+	return fmt.Sprintf("runtime.IntPower(%s, %s)", c.Operand.togo(), c.Pow.togo())
+}
