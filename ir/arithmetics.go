@@ -14,8 +14,13 @@ func (c VarIncDec) togo() string {
 		op = "-1"
 	}
 
-	return fmt.Sprintf(
-		`arithmeticResult = runtime.VarIncrement(shell, %q, %s, %t)
-		`, c.Operand, op, c.Post,
-	)
+	return fmt.Sprintf(`runtime.VarIncrement(shell, %q, %s, %t)`, c.Operand, op, c.Post)
+}
+
+type ParseInt struct {
+	Value Instruction
+}
+
+func (c ParseInt) togo() string {
+	return fmt.Sprintf("runtime.ParseInt(%s)", c.Value.togo())
 }

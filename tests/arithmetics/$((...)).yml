@@ -1,0 +1,7 @@
+cases:
+  - name: simple expressions
+    script: |
+      echo $(( 1 ))
+    expect:
+      stdout: |
+        1

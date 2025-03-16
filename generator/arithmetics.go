@@ -20,18 +20,33 @@ func (g *generator) handleArithmeticCommand(buf *InstructionBuffer, cmd ast.Arit
 	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
-func (g *generator) handleArithmeticExpression(buf *InstructionBuffer, arithmetics ast.Arithmetic) {
-	for _, arithmetic := range arithmetics {
+func (g *generator) handleArithmeticSubstitution(buf *InstructionBuffer, expr ast.Arithmetic) ir.Instruction {
+	var cmdbuf InstructionBuffer
 
-		switch v := arithmetic.(type) {
-		case ast.PostIncDecArithmetic:
-			buf.add(ir.VarIncDec{Operand: v.Operand, Operator: v.Operator, Post: true})
-		case ast.PreIncDecArithmetic:
-			buf.add(ir.VarIncDec{Operand: v.Operand, Operator: v.Operator})
-		default:
-			panic(fmt.Sprintf("what the f**k is this shit: %T", v))
-			// buf.add(ir.ToInt{String: g.handleExpression(buf, v)})
-		}
+	cmdbuf.add(ir.Declare{Name: "arithmeticResult", Value: ir.Literal("0")})
 
+	for _, arithmetic := range expr {
+		cmdbuf.add(ir.Set{Name: "arithmeticResult", Value: g.handleArithmeticExpression(&cmdbuf, arithmetic)})
+	}
+
+	cmdbuf.add(ir.Literal("return runtime.FormatInt(arithmeticResult), shell.ExitCode"))
+
+	name := fmt.Sprintf("expr%d", g.expressionsCount)
+	buf.add(ir.ExpressionClosure{
+		Body: cmdbuf,
+		Name: name,
+	})
+
+	return ir.Literal(name)
+}
+
+func (g *generator) handleArithmeticExpression(buf *InstructionBuffer, expr ast.Expression) ir.Instruction {
+	switch v := expr.(type) {
+	case ast.PostIncDecArithmetic:
+		return (ir.VarIncDec{Operand: v.Operand, Operator: v.Operator, Post: true})
+	case ast.PreIncDecArithmetic:
+		return (ir.VarIncDec{Operand: v.Operand, Operator: v.Operator})
+	default:
+		return (ir.ParseInt{Value: g.handleExpression(buf, v)})
 	}
 }
