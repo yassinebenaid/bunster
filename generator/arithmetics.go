@@ -46,6 +46,8 @@ func (g *generator) handleArithmeticExpression(buf *InstructionBuffer, expr ast.
 		return (ir.VarIncDec{Operand: v.Operand, Operator: v.Operator, Post: true})
 	case ast.PreIncDecArithmetic:
 		return (ir.VarIncDec{Operand: v.Operand, Operator: v.Operator})
+	case ast.Unary:
+		return (ir.UnaryArithmetic{Operand: g.handleArithmeticExpression(buf, v.Operand), Operator: v.Operator})
 	default:
 		return (ir.ParseInt{Value: g.handleExpression(buf, v)})
 	}

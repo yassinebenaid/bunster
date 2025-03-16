@@ -307,6 +307,8 @@ func (a *analyser) report(err string) {
 func (a *analyser) analyseArithmeticExpression(s ast.Expression) {
 	switch v := s.(type) {
 	case ast.PostIncDecArithmetic, ast.PreIncDecArithmetic, ast.Number, ast.Var:
+	case ast.Unary:
+		a.analyseExpression(v.Operand)
 	default:
 		a.report(fmt.Sprintf("Unsupported arithmetic expression type: %T", v))
 	}

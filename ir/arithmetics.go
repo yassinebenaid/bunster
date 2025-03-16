@@ -24,3 +24,12 @@ type ParseInt struct {
 func (c ParseInt) togo() string {
 	return fmt.Sprintf("runtime.ParseInt(%s)", c.Value.togo())
 }
+
+type UnaryArithmetic struct {
+	Operator string
+	Operand  Instruction
+}
+
+func (c UnaryArithmetic) togo() string {
+	return fmt.Sprintf("(%s%s)", c.Operator, c.Operand.togo())
+}
