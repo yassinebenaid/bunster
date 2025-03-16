@@ -14,7 +14,11 @@ func (g *generator) handleArithmeticCommand(buf *InstructionBuffer, cmd ast.Arit
 	g.handleRedirections(&cmdbuf, cmd.Redirections)
 
 	cmdbuf.add(ir.Declare{Name: "arithmeticResult", Value: ir.Literal("0")})
-	g.handleArithmeticExpression(&cmdbuf, cmd.Arithmetic)
+
+	for _, arithmetic := range cmd.Arithmetic {
+		cmdbuf.add(ir.Set{Name: "arithmeticResult", Value: g.handleArithmeticExpression(&cmdbuf, arithmetic)})
+	}
+
 	cmdbuf.add(ir.Literal("if arithmeticResult == 0 { shell.ExitCode = 1 } else { shell.ExitCode = 0  }\n"))
 
 	*buf = append(*buf, ir.Closure(cmdbuf))
