@@ -316,6 +316,10 @@ func (a *analyser) analyseArithmeticExpression(s ast.Expression) {
 	case ast.Binary:
 		a.analyseArithmeticExpression(v.Left)
 		a.analyseArithmeticExpression(v.Right)
+	case ast.Conditional:
+		a.analyseArithmeticExpression(v.Test)
+		a.analyseArithmeticExpression(v.Body)
+		a.analyseArithmeticExpression(v.Alternate)
 	default:
 		a.report(fmt.Sprintf("Unsupported arithmetic expression type: %T", v))
 	}

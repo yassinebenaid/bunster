@@ -93,9 +93,11 @@ cases:
       echo "==:$(( 2 == 2 ))"
       echo "!=:$(( 2 != 2 ))"
       echo "&&:$(( 1 && 1 ))"
+      echo "&&:$(( 1 && -1 ))"
       echo "&&:$(( 1 && 0 ))"
       echo "||:$(( 1 || 1 ))"
       echo "||:$(( 0 || 1 ))"
+      echo "||:$(( 0 || -1 ))"
       echo "||:$(( 0 || 0 ))"
     expect:
       stdout: |
@@ -119,7 +121,20 @@ cases:
         ==:1
         !=:0
         &&:1
+        &&:1
         &&:0
         ||:1
         ||:1
+        ||:1
         ||:0
+
+  - name: conditional operations
+    script: |
+      echo $(( 1 ? 2 : 3 ))
+      echo $(( 0 ? 2 : 3 ))
+      echo $(( (-1) ? 2 : 3 ))
+    expect:
+      stdout: |
+        2
+        3
+        2

@@ -62,3 +62,10 @@ func CompareInt(x int, op string, y int) int {
 	}
 	return 0
 }
+
+func ConditionalInt(a int, b int, c int) int {
+	if a != 0 {
+		return b
+	}
+	return c
+}

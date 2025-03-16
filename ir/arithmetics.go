@@ -70,3 +70,13 @@ type CompareInt struct {
 func (c CompareInt) togo() string {
 	return fmt.Sprintf("runtime.CompareInt(%s, %q, %s)", c.Left.togo(), c.Operator, c.Right.togo())
 }
+
+type ConditionalInt struct {
+	Test      Instruction
+	Body      Instruction
+	Alternate Instruction
+}
+
+func (c ConditionalInt) togo() string {
+	return fmt.Sprintf("runtime.ConditionalInt(%s, %s, %s)", c.Test.togo(), c.Body.togo(), c.Alternate.togo())
+}

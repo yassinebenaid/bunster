@@ -74,6 +74,12 @@ func (g *generator) handleArithmeticExpression(buf *InstructionBuffer, expr ast.
 		default:
 			panic("unsupported binary arithmetic: " + v.Operator)
 		}
+	case ast.Conditional:
+		return (ir.ConditionalInt{
+			Test:      g.handleArithmeticExpression(buf, v.Test),
+			Body:      g.handleArithmeticExpression(buf, v.Body),
+			Alternate: g.handleArithmeticExpression(buf, v.Alternate),
+		})
 	default:
 		return (ir.ParseInt{Value: g.handleExpression(buf, v)})
 	}
