@@ -5,13 +5,17 @@ cases:
 
       var=10
       echo $(( $var ))
+      echo $(( $var ))
       echo $(( $unknown_var ))
 
       var=5.6
       echo $(( $var ))
+
+      echo $(( 1, 2, 3 ))
     expect:
       stdout: |
         1
         10
         0
         5
+        3
