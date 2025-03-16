@@ -7,16 +7,16 @@ import (
 )
 
 func NumberCompare(x, op, y string) bool {
-	xv, err := strconv.ParseInt(x, 10, 64)
+	xv, err := strconv.Atoi(x)
 	if err != nil {
 		return false
 	}
-	yv, err := strconv.ParseInt(y, 10, 64)
+	yv, err := strconv.Atoi(y)
 	if err != nil {
 		return false
 	}
 
-	return CompareInt(int(xv), op, int(yv)) == 1
+	return CompareInt(xv, op, yv) == 1
 }
 
 func FilesHaveSameDevAndIno(file1, file2 string) bool {
