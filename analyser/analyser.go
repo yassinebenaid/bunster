@@ -256,6 +256,10 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 		a.analyseExpression(v.Operand)
 	case ast.Negation:
 		a.analyseExpression(v.Operand)
+	case ast.Arithmetic:
+		for _, expr := range v {
+			a.analyseArithmeticExpression(expr)
+		}
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
@@ -302,8 +306,8 @@ func (a *analyser) report(err string) {
 
 func (a *analyser) analyseArithmeticExpression(s ast.Expression) {
 	switch v := s.(type) {
-	case ast.PostIncDecArithmetic, ast.PreIncDecArithmetic:
+	case ast.PostIncDecArithmetic, ast.PreIncDecArithmetic, ast.Number:
 	default:
-		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
+		a.report(fmt.Sprintf("Unsupported arithmetic expression type: %T", v))
 	}
 }
