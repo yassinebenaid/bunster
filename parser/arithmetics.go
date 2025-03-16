@@ -133,7 +133,12 @@ func (p *parser) parsePrefix() ast.Expression {
 		}
 		p.proceed()
 
-		exp.Operand = p.parseArithmeticExpresion(pPRE_INCREMENT)
+		op := p.parseArithmeticExpresion(pPRE_INCREMENT)
+		if v, ok := op.(ast.Var); !ok {
+			p.error("expected a variable name after `%s`", exp.Operator)
+		} else {
+			exp.Operand = string(v)
+		}
 		return exp
 	case token.PLUS, token.MINUS:
 		exp := ast.Unary{

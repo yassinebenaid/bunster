@@ -19,7 +19,7 @@ type PostIncDecArithmetic struct {
 }
 
 type PreIncDecArithmetic struct {
-	Operand  Expression
+	Operand  string
 	Operator string
 }
 
@@ -59,7 +59,7 @@ func (p PostIncDecArithmetic) string() string {
 }
 
 func (p PreIncDecArithmetic) string() string {
-	return "(" + p.Operator + p.Operand.string() + ")"
+	return "(" + p.Operator + p.Operand + ")"
 
 }
 

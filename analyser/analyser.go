@@ -302,7 +302,7 @@ func (a *analyser) report(err string) {
 
 func (a *analyser) analyseArithmeticExpression(s ast.Expression) {
 	switch v := s.(type) {
-	case ast.PostIncDecArithmetic:
+	case ast.PostIncDecArithmetic, ast.PreIncDecArithmetic:
 	default:
 		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
 	}
