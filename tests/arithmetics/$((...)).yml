@@ -2,6 +2,16 @@ cases:
   - name: simple expressions
     script: |
       echo $(( 1 ))
+
+      var=10
+      echo $(( $var ))
+      echo $(( $unknown_var ))
+
+      var=5.6
+      echo $(( $var ))
     expect:
       stdout: |
         1
+        10
+        0
+        5

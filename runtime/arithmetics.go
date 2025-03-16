@@ -3,8 +3,8 @@ package runtime
 import "strconv"
 
 func ParseInt(value string) int {
-	valueInt, _ := strconv.Atoi(value)
-	return valueInt
+	valueFloat, _ := strconv.ParseFloat(value, 64)
+	return int(valueFloat) // if the value is 5.5, we should return 5 not 0.
 }
 
 func FormatInt(value int) string {
