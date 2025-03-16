@@ -70,3 +70,10 @@ cases:
       stdout: |
         negate:0 negate:0 negate:1 negate:1 negate:0
         flip:-1 flip:-2 flip:0 flip:-6
+
+  - name: binary operations
+    script: |
+      echo $(( 1 + 1 ))
+    expect:
+      stdout: |
+        2

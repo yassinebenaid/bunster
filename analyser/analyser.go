@@ -308,11 +308,14 @@ func (a *analyser) analyseArithmeticExpression(s ast.Expression) {
 	switch v := s.(type) {
 	case ast.PostIncDecArithmetic, ast.PreIncDecArithmetic, ast.Number, ast.Var:
 	case ast.Unary:
-		a.analyseExpression(v.Operand)
+		a.analyseArithmeticExpression(v.Operand)
 	case ast.Negation:
-		a.analyseExpression(v.Operand)
+		a.analyseArithmeticExpression(v.Operand)
 	case ast.BitFlip:
-		a.analyseExpression(v.Operand)
+		a.analyseArithmeticExpression(v.Operand)
+	case ast.Binary:
+		a.analyseArithmeticExpression(v.Left)
+		a.analyseArithmeticExpression(v.Right)
 	default:
 		a.report(fmt.Sprintf("Unsupported arithmetic expression type: %T", v))
 	}

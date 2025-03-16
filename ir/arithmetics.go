@@ -34,6 +34,16 @@ func (c UnaryArithmetic) togo() string {
 	return fmt.Sprintf("(%s%s)", c.Operator, c.Operand.togo())
 }
 
+type BinaryArithmetic struct {
+	Left     Instruction
+	Operator string
+	Right    Instruction
+}
+
+func (c BinaryArithmetic) togo() string {
+	return fmt.Sprintf("(%s%s%s)", c.Left.togo(), c.Operator, c.Right.togo())
+}
+
 type NegateArithmetic struct {
 	Value Instruction
 }
