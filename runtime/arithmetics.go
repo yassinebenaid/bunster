@@ -51,6 +51,10 @@ func CompareInt(x int, op string, y int) int {
 		result = x <= y
 	case ">=":
 		result = x >= y
+	case "&&":
+		result = x != 0 && y != 0
+	case "||":
+		result = x != 0 || y != 0
 	}
 
 	if result {

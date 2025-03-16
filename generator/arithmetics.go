@@ -65,7 +65,7 @@ func (g *generator) handleArithmeticExpression(buf *InstructionBuffer, expr ast.
 				Operand: g.handleArithmeticExpression(buf, v.Left),
 				Pow:     g.handleArithmeticExpression(buf, v.Right),
 			})
-		case ">", "<", ">=", "<=", "!=", "==":
+		case ">", "<", ">=", "<=", "!=", "==", "&&", "||":
 			return (ir.CompareInt{
 				Left:     g.handleArithmeticExpression(buf, v.Left),
 				Right:    g.handleArithmeticExpression(buf, v.Right),
