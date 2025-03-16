@@ -21,3 +21,10 @@ func VarIncrement(shell *Shell, name string, value int, post bool) int {
 
 	return valueInt + value
 }
+
+func NegateInt(value int) int {
+	if value == 0 {
+		return 1
+	}
+	return 0
+}

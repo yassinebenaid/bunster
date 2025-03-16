@@ -33,3 +33,11 @@ type UnaryArithmetic struct {
 func (c UnaryArithmetic) togo() string {
 	return fmt.Sprintf("(%s%s)", c.Operator, c.Operand.togo())
 }
+
+type NegateArithmetic struct {
+	Value Instruction
+}
+
+func (c NegateArithmetic) togo() string {
+	return fmt.Sprintf("runtime.NegateInt(%s)", c.Value.togo())
+}

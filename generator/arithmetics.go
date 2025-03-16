@@ -48,6 +48,10 @@ func (g *generator) handleArithmeticExpression(buf *InstructionBuffer, expr ast.
 		return (ir.VarIncDec{Operand: v.Operand, Operator: v.Operator})
 	case ast.Unary:
 		return (ir.UnaryArithmetic{Operand: g.handleArithmeticExpression(buf, v.Operand), Operator: v.Operator})
+	case ast.BitFlip:
+		return (ir.UnaryArithmetic{Operand: g.handleArithmeticExpression(buf, v.Operand), Operator: "^"})
+	case ast.Negation:
+		return (ir.NegateArithmetic{Value: g.handleArithmeticExpression(buf, v.Operand)})
 	default:
 		return (ir.ParseInt{Value: g.handleExpression(buf, v)})
 	}

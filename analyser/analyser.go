@@ -309,6 +309,10 @@ func (a *analyser) analyseArithmeticExpression(s ast.Expression) {
 	case ast.PostIncDecArithmetic, ast.PreIncDecArithmetic, ast.Number, ast.Var:
 	case ast.Unary:
 		a.analyseExpression(v.Operand)
+	case ast.Negation:
+		a.analyseExpression(v.Operand)
+	case ast.BitFlip:
+		a.analyseExpression(v.Operand)
 	default:
 		a.report(fmt.Sprintf("Unsupported arithmetic expression type: %T", v))
 	}
