@@ -175,44 +175,54 @@ func (g *generator) handleRangeLoop(buf *InstructionBuffer, loop ast.RangeLoop) 
 }
 
 func (g *generator) handleForLoop(buf *InstructionBuffer, loop ast.For) {
-	var cmdbuf, body, init, test, update InstructionBuffer
+	var cmdbuf, body InstructionBuffer
+	var init, test, update ir.Literal
 
 	cmdbuf.add(ir.CloneStreamManager{})
 	g.handleRedirections(&cmdbuf, loop.Redirections)
 
-	cmdbuf.add(ir.Declare{Name: "arithmeticResult", Value: ir.Literal("0")})
+	cmdbuf.add(ir.Declare{Name: "arithmeticResult", Value: ir.Literal("1")})
+	cmdbuf.add(ir.Set{Name: "_", Value: ir.Literal("arithmeticResult")})
 
 	// init (for xxx; ...)
-	for _, arithmetic := range loop.Head.Init {
-		init.add(ir.Set{Name: "arithmeticResult", Value: g.handleArithmeticExpression(&init, arithmetic)})
+	if len(loop.Head.Init) != 0 {
+		var initbuf InstructionBuffer
+		for _, arithmetic := range loop.Head.Init {
+			initbuf.add(ir.Set{Name: "arithmeticResult", Value: g.handleArithmeticExpression(&initbuf, arithmetic)})
+		}
+		cmdbuf.add(ir.Declare{Name: "init", Value: ir.Procedure{Body: initbuf}})
+		init = "init()"
 	}
-	cmdbuf.add(ir.Declare{Name: "init", Value: ir.Procedure{Body: init}})
 
 	// test (for ...; xxx; ...)
-	for _, arithmetic := range loop.Head.Test {
-		test.add(ir.Set{Name: "arithmeticResult", Value: g.handleArithmeticExpression(&test, arithmetic)})
+	if len(loop.Head.Test) != 0 {
+		var testbuf InstructionBuffer
+		for _, arithmetic := range loop.Head.Test {
+			testbuf.add(ir.Set{Name: "arithmeticResult", Value: g.handleArithmeticExpression(&testbuf, arithmetic)})
+		}
+		testbuf.add(ir.Literal("return arithmeticResult\n"))
+		cmdbuf.add(ir.Declare{Name: "test", Value: ir.Procedure{
+			Returns: []string{"int"},
+			Body:    testbuf,
+		}})
+		test = "test() != 0"
 	}
-	test.add(ir.Literal("return arithmeticResult\n"))
-	cmdbuf.add(ir.Declare{Name: "test", Value: ir.Procedure{
-		Returns: []string{"int"},
-		Body:    test,
-	}})
 
 	// update (for ...;...; xxx)
-	for _, arithmetic := range loop.Head.Update {
-		update.add(ir.Set{Name: "arithmeticResult", Value: g.handleArithmeticExpression(&update, arithmetic)})
+	if len(loop.Head.Update) != 0 {
+		var updatebuf InstructionBuffer
+		for _, arithmetic := range loop.Head.Update {
+			updatebuf.add(ir.Set{Name: "arithmeticResult", Value: g.handleArithmeticExpression(&updatebuf, arithmetic)})
+		}
+		cmdbuf.add(ir.Declare{Name: "update", Value: ir.Procedure{Body: updatebuf}})
+		update = "update()"
 	}
-	cmdbuf.add(ir.Declare{Name: "update", Value: ir.Procedure{Body: update}})
 
 	for _, statement := range loop.Body {
 		g.generate(&body, statement)
 	}
-	cmdbuf.add(ir.For{
-		Init:   ir.Literal("init()"),
-		Test:   ir.Literal("test() != 0"),
-		Update: ir.Literal("update()"),
-		Body:   body,
-	})
+
+	cmdbuf.add(ir.For{Init: init, Test: test, Update: update, Body: body})
 
 	buf.add(ir.Closure(cmdbuf))
 }
