@@ -195,6 +195,24 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.analyseExpression(r.Dst)
 			}
 		}
+	case ast.For:
+		for _, expr := range v.Head.Init {
+			a.analyseArithmeticExpression(expr)
+		}
+		for _, expr := range v.Head.Test {
+			a.analyseArithmeticExpression(expr)
+		}
+		for _, expr := range v.Head.Update {
+			a.analyseArithmeticExpression(expr)
+		}
+		for _, s := range v.Body {
+			a.analyseStatement(s)
+		}
+		for _, r := range v.Redirections {
+			if r.Dst != nil {
+				a.analyseExpression(r.Dst)
+			}
+		}
 	case ast.Test:
 		a.analyseExpression(v.Expr)
 

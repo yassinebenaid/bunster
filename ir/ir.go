@@ -227,6 +227,23 @@ func (r StartCommand) togo() string {
 		`, r)
 }
 
+type Procedure struct {
+	Returns []string
+	Body    []Instruction
+}
+
+func (c Procedure) togo() string {
+	var body string
+	for _, ins := range c.Body {
+		body += ins.togo()
+	}
+
+	return fmt.Sprintf(
+		`func() (%s) {
+			%s
+		}`, strings.Join(c.Returns, ", "), body)
+}
+
 type Closure []Instruction
 
 func (c Closure) togo() string {
@@ -376,6 +393,22 @@ func (i RangeLoop) togo() string {
 			shell.SetVar(%q, member)
 		`, i.Members.togo(), i.Var,
 	)
+	for _, ins := range i.Body {
+		cond += ins.togo()
+	}
+
+	return cond + "}\n"
+}
+
+type For struct {
+	Init   Instruction
+	Test   Instruction
+	Update Instruction
+	Body   []Instruction
+}
+
+func (i For) togo() string {
+	cond := fmt.Sprintf("for %s; %s; %s {\n", i.Init.togo(), i.Test.togo(), i.Update.togo())
 	for _, ins := range i.Body {
 		cond += ins.togo()
 	}
