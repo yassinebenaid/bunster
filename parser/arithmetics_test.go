@@ -483,6 +483,57 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
+
+	// let command
+	{`let (x)`, ast.Script{
+		ast.ArithmeticCommand{
+			Arithmetic: ast.Arithmetic{ast.Var("x")},
+		},
+	}},
+	{`let x + y`, ast.Script{
+		ast.ArithmeticCommand{
+			Arithmetic: ast.Arithmetic{
+				ast.Binary{Left: ast.Var("x"), Operator: "+", Right: ast.Var("y")},
+			},
+		},
+	}},
+	{`let x || y `, ast.Script{
+		ast.ArithmeticCommand{
+			Arithmetic: ast.Arithmetic{
+				ast.Binary{
+					Left:     ast.Var("x"),
+					Operator: "||",
+					Right:    ast.Var("y"),
+				},
+			},
+		},
+	}},
+	{`let x| y &&  z `, ast.Script{
+		ast.ArithmeticCommand{
+			Arithmetic: ast.Arithmetic{
+				ast.Binary{
+					Left: ast.Binary{
+						Left:     ast.Var("x"),
+						Operator: "|",
+						Right:    ast.Var("y"),
+					},
+					Operator: "&&",
+					Right:    ast.Var("z"),
+				},
+			},
+		},
+	}},
+	{`let x > y`, ast.Script{
+		ast.ArithmeticCommand{
+			Arithmetic: ast.Arithmetic{
+				ast.Binary{
+					Left:     ast.Var("x"),
+					Operator: ">",
+					Right:    ast.Var("y"),
+				},
+			},
+		},
+	}},
 }
 
 var arithmeticsPrecedenceTests = []struct {
@@ -606,4 +657,6 @@ var arithmeticsErrorHandlingCases = []errorHandlingTestCase{
 	{`(( 1 &= foo ))`, `syntax error: the operator "&=" expects a variable name on the left. (line: 1, column: 6)`},
 	{`(( 1 ^= foo ))`, `syntax error: the operator "^=" expects a variable name on the left. (line: 1, column: 6)`},
 	{`(( 1 %= foo ))`, `syntax error: the operator "%=" expects a variable name on the left. (line: 1, column: 6)`},
+
+	{`let x-- y`, "syntax error: unexpected token `y`. (line: 1, column: 9)"},
 }

@@ -21,6 +21,8 @@ func (p *parser) getCompoundParser() func() ast.Statement {
 		return p.parseSubShell
 	case token.DOUBLE_LEFT_PAREN:
 		return p.parseArithmeticCommand
+	case token.LET:
+		return p.parseLetArithmeticCommand
 	case token.DOUBLE_LEFT_BRACKET:
 		return p.parseTestCommand
 	case token.LEFT_BRACKET, token.TEST:
@@ -738,6 +740,23 @@ loop:
 			break loop
 		}
 	}
+
+	if !p.isControlToken() && p.curr.Type != token.EOF {
+		p.error("unexpected token `%s`", p.curr)
+		return nil
+	}
+
+	return arth
+}
+
+func (p *parser) parseLetArithmeticCommand() ast.Statement {
+	p.proceed()
+	for p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
+	var arth ast.ArithmeticCommand
+	arth.Arithmetic = ast.Arithmetic{p.parseArithmeticExpression(pBASIC)}
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
