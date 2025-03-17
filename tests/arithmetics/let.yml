@@ -1,0 +1,22 @@
+cases:
+  - name: simple 'let' command
+    script: |
+      var=0
+      let var++ ; echo $var
+      let var = 1 + 2 / 2; echo $var
+    expect:
+      stdout: |
+        1
+        2
+
+  - name: let command exits with 1 if the expression evaluates to 0, and 0 otherwise
+    script: |
+      let 1 + 2 
+      echo $?
+
+      let 1-1 
+      echo $?
+    expect:
+      stdout: |
+        0
+        1
