@@ -69,7 +69,7 @@ func (p *parser) parseArithmetics() ast.Arithmetic {
 	var expr ast.Arithmetic
 
 	for {
-		expr = append(expr, p.parseArithmeticExpresion(pBASIC))
+		expr = append(expr, p.parseArithmeticExpression(pBASIC))
 
 		if p.curr.Type != token.COMMA {
 			break
@@ -80,7 +80,7 @@ func (p *parser) parseArithmetics() ast.Arithmetic {
 	return expr
 }
 
-func (p *parser) parseArithmeticExpresion(prec precedence) ast.Expression {
+func (p *parser) parseArithmeticExpression(prec precedence) ast.Expression {
 	if p.curr.Type == token.BLANK {
 		p.proceed()
 	}
@@ -133,7 +133,7 @@ func (p *parser) parsePrefix() ast.Expression {
 		}
 		p.proceed()
 
-		op := p.parseArithmeticExpresion(pPRE_INCREMENT)
+		op := p.parseArithmeticExpression(pPRE_INCREMENT)
 		if v, ok := op.(ast.Var); !ok {
 			p.error("expected a variable name after `%s`", exp.Operator)
 		} else {
@@ -146,19 +146,19 @@ func (p *parser) parsePrefix() ast.Expression {
 		}
 		p.proceed()
 
-		exp.Operand = p.parseArithmeticExpresion(pUNARY)
+		exp.Operand = p.parseArithmeticExpression(pUNARY)
 		return exp
 	case token.EXCLAMATION:
 		p.proceed()
-		exp := ast.Negation{Operand: p.parseArithmeticExpresion(pNEGATION)}
+		exp := ast.Negation{Operand: p.parseArithmeticExpression(pNEGATION)}
 		return exp
 	case token.TILDE:
 		p.proceed()
-		exp := ast.BitFlip{Operand: p.parseArithmeticExpresion(pNEGATION)}
+		exp := ast.BitFlip{Operand: p.parseArithmeticExpression(pNEGATION)}
 		return exp
 	case token.LEFT_PAREN:
 		p.proceed()
-		exp := p.parseArithmeticExpresion(pBASIC)
+		exp := p.parseArithmeticExpression(pBASIC)
 
 		if p.curr.Type != token.RIGHT_PAREN {
 			p.error("expected a closing `)`, found `%s`", p.curr)
@@ -183,7 +183,7 @@ func (p *parser) parseInfix(left ast.Expression) ast.Expression {
 	prec := infixPrecedences[p.curr.Type]
 
 	p.proceed()
-	exp.Right = p.parseArithmeticExpresion(prec)
+	exp.Right = p.parseArithmeticExpression(prec)
 
 	return exp
 }
@@ -193,14 +193,14 @@ func (p *parser) parsePostfix(left ast.Expression) ast.Expression {
 	case token.QUESTION:
 		p.proceed()
 		exp := ast.Conditional{Test: left}
-		exp.Body = p.parseArithmeticExpresion(pBASIC)
+		exp.Body = p.parseArithmeticExpression(pBASIC)
 
 		if p.curr.Type != token.COLON {
 			p.error("expected a colon `:`, found `%s`", p.curr)
 		}
 
 		p.proceed()
-		exp.Alternate = p.parseArithmeticExpresion(pBASIC)
+		exp.Alternate = p.parseArithmeticExpression(pBASIC)
 		return exp
 	case token.ASSIGN, token.STAR_ASSIGN, token.SLASH_ASSIGN, token.PLUS_ASSIGN, token.MINUS_ASSIGN,
 		token.CIRCUMFLEX_ASSIGN, token.PERCENT_ASSIGN, token.DOUBLE_GT_ASSIGN, token.DOUBLE_LT_ASSIGN,
@@ -214,7 +214,7 @@ func (p *parser) parsePostfix(left ast.Expression) ast.Expression {
 			Operator: p.curr.Literal,
 		}
 		p.proceed()
-		exp.Right = p.parseArithmeticExpresion(pBASIC)
+		exp.Right = p.parseArithmeticExpression(pBASIC)
 		return exp
 	default:
 		return left
