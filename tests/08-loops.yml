@@ -621,3 +621,12 @@ cases:
       done
     expect:
       exit_code: 0
+
+  - name: "`for((...))` can have 'continue'"
+    script: |
+      for (( i=0 ; i < 10; i++)) do
+        continue
+        echo $i
+      done
+    expect:
+      exit_code: 0
