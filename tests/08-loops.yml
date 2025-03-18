@@ -569,3 +569,55 @@ cases:
         3
         4
         5
+
+  - name: "`for((...))` can accept redirections"
+    script: |
+      for (( i=0 ; i<5; i++)) do
+        echo $i
+      done >output.txt
+    expect:
+      files:
+        output.txt: |
+          0
+          1
+          2
+          3
+          4
+
+  - name: "`for((...))` can be used within pipeline"
+    script: |
+      for (( i=0 ; i<5; i++)) do
+        echo $i
+      done | cat
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+
+  - name: "`for((...))` exit code is the last command's exit code"
+    script: |
+      for (( i=0 ; i<5; i++)) do
+        true
+      done 
+      echo $?
+
+
+      for (( i=0 ; i<5; i++)) do
+        false
+      done 
+      echo $?
+    expect:
+      stdout: |
+        0
+        1
+
+  - name: "`for((...))` heeader does not affect exit code"
+    script: |
+      for (( 0 ; 0; 0)) do
+        false
+      done
+    expect:
+      exit_code: 0
