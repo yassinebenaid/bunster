@@ -446,4 +446,187 @@ cases:
         before 3
         before 4
 
-# TODO: add more tests here
+  - name: "simple `for((...))` loop"
+    script: |
+      for (( i = 0; i < 5; i++ )) do
+        echo $i
+      done
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+
+  - name: "`for((...))` without init branch"
+    script: |
+      for (( ; i < 5; i++ )) do
+        echo $i
+      done
+    expect:
+      stdout: |
+
+        1
+        2
+        3
+        4
+
+  - name: "`for((...))` with init branch only"
+    script: |
+      for (( i=0 ; ; )) do
+        echo $i
+
+        (( i >= 5 )) && break || (( i++ )) 
+      done
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+        5
+
+  - name: "`for((...))` without update branch"
+    script: |
+      for (( i = 0; i < 5; )) do
+        echo $i
+
+        (( i++ ))
+      done
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+
+  - name: "`for((...))` with update branch only"
+    script: |
+      let i=0
+
+      for (( ; ; i++ )) do
+        echo $i
+        (( i >= 5 )) && break
+       done
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+        5
+
+  - name: "`for((...))` without test branch"
+    script: |
+      for (( i = 0; ; i++ )) do
+        echo $i
+
+        (( i >= 5 )) && break
+      done
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+        5
+
+  - name: "`for((...))` with test branch only"
+    script: |
+      let i = 0
+      for (( ; i <= 5; )) do
+        echo $i
+
+        (( i++ ))
+      done
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+        5
+
+  - name: "`for((...))` without any branches"
+    script: |
+      let i = 1
+
+      for (( ; ; )) do
+        echo $i
+
+        (( i >= 5 )) && break || (( i++ )) 
+      done
+    expect:
+      stdout: |
+        1
+        2
+        3
+        4
+        5
+
+  - name: "`for((...))` can accept redirections"
+    script: |
+      for (( i=0 ; i<5; i++)) do
+        echo $i
+      done >output.txt
+    expect:
+      files:
+        output.txt: |
+          0
+          1
+          2
+          3
+          4
+
+  - name: "`for((...))` can be used within pipeline"
+    script: |
+      for (( i=0 ; i<5; i++)) do
+        echo $i
+      done | cat
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+
+  - name: "`for((...))` exit code is the last command's exit code"
+    script: |
+      for (( i=0 ; i<5; i++)) do
+        true
+      done 
+      echo $?
+
+
+      for (( i=0 ; i<5; i++)) do
+        false
+      done 
+      echo $?
+    expect:
+      stdout: |
+        0
+        1
+
+  - name: "`for((...))` heeader does not affect exit code"
+    script: |
+      for (( 0 ; 0; 0)) do
+        false
+      done
+    expect:
+      exit_code: 0
+
+  - name: "`for((...))` can have 'continue'"
+    script: |
+      for (( i=0 ; i < 10; i++)) do
+        continue
+        echo $i
+      done
+    expect:
+      exit_code: 0

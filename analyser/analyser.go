@@ -139,7 +139,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 	loop:
 		for i := len(a.stack) - 1; i >= 0; i-- {
 			switch a.stack[i].(type) {
-			case ast.Loop, ast.RangeLoop:
+			case ast.Loop, ast.RangeLoop, ast.For:
 				withinLoop = true
 				break loop
 			case ast.List, ast.Break:
@@ -155,7 +155,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 	loop2:
 		for i := len(a.stack) - 1; i >= 0; i-- {
 			switch a.stack[i].(type) {
-			case ast.Loop, ast.RangeLoop:
+			case ast.Loop, ast.RangeLoop, ast.For:
 				withinLoop = true
 				break loop2
 			case ast.List, ast.Continue:
@@ -186,6 +186,24 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 	case ast.RangeLoop:
 		for _, expr := range v.Operands {
 			a.analyseExpression(expr)
+		}
+		for _, s := range v.Body {
+			a.analyseStatement(s)
+		}
+		for _, r := range v.Redirections {
+			if r.Dst != nil {
+				a.analyseExpression(r.Dst)
+			}
+		}
+	case ast.For:
+		for _, expr := range v.Head.Init {
+			a.analyseArithmeticExpression(expr)
+		}
+		for _, expr := range v.Head.Test {
+			a.analyseArithmeticExpression(expr)
+		}
+		for _, expr := range v.Head.Update {
+			a.analyseArithmeticExpression(expr)
 		}
 		for _, s := range v.Body {
 			a.analyseStatement(s)
