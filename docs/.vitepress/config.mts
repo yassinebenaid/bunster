@@ -46,6 +46,10 @@ export default defineConfig({
 								link: "/features/groups-and-subshells",
 							},
 							{
+								text: "Loops",
+								link: "/features/loops",
+							},
+							{
 								text: "Deferred Commands",
 								link: "/features/deferred-commands",
 							},
