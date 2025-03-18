@@ -176,3 +176,50 @@ func copyFile(src, dst string) error {
 
 	return nil
 }
+
+func Mod(workdir string, m map[string][]rune) error {
+	main, err := parser.Parse(lexer.New(m["main.sh"]))
+	if err != nil {
+		return err
+	}
+
+	if err := analyser.Analyse(main); err != nil {
+		return err
+	}
+
+	for file, content := range m {
+		if file == "main.sh" {
+			continue
+		}
+		script, err := parser.Parse(lexer.New(content))
+		if err != nil {
+			return err
+		}
+
+		if err := analyser.Analyse(script); err != nil {
+			return err
+		}
+		main = append(script, main...)
+	}
+
+	program := generator.Generate(main)
+
+	err = os.WriteFile(path.Join(workdir, "program.go"), []byte(program.String()), 0600)
+	if err != nil {
+		return err
+	}
+
+	if err := cloneRuntime(workdir); err != nil {
+		return err
+	}
+
+	if err := cloneStubs(workdir); err != nil {
+		return err
+	}
+
+	if err := cloneEmbeddedFiles(workdir, program.Embeds); err != nil {
+		return err
+	}
+
+	return nil
+}

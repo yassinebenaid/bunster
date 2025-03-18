@@ -35,6 +35,11 @@ func main() {
 				},
 			},
 			{
+				Name:   "mod",
+				Usage:  "Build a module",
+				Action: mod,
+			},
+			{
 				Name:   "generate",
 				Usage:  "Generate the Go module out of a script",
 				Action: geneateCMD,
