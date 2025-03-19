@@ -21,13 +21,13 @@ import (
 var Version string
 
 //go:embed runtime
-var runtimeFS embed.FS
+var RuntimeFS embed.FS
 
 //go:embed stubs/go.mod.stub
-var gomod []byte
+var Gomod []byte
 
 //go:embed stubs/main.go.stub
-var mainGo []byte
+var MainGo []byte
 
 func Generate(workdir string, s []rune) error {
 	program, err := compile(s)
@@ -71,7 +71,7 @@ func compile(s []rune) (*ir.Program, error) {
 }
 
 func cloneRuntime(dst string) error {
-	return fs.WalkDir(runtimeFS, "runtime", func(dpath string, d fs.DirEntry, err error) error {
+	return fs.WalkDir(RuntimeFS, "runtime", func(dpath string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return nil
 		}
@@ -84,7 +84,7 @@ func cloneRuntime(dst string) error {
 			return nil
 		}
 
-		content, err := runtimeFS.ReadFile(dpath)
+		content, err := RuntimeFS.ReadFile(dpath)
 		if err != nil {
 			return err
 		}
@@ -94,11 +94,11 @@ func cloneRuntime(dst string) error {
 }
 
 func cloneStubs(dst string) error {
-	if err := os.WriteFile(path.Join(dst, "main.go"), mainGo, 0600); err != nil {
+	if err := os.WriteFile(path.Join(dst, "main.go"), MainGo, 0600); err != nil {
 		return err
 	}
 
-	if err := os.WriteFile(path.Join(dst, "go.mod"), gomod, 0600); err != nil {
+	if err := os.WriteFile(path.Join(dst, "go.mod"), Gomod, 0600); err != nil {
 		return err
 	}
 

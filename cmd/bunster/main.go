@@ -28,16 +28,11 @@ func main() {
 			},
 			{
 				Name:   "build",
-				Usage:  "Build a script",
+				Usage:  "Build a module",
 				Action: buildCMD,
 				Flags: []cli.Flag{
 					&cli.StringFlag{Name: "o", Required: true},
 				},
-			},
-			{
-				Name:   "mod",
-				Usage:  "Build a module",
-				Action: mod,
 			},
 			{
 				Name:   "generate",
