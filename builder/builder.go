@@ -39,7 +39,7 @@ func (b *Builder) Build() error {
 		return err
 	}
 
-	if err := analyser.Analyse(mainSh); err != nil {
+	if err := analyser.Analyse(mainSh, true); err != nil {
 		return err
 	}
 
@@ -59,7 +59,7 @@ func (b *Builder) Build() error {
 			return err
 		}
 
-		if err := analyser.Analyse(script); err != nil {
+		if err := analyser.Analyse(script, false); err != nil {
 			return err
 		}
 

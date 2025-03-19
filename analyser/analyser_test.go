@@ -45,7 +45,7 @@ func TestErrors(t *testing.T) {
 			t.Fatalf("\nCase: %sInput: %s\nUnexpected Error: %s\n", dump(i), dump(tc.input), dump(err.Error()))
 		}
 
-		analysisError := analyser.Analyse(script)
+		analysisError := analyser.Analyse(script, true)
 
 		if analysisError == nil {
 			t.Fatalf("\nCase: %sInput: %s\nExpected Error, got nil\n", dump(i), dump(tc.input))
