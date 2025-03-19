@@ -34,23 +34,46 @@ func (b *Builder) Build() error {
 		return err
 	}
 
-	script, err := parser.Parse(lexer.New([]rune(string(v))))
+	mainSh, err := parser.Parse(lexer.New([]rune(string(v))))
 	if err != nil {
 		return err
 	}
 
-	if err := analyser.Analyse(script); err != nil {
+	if err := analyser.Analyse(mainSh); err != nil {
 		return err
 	}
 
-	program := generator.Generate(script)
+	module, err := b.globModule()
+	if err != nil {
+		return err
+	}
+
+	for _, f := range module {
+		v, err := os.ReadFile(path.Join(b.Workdir, f))
+		if err != nil {
+			return err
+		}
+
+		script, err := parser.Parse(lexer.New([]rune(string(v))))
+		if err != nil {
+			return err
+		}
+
+		if err := analyser.Analyse(script); err != nil {
+			return err
+		}
+
+		mainSh = append(script, mainSh...)
+	}
+
+	program := generator.Generate(mainSh)
 
 	err = os.WriteFile(path.Join(b.Builddir, "program.go"), []byte(program.String()), 0600)
 	if err != nil {
 		return err
 	}
 
-	if err := b.cloneRuntime(); err != nil {
+	if err := b.writeRuntime(); err != nil {
 		return err
 	}
 
@@ -90,7 +113,24 @@ func (b *Builder) prepare() error {
 	return nil
 }
 
-func (b *Builder) cloneRuntime() error {
+func (b *Builder) globModule() ([]string, error) {
+	files, err := filepath.Glob(path.Join(b.Workdir, "*.sh"))
+	if err != nil {
+		return nil, err
+	}
+
+	var filtered []string
+	for _, file := range files {
+		file = strings.TrimPrefix(file, b.Workdir+"/")
+		if file != "main.sh" {
+			filtered = append(filtered, file)
+		}
+	}
+
+	return filtered, nil
+}
+
+func (b *Builder) writeRuntime() error {
 	return fs.WalkDir(bunster.RuntimeFS, "runtime", func(dpath string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return nil
