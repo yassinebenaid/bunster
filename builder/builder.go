@@ -8,7 +8,6 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
-	"strings"
 
 	"github.com/yassinebenaid/bunster"
 	"github.com/yassinebenaid/bunster/analyser"
@@ -24,12 +23,25 @@ type Builder struct {
 	OutputFile string
 }
 
-func (b *Builder) Build() error {
+func (b *Builder) Build() (err error) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+	if err = os.Chdir(b.Workdir); err != nil {
+		return err
+	}
+	defer func() {
+		if e := os.Chdir(cwd); e != nil {
+			err = e
+		}
+	}()
+
 	if err := b.prepare(); err != nil {
 		return err
 	}
 
-	v, err := os.ReadFile(path.Join(b.Workdir, "main.sh"))
+	v, err := os.ReadFile("main.sh")
 	if err != nil {
 		return err
 	}
@@ -49,7 +61,7 @@ func (b *Builder) Build() error {
 	}
 
 	for _, f := range module {
-		v, err := os.ReadFile(path.Join(b.Workdir, f))
+		v, err := os.ReadFile(f)
 		if err != nil {
 			return err
 		}
@@ -77,11 +89,11 @@ func (b *Builder) Build() error {
 		return err
 	}
 
-	if err := b.cloneStubs(); err != nil {
+	if err := b.writeStubs(); err != nil {
 		return err
 	}
 
-	if err := b.cloneEmbeddedFiles(program.Embeds); err != nil {
+	if err := b.writeEmbeddedFiles(program.Embeds); err != nil {
 		return err
 	}
 
@@ -114,14 +126,13 @@ func (b *Builder) prepare() error {
 }
 
 func (b *Builder) globModule() ([]string, error) {
-	files, err := filepath.Glob(path.Join(b.Workdir, "*.sh"))
+	files, err := filepath.Glob("*.sh")
 	if err != nil {
 		return nil, err
 	}
 
 	var filtered []string
 	for _, file := range files {
-		file = strings.TrimPrefix(file, b.Workdir+"/")
 		if file != "main.sh" {
 			filtered = append(filtered, file)
 		}
@@ -141,10 +152,6 @@ func (b *Builder) writeRuntime() error {
 			return os.MkdirAll(dst, 0766)
 		}
 
-		if strings.HasSuffix(dpath, "_test.go") {
-			return nil
-		}
-
 		content, err := bunster.RuntimeFS.ReadFile(dpath)
 		if err != nil {
 			return err
@@ -154,7 +161,7 @@ func (b *Builder) writeRuntime() error {
 	})
 }
 
-func (b *Builder) cloneStubs() error {
+func (b *Builder) writeStubs() error {
 	if err := os.WriteFile(path.Join(b.Builddir, "main.go"), bunster.MainGo, 0600); err != nil {
 		return err
 	}
@@ -166,7 +173,7 @@ func (b *Builder) cloneStubs() error {
 	return nil
 }
 
-func (b *Builder) cloneEmbeddedFiles(files []string) error {
+func (b *Builder) writeEmbeddedFiles(files []string) error {
 	for _, file := range files {
 		src, dst := file, path.Join(b.Builddir, ir.EmbedDirectory, file)
 
