@@ -37,3 +37,12 @@ cases:
         file1.sh
         file2.sh
         main.sh
+
+  - name: can use foo
+    script: |
+      @embed .
+
+      embed ls .
+    expect:
+      stdout: |
+        main.sh

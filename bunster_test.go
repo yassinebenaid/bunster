@@ -51,7 +51,7 @@ var logger = log.New(os.Stdout, "", log.Ltime)
 func TestBunster(t *testing.T) {
 	filter := os.Getenv("FILTER")
 
-	testFiles, err := globFiles("tests/modules")
+	testFiles, err := globFiles("tests")
 	if err != nil {
 		t.Fatalf("Failed to `Glob` test files, %v", err)
 	}
@@ -96,8 +96,18 @@ func TestBunster(t *testing.T) {
 					t.Fatalf("Failed to create dir, %v", err)
 				}
 
+				if testCase.Script != "" {
+					testCase.Module = map[string]string{"main.sh": testCase.Script}
+				}
+
 				for filename, content := range testCase.Module {
 					if err := os.WriteFile(path.Join(codedir, filename), []byte(content), 0600); err != nil {
+						t.Fatalf("\nTest(#%d): %sFailed to write file %q, %v", i, dump(testCase.Name), filename, err)
+					}
+				}
+
+				for filename, content := range testCase.Files {
+					if err := os.WriteFile(path.Join(rundir, filename), []byte(content), 0600); err != nil {
 						t.Fatalf("\nTest(#%d): %sFailed to write file %q, %v", i, dump(testCase.Name), filename, err)
 					}
 				}
