@@ -51,9 +51,7 @@ The for loop can be constructed in 3 different formats.
 The format is as follows:
 
 ```sh
-for NAME do
-	consequent-commands
-done
+for NAME do	consequent-commands; done
 ```
 
 This format will execute `consequent-commands` once for each [positional argument](/features/variables-and-environment#positional-variables) that is set. the `NAME` is a variable name that will hold the value of the positional
@@ -101,4 +99,35 @@ the output would be:
 bob
 yassine
 phank
+```
+
+### C-like for loop
+
+The third format is similar to the `for` loop in `C` programming language.
+
+```sh
+for (( expr1; expr2; expr3 )) do
+	commands
+done
+
+```
+
+`expr1`, `expr2` and `expr3` are [Arithmetic Expressions](/features/arithmetics#Expressions).
+
+First, the arithmetic expression `expr1` is evaluated. The arithmetic expression `expr2` is then evaluated repeatedly until it evaluates to zero. Each time `expr2` evaluates to a non-zero value, `commands` are executed and the arithmetic expression `expr3` is evaluated. If any expression is omitted, it behaves as if it evaluates to `1`. The return value is the exit status of the last command in `commands` that is executed.
+
+For example:
+
+```sh
+for (( i = 0; i < 3; i++ )) do
+	echo $i
+done
+```
+
+This would output:
+
+```txt
+0
+1
+2
 ```

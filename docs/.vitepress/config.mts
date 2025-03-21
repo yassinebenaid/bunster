@@ -58,6 +58,10 @@ export default defineConfig({
 								link: "/features/test-commands",
 							},
 							{
+								text: "Arithmetics",
+								link: "/features/arithmetics",
+							},
+							{
 								text: "Embedding",
 								link: "/features/embedding",
 							},
