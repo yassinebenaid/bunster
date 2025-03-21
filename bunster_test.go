@@ -101,6 +101,10 @@ func TestBunster(t *testing.T) {
 				}
 
 				for filename, content := range testCase.Module {
+					dir, _ := path.Split(filename)
+					if err := os.MkdirAll(path.Join(codedir, dir), 0700); err != nil {
+						t.Fatalf("\nTest(#%d): %sFailed to write dir %q, %v", i, dump(testCase.Name), dir, err)
+					}
 					if err := os.WriteFile(path.Join(codedir, filename), []byte(content), 0600); err != nil {
 						t.Fatalf("\nTest(#%d): %sFailed to write file %q, %v", i, dump(testCase.Name), filename, err)
 					}
