@@ -4,10 +4,12 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"path"
 	"strings"
 
 	"github.com/urfave/cli/v3"
 	"github.com/yassinebenaid/bunster"
+	"github.com/yassinebenaid/bunster/builder"
 	"github.com/yassinebenaid/bunster/lexer"
 	"github.com/yassinebenaid/bunster/parser"
 	"github.com/yassinebenaid/godump"
@@ -36,7 +38,7 @@ func main() {
 			},
 			{
 				Name:   "generate",
-				Usage:  "Generate the Go module out of a script",
+				Usage:  "Generate the Go source out of a module",
 				Action: geneateCMD,
 				Flags: []cli.Flag{
 					&cli.StringFlag{Name: "o", Required: true},
@@ -83,4 +85,34 @@ func astCMD(_ context.Context, cmd *cli.Command) error {
 	}
 
 	return d.Println(script)
+}
+
+func buildCMD(_ context.Context, cmd *cli.Command) error {
+	destination := cmd.String("o")
+	if !path.IsAbs(destination) {
+		currWorkdir, err := os.Getwd()
+		if err != nil {
+			return err
+		}
+		destination = path.Join(currWorkdir, destination)
+	}
+
+	builder := builder.Builder{
+		Workdir:    ".",
+		Builddir:   path.Join(os.TempDir(), "bunster-build"),
+		OutputFile: destination,
+		MainScript: cmd.Args().First(),
+	}
+
+	return builder.Build()
+}
+
+func geneateCMD(_ context.Context, cmd *cli.Command) error {
+	builder := builder.Builder{
+		Workdir:  ".",
+		Builddir: cmd.String("o"),
+		Gofmt:    true,
+	}
+
+	return builder.Generate()
 }

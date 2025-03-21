@@ -19,6 +19,7 @@ import (
 
 type Builder struct {
 	Workdir    string
+	MainScript string
 	Builddir   string
 	OutputFile string
 	Gofmt      bool
@@ -59,7 +60,7 @@ func (b *Builder) Generate() (err error) {
 		return err
 	}
 
-	v, err := os.ReadFile("main.sh")
+	v, err := os.ReadFile(b.MainScript)
 	if err != nil {
 		return err
 	}
@@ -136,6 +137,10 @@ func (b *Builder) prepare() error {
 		return err
 	}
 
+	if b.MainScript == "" {
+		b.MainScript = "main.sh"
+	}
+
 	return nil
 }
 
@@ -147,7 +152,7 @@ func (b *Builder) globModule() ([]string, error) {
 
 	var filtered []string
 	for _, file := range files {
-		if file != "main.sh" {
+		if file != b.MainScript {
 			filtered = append(filtered, file)
 		}
 	}
