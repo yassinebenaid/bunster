@@ -20,7 +20,7 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 	}
 
 	builder := builder.Builder{
-		Workdir:    ".test",
+		Workdir:    ".",
 		Builddir:   path.Join(os.TempDir(), "bunster-build"),
 		OutputFile: destination,
 	}
