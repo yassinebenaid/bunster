@@ -21,9 +21,27 @@ type Builder struct {
 	Workdir    string
 	Builddir   string
 	OutputFile string
+	Gofmt      bool
 }
 
 func (b *Builder) Build() (err error) {
+	if err := b.Generate(); err != nil {
+		return err
+	}
+
+	gocmd := exec.Command("go", "build", "-o", b.OutputFile)
+	gocmd.Stdin = os.Stdin
+	gocmd.Stdout = os.Stdout
+	gocmd.Stderr = os.Stderr
+	gocmd.Dir = b.Builddir
+	if err := gocmd.Run(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (b *Builder) Generate() (err error) {
 	cwd, err := os.Getwd()
 	if err != nil {
 		return err
@@ -97,13 +115,9 @@ func (b *Builder) Build() (err error) {
 		return err
 	}
 
-	gocmd := exec.Command("go", "build", "-o", b.OutputFile)
-	gocmd.Stdin = os.Stdin
-	gocmd.Stdout = os.Stdout
-	gocmd.Stderr = os.Stderr
-	gocmd.Dir = b.Builddir
-	if err := gocmd.Run(); err != nil {
-		return err
+	if b.Gofmt {
+		// we ignore the error, because this is just an optional step that shouldn't stop us from building the binary
+		_ = exec.Command("gofmt", "-w", b.Builddir).Run()
 	}
 
 	return nil
