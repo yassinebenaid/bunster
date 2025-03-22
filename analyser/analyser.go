@@ -7,6 +7,22 @@ import (
 	"github.com/yassinebenaid/bunster/ast"
 )
 
+type Error struct {
+	File           string
+	Line, Position int
+	Msg            string
+}
+
+func (s Error) Error() string {
+	s.File = "main.sh"
+
+	return fmt.Sprintf("%s(%d:%d): semantic error: %s.", s.File, s.Line, s.Position, s.Msg)
+}
+
+func (a *analyser) report(err Error) {
+	a.errors = append(a.errors, err)
+}
+
 func Analyse(s ast.Script, main bool) error {
 	a := analyser{script: s}
 	a.analyse(main)
@@ -27,7 +43,7 @@ func (a *analyser) analyse(main bool) {
 		if !main {
 			_, ok := statement.(ast.Function)
 			if !ok {
-				a.report("Only functions can exist in global scope")
+				a.report(Error{Msg: "only functions can exist in global scope"})
 				return
 			}
 		}
@@ -121,7 +137,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			}
 		}
 		if !withinFunction {
-			a.report("The `local` keyword cannot be used outside functions")
+			a.report(Error{Msg: "the `local` keyword cannot be used outside functions"})
 		}
 
 		for _, pa := range v {
@@ -151,11 +167,11 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				break loop
 			case ast.List, ast.Break:
 			default:
-				a.report("The `break` keyword cannot be used here")
+				a.report(Error{Msg: "the `break` keyword cannot be used here"})
 			}
 		}
 		if !withinLoop {
-			a.report("The `break` keyword cannot be used here")
+			a.report(Error{Msg: "the `break` keyword cannot be used here"})
 		}
 	case ast.Continue:
 		var withinLoop bool
@@ -167,14 +183,16 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				break loop2
 			case ast.List, ast.Continue:
 			default:
-				a.report("The `continue` keyword cannot be used here")
+				a.report(Error{Msg: "the `continue` keyword cannot be used here"})
 			}
 		}
 		if !withinLoop {
-			a.report("The `continue` keyword cannot be used here")
+			a.report(Error{Msg: "the `continue` keyword cannot be used here"})
 		}
 	case ast.Pipeline:
-		a.analysePipeline(v)
+		for _, cmd := range v {
+			a.analyseStatement(cmd.Command)
+		}
 	case ast.BackgroundConstruction:
 		a.analyseStatement(v.Statement)
 	case ast.Wait:
@@ -230,12 +248,12 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 		}
 	case ast.Embed:
 		if len(a.stack) != 1 {
-			a.report("using '@embed' directive is only valid in global scope")
+			a.report(Error{Msg: "using '@embed' directive is only valid in global scope"})
 		}
 
 		for _, path := range v {
 			if !filepath.IsLocal(path) {
-				a.report(fmt.Sprintf("the path %q is not local", path))
+				a.report(Error{Msg: fmt.Sprintf("the path %q cannot be embeded because it is not local to the module", path)})
 			}
 		}
 	case ast.Defer:
@@ -250,7 +268,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			}
 		}
 	default:
-		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
+		a.report(Error{Msg: fmt.Sprintf("Unsupported statement type: %T", v)})
 	}
 
 	a.stack = a.stack[:len(a.stack)-1]
@@ -273,7 +291,7 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 		}
 	case ast.Binary:
 		if v.Operator == "=~" {
-			a.report(fmt.Sprintf("Unsupported test operator: %s", v.Operator))
+			a.report(Error{Msg: fmt.Sprintf("Unsupported test operator: %s", v.Operator)})
 		}
 		a.analyseExpression(v.Left)
 		a.analyseExpression(v.Right)
@@ -286,47 +304,8 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 			a.analyseArithmeticExpression(expr)
 		}
 	default:
-		a.report(fmt.Sprintf("Unsupported statement type: %T", v))
+		a.report(Error{Msg: fmt.Sprintf("Unsupported statement type: %T", v)})
 	}
-}
-
-type SemanticError struct {
-	Line, Position int
-	Err            string
-}
-
-func (s SemanticError) Error() string {
-	return fmt.Sprintf("semantic error: %s. (line: %d, column: %d)", s.Err, s.Line, s.Position)
-}
-
-var (
-	ErrorUsingShellParametersWithinPipeline = "using shell parameters within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
-	ErrorUsingWaitWithinPipeline            = "using 'wait' command within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
-	ErrorUsingLocalWithinPipeline           = "using 'local' command within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
-	ErrorUsingExportWithinPipeline          = "using 'export' command within a pipeline has no effect and is invalid. only statements that perform IO are allowed within pipelines"
-)
-
-func (a *analyser) analysePipeline(p ast.Pipeline) {
-	for _, cmd := range p {
-		switch cmd.Command.(type) {
-		case ast.ParameterAssignement:
-			a.report(ErrorUsingShellParametersWithinPipeline)
-		case ast.Wait:
-			a.report(ErrorUsingWaitWithinPipeline)
-		case ast.LocalParameterAssignement:
-			a.report(ErrorUsingLocalWithinPipeline)
-		case ast.ExportParameterAssignement:
-			a.report(ErrorUsingExportWithinPipeline)
-		default:
-			a.analyseStatement(cmd.Command)
-		}
-	}
-}
-
-func (a *analyser) report(err string) {
-	a.errors = append(a.errors, SemanticError{
-		Err: err,
-	})
 }
 
 func (a *analyser) analyseArithmeticExpression(s ast.Expression) {
@@ -346,6 +325,6 @@ func (a *analyser) analyseArithmeticExpression(s ast.Expression) {
 		a.analyseArithmeticExpression(v.Body)
 		a.analyseArithmeticExpression(v.Alternate)
 	default:
-		a.report(fmt.Sprintf("Unsupported arithmetic expression type: %T", v))
+		a.report(Error{Msg: fmt.Sprintf("Unsupported arithmetic expression type: %T", v)})
 	}
 }

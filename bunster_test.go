@@ -32,10 +32,11 @@ type Test struct {
 		Module  map[string]string `yaml:"module"`
 		Script  string            `yaml:"script"`
 		Expect  struct {
-			Stdout   string            `yaml:"stdout"`
-			Stderr   string            `yaml:"stderr"`
-			ExitCode int               `yaml:"exit_code"`
-			Files    map[string]string `yaml:"files"`
+			BuildError string            `yaml:"build_error"`
+			Stdout     string            `yaml:"stdout"`
+			Stderr     string            `yaml:"stderr"`
+			ExitCode   int               `yaml:"exit_code"`
+			Files      map[string]string `yaml:"files"`
 		} `yaml:"expect"`
 	}
 }
@@ -78,6 +79,7 @@ func TestBunster(t *testing.T) {
 					// some tests only run on specific platforms.
 					continue
 				}
+				logger.Print(dump(testCase.Name))
 
 				testdir := path.Join(os.TempDir(), "bunster-testing")
 				if err := os.RemoveAll(testdir); err != nil {
@@ -122,7 +124,11 @@ func TestBunster(t *testing.T) {
 				}
 
 				if err := builder.Build(); err != nil {
-					t.Fatalf("\nTest(#%d): %sBuild Error: %s", i, dump(testCase.Name), err.Error())
+					if testCase.Expect.BuildError != err.Error() {
+						t.Fatalf("\nTest(#%d): %sExpected build error does not match actual value\ndiff:\n%s",
+							i, dump(testCase.Name), diff.DiffBG(testCase.Expect.BuildError, err.Error()))
+					}
+					continue
 				}
 
 				var stdout, stderr bytes.Buffer
@@ -192,7 +198,6 @@ func TestBunster(t *testing.T) {
 							i, dump(testCase.Name), filename, diff.DiffBG(expectedContent, string(content)))
 					}
 				}
-				logger.Print(dump(testCase.Name))
 			}
 		})
 	}

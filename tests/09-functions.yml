@@ -373,3 +373,9 @@ cases:
       stdout: |
         var:
         var:foo
+
+  - name: "local variable cannot be declared outside of functions"
+    script: |
+      local var
+    expect:
+      build_error: "main.sh(0:0): semantic error: the `local` keyword cannot be used outside functions."
