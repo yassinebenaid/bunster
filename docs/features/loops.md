@@ -112,7 +112,7 @@ done
 
 ```
 
-`expr1`, `expr2` and `expr3` are [Arithmetic Expressions](/features/arithmetics#Expressions).
+`expr1`, `expr2` and `expr3` are [Arithmetic Expressions](/features/arithmetics#expressions).
 
 First, the arithmetic expression `expr1` is evaluated. The arithmetic expression `expr2` is then evaluated repeatedly until it evaluates to zero. Each time `expr2` evaluates to a non-zero value, `commands` are executed and the arithmetic expression `expr3` is evaluated. If any expression is omitted, it behaves as if it evaluates to `1`. The return value is the exit status of the last command in `commands` that is executed.
 
