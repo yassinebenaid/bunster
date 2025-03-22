@@ -204,31 +204,21 @@ func (shell *Shell) Command(name string, args []string, env map[string]string) *
 	command.Args = args
 	command.Name = name
 	command.Env = env
-
-	if fn, ok := shell.functions.get(name); ok {
-		command.function = fn
-		return &command
-	}
-
 	return &command
 }
 
 type Command struct {
-	Name   string
-	Args   []string
-	Stdin  Stream
-	Stdout Stream
-	Stderr Stream
-	Env    map[string]string
-
+	Name     string
+	Args     []string
+	Stdin    Stream
+	Stdout   Stream
+	Stderr   Stream
+	Env      map[string]string
 	ExitCode int
-
-	function PredefinedCommand
-	execCmd  *exec.Cmd
 }
 
 func (cmd *Command) Run(shell *Shell, streamManager *StreamManager) error {
-	if cmd.function != nil {
+	if fn, ok := shell.functions.get(cmd.Name); ok {
 		shell := Shell{
 			parent:       shell,
 			Path:         shell.Path,
@@ -247,33 +237,33 @@ func (cmd *Command) Run(shell *Shell, streamManager *StreamManager) error {
 			shell.env.set(key, value)
 		}
 
-		cmd.function(&shell, cmd.Stdin, cmd.Stdout, cmd.Stderr)
+		fn(&shell, cmd.Stdin, cmd.Stdout, cmd.Stderr)
 		cmd.ExitCode = shell.ExitCode
 		return nil
 	}
 
-	cmd.execCmd = exec.Command(cmd.Name, cmd.Args...) //nolint:gosec
-	cmd.execCmd.Stdin = cmd.Stdin
-	cmd.execCmd.Stdout = cmd.Stdout
-	cmd.execCmd.Stderr = cmd.Stderr
+	execCmd := exec.Command(cmd.Name, cmd.Args...) //nolint:gosec
+	execCmd.Stdin = cmd.Stdin
+	execCmd.Stdout = cmd.Stdout
+	execCmd.Stderr = cmd.Stderr
 
 	shell.env.foreach(func(key string, value string) bool {
-		cmd.execCmd.Env = append(cmd.execCmd.Env, fmt.Sprintf("%s=%s", key, value))
+		execCmd.Env = append(execCmd.Env, fmt.Sprintf("%s=%s", key, value))
 		return true
 	})
 	shell.exportedVars.foreach(func(key string, _ struct{}) bool {
-		cmd.execCmd.Env = append(cmd.execCmd.Env, fmt.Sprintf("%s=%s", key, shell.ReadVar(key)))
+		execCmd.Env = append(execCmd.Env, fmt.Sprintf("%s=%s", key, shell.ReadVar(key)))
 		return true
 	})
 	for key, value := range cmd.Env {
-		cmd.execCmd.Env = append(cmd.execCmd.Env, key+"="+value)
+		execCmd.Env = append(execCmd.Env, key+"="+value)
 	}
 
-	if err := cmd.execCmd.Run(); err != nil {
+	if err := execCmd.Run(); err != nil {
 		return err
 	}
 
-	cmd.ExitCode = cmd.execCmd.ProcessState.ExitCode()
+	cmd.ExitCode = execCmd.ProcessState.ExitCode()
 	return nil
 }
 
