@@ -1,0 +1,48 @@
+cases:
+  - name: can use functions of other files
+    module:
+      file1.sh: |
+        function foo {
+          echo foo
+        }
+      file2.sh: |
+        bar(){
+          foo
+          echo bar
+        }
+      main.sh: |
+        bar
+    expect:
+      stdout: |
+        foo
+        bar
+
+  - name: can use embedding
+    module:
+      file1.sh: |
+        function foo {
+          echo foo
+        }
+      file2.sh: |
+        bar(){
+          foo
+          echo bar
+        }
+      main.sh: |
+        @embed .
+
+        embed ls .
+    expect:
+      stdout: |
+        file1.sh
+        file2.sh
+        main.sh
+
+  - name: can use foo
+    script: |
+      @embed .
+
+      embed ls .
+    expect:
+      stdout: |
+        main.sh
