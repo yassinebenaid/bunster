@@ -23,7 +23,7 @@ _main.sh_
 echo "Hello World"
 ```
 
-Then run:
+Compile this module:
 
 ```sh
 bunster build -o hello
@@ -42,23 +42,69 @@ _math.sh_
 ```sh
 function calculatePercentage(){
 	total=$1
-	x=$1
+	x=$2
 
-	echo $(( (x / total) * 100 ))
+
+	echo $(( (x * 100) / total ))
 }
 
 function calculateAge(){
 	bith_year=$1
 	currentYear=$(date +%Y)
 
-	echo $(( bith_year - currentYear ))
+	echo $(( currentYear - bith_year ))
 }
 ```
 
-Then update `main.sh` to use this function:
+Then update `main.sh` to use these functions:
 
 ```sh
 calculatePercentage 1024 30
 
 calculateAge 2003
 ```
+
+Compile this module:
+
+```sh
+bunster build -o hello
+```
+
+Now run the program
+
+```sh
+./hello
+```
+
+This will output:
+
+```txt
+2
+22
+```
+
+> [!TIP]
+> Each module can have as many declaration scripts as needed.
+
+## Custom main script
+
+Sometimes the main script is not named `main.sh`. When you compile the program, you can pass the name of the main script as the first argument:
+
+```sh
+├── foo.sh
+├── bar.sh
+└── baz.sh
+```
+
+Assuming your main script is `foo.sh`, you can compile this module like this:
+
+```sh
+bunster build foo.sh -o hello
+```
+
+## Using external modules (libraries)
+
+Users may publish their modules publically in any git registry (such as github, gitlab etc). You can use those modules in your module by requiring them as dependencies.
+
+> [!WARNING]
+> This is a work-in-progrss feature, will be release soon.
