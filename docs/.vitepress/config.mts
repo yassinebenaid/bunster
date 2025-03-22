@@ -19,11 +19,10 @@ export default defineConfig({
 				items: [
 					{ text: "Introduction", link: "/introduction" },
 					{ text: "Installation", link: "/installation" },
-					{ text: "Supported features", link: "/supported-features" },
 					{ text: "CLI", link: "/cli" },
 					{
 						text: "Features",
-						collapsed: false,
+						collapsed: true,
 						items: [
 							{ text: "Simple commands", link: "/features/simple-commands" },
 							{ text: "Redirections", link: "/features/redirections" },
@@ -42,8 +41,16 @@ export default defineConfig({
 								link: "/features/environment-files",
 							},
 							{
-								text: "Groups And Sub-Shells",
+								text: "Groups & Sub-Shells",
 								link: "/features/groups-and-subshells",
+							},
+							{
+								text: "Loops",
+								link: "/features/loops",
+							},
+							{
+								text: "Functions",
+								link: "/features/functions",
 							},
 							{
 								text: "Deferred Commands",
@@ -54,11 +61,20 @@ export default defineConfig({
 								link: "/features/test-commands",
 							},
 							{
+								text: "Arithmetics",
+								link: "/features/arithmetics",
+							},
+							{
 								text: "Embedding",
 								link: "/features/embedding",
 							},
 							{ text: "Builtin commands", link: "/features/builtins" },
 						],
+					},
+					{
+						text: "Workspace",
+						collapsed: true,
+						items: [{ text: "Modules", link: "/workspace/modules" }],
 					},
 					{ text: "Contributing", link: "/contributing" },
 					{ text: "Developers Guideline", link: "/developers" },

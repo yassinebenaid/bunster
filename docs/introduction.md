@@ -7,7 +7,7 @@ Technically speaking, **Bunster** in fact is a `shell-to-Go` [Transpiler](https:
 **Bunster** aims to be compatible with `bash` as a starting move. You should expect your `bash` scripts to just work with bunster. Additional shells will be supported as soon as we release v1.
 
 > [!WARNING]
-> This project is in its early stages of development. [Only a subset of features are supported so far](https://bunster.netlify.app/supported-features.html).
+> This project is in its early stages of development.
 
 ## Vision
 
@@ -21,7 +21,6 @@ makes you feel happy when writing shell scripts. a feeling that shells usually d
 - Support static asset embedding. This feature allows you to embed a file's content to a variable at build time. ([Go has one already](https://pkg.go.dev/embed))
 - Support different shells and POSIX.
 
-
 ## Get Started
 
 <img src="/bunster.gif"/>
@@ -29,13 +28,14 @@ makes you feel happy when writing shell scripts. a feeling that shells usually d
 [Learn more about the usage of bunster.](/cli)
 
 ## Bunster VS Bash
+
 We are not trying to compete with `bash`. Because unlike `bash`, bunster is not a shell. it is a programming language dedicated for scripting. `bash`
 has a scripting plan where you can write commands in scripts. but it's primary use case is interactively.
 
 Bunster is trying to take all good things from `bash`. Add more features to them and make them available in a simple and familiar programming language.
 
-
 ## Why do we have a separate documentation ?
+
 We use the [bash reference](https://www.gnu.org/software/bash/manual/bash.html) as a source of truth. and so you can.
 Becasue we have a promise to keep compatibility with bash, you are free to refer to that manual
 for feature documentation for features supported by bunster.
