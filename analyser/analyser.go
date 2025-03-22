@@ -7,9 +7,9 @@ import (
 	"github.com/yassinebenaid/bunster/ast"
 )
 
-func Analyse(s ast.Script) error {
+func Analyse(s ast.Script, main bool) error {
 	a := analyser{script: s}
-	a.analyse()
+	a.analyse(main)
 	if len(a.errors) == 0 {
 		return nil
 	}
@@ -22,8 +22,15 @@ type analyser struct {
 	stack  []ast.Statement
 }
 
-func (a *analyser) analyse() {
+func (a *analyser) analyse(main bool) {
 	for _, statement := range a.script {
+		if !main {
+			_, ok := statement.(ast.Function)
+			if !ok {
+				a.report("Only functions can exist in global scope")
+				return
+			}
+		}
 		a.analyseStatement(statement)
 	}
 }

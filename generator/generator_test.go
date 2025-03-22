@@ -46,7 +46,7 @@ func TestGenerator(t *testing.T) {
 					t.Fatalf("\nTest: %sError: %s", dump(test.Label), dump(err.Error()))
 				}
 
-				if err := analyser.Analyse(script); err != nil {
+				if err := analyser.Analyse(script, true); err != nil {
 					t.Fatalf("\nTest: %sError: %s", dump(test.Label), dump(err.Error()))
 				}
 
