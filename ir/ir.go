@@ -107,6 +107,12 @@ func (d DeclareSlice) togo() string {
 	return fmt.Sprintf("var %s []string\n", d.Name)
 }
 
+type DeclareMap string
+
+func (d DeclareMap) togo() string {
+	return fmt.Sprintf("var %s = make(map[string]string)\n", d)
+}
+
 type Set struct {
 	Name  string
 	Value Instruction
@@ -123,6 +129,16 @@ type Append struct {
 
 func (a Append) togo() string {
 	return fmt.Sprintf("%s = append(%s, %s)\n", a.Name, a.Name, a.Value.togo())
+}
+
+type SetMap struct {
+	Name  string
+	Key   string
+	Value Instruction
+}
+
+func (a SetMap) togo() string {
+	return fmt.Sprintf("%s[%q] = %s\n", a.Name, a.Key, a.Value.togo())
 }
 
 type String string
@@ -198,10 +214,11 @@ func (rv ReadSpecialVar) togo() string {
 type InitCommand struct {
 	Name string
 	Args string
+	Env  string
 }
 
 func (ic InitCommand) togo() string {
-	return fmt.Sprintf("shell.Command(%s, %s...)", ic.Name, ic.Args)
+	return fmt.Sprintf("shell.Command(%s, %s, %s)", ic.Name, ic.Args, ic.Env)
 }
 
 type RunCommand string

@@ -165,18 +165,19 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command)
 		cmdbuf.add(ir.Append{Name: "arguments", Value: g.handleExpression(&cmdbuf, arg)})
 	}
 
-	cmdbuf.add(ir.Declare{
-		Name:  "command",
-		Value: ir.InitCommand{Name: "commandName", Args: "arguments"},
-	})
-
+	cmdbuf.add(ir.DeclareMap("env"))
 	for _, env := range cmd.Env {
 		var value ir.Instruction = ir.String("")
 		if env.Value != nil {
 			value = g.handleExpression(&cmdbuf, env.Value)
 		}
-		cmdbuf.add(ir.SetCmdEnv{Command: "command", Key: env.Name, Value: value})
+		cmdbuf.add(ir.SetMap{Name: "env", Key: env.Name, Value: value})
 	}
+
+	cmdbuf.add(ir.Declare{
+		Name:  "command",
+		Value: ir.InitCommand{Name: "commandName", Args: "arguments", Env: "env"},
+	})
 
 	cmdbuf.add(ir.CloneStreamManager{})
 	g.handleRedirections(&cmdbuf, cmd.Redirections)

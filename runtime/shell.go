@@ -207,12 +207,12 @@ func (shell *Shell) Terminate(streamManager *StreamManager) {
 	}
 }
 
-func (shell *Shell) Command(name string, args ...string) *Command {
+func (shell *Shell) Command(name string, args []string, env map[string]string) *Command {
 	var command Command
 	command.shell = shell
 	command.Args = args
 	command.Name = name
-	command.Env = make(map[string]string)
+	command.Env = env
 
 	if fn, ok := shell.functions.get(name); ok {
 		command.function = fn
