@@ -23,7 +23,7 @@ export default defineConfig({
 					{ text: "CLI", link: "/cli" },
 					{
 						text: "Features",
-						collapsed: false,
+						collapsed: true,
 						items: [
 							{ text: "Simple commands", link: "/features/simple-commands" },
 							{ text: "Redirections", link: "/features/redirections" },
@@ -67,6 +67,11 @@ export default defineConfig({
 							},
 							{ text: "Builtin commands", link: "/features/builtins" },
 						],
+					},
+					{
+						text: "Workspace",
+						collapsed: true,
+						items: [{ text: "Modules", link: "/workspace/modules" }],
 					},
 					{ text: "Contributing", link: "/contributing" },
 					{ text: "Developers Guideline", link: "/developers" },
