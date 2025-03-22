@@ -19,7 +19,6 @@ export default defineConfig({
 				items: [
 					{ text: "Introduction", link: "/introduction" },
 					{ text: "Installation", link: "/installation" },
-					{ text: "Supported features", link: "/supported-features" },
 					{ text: "CLI", link: "/cli" },
 					{
 						text: "Features",

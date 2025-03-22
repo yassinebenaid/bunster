@@ -19,20 +19,19 @@ Technically speaking, **Bunster** in fact is a `shell-to-Go` [Transpiler](https:
 **Bunster** aims to be compatible with `bash` as a starting move. You should expect your `bash` scripts to just work with bunster. Additional shells will be supported as soon as we release v1.
 
 > [!WARNING]
-> This project is in its early stages of development. [Only a subset of features are supported so far](https://bunster.netlify.app/supported-features.html).
+> This project is in its early stages of development. [Only a subset of features are supported so far](https://bunster.netlify.app/features/simple-commands).
 
 ## Vision
 
 Bunster has a vision to make shell scripts feel like any modern programming language. With as many features as we could, without any bloating. anything that
 makes you feel happy when writing shell scripts. a feeling that shells usually don't provide, a feeling that languages like Go give you, we aim to:
 
-- Improve error handling and messages, we want to help everyone write error-aware scripts. And when they fail, we want to give them clear, concise error messages.  
+- Improve error handling and messages, we want to help everyone write error-aware scripts. And when they fail, we want to give them clear, concise error messages.
 - Introduce a module system that allows you to publish and consume scripts as libraries, with a builtin package manager.
 - Add first-class support for a wide collection of builtin commands that just work out of the box. You don't need external programs to use them.
 - Add first-class support for `.env` files. Allowing you to load variables from `.env`.
 - Support static asset embedding. This feature allows you to embed a file's content to a variable at build time. ([Go has one already](https://pkg.go.dev/embed))
 - Support different shells and POSIX.
-
 
 ## Get Started
 
@@ -48,13 +47,11 @@ We have bash script that installs `bunster` and adds it to your `$PATH`.
 curl -f https://bunster.netlify.app/install.sh | bash
 ```
 
-
 The script will install bunster at `~/.local/bin/bunster` on linux. And `~/bin/bunster` on mac. If you want to install the binary system wide and make it accessible by all users.
 
 ```shell
 curl -f https://bunster.netlify.app/install.sh | GLOBAL=1 bash
 ```
-
 
 > [!WARNING]
 > Do not trust scripts downloaded from the internet. A quick look at the code before running it won't hurt.
@@ -62,15 +59,19 @@ curl -f https://bunster.netlify.app/install.sh | GLOBAL=1 bash
 Checkout the [documentation](https://bunster.netlify.app/installation) for different ways of installation.
 
 ## FAQ
+
 ### How does bunster make your scripts more secure?
+
 It does not. Bunster does not make your script more secure. Instead, it makes your environment more secure. Bunster builds programs that can run in environments where the shell doesn't exist, for example in a cloud server. By eliminating the shell, you remain safe from a variety of security risks (examples include: [RCE](https://www.invicti.com/learn/remote-code-execution-rce/), [Command Injection](https://www.imperva.com/learn/application-security/command-injection/#:~:text=Code%20injection%20is%20a%20generic,proper%20input%2Foutput%20data%20validation.), [Reverse Shell](https://www.wiz.io/academy/reverse-shell-attacks), ...).
 
 _more about this topic on this discussion:_ https://github.com/yassinebenaid/bunster/discussions/126.
 
 ### Does bunster replace the programs in my script?
+
 No, bunster replaces the shell, but you still need to have the programs available in `$PATH` to use them. Later we might add first-class support for a subset of commands builtin.
 
 ### Is bunster a drop-in replacement for bash?
+
 Yes and No.
 
 Yes because bunster aims to be compatible with bash, with a lot of additional features. Bunster is worth being your primary tool for shell scripting.
@@ -81,6 +82,7 @@ No because bunster programs are binary. They're cool if they're yours, but very 
 - Don't use bunster for short, simple scripts.
 
 ### Why would I choose bunster over classic shells?
+
 You don't have to. If you're happy with your favorite shell, just stick with it. **Bunster** is just another option. However, there are a lot of motivators worth consideration.
 
 - **Unique goals:** Bunster brings a [lot of features](https://github.com/yassinebenaid/bunster/blob/master/README.md#vision) that are not present in any of the shells out there.
@@ -98,7 +100,7 @@ Adding support for additional shells is not planned until our first stable relea
 
 ## Developers Guidline
 
-If you are interested in this project and want to know more about it's underlying implementation. Or if you want to contribute back but you don't know where to start. [We have brief article](https://bunster.netlify.app/developers) that explains everything you need to get your hands dirty. Things like the project structure, packages and their concerns, how each component work and interact with other components, how to add new features, how to improve existing features, testing and anything else in this regard. 
+If you are interested in this project and want to know more about it's underlying implementation. Or if you want to contribute back but you don't know where to start. [We have brief article](https://bunster.netlify.app/developers) that explains everything you need to get your hands dirty. Things like the project structure, packages and their concerns, how each component work and interact with other components, how to add new features, how to improve existing features, testing and anything else in this regard.
 
 ## Contributing
 

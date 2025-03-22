@@ -16,6 +16,9 @@ hero:
     - theme: alt
       text: Documentation
       link: /introduction
+    - theme: alt
+      text: Github
+      link: https://github.com/yassinebenaid/bunster
 features:
   - title: Static binaries
     details: |

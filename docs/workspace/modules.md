@@ -102,9 +102,16 @@ Assuming your main script is `foo.sh`, you can compile this module like this:
 bunster build foo.sh -o hello
 ```
 
-## Using external modules (libraries)
+## Publishing module as library
 
-Users may publish their modules publically in any git registry (such as github, gitlab etc). You can use those modules in your module by requiring them as dependencies.
+You may publish your module publically in any git registry (such as github, gitlab etc). This allows others to use your module in their projects by requiring it as dependencies.
+
+> [!WARNING]
+> This is a work-in-progrss feature, will be release soon.
+
+## Using external libraries
+
+If you want to use an external library, it must first be available in a git registry such `githab`, `gitlab` etc.
 
 > [!WARNING]
 > This is a work-in-progrss feature, will be release soon.
