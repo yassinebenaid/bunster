@@ -218,6 +218,19 @@ type Command struct {
 }
 
 func (cmd *Command) Run(shell *Shell, streamManager *StreamManager) error {
+	stdin, err := streamManager.Get("0")
+	if err != nil {
+		return err
+	}
+	stdout, err := streamManager.Get("1")
+	if err != nil {
+		return err
+	}
+	stderr, err := streamManager.Get("2")
+	if err != nil {
+		return err
+	}
+
 	if fn, ok := shell.functions.get(cmd.Name); ok {
 		shell := Shell{
 			parent:       shell,
@@ -237,15 +250,15 @@ func (cmd *Command) Run(shell *Shell, streamManager *StreamManager) error {
 			shell.env.set(key, value)
 		}
 
-		fn(&shell, cmd.Stdin, cmd.Stdout, cmd.Stderr)
+		fn(&shell, stdin, stdout, stderr)
 		cmd.ExitCode = shell.ExitCode
 		return nil
 	}
 
 	execCmd := exec.Command(cmd.Name, cmd.Args...) //nolint:gosec
-	execCmd.Stdin = cmd.Stdin
-	execCmd.Stdout = cmd.Stdout
-	execCmd.Stderr = cmd.Stderr
+	execCmd.Stdin = stdin
+	execCmd.Stdout = stdout
+	execCmd.Stderr = stderr
 
 	shell.env.foreach(func(key string, value string) bool {
 		execCmd.Env = append(execCmd.Env, fmt.Sprintf("%s=%s", key, value))

@@ -157,6 +157,8 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 
 func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command) {
 	var cmdbuf InstructionBuffer
+	cmdbuf.add(ir.CloneStreamManager{})
+	g.handleRedirections(&cmdbuf, cmd.Redirections)
 
 	cmdbuf.add(ir.Declare{Name: "commandName", Value: g.handleExpression(&cmdbuf, cmd.Name)})
 	cmdbuf.add(ir.DeclareSlice{Name: "arguments"})
@@ -178,12 +180,6 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command)
 		Name:  "command",
 		Value: ir.InitCommand{Name: "commandName", Args: "arguments", Env: "env"},
 	})
-
-	cmdbuf.add(ir.CloneStreamManager{})
-	g.handleRedirections(&cmdbuf, cmd.Redirections)
-	cmdbuf.add(ir.SetStream{Name: "command.Stdin", Fd: ir.String("0")})
-	cmdbuf.add(ir.SetStream{Name: "command.Stdout", Fd: ir.String("1")})
-	cmdbuf.add(ir.SetStream{Name: "command.Stderr", Fd: ir.String("2")})
 
 	cmdbuf.add(ir.RunCommand("command"))
 	*buf = append(*buf, ir.Closure(cmdbuf))
