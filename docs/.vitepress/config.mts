@@ -41,7 +41,7 @@ export default defineConfig({
 								link: "/features/environment-files",
 							},
 							{
-								text: "Groups And Sub-Shells",
+								text: "Groups & Sub-Shells",
 								link: "/features/groups-and-subshells",
 							},
 							{

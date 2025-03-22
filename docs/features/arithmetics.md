@@ -59,7 +59,7 @@ Variables are allowed as operands; parameter expansion is performed before the e
 
 A shell variable that is null or unset evaluates to `0`. Operators are evaluated in order of precedence. Sub-expressions in parentheses are evaluated first and may override the precedence rules above. for example, `1 + 2 * 3` evaluates to `7`, while `(1 + 2) * 3` evaluates to `9`.
 
-## Expansion
+## Arithmetic substitution
 
 You can the `$(( expr ))` construct to perform arithmetic substitution, which will be substituted by the result of the evaluation of `expr`.
 
