@@ -233,15 +233,20 @@ func (r RunCommand) togo() string {
 		`, r, r)
 }
 
-type StartCommand string
+type Exec struct {
+	Name string
+	Args string
+	Env  string
+}
 
-func (r StartCommand) togo() string {
+func (e Exec) togo() string {
 	return fmt.Sprintf(
-		`if err := %s.Start(); err != nil {
+		`if err := shell.Exec(streamManager, %s, %s, %s); err != nil {
 			shell.HandleError(streamManager, err)
 			return
 		}
-		`, r)
+		`, e.Name, e.Args, e.Env,
+	)
 }
 
 type Procedure struct {

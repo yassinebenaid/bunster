@@ -199,25 +199,7 @@ func (shell *Shell) Terminate(streamManager *StreamManager) {
 	}
 }
 
-func (shell *Shell) Command(name string, args []string, env map[string]string) *Command {
-	var command Command
-	command.Args = args
-	command.Name = name
-	command.Env = env
-	return &command
-}
-
-type Command struct {
-	Name     string
-	Args     []string
-	Stdin    Stream
-	Stdout   Stream
-	Stderr   Stream
-	Env      map[string]string
-	ExitCode int
-}
-
-func (cmd *Command) Run(shell *Shell, streamManager *StreamManager) error {
+func (shell *Shell) Exec(streamManager *StreamManager, name string, args []string, env map[string]string) error {
 	stdin, err := streamManager.Get("0")
 	if err != nil {
 		return err
@@ -231,13 +213,13 @@ func (cmd *Command) Run(shell *Shell, streamManager *StreamManager) error {
 		return err
 	}
 
-	if fn, ok := shell.functions.get(cmd.Name); ok {
-		shell := Shell{
+	if fn, ok := shell.functions.get(name); ok {
+		childShell := Shell{
 			parent:       shell,
 			Path:         shell.Path,
 			PID:          shell.PID,
 			Embed:        shell.Embed,
-			Args:         cmd.Args[:],
+			Args:         args,
 			functions:    shell.functions,
 			vars:         shell.vars,
 			env:          shell.env.clone(),
@@ -246,16 +228,16 @@ func (cmd *Command) Run(shell *Shell, streamManager *StreamManager) error {
 			exportedVars: shell.exportedVars,
 		}
 
-		for key, value := range cmd.Env {
-			shell.env.set(key, value)
+		for key, value := range env {
+			childShell.env.set(key, value)
 		}
 
-		fn(&shell, stdin, stdout, stderr)
-		cmd.ExitCode = shell.ExitCode
+		fn(&childShell, stdin, stdout, stderr)
+		shell.ExitCode = childShell.ExitCode
 		return nil
 	}
 
-	execCmd := exec.Command(cmd.Name, cmd.Args...) //nolint:gosec
+	execCmd := exec.Command(name, args...) //nolint:gosec
 	execCmd.Stdin = stdin
 	execCmd.Stdout = stdout
 	execCmd.Stderr = stderr
@@ -268,7 +250,7 @@ func (cmd *Command) Run(shell *Shell, streamManager *StreamManager) error {
 		execCmd.Env = append(execCmd.Env, fmt.Sprintf("%s=%s", key, shell.ReadVar(key)))
 		return true
 	})
-	for key, value := range cmd.Env {
+	for key, value := range env {
 		execCmd.Env = append(execCmd.Env, key+"="+value)
 	}
 
@@ -276,7 +258,7 @@ func (cmd *Command) Run(shell *Shell, streamManager *StreamManager) error {
 		return err
 	}
 
-	cmd.ExitCode = execCmd.ProcessState.ExitCode()
+	shell.ExitCode = execCmd.ProcessState.ExitCode()
 	return nil
 }
 
