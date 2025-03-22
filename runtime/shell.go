@@ -243,11 +243,11 @@ func (shell *Shell) Exec(streamManager *StreamManager, name string, args []strin
 	execCmd.Stderr = stderr
 
 	shell.env.foreach(func(key string, value string) bool {
-		execCmd.Env = append(execCmd.Env, fmt.Sprintf("%s=%s", key, value))
+		execCmd.Env = append(execCmd.Env, key+"="+value)
 		return true
 	})
 	shell.exportedVars.foreach(func(key string, _ struct{}) bool {
-		execCmd.Env = append(execCmd.Env, fmt.Sprintf("%s=%s", key, shell.ReadVar(key)))
+		execCmd.Env = append(execCmd.Env, key+"="+shell.ReadVar(key))
 		return true
 	})
 	for key, value := range env {
