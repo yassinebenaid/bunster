@@ -49,6 +49,10 @@ export default defineConfig({
 								link: "/features/loops",
 							},
 							{
+								text: "Functions",
+								link: "/features/functions",
+							},
+							{
 								text: "Deferred Commands",
 								link: "/features/deferred-commands",
 							},
