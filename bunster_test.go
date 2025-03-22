@@ -126,7 +126,7 @@ func TestBunster(t *testing.T) {
 				}
 
 				var stdout, stderr bytes.Buffer
-				cmd := exec.Command(path.Join(codedir, "test.bin"), testCase.Args...)
+				cmd := exec.Command(path.Join(codedir, "test.bin"), testCase.Args...) //nolint:gosec
 				cmd.Stdin = strings.NewReader(testCase.Stdin)
 				cmd.Stdout = &stdout
 				cmd.Stderr = &stderr

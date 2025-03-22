@@ -30,7 +30,7 @@ func (b *Builder) Build() (err error) {
 		return err
 	}
 
-	gocmd := exec.Command("go", "build", "-o", b.OutputFile)
+	gocmd := exec.Command("go", "build", "-o", b.OutputFile) //nolint:gosec
 	gocmd.Stdin = os.Stdin
 	gocmd.Stdout = os.Stdout
 	gocmd.Stderr = os.Stderr
@@ -118,7 +118,7 @@ func (b *Builder) Generate() (err error) {
 
 	if b.Gofmt {
 		// we ignore the error, because this is just an optional step that shouldn't stop us from building the binary
-		_ = exec.Command("gofmt", "-w", b.Builddir).Run()
+		_ = exec.Command("gofmt", "-w", b.Builddir).Run() //nolint:gosec
 	}
 
 	return nil

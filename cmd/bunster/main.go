@@ -109,9 +109,10 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 
 func geneateCMD(_ context.Context, cmd *cli.Command) error {
 	builder := builder.Builder{
-		Workdir:  ".",
-		Builddir: cmd.String("o"),
-		Gofmt:    true,
+		Workdir:    ".",
+		Builddir:   cmd.String("o"),
+		MainScript: cmd.Args().First(),
+		Gofmt:      true,
 	}
 
 	return builder.Generate()
