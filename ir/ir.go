@@ -225,7 +225,7 @@ type RunCommand string
 
 func (r RunCommand) togo() string {
 	return fmt.Sprintf(
-		`if err := %s.Run(); err != nil {
+		`if err := %s.Run(shell, streamManager); err != nil {
 			shell.HandleError(streamManager, err)
 			return
 		}

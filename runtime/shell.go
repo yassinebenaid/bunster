@@ -201,7 +201,6 @@ func (shell *Shell) Terminate(streamManager *StreamManager) {
 
 func (shell *Shell) Command(name string, args []string, env map[string]string) *Command {
 	var command Command
-	command.shell = shell
 	command.Args = args
 	command.Name = name
 	command.Env = env
@@ -215,7 +214,6 @@ func (shell *Shell) Command(name string, args []string, env map[string]string) *
 }
 
 type Command struct {
-	shell  *Shell
 	Name   string
 	Args   []string
 	Stdin  Stream
@@ -229,20 +227,20 @@ type Command struct {
 	execCmd  *exec.Cmd
 }
 
-func (cmd *Command) Run() error {
+func (cmd *Command) Run(shell *Shell, streamManager *StreamManager) error {
 	if cmd.function != nil {
 		shell := Shell{
-			parent:       cmd.shell,
-			Path:         cmd.shell.Path,
-			PID:          cmd.shell.PID,
-			Embed:        cmd.shell.Embed,
+			parent:       shell,
+			Path:         shell.Path,
+			PID:          shell.PID,
+			Embed:        shell.Embed,
 			Args:         cmd.Args[:],
-			functions:    cmd.shell.functions,
-			vars:         cmd.shell.vars,
-			env:          cmd.shell.env.clone(),
+			functions:    shell.functions,
+			vars:         shell.vars,
+			env:          shell.env.clone(),
 			localVars:    newRepository[string](),
-			ExitCode:     cmd.shell.ExitCode,
-			exportedVars: cmd.shell.exportedVars,
+			ExitCode:     shell.ExitCode,
+			exportedVars: shell.exportedVars,
 		}
 
 		for key, value := range cmd.Env {
@@ -259,12 +257,12 @@ func (cmd *Command) Run() error {
 	cmd.execCmd.Stdout = cmd.Stdout
 	cmd.execCmd.Stderr = cmd.Stderr
 
-	cmd.shell.env.foreach(func(key string, value string) bool {
+	shell.env.foreach(func(key string, value string) bool {
 		cmd.execCmd.Env = append(cmd.execCmd.Env, fmt.Sprintf("%s=%s", key, value))
 		return true
 	})
-	cmd.shell.exportedVars.foreach(func(key string, _ struct{}) bool {
-		cmd.execCmd.Env = append(cmd.execCmd.Env, fmt.Sprintf("%s=%s", key, cmd.shell.ReadVar(key)))
+	shell.exportedVars.foreach(func(key string, _ struct{}) bool {
+		cmd.execCmd.Env = append(cmd.execCmd.Env, fmt.Sprintf("%s=%s", key, shell.ReadVar(key)))
 		return true
 	})
 	for key, value := range cmd.Env {
