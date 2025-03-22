@@ -27,12 +27,6 @@ func NewShell() *Shell {
 	return shell
 }
 
-type ExitError int
-
-func (e ExitError) Error() string {
-	return fmt.Sprintf("exit code %d", e)
-}
-
 type PredefinedCommand func(shell *Shell, stdin, stdout, stderr Stream)
 
 type Shell struct {
@@ -168,8 +162,6 @@ func (shell *Shell) HandleError(sm *StreamManager, err error) {
 		fmt.Fprintf(stderr, "%q: %v\n", e.Path, e.Err)
 	case *exec.ExitError:
 		shell.ExitCode = e.ExitCode()
-	case ExitError:
-		shell.ExitCode = int(e)
 	default:
 		fmt.Fprintln(stderr, err)
 	}
@@ -235,23 +227,9 @@ type Command struct {
 
 	function PredefinedCommand
 	execCmd  *exec.Cmd
-	wg       sync.WaitGroup
 }
 
 func (cmd *Command) Run() error {
-	if err := cmd.Start(); err != nil {
-		return err
-	}
-	if err := cmd.Wait(); err != nil {
-		return err
-	}
-	if cmd.function == nil {
-		cmd.ExitCode = cmd.execCmd.ProcessState.ExitCode()
-	}
-	return nil
-}
-
-func (cmd *Command) Start() error {
 	if cmd.function != nil {
 		shell := Shell{
 			parent:       cmd.shell,
@@ -271,12 +249,8 @@ func (cmd *Command) Start() error {
 			shell.env.set(key, value)
 		}
 
-		cmd.wg.Add(1)
-		go func() {
-			cmd.function(&shell, cmd.Stdin, cmd.Stdout, cmd.Stderr)
-			cmd.ExitCode = shell.ExitCode
-			cmd.wg.Done()
-		}()
+		cmd.function(&shell, cmd.Stdin, cmd.Stdout, cmd.Stderr)
+		cmd.ExitCode = shell.ExitCode
 		return nil
 	}
 
@@ -297,18 +271,12 @@ func (cmd *Command) Start() error {
 		cmd.execCmd.Env = append(cmd.execCmd.Env, key+"="+value)
 	}
 
-	return cmd.execCmd.Start()
-}
-
-func (cmd *Command) Wait() error {
-	if cmd.function != nil {
-		cmd.wg.Wait()
-		if cmd.ExitCode != 0 {
-			return ExitError(cmd.ExitCode)
-		}
-		return nil
+	if err := cmd.execCmd.Run(); err != nil {
+		return err
 	}
-	return cmd.execCmd.Wait()
+
+	cmd.ExitCode = cmd.execCmd.ProcessState.ExitCode()
+	return nil
 }
 
 type repository[T any] struct {
