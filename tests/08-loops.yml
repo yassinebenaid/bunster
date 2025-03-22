@@ -624,9 +624,41 @@ cases:
 
   - name: "`for((...))` can have 'continue'"
     script: |
-      for (( i=0 ; i < 10; i++)) do
+      for (( i=0 ; i < 3; i++)) do
+        echo start:$i
         continue
-        echo $i
+        echo end:$i
       done
     expect:
-      exit_code: 0
+      stdout: |
+        start:0
+        start:1
+        start:2
+
+  - name: "`continue` cannot be used outside loops"
+    script: |
+      continue
+    expect:
+      build_error: "main.sh(0:0): semantic error: the `continue` keyword cannot be used here."
+
+  - name: "`break` cannot be used outside loops"
+    script: |
+      break
+    expect:
+      build_error: "main.sh(0:0): semantic error: the `break` keyword cannot be used here."
+
+  - name: "`continue`  must be exactly in the scope of loops"
+    script: |
+      while true; do
+        (continue)
+      done
+    expect:
+      build_error: "main.sh(0:0): semantic error: the `continue` keyword cannot be used here."
+
+  - name: "`break`  must be exactly in the scope of loops"
+    script: |
+      while true; do
+        (break)
+      done
+    expect:
+      build_error: "main.sh(0:0): semantic error: the `break` keyword cannot be used here."

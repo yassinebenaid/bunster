@@ -7,6 +7,22 @@ import (
 	"github.com/yassinebenaid/bunster/ast"
 )
 
+type Error struct {
+	File           string
+	Line, Position int
+	Msg            string
+}
+
+func (s Error) Error() string {
+	s.File = "main.sh"
+
+	return fmt.Sprintf("%s(%d:%d): semantic error: %s.", s.File, s.Line, s.Position, s.Msg)
+}
+
+func (a *analyser) report(err Error) {
+	a.errors = append(a.errors, err)
+}
+
 func Analyse(s ast.Script, main bool) error {
 	a := analyser{script: s}
 	a.analyse(main)
@@ -27,7 +43,7 @@ func (a *analyser) analyse(main bool) {
 		if !main {
 			_, ok := statement.(ast.Function)
 			if !ok {
-				a.report(Error{Msg: "Only functions can exist in global scope"})
+				a.report(Error{Msg: "only functions can exist in global scope"})
 				return
 			}
 		}
@@ -121,7 +137,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			}
 		}
 		if !withinFunction {
-			a.report(Error{Msg: "The `local` keyword cannot be used outside functions"})
+			a.report(Error{Msg: "the `local` keyword cannot be used outside functions"})
 		}
 
 		for _, pa := range v {
@@ -151,11 +167,11 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				break loop
 			case ast.List, ast.Break:
 			default:
-				a.report(Error{Msg: "The `break` keyword cannot be used here"})
+				a.report(Error{Msg: "the `break` keyword cannot be used here"})
 			}
 		}
 		if !withinLoop {
-			a.report(Error{Msg: "The `break` keyword cannot be used here"})
+			a.report(Error{Msg: "the `break` keyword cannot be used here"})
 		}
 	case ast.Continue:
 		var withinLoop bool
@@ -167,11 +183,11 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				break loop2
 			case ast.List, ast.Continue:
 			default:
-				a.report(Error{Msg: "The `continue` keyword cannot be used here"})
+				a.report(Error{Msg: "the `continue` keyword cannot be used here"})
 			}
 		}
 		if !withinLoop {
-			a.report(Error{Msg: "The `continue` keyword cannot be used here"})
+			a.report(Error{Msg: "the `continue` keyword cannot be used here"})
 		}
 	case ast.Pipeline:
 		for _, cmd := range v {
@@ -237,7 +253,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 
 		for _, path := range v {
 			if !filepath.IsLocal(path) {
-				a.report(Error{Msg: fmt.Sprintf("the path %q is not local", path)})
+				a.report(Error{Msg: fmt.Sprintf("the path %q cannot be embeded because it is not local to the module", path)})
 			}
 		}
 	case ast.Defer:
@@ -290,19 +306,6 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 	default:
 		a.report(Error{Msg: fmt.Sprintf("Unsupported statement type: %T", v)})
 	}
-}
-
-type Error struct {
-	Line, Position int
-	Msg            string
-}
-
-func (s Error) Error() string {
-	return fmt.Sprintf("semantic error: %s. (line: %d, column: %d)", s.Msg, s.Line, s.Position)
-}
-
-func (a *analyser) report(err Error) {
-	a.errors = append(a.errors, err)
 }
 
 func (a *analyser) analyseArithmeticExpression(s ast.Expression) {

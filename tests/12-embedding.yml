@@ -137,3 +137,17 @@ cases:
     expect:
       stdout: |
         file
+
+  - name: "cannot embed files outside the module"
+    script: |
+      @embed ../file
+    expect:
+      build_error: 'main.sh(0:0): semantic error: the path "../file" cannot be embeded because it is not local to the module.'
+
+  - name: "@embed directive is only valid in global scope"
+    script: |
+      (
+        @embed foo
+      )
+    expect:
+      build_error: "main.sh(0:0): semantic error: using '@embed' directive is only valid in global scope."
