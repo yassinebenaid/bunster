@@ -89,3 +89,31 @@ echo var:foo var2: var3:
 
 > [!TIP]
 > Unlike groups, sub-shells do not require any separator before the closing parenthese.
+
+## Command substitution
+
+Command substitution allows the output of a command to be used as expression, for example as a command name, argument, a variable value etc. Command substitution occurs when a command is enclosed as follows:
+
+```sh
+$(command)
+```
+
+Bunster performs the substitution by executing `command` in a subshell environment and replacing the command substitution with the standard output of the `command`, with any trailing newlines deleted. Embedded newlines are not deleted.
+
+example:
+
+```sh
+echo $( echo foobar )
+```
+
+will output:
+
+```txt
+foobar
+```
+
+You may use as many commands as you like within a command substitution, and all commands, keywords and statments are valid inside command substitution, you can even nest command substitutions.
+
+```sh
+echo $( echo $( echo foobar) )
+```
