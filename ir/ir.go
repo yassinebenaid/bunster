@@ -211,28 +211,6 @@ func (rv ReadSpecialVar) togo() string {
 	return fmt.Sprintf("shell.ReadSpecialVar(%q)", rv)
 }
 
-type InitCommand struct {
-	Name string
-	Args string
-	Env  string
-}
-
-func (ic InitCommand) togo() string {
-	return fmt.Sprintf("shell.Command(%s, %s, %s)", ic.Name, ic.Args, ic.Env)
-}
-
-type RunCommand string
-
-func (r RunCommand) togo() string {
-	return fmt.Sprintf(
-		`if err := %s.Run(shell, streamManager); err != nil {
-			shell.HandleError(streamManager, err)
-			return
-		}
-		shell.ExitCode = %s.ExitCode
-		`, r, r)
-}
-
 type Exec struct {
 	Name string
 	Args string
@@ -281,20 +259,6 @@ func (c Closure) togo() string {
 	`, body)
 }
 
-type Scope []Instruction
-
-func (s Scope) togo() string {
-	var body string
-	for _, ins := range s {
-		body += ins.togo()
-	}
-
-	return fmt.Sprintf(`{
-			%s
-		}
-	`, body)
-}
-
 type Gorouting []Instruction
 
 func (g Gorouting) togo() string {
@@ -331,16 +295,6 @@ func (c ExpressionClosure) togo() string {
 			return
 		}
 		`, c.Name, body)
-}
-
-type SetCmdEnv struct {
-	Command string
-	Key     string
-	Value   Instruction
-}
-
-func (s SetCmdEnv) togo() string {
-	return fmt.Sprintf("%s.Env[%q] = %s\n", s.Command, s.Key, s.Value.togo())
 }
 
 type IfLastExitCode struct {
