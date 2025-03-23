@@ -6,11 +6,15 @@ import (
 )
 
 func (g *generator) handleFunction(buf *InstructionBuffer, function ast.Function) {
-	g.handleRedirections(buf, function.Redirections)
+	var body InstructionBuffer
+
+	g.handleRedirections(&body, function.Redirections)
 
 	for _, cmd := range function.Body {
-		g.generate(buf, cmd)
+		g.generate(&body, cmd)
 	}
+
+	buf.add(ir.Function{Name: function.Name, Body: body, Subshell: function.SubShell})
 }
 
 func (g *generator) handleBreak(buf *InstructionBuffer, _ ast.Break) {

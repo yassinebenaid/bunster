@@ -5,11 +5,11 @@ import (
 )
 
 func Register(shell *runtime.Shell) {
-	shell.RegisterFunction("true", True)
-	shell.RegisterFunction("false", False)
-	shell.RegisterFunction("loadenv", Loadenv)
-	shell.RegisterFunction("embed", Embed)
-	shell.RegisterFunction("shift", Shift)
+	shell.RegisterBuiltin("true", True)
+	shell.RegisterBuiltin("false", False)
+	shell.RegisterBuiltin("loadenv", Loadenv)
+	shell.RegisterBuiltin("embed", Embed)
+	shell.RegisterBuiltin("shift", Shift)
 }
 
 func True(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {

@@ -67,9 +67,7 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement) {
 	case ast.Wait:
 		g.handleWait(buf, v)
 	case ast.Function:
-		var body InstructionBuffer
-		g.handleFunction(&body, v)
-		buf.add(ir.Function{Name: v.Name, Body: body})
+		g.handleFunction(buf, v)
 	case ast.Defer:
 		var body InstructionBuffer
 		g.generate(&body, v.Command)
@@ -158,33 +156,25 @@ func (g *generator) handlePipeline(buf *InstructionBuffer, p ast.Pipeline) {
 func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command) {
 	var cmdbuf InstructionBuffer
 
+	cmdbuf.add(ir.CloneStreamManager{})
+	g.handleRedirections(&cmdbuf, cmd.Redirections)
+
 	cmdbuf.add(ir.Declare{Name: "commandName", Value: g.handleExpression(&cmdbuf, cmd.Name)})
 	cmdbuf.add(ir.DeclareSlice{Name: "arguments"})
+	cmdbuf.add(ir.DeclareMap("env"))
 
 	for _, arg := range cmd.Args {
 		cmdbuf.add(ir.Append{Name: "arguments", Value: g.handleExpression(&cmdbuf, arg)})
 	}
-
-	cmdbuf.add(ir.Declare{
-		Name:  "command",
-		Value: ir.InitCommand{Name: "commandName", Args: "arguments"},
-	})
-
 	for _, env := range cmd.Env {
 		var value ir.Instruction = ir.String("")
 		if env.Value != nil {
 			value = g.handleExpression(&cmdbuf, env.Value)
 		}
-		cmdbuf.add(ir.SetCmdEnv{Command: "command", Key: env.Name, Value: value})
+		cmdbuf.add(ir.SetMap{Name: "env", Key: env.Name, Value: value})
 	}
 
-	cmdbuf.add(ir.CloneStreamManager{})
-	g.handleRedirections(&cmdbuf, cmd.Redirections)
-	cmdbuf.add(ir.SetStream{Name: "command.Stdin", Fd: ir.String("0")})
-	cmdbuf.add(ir.SetStream{Name: "command.Stdout", Fd: ir.String("1")})
-	cmdbuf.add(ir.SetStream{Name: "command.Stderr", Fd: ir.String("2")})
-
-	cmdbuf.add(ir.RunCommand("command"))
+	cmdbuf.add(ir.Exec{Name: "commandName", Args: "arguments", Env: "env"})
 	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 

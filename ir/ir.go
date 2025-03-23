@@ -107,6 +107,12 @@ func (d DeclareSlice) togo() string {
 	return fmt.Sprintf("var %s []string\n", d.Name)
 }
 
+type DeclareMap string
+
+func (d DeclareMap) togo() string {
+	return fmt.Sprintf("var %s = make(map[string]string)\n", d)
+}
+
 type Set struct {
 	Name  string
 	Value Instruction
@@ -123,6 +129,16 @@ type Append struct {
 
 func (a Append) togo() string {
 	return fmt.Sprintf("%s = append(%s, %s)\n", a.Name, a.Name, a.Value.togo())
+}
+
+type SetMap struct {
+	Name  string
+	Key   string
+	Value Instruction
+}
+
+func (a SetMap) togo() string {
+	return fmt.Sprintf("%s[%q] = %s\n", a.Name, a.Key, a.Value.togo())
 }
 
 type String string
@@ -198,17 +214,18 @@ func (rv ReadSpecialVar) togo() string {
 type InitCommand struct {
 	Name string
 	Args string
+	Env  string
 }
 
 func (ic InitCommand) togo() string {
-	return fmt.Sprintf("shell.Command(%s, %s...)", ic.Name, ic.Args)
+	return fmt.Sprintf("shell.Command(%s, %s, %s)", ic.Name, ic.Args, ic.Env)
 }
 
 type RunCommand string
 
 func (r RunCommand) togo() string {
 	return fmt.Sprintf(
-		`if err := %s.Run(); err != nil {
+		`if err := %s.Run(shell, streamManager); err != nil {
 			shell.HandleError(streamManager, err)
 			return
 		}
@@ -216,15 +233,20 @@ func (r RunCommand) togo() string {
 		`, r, r)
 }
 
-type StartCommand string
+type Exec struct {
+	Name string
+	Args string
+	Env  string
+}
 
-func (r StartCommand) togo() string {
+func (e Exec) togo() string {
 	return fmt.Sprintf(
-		`if err := %s.Start(); err != nil {
+		`if err := shell.Exec(streamManager, %s, %s, %s); err != nil {
 			shell.HandleError(streamManager, err)
 			return
 		}
-		`, r)
+		`, e.Name, e.Args, e.Env,
+	)
 }
 
 type Procedure struct {
@@ -428,8 +450,9 @@ func (i InvertExitCode) togo() string {
 }
 
 type Function struct {
-	Name string
-	Body []Instruction
+	Name     string
+	Body     []Instruction
+	Subshell bool
 }
 
 func (f Function) togo() string {
@@ -438,12 +461,19 @@ func (f Function) togo() string {
 		body += ins.togo()
 	}
 
+	if f.Subshell {
+		return fmt.Sprintf(
+			"shell.RegisterFunction(%q, func(shell *runtime.Shell, streamManager *runtime.StreamManager){"+`
+					shell = shell.Clone()	
+					defer shell.Terminate(streamManager)
+				%s
+			`+"})\n",
+			f.Name, body,
+		)
+	}
+
 	return fmt.Sprintf(
-		"shell.RegisterFunction(%q, func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream){"+`
-			streamManager := streamManager.Clone()
-			streamManager.Add("0", stdin)
-			streamManager.Add("1", stdout)
-			streamManager.Add("2", stderr)
+		"shell.RegisterFunction(%q, func(shell *runtime.Shell, streamManager *runtime.StreamManager){"+`
 			defer shell.Terminate(streamManager)
 			%s
 		`+"})\n",

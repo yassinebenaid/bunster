@@ -17,7 +17,8 @@ func NewShell() *Shell {
 	shell.env = newRepository[string]()
 	shell.localVars = newRepository[string]()
 	shell.exportedVars = newRepository[struct{}]()
-	shell.functions = newRepository[PredefinedCommand]()
+	shell.functions = newRepository[Function]()
+	shell.builtins = newRepository[Builtin]()
 
 	for _, env := range os.Environ() {
 		envs := strings.SplitN(env, "=", 2)
@@ -27,13 +28,8 @@ func NewShell() *Shell {
 	return shell
 }
 
-type ExitError int
-
-func (e ExitError) Error() string {
-	return fmt.Sprintf("exit code %d", e)
-}
-
-type PredefinedCommand func(shell *Shell, stdin, stdout, stderr Stream)
+type Function func(shell *Shell, streamManager *StreamManager)
+type Builtin func(shell *Shell, stdin, stdout, stderr Stream)
 
 type Shell struct {
 	parent    *Shell
@@ -48,7 +44,8 @@ type Shell struct {
 	env          *repository[string]
 	localVars    *repository[string]
 	exportedVars *repository[struct{}]
-	functions    *repository[PredefinedCommand]
+	functions    *repository[Function]
+	builtins     *repository[Builtin]
 	defered      []func(*Shell, *StreamManager)
 }
 
@@ -168,8 +165,6 @@ func (shell *Shell) HandleError(sm *StreamManager, err error) {
 		fmt.Fprintf(stderr, "%q: %v\n", e.Path, e.Err)
 	case *exec.ExitError:
 		shell.ExitCode = e.ExitCode()
-	case ExitError:
-		shell.ExitCode = int(e)
 	default:
 		fmt.Fprintln(stderr, err)
 	}
@@ -183,6 +178,7 @@ func (shell *Shell) Clone() *Shell {
 		Args:         shell.Args,
 		Embed:        shell.Embed,
 		functions:    shell.functions.clone(),
+		builtins:     shell.builtins.clone(),
 		vars:         shell.vars.clone(),
 		localVars:    shell.localVars.clone(),
 		env:          shell.env.clone(),
@@ -192,8 +188,12 @@ func (shell *Shell) Clone() *Shell {
 	return sh
 }
 
-func (shell *Shell) RegisterFunction(name string, handler PredefinedCommand) {
+func (shell *Shell) RegisterFunction(name string, handler Function) {
 	shell.functions.set(name, handler)
+}
+
+func (shell *Shell) RegisterBuiltin(name string, handler Builtin) {
+	shell.builtins.set(name, handler)
 }
 
 func (shell *Shell) Defer(handler func(*Shell, *StreamManager)) {
@@ -207,108 +207,80 @@ func (shell *Shell) Terminate(streamManager *StreamManager) {
 	}
 }
 
-func (shell *Shell) Command(name string, args ...string) *Command {
-	var command Command
-	command.shell = shell
-	command.Args = args
-	command.Name = name
-	command.Env = make(map[string]string)
+func (shell *Shell) Exec(streamManager *StreamManager, name string, args []string, env map[string]string) error {
+	var childShell Shell
+	function, isFunc := shell.functions.get(name)
+	builtin, isBuiltin := shell.builtins.get(name)
 
-	if fn, ok := shell.functions.get(name); ok {
-		command.function = fn
-		return &command
-	}
-
-	return &command
-}
-
-type Command struct {
-	shell  *Shell
-	Name   string
-	Args   []string
-	Stdin  Stream
-	Stdout Stream
-	Stderr Stream
-	Env    map[string]string
-
-	ExitCode int
-
-	function PredefinedCommand
-	execCmd  *exec.Cmd
-	wg       sync.WaitGroup
-}
-
-func (cmd *Command) Run() error {
-	if err := cmd.Start(); err != nil {
-		return err
-	}
-	if err := cmd.Wait(); err != nil {
-		return err
-	}
-	if cmd.function == nil {
-		cmd.ExitCode = cmd.execCmd.ProcessState.ExitCode()
-	}
-	return nil
-}
-
-func (cmd *Command) Start() error {
-	if cmd.function != nil {
-		shell := Shell{
-			parent:       cmd.shell,
-			Path:         cmd.shell.Path,
-			PID:          cmd.shell.PID,
-			Embed:        cmd.shell.Embed,
-			Args:         cmd.Args[:],
-			functions:    cmd.shell.functions,
-			vars:         cmd.shell.vars,
-			env:          cmd.shell.env.clone(),
+	if isFunc || isBuiltin {
+		childShell = Shell{
+			parent:       shell,
+			Path:         shell.Path,
+			PID:          shell.PID,
+			Embed:        shell.Embed,
+			Args:         args,
+			functions:    shell.functions,
+			builtins:     shell.builtins,
+			vars:         shell.vars,
+			env:          shell.env.clone(),
 			localVars:    newRepository[string](),
-			ExitCode:     cmd.shell.ExitCode,
-			exportedVars: cmd.shell.exportedVars,
+			ExitCode:     shell.ExitCode,
+			exportedVars: shell.exportedVars,
 		}
 
-		for key, value := range cmd.Env {
-			shell.env.set(key, value)
+		for key, value := range env {
+			childShell.env.set(key, value)
 		}
+	}
 
-		cmd.wg.Add(1)
-		go func() {
-			cmd.function(&shell, cmd.Stdin, cmd.Stdout, cmd.Stderr)
-			cmd.ExitCode = shell.ExitCode
-			cmd.wg.Done()
-		}()
+	if isFunc {
+		function(&childShell, streamManager)
+		shell.ExitCode = childShell.ExitCode
 		return nil
 	}
 
-	cmd.execCmd = exec.Command(cmd.Name, cmd.Args...) //nolint:gosec
-	cmd.execCmd.Stdin = cmd.Stdin
-	cmd.execCmd.Stdout = cmd.Stdout
-	cmd.execCmd.Stderr = cmd.Stderr
-
-	cmd.shell.env.foreach(func(key string, value string) bool {
-		cmd.execCmd.Env = append(cmd.execCmd.Env, fmt.Sprintf("%s=%s", key, value))
-		return true
-	})
-	cmd.shell.exportedVars.foreach(func(key string, _ struct{}) bool {
-		cmd.execCmd.Env = append(cmd.execCmd.Env, fmt.Sprintf("%s=%s", key, cmd.shell.ReadVar(key)))
-		return true
-	})
-	for key, value := range cmd.Env {
-		cmd.execCmd.Env = append(cmd.execCmd.Env, key+"="+value)
+	stdin, err := streamManager.Get("0")
+	if err != nil {
+		return err
+	}
+	stdout, err := streamManager.Get("1")
+	if err != nil {
+		return err
+	}
+	stderr, err := streamManager.Get("2")
+	if err != nil {
+		return err
 	}
 
-	return cmd.execCmd.Start()
-}
-
-func (cmd *Command) Wait() error {
-	if cmd.function != nil {
-		cmd.wg.Wait()
-		if cmd.ExitCode != 0 {
-			return ExitError(cmd.ExitCode)
-		}
+	if isBuiltin {
+		builtin(&childShell, stdin, stdout, stderr)
+		shell.ExitCode = childShell.ExitCode
 		return nil
 	}
-	return cmd.execCmd.Wait()
+
+	execCmd := exec.Command(name, args...) //nolint:gosec
+	execCmd.Stdin = stdin
+	execCmd.Stdout = stdout
+	execCmd.Stderr = stderr
+
+	shell.env.foreach(func(key string, value string) bool {
+		execCmd.Env = append(execCmd.Env, key+"="+value)
+		return true
+	})
+	shell.exportedVars.foreach(func(key string, _ struct{}) bool {
+		execCmd.Env = append(execCmd.Env, key+"="+shell.ReadVar(key))
+		return true
+	})
+	for key, value := range env {
+		execCmd.Env = append(execCmd.Env, key+"="+value)
+	}
+
+	if err := execCmd.Run(); err != nil {
+		return err
+	}
+
+	shell.ExitCode = execCmd.ProcessState.ExitCode()
+	return nil
 }
 
 type repository[T any] struct {
