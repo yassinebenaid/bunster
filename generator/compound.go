@@ -233,5 +233,11 @@ func (g *generator) handleCase(buf *InstructionBuffer, _case ast.Case) {
 	cmdbuf.add(ir.CloneStreamManager{})
 	g.handleRedirections(&cmdbuf, _case.Redirections)
 
+	cmdbuf.add(ir.Declare{Name: "needle", Value: g.handleExpression(&cmdbuf, _case.Word)})
+
+	for _, branch := range _case.Cases {
+		_ = branch
+	}
+
 	buf.add(ir.Closure(cmdbuf))
 }
