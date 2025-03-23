@@ -82,14 +82,12 @@ cases:
 
       foo >func2.txt <<<"foobar" 3>third2.txt 4>fourth.txt
     expect:
-      exit_code: 1
-      stderr: "trying to duplicate bad file descriptor: 4\n"
       files:
         func.txt: "hello world\n"
         func2.txt: ""
         third.txt: "hey\n"
         third2.txt: ""
-        fourth.txt: ""
+        fourth.txt: "cool\n"
 
   - name: "can pass positional arguments to functions"
     args: [foo, bar]

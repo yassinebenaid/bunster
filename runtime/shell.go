@@ -17,7 +17,8 @@ func NewShell() *Shell {
 	shell.env = newRepository[string]()
 	shell.localVars = newRepository[string]()
 	shell.exportedVars = newRepository[struct{}]()
-	shell.functions = newRepository[PredefinedCommand]()
+	shell.functions = newRepository[Function]()
+	shell.builtins = newRepository[Builtin]()
 
 	for _, env := range os.Environ() {
 		envs := strings.SplitN(env, "=", 2)
@@ -27,7 +28,8 @@ func NewShell() *Shell {
 	return shell
 }
 
-type PredefinedCommand func(shell *Shell, stdin, stdout, stderr Stream)
+type Function func(shell *Shell, streamManager *StreamManager)
+type Builtin func(shell *Shell, stdin, stdout, stderr Stream)
 
 type Shell struct {
 	parent    *Shell
@@ -42,7 +44,8 @@ type Shell struct {
 	env          *repository[string]
 	localVars    *repository[string]
 	exportedVars *repository[struct{}]
-	functions    *repository[PredefinedCommand]
+	functions    *repository[Function]
+	builtins     *repository[Builtin]
 	defered      []func(*Shell, *StreamManager)
 }
 
@@ -175,6 +178,7 @@ func (shell *Shell) Clone() *Shell {
 		Args:         shell.Args,
 		Embed:        shell.Embed,
 		functions:    shell.functions.clone(),
+		builtins:     shell.builtins.clone(),
 		vars:         shell.vars.clone(),
 		localVars:    shell.localVars.clone(),
 		env:          shell.env.clone(),
@@ -184,8 +188,12 @@ func (shell *Shell) Clone() *Shell {
 	return sh
 }
 
-func (shell *Shell) RegisterFunction(name string, handler PredefinedCommand) {
+func (shell *Shell) RegisterFunction(name string, handler Function) {
 	shell.functions.set(name, handler)
+}
+
+func (shell *Shell) RegisterBuiltin(name string, handler Builtin) {
+	shell.builtins.set(name, handler)
 }
 
 func (shell *Shell) Defer(handler func(*Shell, *StreamManager)) {
@@ -200,6 +208,31 @@ func (shell *Shell) Terminate(streamManager *StreamManager) {
 }
 
 func (shell *Shell) Exec(streamManager *StreamManager, name string, args []string, env map[string]string) error {
+	if fn, ok := shell.functions.get(name); ok {
+		childShell := Shell{
+			parent:       shell,
+			Path:         shell.Path,
+			PID:          shell.PID,
+			Embed:        shell.Embed,
+			Args:         args,
+			functions:    shell.functions,
+			builtins:     shell.builtins,
+			vars:         shell.vars,
+			env:          shell.env.clone(),
+			localVars:    newRepository[string](),
+			ExitCode:     shell.ExitCode,
+			exportedVars: shell.exportedVars,
+		}
+
+		for key, value := range env {
+			childShell.env.set(key, value)
+		}
+
+		fn(&childShell, streamManager)
+		shell.ExitCode = childShell.ExitCode
+		return nil
+	}
+
 	stdin, err := streamManager.Get("0")
 	if err != nil {
 		return err
@@ -213,7 +246,7 @@ func (shell *Shell) Exec(streamManager *StreamManager, name string, args []strin
 		return err
 	}
 
-	if fn, ok := shell.functions.get(name); ok {
+	if builtin, ok := shell.builtins.get(name); ok {
 		childShell := Shell{
 			parent:       shell,
 			Path:         shell.Path,
@@ -221,6 +254,7 @@ func (shell *Shell) Exec(streamManager *StreamManager, name string, args []strin
 			Embed:        shell.Embed,
 			Args:         args,
 			functions:    shell.functions,
+			builtins:     shell.builtins,
 			vars:         shell.vars,
 			env:          shell.env.clone(),
 			localVars:    newRepository[string](),
@@ -232,7 +266,7 @@ func (shell *Shell) Exec(streamManager *StreamManager, name string, args []strin
 			childShell.env.set(key, value)
 		}
 
-		fn(&childShell, stdin, stdout, stderr)
+		builtin(&childShell, stdin, stdout, stderr)
 		shell.ExitCode = childShell.ExitCode
 		return nil
 	}

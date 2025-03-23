@@ -461,11 +461,7 @@ func (f Function) togo() string {
 	}
 
 	return fmt.Sprintf(
-		"shell.RegisterFunction(%q, func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream){"+`
-			streamManager := streamManager.Clone()
-			streamManager.Add("0", stdin)
-			streamManager.Add("1", stdout)
-			streamManager.Add("2", stderr)
+		"shell.RegisterFunction(%q, func(shell *runtime.Shell, streamManager *runtime.StreamManager){"+`
 			defer shell.Terminate(streamManager)
 			%s
 		`+"})\n",
