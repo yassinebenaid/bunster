@@ -372,6 +372,22 @@ cases:
         var:
         var:foo
 
+  - name: "can declare function to run in subshell"
+    script: |
+      var=foo
+
+      func()(
+        var=bar
+      )
+
+      echo var:$var
+      func
+      echo var:$var
+    expect:
+      stdout: |
+        var:foo
+        var:foo
+
   - name: "local variable cannot be declared outside of functions"
     script: |
       local var

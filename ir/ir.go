@@ -450,14 +450,26 @@ func (i InvertExitCode) togo() string {
 }
 
 type Function struct {
-	Name string
-	Body []Instruction
+	Name     string
+	Body     []Instruction
+	Subshell bool
 }
 
 func (f Function) togo() string {
 	var body string
 	for _, ins := range f.Body {
 		body += ins.togo()
+	}
+
+	if f.Subshell {
+		return fmt.Sprintf(
+			"shell.RegisterFunction(%q, func(shell *runtime.Shell, streamManager *runtime.StreamManager){"+`
+					shell = shell.Clone()	
+					defer shell.Terminate(streamManager)
+				%s
+			`+"})\n",
+			f.Name, body,
+		)
 	}
 
 	return fmt.Sprintf(
