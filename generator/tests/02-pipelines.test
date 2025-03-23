@@ -3,7 +3,6 @@
 cat file.txt | grep foobar
 
 #(RESULT)
-
 package main
 
 import "github.com/yassinebenaid/bunster/runtime"
@@ -31,35 +30,16 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			go func() {
 				defer func() { done <- struct{}{} }()
 				func() {
-					var commandName = "cat"
-					var arguments []string
-					arguments = append(arguments, "file.txt")
-					var command = shell.Command(commandName, arguments...)
 					streamManager := streamManager.Clone()
 					defer streamManager.Destroy()
-					if stream, err := streamManager.Get("0"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stdin = stream
-					}
-					if stream, err := streamManager.Get("1"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stdout = stream
-					}
-					if stream, err := streamManager.Get("2"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stderr = stream
-					}
-					if err := command.Run(); err != nil {
+					var commandName = "cat"
+					var arguments []string
+					var env = make(map[string]string)
+					arguments = append(arguments, "file.txt")
+					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
 						shell.HandleError(streamManager, err)
 						return
 					}
-					shell.ExitCode = command.ExitCode
 
 				}()
 
@@ -80,35 +60,16 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			go func() {
 				defer func() { done <- struct{}{} }()
 				func() {
-					var commandName = "grep"
-					var arguments []string
-					arguments = append(arguments, "foobar")
-					var command = shell.Command(commandName, arguments...)
 					streamManager := streamManager.Clone()
 					defer streamManager.Destroy()
-					if stream, err := streamManager.Get("0"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stdin = stream
-					}
-					if stream, err := streamManager.Get("1"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stdout = stream
-					}
-					if stream, err := streamManager.Get("2"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stderr = stream
-					}
-					if err := command.Run(); err != nil {
+					var commandName = "grep"
+					var arguments []string
+					var env = make(map[string]string)
+					arguments = append(arguments, "foobar")
+					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
 						shell.HandleError(streamManager, err)
 						return
 					}
-					shell.ExitCode = command.ExitCode
 
 				}()
 
@@ -134,7 +95,6 @@ cat file.txt |
     strjoin ', '
 
 #(RESULT)
-
 package main
 
 import "github.com/yassinebenaid/bunster/runtime"
@@ -162,35 +122,16 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			go func() {
 				defer func() { done <- struct{}{} }()
 				func() {
-					var commandName = "cat"
-					var arguments []string
-					arguments = append(arguments, "file.txt")
-					var command = shell.Command(commandName, arguments...)
 					streamManager := streamManager.Clone()
 					defer streamManager.Destroy()
-					if stream, err := streamManager.Get("0"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stdin = stream
-					}
-					if stream, err := streamManager.Get("1"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stdout = stream
-					}
-					if stream, err := streamManager.Get("2"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stderr = stream
-					}
-					if err := command.Run(); err != nil {
+					var commandName = "cat"
+					var arguments []string
+					var env = make(map[string]string)
+					arguments = append(arguments, "file.txt")
+					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
 						shell.HandleError(streamManager, err)
 						return
 					}
-					shell.ExitCode = command.ExitCode
 
 				}()
 
@@ -217,35 +158,16 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			go func() {
 				defer func() { done <- struct{}{} }()
 				func() {
-					var commandName = "grep"
-					var arguments []string
-					arguments = append(arguments, "foobar")
-					var command = shell.Command(commandName, arguments...)
 					streamManager := streamManager.Clone()
 					defer streamManager.Destroy()
-					if stream, err := streamManager.Get("0"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stdin = stream
-					}
-					if stream, err := streamManager.Get("1"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stdout = stream
-					}
-					if stream, err := streamManager.Get("2"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stderr = stream
-					}
-					if err := command.Run(); err != nil {
+					var commandName = "grep"
+					var arguments []string
+					var env = make(map[string]string)
+					arguments = append(arguments, "foobar")
+					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
 						shell.HandleError(streamManager, err)
 						return
 					}
-					shell.ExitCode = command.ExitCode
 
 				}()
 
@@ -272,36 +194,17 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			go func() {
 				defer func() { done <- struct{}{} }()
 				func() {
-					var commandName = "strep"
-					var arguments []string
-					arguments = append(arguments, "[o]+")
-					arguments = append(arguments, "o")
-					var command = shell.Command(commandName, arguments...)
 					streamManager := streamManager.Clone()
 					defer streamManager.Destroy()
-					if stream, err := streamManager.Get("0"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stdin = stream
-					}
-					if stream, err := streamManager.Get("1"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stdout = stream
-					}
-					if stream, err := streamManager.Get("2"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stderr = stream
-					}
-					if err := command.Run(); err != nil {
+					var commandName = "strep"
+					var arguments []string
+					var env = make(map[string]string)
+					arguments = append(arguments, "[o]+")
+					arguments = append(arguments, "o")
+					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
 						shell.HandleError(streamManager, err)
 						return
 					}
-					shell.ExitCode = command.ExitCode
 
 				}()
 
@@ -322,35 +225,16 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			go func() {
 				defer func() { done <- struct{}{} }()
 				func() {
-					var commandName = "strjoin"
-					var arguments []string
-					arguments = append(arguments, ", ")
-					var command = shell.Command(commandName, arguments...)
 					streamManager := streamManager.Clone()
 					defer streamManager.Destroy()
-					if stream, err := streamManager.Get("0"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stdin = stream
-					}
-					if stream, err := streamManager.Get("1"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stdout = stream
-					}
-					if stream, err := streamManager.Get("2"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stderr = stream
-					}
-					if err := command.Run(); err != nil {
+					var commandName = "strjoin"
+					var arguments []string
+					var env = make(map[string]string)
+					arguments = append(arguments, ", ")
+					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
 						shell.HandleError(streamManager, err)
 						return
 					}
-					shell.ExitCode = command.ExitCode
 
 				}()
 
@@ -373,7 +257,6 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 cat file.txt |& grep foobar
 
 #(RESULT)
-
 package main
 
 import "github.com/yassinebenaid/bunster/runtime"
@@ -402,35 +285,16 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			go func() {
 				defer func() { done <- struct{}{} }()
 				func() {
-					var commandName = "cat"
-					var arguments []string
-					arguments = append(arguments, "file.txt")
-					var command = shell.Command(commandName, arguments...)
 					streamManager := streamManager.Clone()
 					defer streamManager.Destroy()
-					if stream, err := streamManager.Get("0"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stdin = stream
-					}
-					if stream, err := streamManager.Get("1"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stdout = stream
-					}
-					if stream, err := streamManager.Get("2"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stderr = stream
-					}
-					if err := command.Run(); err != nil {
+					var commandName = "cat"
+					var arguments []string
+					var env = make(map[string]string)
+					arguments = append(arguments, "file.txt")
+					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
 						shell.HandleError(streamManager, err)
 						return
 					}
-					shell.ExitCode = command.ExitCode
 
 				}()
 
@@ -451,35 +315,16 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			go func() {
 				defer func() { done <- struct{}{} }()
 				func() {
-					var commandName = "grep"
-					var arguments []string
-					arguments = append(arguments, "foobar")
-					var command = shell.Command(commandName, arguments...)
 					streamManager := streamManager.Clone()
 					defer streamManager.Destroy()
-					if stream, err := streamManager.Get("0"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stdin = stream
-					}
-					if stream, err := streamManager.Get("1"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stdout = stream
-					}
-					if stream, err := streamManager.Get("2"); err != nil {
-						shell.HandleError(streamManager, err)
-						return
-					} else {
-						command.Stderr = stream
-					}
-					if err := command.Run(); err != nil {
+					var commandName = "grep"
+					var arguments []string
+					var env = make(map[string]string)
+					arguments = append(arguments, "foobar")
+					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
 						shell.HandleError(streamManager, err)
 						return
 					}
-					shell.ExitCode = command.ExitCode
 
 				}()
 
@@ -498,43 +343,27 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 
 #(TEST: can invert exit code )
+
 ! command
+
 #(RESULT)
+
 package main
 
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-    defer shell.Terminate(streamManager)
+	defer shell.Terminate(streamManager)
 	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
 		var commandName = "command"
 		var arguments []string
-		var command = shell.Command(commandName, arguments...)
-		streamManager := streamManager.Clone()
-        defer streamManager.Destroy()
-		if stream, err := streamManager.Get("0"); err != nil {
-        shell.HandleError(streamManager, err)
-        return
-        } else {
-            command.Stdin = stream
-        }
-        if stream, err := streamManager.Get("1"); err != nil {
-            shell.HandleError(streamManager, err)
-            return
-        } else {
-            command.Stdout = stream
-        }
-        if stream, err := streamManager.Get("2"); err != nil {
-            shell.HandleError(streamManager, err)
-            return
-        } else {
-            command.Stderr = stream
-        }
-		if err := command.Run(); err != nil {
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
 			shell.HandleError(streamManager, err)
 			return
 		}
-        shell.ExitCode = command.ExitCode
 
 	}()
 	if shell.ExitCode == 0 {
@@ -549,43 +378,27 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 
 #(TEST: can invert exit code recursivly)
+
 ! ! command
+
 #(RESULT)
+
 package main
 
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-    defer shell.Terminate(streamManager)
+	defer shell.Terminate(streamManager)
 	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
 		var commandName = "command"
 		var arguments []string
-		var command = shell.Command(commandName, arguments...)
-		streamManager := streamManager.Clone()
-        defer streamManager.Destroy()
-		if stream, err := streamManager.Get("0"); err != nil {
-        shell.HandleError(streamManager, err)
-        return
-        } else {
-            command.Stdin = stream
-        }
-        if stream, err := streamManager.Get("1"); err != nil {
-            shell.HandleError(streamManager, err)
-            return
-        } else {
-            command.Stdout = stream
-        }
-        if stream, err := streamManager.Get("2"); err != nil {
-            shell.HandleError(streamManager, err)
-            return
-        } else {
-            command.Stderr = stream
-        }
-		if err := command.Run(); err != nil {
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
 			shell.HandleError(streamManager, err)
 			return
 		}
-        shell.ExitCode = command.ExitCode
 
 	}()
 	if shell.ExitCode == 0 {
@@ -599,5 +412,6 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		shell.ExitCode = 0
 	}
 }
+
 
 #(ENDTEST)

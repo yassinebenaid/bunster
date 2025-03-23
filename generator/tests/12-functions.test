@@ -11,44 +11,21 @@ package main
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-    defer shell.Terminate(streamManager)
-	shell.RegisterFunction("foobar", func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
-		streamManager := streamManager.Clone()
-		streamManager.Add("0", stdin)
-		streamManager.Add("1", stdout)
-		streamManager.Add("2", stderr)
+	defer shell.Terminate(streamManager)
+	shell.RegisterFunction("foobar", func(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		defer shell.Terminate(streamManager)
 		func() {
-			var commandName = "echo"
-			var arguments []string
-			arguments = append(arguments, "foo")
-			arguments = append(arguments, "bar")
-			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
-			if stream, err := streamManager.Get("0"); err != nil {
-					shell.HandleError(streamManager, err)
-				return
-			} else {
-				command.Stdin = stream
-			}
-			if stream, err := streamManager.Get("1"); err != nil {
-					shell.HandleError(streamManager, err)
-				return
-			} else {
-				command.Stdout = stream
-			}
-			if stream, err := streamManager.Get("2"); err != nil {
-					shell.HandleError(streamManager, err)
-				return
-			} else {
-				command.Stderr = stream
-			}
-			if err := command.Run(); err != nil {
-					shell.HandleError(streamManager, err)
+			var commandName = "echo"
+			var arguments []string
+			var env = make(map[string]string)
+			arguments = append(arguments, "foo")
+			arguments = append(arguments, "bar")
+			if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+				shell.HandleError(streamManager, err)
 				return
 			}
-			shell.ExitCode = command.ExitCode
 
 		}()
 
@@ -66,50 +43,26 @@ foobar() {
 }
 
 #(RESULT)
-
 package main
 
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-    defer shell.Terminate(streamManager)
-	shell.RegisterFunction("foobar", func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
-		streamManager := streamManager.Clone()
-		streamManager.Add("0", stdin)
-		streamManager.Add("1", stdout)
-		streamManager.Add("2", stderr)
+	defer shell.Terminate(streamManager)
+	shell.RegisterFunction("foobar", func(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		defer shell.Terminate(streamManager)
 		func() {
-			var commandName = "echo"
-			var arguments []string
-			arguments = append(arguments, "foo")
-			arguments = append(arguments, "bar")
-			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
-			if stream, err := streamManager.Get("0"); err != nil {
-					shell.HandleError(streamManager, err)
-				return
-			} else {
-				command.Stdin = stream
-			}
-			if stream, err := streamManager.Get("1"); err != nil {
-					shell.HandleError(streamManager, err)
-				return
-			} else {
-				command.Stdout = stream
-			}
-			if stream, err := streamManager.Get("2"); err != nil {
-					shell.HandleError(streamManager, err)
-				return
-			} else {
-				command.Stderr = stream
-			}
-			if err := command.Run(); err != nil {
-					shell.HandleError(streamManager, err)
+			var commandName = "echo"
+			var arguments []string
+			var env = make(map[string]string)
+			arguments = append(arguments, "foo")
+			arguments = append(arguments, "bar")
+			if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+				shell.HandleError(streamManager, err)
 				return
 			}
-			shell.ExitCode = command.ExitCode
 
 		}()
 
@@ -130,92 +83,45 @@ foobar() {
 }
 
 #(RESULT)
-
 package main
 
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-    defer shell.Terminate(streamManager)
-	shell.RegisterFunction("foobar", func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
-		streamManager := streamManager.Clone()
-		streamManager.Add("0", stdin)
-		streamManager.Add("1", stdout)
-		streamManager.Add("2", stderr)
+	defer shell.Terminate(streamManager)
+	shell.RegisterFunction("foobar", func(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		defer shell.Terminate(streamManager)
 		func() {
-			var commandName = "echo"
-			var arguments []string
-			arguments = append(arguments, "foo")
-			arguments = append(arguments, "bar")
-			var command = shell.Command(commandName, arguments...)
 			streamManager := streamManager.Clone()
 			defer streamManager.Destroy()
-			if stream, err := streamManager.Get("0"); err != nil {
-					shell.HandleError(streamManager, err)
-				return
-			} else {
-				command.Stdin = stream
-			}
-			if stream, err := streamManager.Get("1"); err != nil {
-					shell.HandleError(streamManager, err)
-				return
-			} else {
-				command.Stdout = stream
-			}
-			if stream, err := streamManager.Get("2"); err != nil {
-					shell.HandleError(streamManager, err)
-				return
-			} else {
-				command.Stderr = stream
-			}
-			if err := command.Run(); err != nil {
-					shell.HandleError(streamManager, err)
+			var commandName = "echo"
+			var arguments []string
+			var env = make(map[string]string)
+			arguments = append(arguments, "foo")
+			arguments = append(arguments, "bar")
+			if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+				shell.HandleError(streamManager, err)
 				return
 			}
-			shell.ExitCode = command.ExitCode
 
 		}()
 
 	})
 	if shell.ExitCode == 0 {
-		shell.RegisterFunction("foobar", func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
-			streamManager := streamManager.Clone()
-			streamManager.Add("0", stdin)
-			streamManager.Add("1", stdout)
-			streamManager.Add("2", stderr)
+		shell.RegisterFunction("foobar", func(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			defer shell.Terminate(streamManager)
 			func() {
-				var commandName = "echo"
-				var arguments []string
-				arguments = append(arguments, "foo")
-				arguments = append(arguments, "bar")
-				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
-				if stream, err := streamManager.Get("0"); err != nil {
-						shell.HandleError(streamManager, err)
-					return
-				} else {
-					command.Stdin = stream
-				}
-				if stream, err := streamManager.Get("1"); err != nil {
-						shell.HandleError(streamManager, err)
-					return
-				} else {
-					command.Stdout = stream
-				}
-				if stream, err := streamManager.Get("2"); err != nil {
-						shell.HandleError(streamManager, err)
-					return
-				} else {
-					command.Stderr = stream
-				}
-				if err := command.Run(); err != nil {
-						shell.HandleError(streamManager, err)
+				var commandName = "echo"
+				var arguments []string
+				var env = make(map[string]string)
+				arguments = append(arguments, "foo")
+				arguments = append(arguments, "bar")
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
 					return
 				}
-				shell.ExitCode = command.ExitCode
 
 			}()
 
@@ -223,43 +129,20 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 	}
 	if shell.ExitCode != 0 {
-		shell.RegisterFunction("foobar", func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
-			streamManager := streamManager.Clone()
-			streamManager.Add("0", stdin)
-			streamManager.Add("1", stdout)
-			streamManager.Add("2", stderr)
+		shell.RegisterFunction("foobar", func(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			defer shell.Terminate(streamManager)
 			func() {
-				var commandName = "echo"
-				var arguments []string
-				arguments = append(arguments, "foo")
-				arguments = append(arguments, "bar")
-				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
-				if stream, err := streamManager.Get("0"); err != nil {
-						shell.HandleError(streamManager, err)
-					return
-				} else {
-					command.Stdin = stream
-				}
-				if stream, err := streamManager.Get("1"); err != nil {
-						shell.HandleError(streamManager, err)
-					return
-				} else {
-					command.Stdout = stream
-				}
-				if stream, err := streamManager.Get("2"); err != nil {
-						shell.HandleError(streamManager, err)
-					return
-				} else {
-					command.Stderr = stream
-				}
-				if err := command.Run(); err != nil {
-						shell.HandleError(streamManager, err)
+				var commandName = "echo"
+				var arguments []string
+				var env = make(map[string]string)
+				arguments = append(arguments, "foo")
+				arguments = append(arguments, "bar")
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
 					return
 				}
-				shell.ExitCode = command.ExitCode
 
 			}()
 
@@ -286,56 +169,28 @@ foobar() {
 }
 
 #(RESULT)
-
 package main
 
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-    defer shell.Terminate(streamManager)
-	shell.RegisterFunction("foobar", func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
-		streamManager := streamManager.Clone()
-		streamManager.Add("0", stdin)
-		streamManager.Add("1", stdout)
-		streamManager.Add("2", stderr)
+	defer shell.Terminate(streamManager)
+	shell.RegisterFunction("foobar", func(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		defer shell.Terminate(streamManager)
-		shell.RegisterFunction("foobar", func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
-			streamManager := streamManager.Clone()
-			streamManager.Add("0", stdin)
-			streamManager.Add("1", stdout)
-			streamManager.Add("2", stderr)
+		shell.RegisterFunction("foobar", func(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			defer shell.Terminate(streamManager)
 			func() {
-				var commandName = "echo"
-				var arguments []string
-				arguments = append(arguments, "foo")
-				arguments = append(arguments, "bar")
-				var command = shell.Command(commandName, arguments...)
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
-				if stream, err := streamManager.Get("0"); err != nil {
-					shell.HandleError(streamManager, err)
-					return
-				} else {
-					command.Stdin = stream
-				}
-				if stream, err := streamManager.Get("1"); err != nil {
-					shell.HandleError(streamManager, err)
-					return
-				} else {
-					command.Stdout = stream
-				}
-				if stream, err := streamManager.Get("2"); err != nil {
-					shell.HandleError(streamManager, err)
-					return
-				} else {
-					command.Stderr = stream
-				}
-				if err := command.Run(); err != nil {
+				var commandName = "echo"
+				var arguments []string
+				var env = make(map[string]string)
+				arguments = append(arguments, "foo")
+				arguments = append(arguments, "bar")
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
 					shell.HandleError(streamManager, err)
 					return
 				}
-				shell.ExitCode = command.ExitCode
 
 			}()
 
@@ -357,20 +212,45 @@ foobar() {
 }
 
 #(RESULT)
-
 package main
 
 import "github.com/yassinebenaid/bunster/runtime"
 
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-    defer shell.Terminate(streamManager)
-	shell.RegisterFunction("foobar", func(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
-		streamManager := streamManager.Clone()
-		streamManager.Add("0", stdin)
-		streamManager.Add("1", stdout)
-		streamManager.Add("2", stderr)
+	defer shell.Terminate(streamManager)
+	shell.RegisterFunction("foobar", func(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		defer shell.Terminate(streamManager)
-		func(){
+		func() {
+			shell.SetLocalVar("key", "value")
+
+		}()
+
+	})
+}
+
+#(ENDTEST)
+
+
+
+#(TEST: local function variables)
+
+foobar() (
+
+  local key=value
+
+)
+
+#(RESULT)
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	shell.RegisterFunction("foobar", func(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	shell = shell.Clone()
+		defer shell.Terminate(streamManager)
+		func() {
 			shell.SetLocalVar("key", "value")
 
 		}()
