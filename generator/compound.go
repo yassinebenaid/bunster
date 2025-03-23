@@ -226,3 +226,12 @@ func (g *generator) handleForLoop(buf *InstructionBuffer, loop ast.For) {
 
 	buf.add(ir.Closure(cmdbuf))
 }
+
+func (g *generator) handleCase(buf *InstructionBuffer, _case ast.Case) {
+	var cmdbuf InstructionBuffer
+
+	cmdbuf.add(ir.CloneStreamManager{})
+	g.handleRedirections(&cmdbuf, _case.Redirections)
+
+	buf.add(ir.Closure(cmdbuf))
+}
