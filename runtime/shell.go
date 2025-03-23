@@ -208,8 +208,12 @@ func (shell *Shell) Terminate(streamManager *StreamManager) {
 }
 
 func (shell *Shell) Exec(streamManager *StreamManager, name string, args []string, env map[string]string) error {
-	if fn, ok := shell.functions.get(name); ok {
-		childShell := Shell{
+	var childShell Shell
+	function, isFunc := shell.functions.get(name)
+	builtin, isBuiltin := shell.builtins.get(name)
+
+	if isFunc || isBuiltin {
+		childShell = Shell{
 			parent:       shell,
 			Path:         shell.Path,
 			PID:          shell.PID,
@@ -227,8 +231,10 @@ func (shell *Shell) Exec(streamManager *StreamManager, name string, args []strin
 		for key, value := range env {
 			childShell.env.set(key, value)
 		}
+	}
 
-		fn(&childShell, streamManager)
+	if isFunc {
+		function(&childShell, streamManager)
 		shell.ExitCode = childShell.ExitCode
 		return nil
 	}
@@ -246,26 +252,7 @@ func (shell *Shell) Exec(streamManager *StreamManager, name string, args []strin
 		return err
 	}
 
-	if builtin, ok := shell.builtins.get(name); ok {
-		childShell := Shell{
-			parent:       shell,
-			Path:         shell.Path,
-			PID:          shell.PID,
-			Embed:        shell.Embed,
-			Args:         args,
-			functions:    shell.functions,
-			builtins:     shell.builtins,
-			vars:         shell.vars,
-			env:          shell.env.clone(),
-			localVars:    newRepository[string](),
-			ExitCode:     shell.ExitCode,
-			exportedVars: shell.exportedVars,
-		}
-
-		for key, value := range env {
-			childShell.env.set(key, value)
-		}
-
+	if isBuiltin {
 		builtin(&childShell, stdin, stdout, stderr)
 		shell.ExitCode = childShell.ExitCode
 		return nil
