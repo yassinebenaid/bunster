@@ -235,6 +235,7 @@ func (g *generator) handleCase(buf *InstructionBuffer, _case ast.Case) {
 
 	cmdbuf.add(ir.Declare{Name: "needle", Value: g.handleExpression(&cmdbuf, _case.Word)})
 	cmdbuf.add(ir.Declare{Name: "fallback", Value: ir.Literal("false")})
+	cmdbuf.add(ir.Declare{Name: "_", Value: ir.Literal("fallback")}) // just to silence the go compiler
 	fallback := false
 
 	for _, branch := range _case.Cases {
@@ -248,7 +249,8 @@ func (g *generator) handleCase(buf *InstructionBuffer, _case ast.Case) {
 		}
 		for _, pattern := range branch.Patterns {
 			patterns = append(patterns, ir.MatchPattern{
-				Needle: g.handleExpression(&cmdbuf, pattern),
+				Hystack: "needle",
+				Needle:  g.handleExpression(&cmdbuf, pattern),
 			})
 		}
 		for _, statement := range branch.Body {

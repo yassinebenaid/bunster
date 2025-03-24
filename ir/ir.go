@@ -469,9 +469,10 @@ func (f Defer) togo() string {
 }
 
 type MatchPattern struct {
-	Needle Instruction
+	Hystack string
+	Needle  Instruction
 }
 
 func (s MatchPattern) togo() string {
-	return fmt.Sprintf(`runtime.PatternMatch(needle, %s)`, s.Needle.togo())
+	return fmt.Sprintf(`runtime.PatternMatch(%s, %s)`, s.Hystack, s.Needle.togo())
 }
