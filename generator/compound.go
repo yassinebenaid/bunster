@@ -234,9 +234,39 @@ func (g *generator) handleCase(buf *InstructionBuffer, _case ast.Case) {
 	g.handleRedirections(&cmdbuf, _case.Redirections)
 
 	cmdbuf.add(ir.Declare{Name: "needle", Value: g.handleExpression(&cmdbuf, _case.Word)})
+	cmdbuf.add(ir.Declare{Name: "fallback", Value: ir.Literal("false")})
+	fallback := false
 
 	for _, branch := range _case.Cases {
-		_ = branch
+		var patterns []ir.Instruction
+		var body InstructionBuffer
+
+		if fallback {
+			fallback = false
+			body.add(ir.Set{Name: "fallback", Value: ir.Literal("false")})
+			patterns = append(patterns, ir.Literal("fallback"))
+		}
+		for _, pattern := range branch.Patterns {
+			patterns = append(patterns, ir.MatchPattern{
+				Needle: g.handleExpression(&cmdbuf, pattern),
+			})
+		}
+		for _, statement := range branch.Body {
+			g.generate(&body, statement)
+		}
+
+		if branch.Terminator == ";&" {
+			fallback = true
+			body.add(ir.Set{Name: "fallback", Value: ir.Literal("true")})
+		} else if branch.Terminator != ";;&" {
+			body.add(ir.Literal("return;"))
+		}
+
+		cmdbuf.add(ir.If{
+			Condition: ir.ConcatInstruction{Needles: patterns, Separator: "||"},
+			Body:      body,
+		})
+
 	}
 
 	buf.add(ir.Closure(cmdbuf))

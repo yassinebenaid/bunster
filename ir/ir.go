@@ -320,6 +320,21 @@ func (i IfLastExitCode) togo() string {
 		`, condition, body)
 }
 
+type ConcatInstruction struct {
+	Needles   []Instruction
+	Separator string
+}
+
+func (i ConcatInstruction) togo() string {
+	var ins []string
+
+	for _, n := range i.Needles {
+		ins = append(ins, n.togo())
+	}
+
+	return strings.Join(ins, i.Separator)
+}
+
 type If struct {
 	Condition Instruction
 	Body      []Instruction
@@ -327,7 +342,7 @@ type If struct {
 }
 
 func (i If) togo() string {
-	cond := fmt.Sprintf("if %s {\n", i.Condition)
+	cond := fmt.Sprintf("if %s {\n", i.Condition.togo())
 	for _, ins := range i.Body {
 		cond += ins.togo()
 	}
@@ -451,4 +466,12 @@ func (f Defer) togo() string {
 		`+"})\n",
 		body,
 	)
+}
+
+type MatchPattern struct {
+	Needle Instruction
+}
+
+func (s MatchPattern) togo() string {
+	return fmt.Sprintf(`runtime.PatternMatch(needle, %s)`, s.Needle.togo())
 }
