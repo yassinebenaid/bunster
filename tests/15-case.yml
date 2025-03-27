@@ -128,3 +128,50 @@ cases:
         4:ok
         4:ok
         4:ok
+
+  - name: cases are evaluated as patterns
+    script: |
+      case foo in
+        f*) echo 1:ok;;&
+        f**) echo 2:ok;;&
+        [def]oo ) echo 3:ok;;&
+        ?oo ) echo 4:ok;;&
+        *) echo 5:ok;;&
+      esac
+    expect:
+      stdout: |
+        1:ok
+        2:ok
+        3:ok
+        4:ok
+        5:ok
+
+  - name: can use redirections on case
+    script: |
+      case foo in
+        *) cat 
+      esac <<<foobar >file.txt
+    expect:
+      files:
+        file.txt: "foobar\n"
+
+  - name: case's exit code is last command's exit code
+    script: |
+      case foo in   *) true;  esac
+      echo $?
+
+      case foo in   *) false;  esac
+      echo $?
+    expect:
+      stdout: |
+        0
+        1
+
+  - name: can use redirections on case
+    script: |
+      case foo in
+        *) cat 
+      esac <<<foobar >file.txt
+    expect:
+      files:
+        file.txt: "foobar\n"
