@@ -591,6 +591,11 @@ func (p *parser) parseCase() ast.Statement {
 	}
 	p.proceed()
 
+	if len(stmt.Cases) == 0 {
+		p.error("at least one case expected in `case` statement")
+		return nil
+	}
+
 	p.parseCompoundRedirections(&stmt.Redirections)
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {

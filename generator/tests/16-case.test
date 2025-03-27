@@ -1,0 +1,269 @@
+#(TEST: simple case)
+
+case foo in 
+	*) cmd 
+esac
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var needle = "foo"
+		var fallback = false
+		var _ = fallback
+		if runtime.PatternMatch(needle, "*") {
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "cmd"
+				var arguments []string
+				var env = make(map[string]string)
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+			return
+		}
+
+	}()
+}
+ 
+#(ENDTEST)
+
+
+
+
+#(TEST: multiple cases)
+
+case foo in 
+	foo) cmd ;;
+	bar) cmd ;;
+esac
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var needle = "foo"
+		var fallback = false
+		var _ = fallback
+		if runtime.PatternMatch(needle, "foo") {
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "cmd"
+				var arguments []string
+				var env = make(map[string]string)
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+			return
+		}
+		if runtime.PatternMatch(needle, "bar") {
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "cmd"
+				var arguments []string
+				var env = make(map[string]string)
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+			return
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+
+
+
+
+#(TEST: multiple patterns)
+
+case foo in 
+	foo | bar ) cmd 
+esac
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var needle = "foo"
+		var fallback = false
+		var _ = fallback
+		if runtime.PatternMatch(needle, "foo") || runtime.PatternMatch(needle, "bar") {
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "cmd"
+				var arguments []string
+				var env = make(map[string]string)
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+			return
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+
+
+
+#(TEST: fallthrough)
+
+case foo in 
+	foo) cmd ;& 
+	bar) cmd2 
+esac
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var needle = "foo"
+		var fallback = false
+		var _ = fallback
+		if runtime.PatternMatch(needle, "foo") {
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "cmd"
+				var arguments []string
+				var env = make(map[string]string)
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+			fallback = true
+		}
+		if fallback || runtime.PatternMatch(needle, "bar") {
+			fallback = false
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "cmd2"
+				var arguments []string
+				var env = make(map[string]string)
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+			return
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+
+
+
+
+
+#(TEST: continue)
+
+case foo in 
+	foo) cmd ;;& 
+	bar) cmd2 
+esac
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var needle = "foo"
+		var fallback = false
+		var _ = fallback
+		if runtime.PatternMatch(needle, "foo") {
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "cmd"
+				var arguments []string
+				var env = make(map[string]string)
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+		}
+		if runtime.PatternMatch(needle, "bar") {
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "cmd2"
+				var arguments []string
+				var env = make(map[string]string)
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+			return
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+

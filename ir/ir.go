@@ -211,28 +211,6 @@ func (rv ReadSpecialVar) togo() string {
 	return fmt.Sprintf("shell.ReadSpecialVar(%q)", rv)
 }
 
-type InitCommand struct {
-	Name string
-	Args string
-	Env  string
-}
-
-func (ic InitCommand) togo() string {
-	return fmt.Sprintf("shell.Command(%s, %s, %s)", ic.Name, ic.Args, ic.Env)
-}
-
-type RunCommand string
-
-func (r RunCommand) togo() string {
-	return fmt.Sprintf(
-		`if err := %s.Run(shell, streamManager); err != nil {
-			shell.HandleError(streamManager, err)
-			return
-		}
-		shell.ExitCode = %s.ExitCode
-		`, r, r)
-}
-
 type Exec struct {
 	Name string
 	Args string
@@ -281,20 +259,6 @@ func (c Closure) togo() string {
 	`, body)
 }
 
-type Scope []Instruction
-
-func (s Scope) togo() string {
-	var body string
-	for _, ins := range s {
-		body += ins.togo()
-	}
-
-	return fmt.Sprintf(`{
-			%s
-		}
-	`, body)
-}
-
 type Gorouting []Instruction
 
 func (g Gorouting) togo() string {
@@ -333,16 +297,6 @@ func (c ExpressionClosure) togo() string {
 		`, c.Name, body)
 }
 
-type SetCmdEnv struct {
-	Command string
-	Key     string
-	Value   Instruction
-}
-
-func (s SetCmdEnv) togo() string {
-	return fmt.Sprintf("%s.Env[%q] = %s\n", s.Command, s.Key, s.Value.togo())
-}
-
 type IfLastExitCode struct {
 	Zero bool
 	Body []Instruction
@@ -366,6 +320,21 @@ func (i IfLastExitCode) togo() string {
 		`, condition, body)
 }
 
+type ConcatInstruction struct {
+	Needles   []Instruction
+	Separator string
+}
+
+func (i ConcatInstruction) togo() string {
+	var ins []string
+
+	for _, n := range i.Needles {
+		ins = append(ins, n.togo())
+	}
+
+	return strings.Join(ins, i.Separator)
+}
+
 type If struct {
 	Condition Instruction
 	Body      []Instruction
@@ -373,7 +342,7 @@ type If struct {
 }
 
 func (i If) togo() string {
-	cond := fmt.Sprintf("if %s {\n", i.Condition)
+	cond := fmt.Sprintf("if %s {\n", i.Condition.togo())
 	for _, ins := range i.Body {
 		cond += ins.togo()
 	}
@@ -497,4 +466,13 @@ func (f Defer) togo() string {
 		`+"})\n",
 		body,
 	)
+}
+
+type MatchPattern struct {
+	Hystack string
+	Needle  Instruction
+}
+
+func (s MatchPattern) togo() string {
+	return fmt.Sprintf(`runtime.PatternMatch(%s, %s)`, s.Hystack, s.Needle.togo())
 }

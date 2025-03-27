@@ -28,7 +28,14 @@ func Loadenv(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 	}
 
 	for _, filename := range files {
-		vars, err := readFile(filename)
+		content, err := os.ReadFile(filename)
+		if err != nil {
+			fmt.Fprintf(stderr, "loadenv: %s\n", err)
+			shell.ExitCode = 1
+			return
+		}
+
+		vars, err := parse(content)
 		if err != nil {
 			fmt.Fprintf(stderr, "loadenv: %s\n", err)
 			shell.ExitCode = 1
@@ -46,27 +53,9 @@ func Loadenv(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 	shell.ExitCode = 0
 }
 
-func readFile(filename string) (envMap map[string]string, err error) {
-	content, err := os.ReadFile(filename)
-	if err != nil {
-		return
-	}
-
+func parse(src []byte) (map[string]string, error) {
 	out := make(map[string]string)
-	err = parseBytes(content, out)
 
-	return out, err
-}
-
-const (
-	charComment       = '#'
-	prefixSingleQuote = '\''
-	prefixDoubleQuote = '"'
-
-	exportPrefix = "export"
-)
-
-func parseBytes(src []byte, out map[string]string) error {
 	src = bytes.Replace(src, []byte("\r\n"), []byte("\n"), -1)
 	cutset := src
 	for {
@@ -78,19 +67,19 @@ func parseBytes(src []byte, out map[string]string) error {
 
 		key, left, err := locateKeyName(cutset)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		value, left, err := extractVarValue(left, out)
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		out[key] = value
 		cutset = left
 	}
 
-	return nil
+	return out, nil
 }
 
 // getStatementPosition returns position of statement begin.
@@ -103,7 +92,7 @@ func getStatementStart(src []byte) []byte {
 	}
 
 	src = src[pos:]
-	if src[0] != charComment {
+	if src[0] != '#' {
 		return src
 	}
 
@@ -120,8 +109,8 @@ func getStatementStart(src []byte) []byte {
 func locateKeyName(src []byte) (key string, cutset []byte, err error) {
 	// trim "export" and space at beginning
 	src = bytes.TrimLeftFunc(src, isSpace)
-	if bytes.HasPrefix(src, []byte(exportPrefix)) {
-		trimmed := bytes.TrimPrefix(src, []byte(exportPrefix))
+	if bytes.HasPrefix(src, []byte("export")) {
+		trimmed := bytes.TrimPrefix(src, []byte("export"))
 		if bytes.IndexFunc(trimmed, isSpace) == 0 {
 			src = bytes.TrimLeftFunc(trimmed, isSpace)
 		}
@@ -193,7 +182,7 @@ func extractVarValue(src []byte, vars map[string]string) (value string, rest []b
 		// Work backwards to check if the line ends in whitespace then
 		// a comment, ie: foo=bar # baz # other
 		for i := 0; i < endOfVar; i++ {
-			if line[i] == charComment && i < endOfVar {
+			if line[i] == '#' && i < endOfVar {
 				if isSpace(line[i-1]) {
 					endOfVar = i
 					break
@@ -203,7 +192,7 @@ func extractVarValue(src []byte, vars map[string]string) (value string, rest []b
 
 		trimmed := strings.TrimFunc(string(line[0:endOfVar]), isSpace)
 
-		return expandVariables(trimmed, vars), src[endOfLine:], nil
+		return expand(trimmed, vars), src[endOfLine:], nil
 	}
 
 	// lookup quoted string terminator
@@ -220,10 +209,10 @@ func extractVarValue(src []byte, vars map[string]string) (value string, rest []b
 		// trim quotes
 		trimFunc := isCharFunc(rune(quote))
 		value = string(bytes.TrimLeftFunc(bytes.TrimRightFunc(src[0:i], trimFunc), trimFunc))
-		if quote == prefixDoubleQuote {
+		if quote == '"' {
 			// unescape newlines for double quote (this is compat feature)
 			// and expand environment variables
-			value = expandVariables(expandEscapes(value), vars)
+			value = expand(expandEscapes(value), vars)
 		}
 
 		return value, src[i+1:], nil
@@ -266,7 +255,7 @@ func hasQuotePrefix(src []byte) (prefix byte, isQuored bool) {
 	}
 
 	switch prefix := src[0]; prefix {
-	case prefixDoubleQuote, prefixSingleQuote:
+	case '"', '\'':
 		return prefix, true
 	default:
 		return 0, false
@@ -303,7 +292,7 @@ var (
 	unescapeCharsRegex = regexp.MustCompile(`\\([^$])`)
 )
 
-func expandVariables(v string, m map[string]string) string {
+func expand(v string, m map[string]string) string {
 	return expandVarRegex.ReplaceAllStringFunc(v, func(s string) string {
 		submatch := expandVarRegex.FindStringSubmatch(s)
 

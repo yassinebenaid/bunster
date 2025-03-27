@@ -417,12 +417,6 @@ var caseTests = []testCase{
 		},
 	}},
 
-	{`case esac in esac`, ast.Script{
-		ast.Case{
-			Word: ast.Word("esac"),
-		},
-	}},
-
 	{`case word in
  		pattern	) cmd; ;;
    		pattern ) cmd; ;&
@@ -465,9 +459,10 @@ var caseErrorHandlingCases = []errorHandlingTestCase{
 	{`case foo in pattern) foo esac`, "syntax error: expected `esac` to close `case` command. (line: 1, column: 31)"},
 	{`case foo in pattern) foo;;; esac`, "syntax error: invalid pattern provided, unexpected token `;`. (line: 1, column: 27)"},
 	{`case foo in pattern) foo;;;& esac`, "syntax error: invalid pattern provided, unexpected token `;`. (line: 1, column: 27)"},
-	{`case foo in esac arg`, "syntax error: unexpected token `arg`. (line: 1, column: 18)"},
-	{`case foo in esac <in >out <<<etc arg`, "syntax error: unexpected token `arg`. (line: 1, column: 34)"},
+	{`case foo in foo) cmd;; esac arg`, "syntax error: unexpected token `arg`. (line: 1, column: 29)"},
+	{`case foo in foo) cmd;; esac <in >out <<<etc arg`, "syntax error: unexpected token `arg`. (line: 1, column: 45)"},
 	{`case foo in foo) cmd (; esac`, "syntax error: expected `)`, found `;`. (line: 1, column: 23)"},
 
+	{`case foo in esac`, "syntax error: at least one case expected in `case` statement. (line: 1, column: 17)"},
 	{`esac`, "syntax error: `esac` is a reserved keyword, cannot be used a command name. (line: 1, column: 1)"},
 }

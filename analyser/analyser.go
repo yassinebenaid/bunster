@@ -267,6 +267,23 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.analyseExpression(r.Dst)
 			}
 		}
+	case ast.Case:
+		a.analyseExpression(v.Word)
+
+		for _, _case := range v.Cases {
+			for _, pattern := range _case.Patterns {
+				a.analyseExpression(pattern)
+			}
+			for _, s := range _case.Body {
+				a.analyseStatement(s)
+			}
+		}
+
+		for _, r := range v.Redirections {
+			if r.Dst != nil {
+				a.analyseExpression(r.Dst)
+			}
+		}
 	default:
 		a.report(Error{Msg: fmt.Sprintf("Unsupported statement type: %T", v)})
 	}

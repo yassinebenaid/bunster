@@ -1,0 +1,177 @@
+cases:
+  - name: simple case statment
+    script: |
+      case foo in
+        foo) echo 1:ok
+      esac
+
+
+      case foo in
+        foo) echo 2:ok;;
+      esac
+
+
+      case foo in
+        bar) echo 3:bug;;
+        foo) echo 3:ok;;
+        baz) echo 3:bug;;
+      esac
+
+      case foo in
+        bar) echo 4:bug;;
+        foo) echo 4:ok;;
+        foo) echo 4:bug;;
+        baz) echo 4:bug;;
+      esac
+    expect:
+      stdout: |
+        1:ok
+        2:ok
+        3:ok
+        4:ok
+
+  - name: can use multiple patterns per case
+    script: |
+      case foo in
+        foo|bar) echo 1:ok
+      esac
+
+      case foo in
+        bar) echo 2:bug;;
+        bar|foo) echo 2:ok;;
+        baz) echo 2:bug;;
+      esac
+
+      case foo in
+        foo|bar) echo 3:ok;;
+        foo|bar) echo 3:bug;;
+      esac
+
+      case foo in
+        bar|foo) echo 4:ok;;
+        foo) echo 4:bug;;
+      esac
+    expect:
+      stdout: |
+        1:ok
+        2:ok
+        3:ok
+        4:ok
+
+  - name: can fallthrough to next branch
+    script: |
+      case foo in
+        foo) echo 1:ok;&
+        bar) echo 1:ok;;
+      esac
+
+      case foo in
+        boo) echo 2:ok;;
+        foo) echo 2:ok;&
+        bar) echo 2:ok;;
+        baz) echo 2:bug;;
+      esac
+
+      case foo in
+        foz) echo 3:bug;&
+        foo) echo 3:ok;&
+        boo) echo 3:ok;&
+        bar) echo 3:ok;&
+        baz) echo 3:ok;&
+      esac
+    expect:
+      stdout: |
+        1:ok
+        1:ok
+        2:ok
+        2:ok
+        3:ok
+        3:ok
+        3:ok
+        3:ok
+
+  - name: can continue to next test
+    script: |
+      case foo in
+        foo) echo 1:ok;;&
+        foo) echo 1:ok;;
+      esac
+
+      case foo in
+        bar) echo 2:bug;;&
+        foo) echo 2:ok;;&
+        baz) echo 2:bug;;&
+      esac
+
+      case foo in
+        bar) echo 3:bug;;&
+        foo) echo 3:ok;;&
+        foo) echo 3:ok;;&
+        baz) echo 3:bug;;&
+      esac
+
+
+      case foo in
+        foo) echo 4:ok;;&
+        foo) echo 4:ok;;&
+        foo) echo 4:ok;;&
+        foo) echo 4:ok;;&
+      esac
+    expect:
+      stdout: |
+        1:ok
+        1:ok
+        2:ok
+        3:ok
+        3:ok
+        4:ok
+        4:ok
+        4:ok
+        4:ok
+
+  - name: cases are evaluated as patterns
+    script: |
+      case foo in
+        f*) echo 1:ok;;&
+        f**) echo 2:ok;;&
+        [def]oo ) echo 3:ok;;&
+        ?oo ) echo 4:ok;;&
+        *) echo 5:ok;;&
+      esac
+    expect:
+      stdout: |
+        1:ok
+        2:ok
+        3:ok
+        4:ok
+        5:ok
+
+  - name: can use redirections on case
+    script: |
+      case foo in
+        *) cat 
+      esac <<<foobar >file.txt
+    expect:
+      files:
+        file.txt: "foobar\n"
+
+  - name: case's exit code is last command's exit code
+    script: |
+      case foo in   *) true;  esac
+      echo $?
+
+      case foo in   *) false;  esac
+      echo $?
+    expect:
+      stdout: |
+        0
+        1
+
+  - name: can use redirections on case
+    script: |
+      case foo in
+        *) cat 
+      esac <<<foobar >file.txt
+    expect:
+      files:
+        file.txt: "foobar\n"

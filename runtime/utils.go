@@ -2,8 +2,11 @@ package runtime
 
 import (
 	"os"
+	"regexp"
 	"strconv"
 	"syscall"
+
+	"github.com/yassinebenaid/bunster/runtime/pattern"
 )
 
 func NumberCompare(x, op, y string) bool {
@@ -225,4 +228,12 @@ func FileIsSocket(file string) bool {
 	}
 
 	return info.Mode()&os.ModeSocket != 0
+}
+
+func PatternMatch(str string, p string) bool {
+	rx, err := pattern.Regexp(p, pattern.EntireString)
+	if err != nil {
+		return false
+	}
+	return regexp.MustCompile(rx).MatchString(str)
 }
