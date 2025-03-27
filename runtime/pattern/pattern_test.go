@@ -8,7 +8,7 @@ import (
 
 var translateTests = []struct {
 	pat     string
-	mode    Mode
+	mode    mode
 	want    string
 	wantErr bool
 }{
@@ -100,36 +100,5 @@ func TestRegexp(t *testing.T) {
 				t.Fatalf("regexp/syntax.Parse(%q) failed with %q", got, rxErr)
 			}
 		})
-	}
-}
-
-var metaTests = []struct {
-	pat       string
-	mode      Mode
-	wantHas   bool
-	wantQuote string
-}{
-	{``, 0, false, ``},
-	{`foo`, 0, false, `foo`},
-	{`.`, 0, false, `.`},
-	{`*`, 0, true, `\*`},
-	{`*`, Shortest | Filenames, true, `\*`},
-	{`foo?`, 0, true, `foo\?`},
-	{`\[`, 0, false, `\\\[`},
-	{`{`, 0, false, `{`},
-	{`{`, Braces, true, `\{`},
-}
-
-func TestMeta(t *testing.T) {
-	t.Parallel()
-	for _, tc := range metaTests {
-		if got := HasMeta(tc.pat, tc.mode); got != tc.wantHas {
-			t.Errorf("HasMeta(%q, %b) got %t, wanted %t",
-				tc.pat, tc.mode, got, tc.wantHas)
-		}
-		if got := QuoteMeta(tc.pat, tc.mode); got != tc.wantQuote {
-			t.Errorf("QuoteMeta(%q, %b) got %q, wanted %q",
-				tc.pat, tc.mode, got, tc.wantQuote)
-		}
 	}
 }

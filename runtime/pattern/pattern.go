@@ -8,9 +8,7 @@ import (
 	"strings"
 )
 
-// Mode can be used to supply a number of options to the package's functions.
-// Not all functions change their behavior with all of the options below.
-type Mode uint
+type mode uint
 
 type SyntaxError struct {
 	msg string
@@ -22,7 +20,7 @@ func (e SyntaxError) Error() string { return e.msg }
 func (e SyntaxError) Unwrap() error { return e.err }
 
 const (
-	Shortest     Mode = 1 << iota // prefer the shortest match.
+	Shortest     mode = 1 << iota // prefer the shortest match.
 	Filenames                     // "*" and "?" don't match slashes; only "**" does
 	Braces                        // support "{a,b}" and "{1..4}"
 	EntireString                  // match the entire string using ^$ delimiters
@@ -31,16 +29,7 @@ const (
 
 var numRange = regexp.MustCompile(`^([+-]?\d+)\.\.([+-]?\d+)}`)
 
-// Regexp turns a shell pattern into a regular expression that can be used with
-// [regexp.Compile]. It will return an error if the input pattern was incorrect.
-// Otherwise, the returned expression can be passed to [regexp.MustCompile].
-//
-// For example, Regexp(`foo*bar?`, true) returns `foo.*bar.`.
-//
-// Note that this function (and [QuoteMeta]) should not be directly used with file
-// paths if Windows is supported, as the path separator on that platform is the
-// same character as the escaping character for shell patterns.
-func Regexp(pat string, mode Mode) (string, error) {
+func Regexp(pat string, mode mode) (string, error) {
 	needsEscaping := false
 noopLoop:
 	for _, r := range pat {
@@ -264,67 +253,4 @@ func charClass(s string) (string, error) {
 		return "", fmt.Errorf("invalid character class: %q", name)
 	}
 	return s[:len(name)+6], nil
-}
-
-// HasMeta returns whether a string contains any unescaped pattern
-// metacharacters: '*', '?', or '['. When the function returns false, the given
-// pattern can only match at most one string.
-//
-// For example, HasMeta(`foo\*bar`) returns false, but HasMeta(`foo*bar`)
-// returns true.
-//
-// This can be useful to avoid extra work, like [Regexp]. Note that this
-// function cannot be used to avoid [QuoteMeta], as backslashes are quoted by
-// that function but ignored here.
-func HasMeta(pat string, mode Mode) bool {
-	for i := 0; i < len(pat); i++ {
-		switch pat[i] {
-		case '\\':
-			i++
-		case '*', '?', '[':
-			return true
-		case '{':
-			if mode&Braces != 0 {
-				return true
-			}
-		}
-	}
-	return false
-}
-
-// QuoteMeta returns a string that quotes all pattern metacharacters in the
-// given text. The returned string is a pattern that matches the literal text.
-//
-// For example, QuoteMeta(`foo*bar?`) returns `foo\*bar\?`.
-func QuoteMeta(pat string, mode Mode) string {
-	needsEscaping := false
-loop:
-	for _, r := range pat {
-		switch r {
-		case '{':
-			if mode&Braces == 0 {
-				continue
-			}
-			fallthrough
-		case '*', '?', '[', '\\':
-			needsEscaping = true
-			break loop
-		}
-	}
-	if !needsEscaping { // short-cut without a string copy
-		return pat
-	}
-	var sb strings.Builder
-	for _, r := range pat {
-		switch r {
-		case '*', '?', '[', '\\':
-			sb.WriteByte('\\')
-		case '{':
-			if mode&Braces != 0 {
-				sb.WriteByte('\\')
-			}
-		}
-		sb.WriteRune(r)
-	}
-	return sb.String()
 }
