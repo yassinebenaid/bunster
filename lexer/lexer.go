@@ -39,12 +39,7 @@ func (l *Lexer) NextToken() token.Token {
 switch_beginning:
 	switch {
 	case l.ctx == ctx_LITERAL_STRING && l.curr != '\'' && l.curr != 0:
-		tok.Type, tok.Literal = token.OTHER, string(l.curr)
-
-		for l.next != 0 && l.next != '\'' {
-			l.proceed()
-			tok.Literal += string(l.curr)
-		}
+		return l.ReadUntil('\'')
 	case l.curr == ' ' || l.curr == '\t':
 		tok.Type, tok.Literal = token.BLANK, string(l.curr)
 		for l.next == ' ' || l.next == '\t' {
@@ -402,4 +397,21 @@ func (l *Lexer) proceed() {
 		l.line++
 		l.position = 1
 	}
+}
+
+func (l *Lexer) ReadUntil(at rune) token.Token {
+	var t = token.Token{
+		Type:     token.OTHER,
+		Literal:  string(l.curr),
+		Line:     l.line,
+		Position: l.position - 1,
+	}
+
+	for l.next != 0 && l.next != at {
+		l.proceed()
+		t.Literal += string(l.curr)
+	}
+
+	l.proceed()
+	return t
 }

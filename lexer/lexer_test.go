@@ -346,3 +346,30 @@ func TestLexer(t *testing.T) {
 		}
 	}
 }
+
+func TestCanReadUntilACharacter(t *testing.T) {
+	l := lexer.New([]rune(`foo bar baz boo fish zinc`))
+
+	if n := l.NextToken(); n.String() != "foo" {
+		t.Fatalf("Unexpected: %q", n.String())
+	}
+	if n := l.NextToken(); n.String() != "blank" {
+		t.Fatalf("Unexpected: %q", n.String())
+	}
+
+	if n := l.ReadUntil('i'); n.String() != "bar baz boo f" {
+		t.Fatalf("Unexpected: %q", n.String())
+	}
+
+	if n := l.NextToken(); n.String() != "ish" {
+		t.Fatalf("Unexpected: %q", n.String())
+	}
+
+	if n := l.ReadUntil('n'); n.String() != " zi" {
+		t.Fatalf("Unexpected: %q", n.String())
+	}
+
+	if n := l.NextToken(); n.String() != "nc" {
+		t.Fatalf("Unexpected: %q", n.String())
+	}
+}
