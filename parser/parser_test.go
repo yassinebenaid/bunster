@@ -128,13 +128,14 @@ var testCases = []struct {
 				},
 			},
 		}},
-		{`cmd '' '\' '$foo'`, ast.Script{
+		{`cmd '' '\' '$foo' "let's go"`, ast.Script{
 			ast.Command{
 				Name: ast.Word("cmd"),
 				Args: []ast.Expression{
 					ast.Word(""),
 					ast.Word(`\`),
 					ast.Word(`$foo`),
+					ast.Word(`let's go`),
 				},
 			},
 		}},
