@@ -243,82 +243,12 @@ func TestLexer(t *testing.T) {
 			{Type: token.WORD, Literal: `oo`, Line: 1, Position: 3},
 		}},
 		{"\\\nfoo", []token.Token{{Type: token.WORD, Literal: "foo", Line: 2, Position: 1}}},
-
-		// Literal strings
-		{`'hello world'`, []token.Token{
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
-			{Type: token.OTHER, Literal: `hello world`, Line: 1, Position: 2},
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 13},
-		}},
-		{`''`, []token.Token{
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 2},
-		}},
-		{`'\'`, []token.Token{
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
-			{Type: token.OTHER, Literal: `\`, Line: 1, Position: 2},
+		{`it's ok`, []token.Token{
+			{Type: token.WORD, Literal: `it`, Line: 1, Position: 1},
 			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 3},
-		}},
-		{`'''''x' '  '`, []token.Token{
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 2},
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 3},
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 4},
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 5},
-			{Type: token.OTHER, Literal: `x`, Line: 1, Position: 6},
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 7},
-			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 8},
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 9},
-			{Type: token.OTHER, Literal: `  `, Line: 1, Position: 10},
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 12},
-		}},
-		{
-			`'if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset'`,
-			[]token.Token{
-				{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
-				{
-					Type:     token.OTHER,
-					Literal:  `if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset`,
-					Line:     1,
-					Position: 2,
-				},
-				{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 143},
-			},
-		},
-		{
-			`'+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : \ " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~'`,
-			[]token.Token{
-				{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
-				{
-					Type:     token.OTHER,
-					Literal:  `+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : \ " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~`,
-					Line:     1,
-					Position: 2,
-				},
-				{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 182},
-			},
-		},
-		{
-			`'$$ $@ $? $# $! $_ $* $0$1$2 $3$4 $5 $6 $7 $8 $9 $10 foo bar foo-bar $variable_name $variable-name
-					$concatinated$VAIABLE$VAR_0987654321 0123456789 123.456 .123 123. 1.2.3 .abc 1.c 12.34abc 123< <&45 33<&45 5<< 6<<- 1> 1>&2 7>> 81>| 19<>
-					   	\t'`,
-			[]token.Token{
-				{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
-				{
-					Type: token.OTHER,
-					Literal: `$$ $@ $? $# $! $_ $* $0$1$2 $3$4 $5 $6 $7 $8 $9 $10 foo bar foo-bar $variable_name $variable-name
-					$concatinated$VAIABLE$VAR_0987654321 0123456789 123.456 .123 123. 1.2.3 .abc 1.c 12.34abc 123< <&45 33<&45 5<< 6<<- 1> 1>&2 7>> 81>| 19<>
-					   	\t`,
-					Line:     1,
-					Position: 2,
-				},
-				{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 3, Position: 12},
-			},
-		},
-		{"'\\\n'", []token.Token{
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 1, Position: 1},
-			{Type: token.OTHER, Literal: "\\\n", Line: 1, Position: 2},
-			{Type: token.SINGLE_QUOTE, Literal: `'`, Line: 2, Position: 1},
+			{Type: token.WORD, Literal: `s`, Line: 1, Position: 4},
+			{Type: token.BLANK, Literal: ` `, Line: 1, Position: 5},
+			{Type: token.WORD, Literal: `ok`, Line: 1, Position: 6},
 		}},
 		// Others
 		{`$ @`, []token.Token{
@@ -344,5 +274,32 @@ func TestLexer(t *testing.T) {
 		if result := l.NextToken(); token.EOF != result.Type {
 			t.Fatalf("\nCase:%d, expected EOF, got:\n %s ", i, dump(result))
 		}
+	}
+}
+
+func TestCanReadUntilACharacter(t *testing.T) {
+	l := lexer.New([]rune(`foo bar baz boo fish zinc`))
+
+	if n := l.NextToken(); n.String() != "foo" {
+		t.Fatalf("Unexpected: %q", n.String())
+	}
+	if n := l.NextToken(); n.String() != "blank" {
+		t.Fatalf("Unexpected: %q", n.String())
+	}
+
+	if n := l.ReadUntil('i'); n.String() != "bar baz boo f" {
+		t.Fatalf("Unexpected: %q", n.String())
+	}
+
+	if n := l.NextToken(); n.String() != "ish" {
+		t.Fatalf("Unexpected: %q", n.String())
+	}
+
+	if n := l.ReadUntil('n'); n.String() != " zi" {
+		t.Fatalf("Unexpected: %q", n.String())
+	}
+
+	if n := l.NextToken(); n.String() != "nc" {
+		t.Fatalf("Unexpected: %q", n.String())
 	}
 }

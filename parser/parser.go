@@ -32,7 +32,8 @@ type parser struct {
 	next3 token.Token
 	Error *ParserError
 
-	loopLevel int
+	loopLevel  int
+	lexerState [5]lexer.State
 }
 
 type ParserError struct {
@@ -55,11 +56,22 @@ func (p *parser) error(msg string, args ...any) {
 	}
 }
 
-func (p *parser) proceed() {
+func (p *parser) proceed(until ...rune) {
 	p.curr = p.next
 	p.next = p.next2
 	p.next2 = p.next3
-	p.next3 = p.l.NextToken()
+
+	if len(until) != 0 {
+		p.next3 = p.l.ReadUntil(until[0])
+	} else {
+		p.next3 = p.l.NextToken()
+	}
+
+	p.lexerState[0] = p.lexerState[1]
+	p.lexerState[1] = p.lexerState[2]
+	p.lexerState[2] = p.lexerState[3]
+	p.lexerState[3] = p.lexerState[4]
+	p.lexerState[4] = p.l.State
 }
 
 func (p *parser) ParseScript() ast.Script {
@@ -281,14 +293,25 @@ func (p *parser) parseLiteralString() ast.Word {
 		return ast.Word("")
 	}
 
-	word := p.curr.Literal
+	word := p.reloadAndReadUntil('\'')
 	p.proceed()
 
 	if p.curr.Type != token.SINGLE_QUOTE {
 		p.error("a closing single quote is missing")
 	}
 
-	return ast.Word(word)
+	return ast.Word(word.Literal)
+}
+
+func (p *parser) reloadAndReadUntil(until rune) token.Token {
+	p.l.State = p.lexerState[0]
+
+	p.proceed(until)
+	p.proceed()
+	p.proceed()
+	p.proceed()
+
+	return p.curr
 }
 
 func (p *parser) parseString() ast.Expression {
