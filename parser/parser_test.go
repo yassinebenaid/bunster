@@ -312,6 +312,7 @@ var testCases = []struct {
 	{"Conditionals", conditionalsTests},
 	{"Embedding", embeddingTests},
 	{"Defer", deferTests},
+	{"Builtins", builtinTests},
 }
 
 func TestParser(t *testing.T) {
@@ -410,6 +411,7 @@ var errorHandlingTestCases = []struct {
 	{"Shell Parameters", parameterAssignmentErrorHandlingCases},
 	{"Embedding", embeddingErrorHandlingCases},
 	{"Defer", deferErrorHandlingCases},
+	{"Builtins", builtinsErrorHandlingCases},
 }
 
 func TestParserErrorHandling(t *testing.T) {

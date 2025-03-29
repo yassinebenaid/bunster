@@ -1,0 +1,45 @@
+cases:
+  - name: can exit out of script
+    script: |
+      echo foo
+      exit
+      echo bar
+    expect:
+      exit_code: 0
+      stdout: "foo\n"
+
+  - name: can exit with specific code
+    script: |
+      echo foo
+      exit 3
+      echo bar
+    expect:
+      exit_code: 3
+      stdout: "foo\n"
+
+  - name: can exit with any expression
+    script: |
+      var=65
+      exit $var
+    expect:
+      exit_code: 65
+
+  - name: cannot pass invalid exit code
+    script: |
+      exit not-a-number
+    expect:
+      exit_code: 1
+      stderr: |
+        exit: "not-a-number" is not a valid code
+
+  # TODO: exiting from subshell should only exit the subshell. we'll fix it later.
+  - name: exiting within subshell is no different (YET)
+    script: |
+      echo foo
+      (
+        exit 3
+      )
+      echo bar
+    expect:
+      exit_code: 3
+      stdout: "foo\n"

@@ -166,6 +166,18 @@ func (s Literal) togo() string {
 	return string(s)
 }
 
+type Exit struct {
+	Code Instruction
+}
+
+func (e Exit) togo() string {
+	return fmt.Sprintf(
+		`if err := shell.Exit(%s); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		};`, e.Code.togo())
+}
+
 type ReadVar string
 
 func (rv ReadVar) togo() string {

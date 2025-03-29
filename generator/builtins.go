@@ -17,6 +17,10 @@ func (g *generator) handleFunction(buf *InstructionBuffer, function ast.Function
 	buf.add(ir.Function{Name: function.Name, Body: body, Subshell: function.SubShell})
 }
 
+func (g *generator) handleExit(buf *InstructionBuffer, exit ast.Exit) {
+	buf.add(ir.Exit{Code: g.handleExpression(buf, exit.Code)})
+}
+
 func (g *generator) handleBreak(buf *InstructionBuffer, _ ast.Break) {
 	buf.add(ir.Literal("break\n"))
 }

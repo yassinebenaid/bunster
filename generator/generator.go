@@ -84,6 +84,8 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement) {
 		g.handleForLoop(buf, v)
 	case ast.Case:
 		g.handleCase(buf, v)
+	case ast.Exit:
+		g.handleExit(buf, v)
 	default:
 		panic(fmt.Sprintf("Unsupported statement: %T", v))
 	}

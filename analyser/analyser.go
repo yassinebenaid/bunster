@@ -195,7 +195,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 		}
 	case ast.BackgroundConstruction:
 		a.analyseStatement(v.Statement)
-	case ast.Wait:
+	case ast.Wait, ast.Exit:
 		//TODO: ensure 'wait' is not invokes when no commands are put in background.
 	case ast.InvertExitCode:
 		a.analyseStatement(v.Statement)
