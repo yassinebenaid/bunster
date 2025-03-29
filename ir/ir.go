@@ -166,6 +166,12 @@ func (s Literal) togo() string {
 	return string(s)
 }
 
+type Exit string
+
+func (e Exit) togo() string {
+	return fmt.Sprintf("shell.Exit(%s)\n", e)
+}
+
 type ReadVar string
 
 func (rv ReadVar) togo() string {

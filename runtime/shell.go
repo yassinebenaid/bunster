@@ -57,6 +57,10 @@ func (shell *Shell) Shift(n int) {
 	}
 }
 
+func (shell *Shell) Exit(code int) {
+	os.Exit(code)
+}
+
 func (shell *Shell) ReadVar(name string) string {
 	if value, ok := shell.getLocalVar(name); ok {
 		return value
