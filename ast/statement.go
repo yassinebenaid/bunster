@@ -67,6 +67,7 @@ type RangeLoop struct {
 }
 
 type Break int
+type Exit string
 type Continue int
 type Wait struct{}
 
@@ -160,6 +161,7 @@ func (Function) node()            {}
 func (Test) node()                {}
 func (Break) node()               {}
 func (Continue) node()            {}
+func (Exit) node()                {}
 func (Wait) node()                {}
 func (Embed) node()               {}
 func (Defer) node()               {}
@@ -187,6 +189,7 @@ func (Function) stmt()       {}
 func (Test) stmt()           {}
 func (Break) stmt()          {}
 func (Continue) stmt()       {}
+func (Exit) stmt()           {}
 func (Wait) stmt()           {}
 func (Embed) stmt()          {}
 func (Defer) stmt()          {}

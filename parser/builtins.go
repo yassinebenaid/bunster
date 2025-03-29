@@ -11,6 +11,8 @@ func (p *parser) getBuiltinParser() func() ast.Statement {
 	switch p.curr.Type {
 	case token.BREAK:
 		return p.parseBreak
+	case token.EXIT:
+		return p.parseExit
 	case token.CONTINUE:
 		return p.parseContinue
 	case token.FUNCTION:
@@ -136,6 +138,33 @@ func (p *parser) parseBreak() ast.Statement {
 		return nil
 	}
 	return ast.Break(1)
+}
+
+func (p *parser) parseExit() ast.Statement {
+	p.proceed()
+
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
+	var code = "0"
+	if p.curr.Type == token.INT {
+		code = p.curr.Literal
+		p.proceed()
+	}
+
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
+
+	if !p.isControlToken() && p.curr.Type != token.EOF {
+		p.error("unexpected token `%s`", p.curr)
+		return nil
+	}
+
+	return ast.Exit(code)
 }
 
 func (p *parser) parseContinue() ast.Statement {
