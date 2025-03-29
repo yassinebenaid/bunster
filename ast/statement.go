@@ -67,7 +67,10 @@ type RangeLoop struct {
 }
 
 type Break int
-type Exit string
+type Exit struct {
+	Code Expression
+}
+
 type Continue int
 type Wait struct{}
 

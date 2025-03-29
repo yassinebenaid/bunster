@@ -18,7 +18,7 @@ func (g *generator) handleFunction(buf *InstructionBuffer, function ast.Function
 }
 
 func (g *generator) handleExit(buf *InstructionBuffer, exit ast.Exit) {
-	buf.add(ir.Exit(exit))
+	buf.add(ir.Exit{Code: g.handleExpression(buf, exit.Code)})
 }
 
 func (g *generator) handleBreak(buf *InstructionBuffer, _ ast.Break) {

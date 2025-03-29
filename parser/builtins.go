@@ -147,12 +147,20 @@ func (p *parser) parseExit() ast.Statement {
 		p.proceed()
 	}
 
-	var code = "0"
-	if p.curr.Type == token.INT {
-		code = p.curr.Literal
-		p.proceed()
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
 	}
 
+	var code ast.Expression = ast.Word("0")
+	if exp := p.parseExpression(); exp != nil {
+		code = exp
+	}
+
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
 	if p.curr.Type == token.HASH {
 		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
 			p.proceed()
@@ -164,7 +172,9 @@ func (p *parser) parseExit() ast.Statement {
 		return nil
 	}
 
-	return ast.Exit(code)
+	return ast.Exit{
+		Code: code,
+	}
 }
 
 func (p *parser) parseContinue() ast.Statement {

@@ -166,10 +166,12 @@ func (s Literal) togo() string {
 	return string(s)
 }
 
-type Exit string
+type Exit struct {
+	Code Instruction
+}
 
 func (e Exit) togo() string {
-	return fmt.Sprintf("shell.Exit(%s)\n", e)
+	return fmt.Sprintf("shell.Exit(runtime.ParseInt(%s))\n", e.Code.togo())
 }
 
 type ReadVar string
