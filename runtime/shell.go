@@ -57,8 +57,14 @@ func (shell *Shell) Shift(n int) {
 	}
 }
 
-func (shell *Shell) Exit(code int) {
+func (shell *Shell) Exit(ecode string) error {
+	code, err := strconv.Atoi(ecode)
+	if err != nil {
+		return fmt.Errorf("exit: %q is not a valid code", ecode)
+	}
+
 	os.Exit(code)
+	return nil
 }
 
 func (shell *Shell) ReadVar(name string) string {

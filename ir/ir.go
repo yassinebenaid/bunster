@@ -171,7 +171,11 @@ type Exit struct {
 }
 
 func (e Exit) togo() string {
-	return fmt.Sprintf("shell.Exit(runtime.ParseInt(%s))\n", e.Code.togo())
+	return fmt.Sprintf(
+		`if err := shell.Exit(%s); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		};`, e.Code.togo())
 }
 
 type ReadVar string
