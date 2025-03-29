@@ -4,25 +4,20 @@ import (
 	"github.com/yassinebenaid/bunster/token"
 )
 
-type context byte
-
-const (
-	ctx_DEFAULT context = iota
-	ctx_LITERAL_STRING
-)
-
-type Lexer struct {
-	input    []rune
+type State struct {
 	pos      int
 	curr     rune
 	next     rune
-	ctx      context
 	line     int
 	position int
 }
+type Lexer struct {
+	input []rune
+	State
+}
 
 func New(in []rune) Lexer {
-	l := Lexer{input: in, line: 1}
+	l := Lexer{input: in, State: State{line: 1}}
 
 	// read twice so that 'curr' and 'next' get initialized
 	l.proceed()
@@ -38,8 +33,6 @@ func (l *Lexer) NextToken() token.Token {
 
 switch_beginning:
 	switch {
-	case l.ctx == ctx_LITERAL_STRING && l.curr != '\'' && l.curr != 0:
-		return l.ReadUntil('\'')
 	case l.curr == ' ' || l.curr == '\t':
 		tok.Type, tok.Literal = token.BLANK, string(l.curr)
 		for l.next == ' ' || l.next == '\t' {
@@ -283,11 +276,6 @@ switch_beginning:
 	case l.curr == '#':
 		tok.Type, tok.Literal = token.HASH, string(l.curr)
 	case l.curr == '\'':
-		if l.ctx == ctx_DEFAULT {
-			l.ctx = ctx_LITERAL_STRING
-		} else {
-			l.ctx = ctx_DEFAULT
-		}
 		tok.Type, tok.Literal = token.SINGLE_QUOTE, string(l.curr)
 	case l.curr == '"':
 		tok.Type, tok.Literal = token.DOUBLE_QUOTE, string(l.curr)
