@@ -11,14 +11,9 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Dependency struct {
-	From string `yaml:"from"`
-	Rev  string `yaml:"rev"`
-}
-
 type Config struct {
-	Module  string       `yaml:"module"`
-	Require []Dependency `yaml:"require"`
+	Module  string            `yaml:"module"`
+	Require map[string]string `yaml:"require"`
 }
 
 type Module struct {
@@ -41,11 +36,11 @@ func (b *Builder) globModule(c *Config) (*Module, error) {
 		}
 	}
 
-	for _, dep := range c.Require {
+	for from, rev := range c.Require {
 		var submodule Module
-		submodule.Module = dep.From + "/" + dep.Rev
+		submodule.Module = from + "/" + rev
 		module.Require = append(module.Require, submodule)
-		files, err := filepath.Glob(filepath.Join(os.Getenv("HOME"), ".bunster", "pkg", dep.From, dep.Rev, "*.sh"))
+		files, err := filepath.Glob(filepath.Join(os.Getenv("HOME"), ".bunster", "pkg", from, rev, "*.sh"))
 		if err != nil {
 			return nil, err
 		}
@@ -60,7 +55,9 @@ func (b *Builder) globModule(c *Config) (*Module, error) {
 const configFile = "bunster.test.yml"
 
 func (b *Builder) loadConfig() (*Config, error) {
-	var c Config
+	var c = Config{
+		Require: map[string]string{},
+	}
 
 	content, err := os.ReadFile(filepath.Join(b.Workdir, configFile))
 	if err != nil {
@@ -84,6 +81,7 @@ func (b *Builder) writeConfig(config *Config) error {
 	}
 
 	encoder := yaml.NewEncoder(f)
+	encoder.SetIndent(2)
 	if err := encoder.Encode(config); err != nil {
 		return err
 	}
@@ -108,24 +106,14 @@ func (b *Builder) ResolveDeps(packages []string) (err error) {
 			return err
 		}
 
-		config.Require = append(config.Require, Dependency{
-			From: name,
-			Rev:  rev,
-		})
+		config.Require[name] = rev
 	}
 
 	return b.writeConfig(config)
 }
 
 func (b *Builder) getPackage(path, rev string) (err error) {
-	tmpDir, pkgDir := filepath.Join(b.Home, "tmp"), filepath.Join(b.Home, "pkg", path, rev)
-
-	if err := os.RemoveAll(tmpDir); err != nil {
-		return err
-	}
-	if err := os.MkdirAll(tmpDir, 0700); err != nil {
-		return err
-	}
+	pkgDir := filepath.Join(b.Home, "pkg", path, rev)
 
 	if err := os.RemoveAll(pkgDir); err != nil {
 		return err
@@ -134,20 +122,31 @@ func (b *Builder) getPackage(path, rev string) (err error) {
 		return err
 	}
 
+	if err := _exec(pkgDir, "git", "init"); err != nil {
+		return err
+	}
+	if err := _exec(pkgDir, "git", "fetch", "--dept=1", "https://"+path, rev); err != nil {
+		return fmt.Errorf("failed to resolve package %q, either path or version are invalid", path)
+	}
+	if err := _exec(pkgDir, "git", "checkout", rev); err != nil {
+		return fmt.Errorf("failed to resolve package %q, unknown revision %q", path, rev)
+	}
+	if err := _exec(pkgDir, "rm", "-rf", ".git"); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func _exec(dir string, args ...string) error {
 	var stderr bytes.Buffer
-	sh := exec.Command("sh")
+	sh := exec.Command(args[0], args[1:]...)
 	sh.Stderr = &stderr
-	sh.Dir = filepath.Join(b.Home, "tmp")
-	sh.Stdin = strings.NewReader(fmt.Sprintf(`
-		git init && \
-			git fetch --dept=1 "https://%s" "%s" && \
-			git checkout "%s" && \
-			rm -rf .git && \
-			cp -r . %s
-	`, path, rev, rev, pkgDir))
+	sh.Dir = dir
 
 	if err := sh.Run(); err != nil {
-		return fmt.Errorf(`failed to resolve package "%s", error: "%s", stderr: "%s"`, path, err, stderr.String())
+		return fmt.Errorf(`exec error(%s): "%s", stderr: "%s"`, args, err, stderr.String())
 	}
+
 	return nil
 }
