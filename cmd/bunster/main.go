@@ -23,7 +23,7 @@ func main() {
 			{
 				Name:   "ast",
 				Usage:  "Print the script ast",
-				Action: astCMD,
+				Action: ast,
 				Flags: []cli.Flag{
 					&cli.BoolFlag{Name: "no-ansi", Aliases: []string{"n"}},
 				},
@@ -31,7 +31,7 @@ func main() {
 			{
 				Name:   "build",
 				Usage:  "Build a module",
-				Action: buildCMD,
+				Action: build,
 				Flags: []cli.Flag{
 					&cli.StringFlag{Name: "o", Required: true},
 				},
@@ -39,7 +39,7 @@ func main() {
 			{
 				Name:   "generate",
 				Usage:  "Generate the Go source out of a module",
-				Action: geneateCMD,
+				Action: geneate,
 				Flags: []cli.Flag{
 					&cli.StringFlag{Name: "o", Required: true},
 				},
@@ -52,6 +52,11 @@ func main() {
 					return nil
 				},
 			},
+			{
+				Name:   "get",
+				Usage:  "Download a package specified on the command line, or all packages in bunster.yml if not arguments are present",
+				Action: get,
+			},
 		},
 	}
 
@@ -62,7 +67,7 @@ func main() {
 	}
 }
 
-func astCMD(_ context.Context, cmd *cli.Command) error {
+func ast(_ context.Context, cmd *cli.Command) error {
 	filename := cmd.Args().Get(0)
 	v, err := os.ReadFile(filename)
 	if err != nil {
@@ -87,7 +92,7 @@ func astCMD(_ context.Context, cmd *cli.Command) error {
 	return d.Println(script)
 }
 
-func buildCMD(_ context.Context, cmd *cli.Command) error {
+func build(_ context.Context, cmd *cli.Command) error {
 	destination := cmd.String("o")
 	if !path.IsAbs(destination) {
 		currWorkdir, err := os.Getwd()
@@ -107,7 +112,7 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 	return builder.Build()
 }
 
-func geneateCMD(_ context.Context, cmd *cli.Command) error {
+func geneate(_ context.Context, cmd *cli.Command) error {
 	builder := builder.Builder{
 		Workdir:    ".",
 		Builddir:   cmd.String("o"),
@@ -116,4 +121,13 @@ func geneateCMD(_ context.Context, cmd *cli.Command) error {
 	}
 
 	return builder.Generate()
+}
+
+func get(_ context.Context, cmd *cli.Command) error {
+	builder := builder.Builder{
+		Workdir: ".",
+		Home:    path.Join(os.Getenv("HOME"), ".bunster"),
+	}
+
+	return builder.ResolveDeps(cmd.Args().Slice())
 }

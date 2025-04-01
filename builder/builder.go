@@ -23,6 +23,7 @@ type Builder struct {
 	Builddir   string
 	OutputFile string
 	Gofmt      bool
+	Home       string
 }
 
 func (b *Builder) Build() (err error) {
