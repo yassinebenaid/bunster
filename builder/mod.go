@@ -75,18 +75,16 @@ func (b *Builder) loadConfig() (*Config, error) {
 }
 
 func (b *Builder) writeConfig(config *Config) error {
-	f, err := os.OpenFile(configFile, os.O_WRONLY|os.O_CREATE, 0600)
+	out, err := yaml.Marshal(config)
 	if err != nil {
 		return err
 	}
 
-	encoder := yaml.NewEncoder(f)
-	encoder.SetIndent(2)
-	if err := encoder.Encode(config); err != nil {
+	if err := os.WriteFile(configFile, out, 0600); err != nil {
 		return err
 	}
 
-	return encoder.Close()
+	return nil
 }
 
 func (b *Builder) ResolveDeps(packages []string) (err error) {
@@ -128,7 +126,7 @@ func (b *Builder) getPackage(path, rev string) (err error) {
 	if err := _exec(pkgDir, "git", "fetch", "--dept=1", "https://"+path, rev); err != nil {
 		return fmt.Errorf("failed to resolve package %q, either path or version are invalid", path)
 	}
-	if err := _exec(pkgDir, "git", "checkout", rev); err != nil {
+	if err := _exec(pkgDir, "git", "checkout", "FETCH_HEAD"); err != nil {
 		return fmt.Errorf("failed to resolve package %q, unknown revision %q", path, rev)
 	}
 	if err := _exec(pkgDir, "rm", "-rf", ".git"); err != nil {
