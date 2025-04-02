@@ -96,6 +96,12 @@ func (b *Builder) ResolveDeps(packages []string) (err error) {
 		return err
 	}
 
+	if len(packages) == 0 {
+		for dep, rev := range config.Require {
+			packages = append(packages, dep+"@"+rev)
+		}
+	}
+
 	for _, p := range packages {
 		pack := strings.SplitN(p, "@", 2)
 		name, rev := pack[0], pack[1]
