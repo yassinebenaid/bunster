@@ -15,7 +15,8 @@ type Config struct {
 }
 
 type Module struct {
-	Module  string
+	Path    string
+	Version string
 	Require []Module
 	Tree    []string
 }
@@ -34,11 +35,12 @@ func (b *Builder) globModule(c *Config) (*Module, error) {
 		}
 	}
 
-	for from, rev := range c.Require {
+	for path, version := range c.Require {
 		var submodule Module
-		submodule.Module = from + "/" + rev
+		submodule.Path = path
+		submodule.Version = version
 		module.Require = append(module.Require, submodule)
-		files, err := filepath.Glob(filepath.Join(os.Getenv("HOME"), ".bunster", "pkg", from, rev, "*.sh"))
+		files, err := filepath.Glob(filepath.Join(os.Getenv("HOME"), ".bunster", "pkg", path, version, "*.sh"))
 		if err != nil {
 			return nil, err
 		}

@@ -104,6 +104,7 @@ func build(_ context.Context, cmd *cli.Command) error {
 	}
 
 	builder := builder.Builder{
+		Home:       path.Join(os.Getenv("HOME"), ".bunster"),
 		Workdir:    ".",
 		Builddir:   path.Join(os.TempDir(), "bunster-build"),
 		OutputFile: destination,
@@ -115,6 +116,7 @@ func build(_ context.Context, cmd *cli.Command) error {
 
 func geneate(_ context.Context, cmd *cli.Command) error {
 	builder := builder.Builder{
+		Home:       path.Join(os.Getenv("HOME"), ".bunster"),
 		Workdir:    ".",
 		Builddir:   cmd.String("o"),
 		MainScript: cmd.Args().First(),
@@ -136,8 +138,8 @@ func get(_ context.Context, cmd *cli.Command) error {
 	defer lock.Unlock()
 
 	builder := builder.Builder{
-		Workdir: ".",
 		Home:    path.Join(os.Getenv("HOME"), ".bunster"),
+		Workdir: ".",
 	}
 
 	return builder.ResolveDeps(cmd.Args().Slice())
