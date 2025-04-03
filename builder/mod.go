@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -96,28 +95,24 @@ func (b *Builder) ResolveDeps(packages []string) (err error) {
 		return err
 	}
 
-	if len(packages) == 0 {
-		for dep, rev := range config.Require {
-			packages = append(packages, dep+"@"+rev)
-		}
-	}
-
 	for _, p := range packages {
-		pack := strings.SplitN(p, "@", 2)
-		name, rev := pack[0], pack[1]
-
-		if err := b.getPackage(name, rev); err != nil {
+		query, err := parseQuery(p)
+		if err != nil {
 			return err
 		}
 
-		config.Require[name] = rev
+		if err := b.getPackage(query); err != nil {
+			return err
+		}
+
+		config.Require[query.module] = query.commit
 	}
 
 	return b.writeConfig(config)
 }
 
-func (b *Builder) getPackage(path, rev string) (err error) {
-	pkgDir := filepath.Join(b.Home, "pkg", path, rev)
+func (b *Builder) getPackage(q query) (err error) {
+	pkgDir := filepath.Join(b.Home, "pkg", q.module, q.commit)
 
 	if err := os.RemoveAll(pkgDir); err != nil {
 		return err
@@ -129,11 +124,11 @@ func (b *Builder) getPackage(path, rev string) (err error) {
 	if err := _exec(pkgDir, "git", "init"); err != nil {
 		return err
 	}
-	if err := _exec(pkgDir, "git", "fetch", "--dept=1", "https://"+path, rev); err != nil {
-		return fmt.Errorf("failed to resolve package %q, either path or version are invalid", path)
+	if err := _exec(pkgDir, "git", "fetch", "--dept=1", "https://"+q.module, q.commit); err != nil {
+		return fmt.Errorf("failed to resolve package %q, either path or version are invalid", q.module)
 	}
 	if err := _exec(pkgDir, "git", "checkout", "FETCH_HEAD"); err != nil {
-		return fmt.Errorf("failed to resolve package %q, unknown revision %q", path, rev)
+		return fmt.Errorf("failed to resolve package %q, unknown revision %q", q.module, q.commit)
 	}
 	if err := _exec(pkgDir, "rm", "-rf", ".git"); err != nil {
 		return err
