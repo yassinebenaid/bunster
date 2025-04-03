@@ -19,7 +19,7 @@ import (
 func main() {
 	app := cli.Command{
 		Name:  "bunster",
-		Usage: "compile shell script to self-contained executable programs",
+		Usage: "compile shell scripts to static binaries",
 		Commands: []*cli.Command{
 			{
 				Name:   "ast",
@@ -57,6 +57,7 @@ func main() {
 				Name:   "get",
 				Usage:  "Download a package specified on the command line, or all packages in bunster.yml if not arguments are present",
 				Action: get,
+				Flags:  []cli.Flag{&cli.BoolFlag{Name: "missing"}},
 			},
 		},
 	}
@@ -142,5 +143,5 @@ func get(_ context.Context, cmd *cli.Command) error {
 		Workdir: ".",
 	}
 
-	return builder.ResolveDeps(cmd.Args().Slice())
+	return builder.ResolveDeps(cmd.Args().Slice(), cmd.Bool("missing"))
 }

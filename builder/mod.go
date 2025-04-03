@@ -87,13 +87,19 @@ func (b *Builder) writeConfig(config *Config) error {
 	return nil
 }
 
-func (b *Builder) ResolveDeps(packages []string) (err error) {
+func (b *Builder) ResolveDeps(packages []string, missing bool) (err error) {
 	config, err := b.loadConfig()
 	if err != nil {
 		if os.IsNotExist(err) {
 			return nil
 		}
 		return err
+	}
+
+	if missing {
+		for module, version := range config.Require {
+			packages = append(packages, module+"@"+version)
+		}
 	}
 
 	for _, p := range packages {
