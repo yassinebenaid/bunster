@@ -11,7 +11,6 @@ import (
 )
 
 type Config struct {
-	Module  string            `yaml:"module"`
 	Require map[string]string `yaml:"require"`
 }
 
