@@ -18,8 +18,12 @@ import (
 
 func main() {
 	app := cli.Command{
-		Name:  "bunster",
-		Usage: "compile shell scripts to static binaries",
+		Name:      "bunster",
+		Usage:     "compile shell scripts to static binaries",
+		Version:   strings.TrimSpace(bunster.Version),
+		Authors:   []any{"Yassine Benaid <yassinebenaide3@gmail.com>"},
+		Copyright: "2024, Yassine Benaid",
+		Suggest:   true,
 		Commands: []*cli.Command{
 			{
 				Name:   "ast",
@@ -46,16 +50,8 @@ func main() {
 				},
 			},
 			{
-				Name:  "version",
-				Usage: "Print bunster version",
-				Action: func(ctx context.Context, c *cli.Command) error {
-					fmt.Println(strings.TrimSpace(bunster.Version))
-					return nil
-				},
-			},
-			{
 				Name:   "get",
-				Usage:  "Download a package specified on the command line, or all packages in bunster.yml if not arguments are present",
+				Usage:  "get a module from a remote registry.",
 				Action: get,
 				Flags:  []cli.Flag{&cli.BoolFlag{Name: "missing"}},
 			},
