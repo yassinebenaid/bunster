@@ -100,6 +100,10 @@ func (b *Builder) ResolveDeps(packages []string) (err error) {
 			return err
 		}
 
+		if b.checkPackage(query) {
+			continue
+		}
+
 		if err := b.getPackage(query); err != nil {
 			return err
 		}
@@ -133,7 +137,24 @@ func (b *Builder) getPackage(q query) (err error) {
 		return err
 	}
 
+	if err := b.lockPackage(q); err != nil {
+		return err
+	}
+
 	return nil
+}
+
+func (b *Builder) lockPackage(q query) (err error) {
+	lockFile := filepath.Join(b.Home, "pkg", q.module, q.commit, ".bunster.lock")
+
+	return os.WriteFile(lockFile, nil, 0600)
+}
+
+func (b *Builder) checkPackage(q query) bool {
+	lockFile := filepath.Join(b.Home, "pkg", q.module, q.commit, ".bunster.lock")
+
+	_, err := os.Stat(lockFile)
+	return err == nil
 }
 
 func _exec(dir string, args ...string) error {

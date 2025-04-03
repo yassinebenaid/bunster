@@ -125,7 +125,7 @@ func geneate(_ context.Context, cmd *cli.Command) error {
 }
 
 func get(_ context.Context, cmd *cli.Command) error {
-	lock := flock.New(path.Join(os.Getenv("HOME"), ".bunster", "bunster.lock"))
+	lock := flock.New(path.Join(os.TempDir(), "bunster.lock"))
 	locked, err := lock.TryLock()
 	if err != nil {
 		return err
