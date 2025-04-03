@@ -7,6 +7,7 @@ import (
 	"path"
 	"strings"
 
+	"github.com/gofrs/flock"
 	"github.com/urfave/cli/v3"
 	"github.com/yassinebenaid/bunster"
 	"github.com/yassinebenaid/bunster/builder"
@@ -124,6 +125,16 @@ func geneate(_ context.Context, cmd *cli.Command) error {
 }
 
 func get(_ context.Context, cmd *cli.Command) error {
+	lock := flock.New(path.Join(os.Getenv("HOME"), ".bunster", "bunster.lock"))
+	locked, err := lock.TryLock()
+	if err != nil {
+		return err
+	}
+	if !locked {
+		return fmt.Errorf("this command is currently running in another process")
+	}
+	defer lock.Unlock()
+
 	builder := builder.Builder{
 		Workdir: ".",
 		Home:    path.Join(os.Getenv("HOME"), ".bunster"),
