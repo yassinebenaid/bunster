@@ -1,0 +1,85 @@
+cases:
+  - name: can change directory
+    script: |
+      mkdir  dir
+      touch dir/foo.txt dir/bar.txt
+
+      ls
+      echo --
+
+      cd dir
+
+      ls
+      echo --
+
+      cd ..
+
+      ls
+      echo --
+    expect:
+      stdout: |
+        dir
+        --
+        bar.txt
+        foo.txt
+        --
+        dir
+        --
+
+  - name: when no arguments are passed, `cd` switches to home directory
+    script: |
+      mkdir dir
+      touch dir/foo.txt dir/bar.txt
+      HOME=dir
+
+      ls
+      echo --
+
+      cd 
+
+      ls
+      echo --
+    expect:
+      stdout: |
+        dir
+        --
+        bar.txt
+        foo.txt
+        --
+
+  - name: redirections reflect the current working directory
+    script: |
+      mkdir dir
+
+      echo foo >file.txt
+
+      cd dir 
+      echo bar >file.txt
+    expect:
+      files:
+        file.txt: "foo\n"
+        dir/file.txt: "bar\n"
+
+  - name: tests agains files respect current working directory
+    script: |
+      mkdir dir
+      touch dir/file.txt
+      ln dir/file.txt dir/file2.txt
+
+      cd dir
+      [ file.txt -ef file2.txt ]
+      echo $?
+    expect:
+      stdout: "0\n"
+
+  - name: changing directory within subshell does not affect parent shell
+    script: |
+      mkdir dir
+      touch dir/file.txt
+
+      ( cd dir )
+
+      ls
+
+    expect:
+      stdout: "dir\n"

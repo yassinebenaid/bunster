@@ -19,7 +19,7 @@ type OpenStream struct {
 
 func (of OpenStream) togo() string {
 	return fmt.Sprintf(
-		`%s, err := streamManager.OpenStream(%s, runtime.%s)
+		`%s, err := streamManager.OpenStream(shell.Path(%s), runtime.%s)
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return
