@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
@@ -34,7 +35,8 @@ type Builtin func(shell *Shell, stdin, stdout, stderr Stream)
 type Shell struct {
 	parent    *Shell
 	PID       int
-	Path      string
+	Arg0      string
+	CWD       string
 	ExitCode  int
 	Args      []string
 	WaitGroup sync.WaitGroup
@@ -55,6 +57,18 @@ func (shell *Shell) Shift(n int) {
 	} else {
 		shell.parent.Args = nil
 	}
+}
+
+func (shell *Shell) CD(dir string) {
+	shell.parent.CWD = dir
+}
+
+func (shell *Shell) Path(p string) string {
+	if filepath.IsAbs(p) {
+		return p
+	}
+
+	return filepath.Join(shell.CWD, p)
 }
 
 func (shell *Shell) Exit(ecode string) error {
@@ -139,7 +153,7 @@ func (shell *Shell) MarkVarAsExported(name string) {
 func (shell *Shell) ReadSpecialVar(name string) string {
 	switch name {
 	case "0":
-		return shell.Path
+		return shell.Arg0
 	case "$":
 		return strconv.FormatInt(int64(shell.PID), 10)
 	case "#":
@@ -183,7 +197,8 @@ func (shell *Shell) HandleError(sm *StreamManager, err error) {
 func (shell *Shell) Clone() *Shell {
 	sh := &Shell{
 		PID:          shell.PID,
-		Path:         shell.Path,
+		Arg0:         shell.Arg0,
+		CWD:          shell.CWD,
 		ExitCode:     shell.ExitCode,
 		Args:         shell.Args,
 		Embed:        shell.Embed,
@@ -225,7 +240,8 @@ func (shell *Shell) Exec(streamManager *StreamManager, name string, args []strin
 	if isFunc || isBuiltin {
 		childShell = Shell{
 			parent:       shell,
-			Path:         shell.Path,
+			Arg0:         shell.Arg0,
+			CWD:          shell.CWD,
 			PID:          shell.PID,
 			Embed:        shell.Embed,
 			Args:         args,
@@ -272,6 +288,7 @@ func (shell *Shell) Exec(streamManager *StreamManager, name string, args []strin
 	execCmd.Stdin = stdin
 	execCmd.Stdout = stdout
 	execCmd.Stderr = stderr
+	execCmd.Dir = shell.CWD
 
 	shell.env.foreach(func(key string, value string) bool {
 		execCmd.Env = append(execCmd.Env, key+"="+value)

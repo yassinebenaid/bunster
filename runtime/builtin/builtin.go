@@ -10,6 +10,7 @@ func Register(shell *runtime.Shell) {
 	shell.RegisterBuiltin("loadenv", Loadenv)
 	shell.RegisterBuiltin("embed", Embed)
 	shell.RegisterBuiltin("shift", Shift)
+	shell.RegisterBuiltin("cd", CD)
 }
 
 func True(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
