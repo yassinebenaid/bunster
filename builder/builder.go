@@ -23,6 +23,7 @@ type Builder struct {
 	Builddir   string
 	OutputFile string
 	Gofmt      bool
+	Home       string
 }
 
 func (b *Builder) Build() (err error) {
@@ -74,12 +75,17 @@ func (b *Builder) Generate() (err error) {
 		return err
 	}
 
-	module, err := b.globModule()
+	config, err := b.loadConfig()
 	if err != nil {
 		return err
 	}
 
-	for _, f := range module {
+	module, err := b.globModule(config)
+	if err != nil {
+		return err
+	}
+
+	for _, f := range module.Tree {
 		v, err := os.ReadFile(f)
 		if err != nil {
 			return err
@@ -95,6 +101,26 @@ func (b *Builder) Generate() (err error) {
 		}
 
 		mainSh = append(script, mainSh...)
+	}
+
+	for _, submodule := range module.Require {
+		for _, f := range submodule.Tree {
+			v, err := os.ReadFile(f)
+			if err != nil {
+				return err
+			}
+
+			script, err := parser.Parse(lexer.New([]rune(string(v))))
+			if err != nil {
+				return err
+			}
+
+			if err := analyser.Analyse(script, false); err != nil {
+				return err
+			}
+
+			mainSh = append(script, mainSh...)
+		}
 	}
 
 	program := generator.Generate(mainSh)
@@ -142,22 +168,6 @@ func (b *Builder) prepare() error {
 	}
 
 	return nil
-}
-
-func (b *Builder) globModule() ([]string, error) {
-	files, err := filepath.Glob("*.sh")
-	if err != nil {
-		return nil, err
-	}
-
-	var filtered []string
-	for _, file := range files {
-		if file != b.MainScript {
-			filtered = append(filtered, file)
-		}
-	}
-
-	return filtered, nil
 }
 
 func (b *Builder) writeRuntime() error {

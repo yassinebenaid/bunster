@@ -7,6 +7,7 @@ import (
 	"path"
 	"strings"
 
+	"github.com/gofrs/flock"
 	"github.com/urfave/cli/v3"
 	"github.com/yassinebenaid/bunster"
 	"github.com/yassinebenaid/bunster/builder"
@@ -17,13 +18,17 @@ import (
 
 func main() {
 	app := cli.Command{
-		Name:  "bunster",
-		Usage: "compile shell script to self-contained executable programs",
+		Name:      "bunster",
+		Usage:     "compile shell scripts to static binaries",
+		Version:   strings.TrimSpace(bunster.Version),
+		Authors:   []any{"Yassine Benaid <yassinebenaide3@gmail.com>"},
+		Copyright: "2024, Yassine Benaid",
+		Suggest:   true,
 		Commands: []*cli.Command{
 			{
 				Name:   "ast",
 				Usage:  "Print the script ast",
-				Action: astCMD,
+				Action: ast,
 				Flags: []cli.Flag{
 					&cli.BoolFlag{Name: "no-ansi", Aliases: []string{"n"}},
 				},
@@ -31,7 +36,7 @@ func main() {
 			{
 				Name:   "build",
 				Usage:  "Build a module",
-				Action: buildCMD,
+				Action: build,
 				Flags: []cli.Flag{
 					&cli.StringFlag{Name: "o", Required: true},
 				},
@@ -39,18 +44,16 @@ func main() {
 			{
 				Name:   "generate",
 				Usage:  "Generate the Go source out of a module",
-				Action: geneateCMD,
+				Action: geneate,
 				Flags: []cli.Flag{
 					&cli.StringFlag{Name: "o", Required: true},
 				},
 			},
 			{
-				Name:  "version",
-				Usage: "Print bunster version",
-				Action: func(ctx context.Context, c *cli.Command) error {
-					fmt.Println(strings.TrimSpace(bunster.Version))
-					return nil
-				},
+				Name:   "get",
+				Usage:  "get a module from a remote registry.",
+				Action: get,
+				Flags:  []cli.Flag{&cli.BoolFlag{Name: "missing"}},
 			},
 		},
 	}
@@ -62,7 +65,7 @@ func main() {
 	}
 }
 
-func astCMD(_ context.Context, cmd *cli.Command) error {
+func ast(_ context.Context, cmd *cli.Command) error {
 	filename := cmd.Args().Get(0)
 	v, err := os.ReadFile(filename)
 	if err != nil {
@@ -87,7 +90,7 @@ func astCMD(_ context.Context, cmd *cli.Command) error {
 	return d.Println(script)
 }
 
-func buildCMD(_ context.Context, cmd *cli.Command) error {
+func build(_ context.Context, cmd *cli.Command) error {
 	destination := cmd.String("o")
 	if !path.IsAbs(destination) {
 		currWorkdir, err := os.Getwd()
@@ -98,6 +101,7 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 	}
 
 	builder := builder.Builder{
+		Home:       path.Join(os.Getenv("HOME"), ".bunster"),
 		Workdir:    ".",
 		Builddir:   path.Join(os.TempDir(), "bunster-build"),
 		OutputFile: destination,
@@ -107,8 +111,9 @@ func buildCMD(_ context.Context, cmd *cli.Command) error {
 	return builder.Build()
 }
 
-func geneateCMD(_ context.Context, cmd *cli.Command) error {
+func geneate(_ context.Context, cmd *cli.Command) error {
 	builder := builder.Builder{
+		Home:       path.Join(os.Getenv("HOME"), ".bunster"),
 		Workdir:    ".",
 		Builddir:   cmd.String("o"),
 		MainScript: cmd.Args().First(),
@@ -116,4 +121,23 @@ func geneateCMD(_ context.Context, cmd *cli.Command) error {
 	}
 
 	return builder.Generate()
+}
+
+func get(_ context.Context, cmd *cli.Command) error {
+	lock := flock.New(path.Join(os.TempDir(), "bunster.lock"))
+	locked, err := lock.TryLock()
+	if err != nil {
+		return err
+	}
+	if !locked {
+		return fmt.Errorf("this command is currently running in another process")
+	}
+	defer func() { _ = lock.Unlock() }()
+
+	builder := builder.Builder{
+		Home:    path.Join(os.Getenv("HOME"), ".bunster"),
+		Workdir: ".",
+	}
+
+	return builder.ResolveDeps(cmd.Args().Slice(), cmd.Bool("missing"))
 }
