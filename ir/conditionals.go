@@ -197,7 +197,7 @@ type TestFileDescriptorIsTerminal struct {
 }
 
 func (c TestFileDescriptorIsTerminal) togo() string {
-	return fmt.Sprintf("testResult = runtime.FileDescriptorIsTerminal(streamManager, shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("testResult = runtime.FileDescriptorIsTerminal(streamManager, %s)\n", c.File.togo())
 }
 
 type TestFileIsSocket struct {

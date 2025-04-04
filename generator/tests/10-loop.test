@@ -139,13 +139,13 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
-		stream0, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_WRITE)
+		stream0, err := streamManager.OpenStream(shell.Path("file.txt"), runtime.STREAM_FLAG_WRITE)
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return
 		}
 		streamManager.Add("1", stream0)
-		stream1, err := streamManager.OpenStream("input.txt", runtime.STREAM_FLAG_READ)
+		stream1, err := streamManager.OpenStream(shell.Path("input.txt"), runtime.STREAM_FLAG_READ)
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return
@@ -267,13 +267,13 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
-		stream0, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_WRITE)
+		stream0, err := streamManager.OpenStream(shell.Path("file.txt"), runtime.STREAM_FLAG_WRITE)
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return
 		}
 		streamManager.Add("1", stream0)
-		stream1, err := streamManager.OpenStream("input.txt", runtime.STREAM_FLAG_READ)
+		stream1, err := streamManager.OpenStream(shell.Path("input.txt"), runtime.STREAM_FLAG_READ)
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return
@@ -575,13 +575,13 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
-		stream0, err := streamManager.OpenStream("file.txt", runtime.STREAM_FLAG_WRITE)
+		stream0, err := streamManager.OpenStream(shell.Path("file.txt"), runtime.STREAM_FLAG_WRITE)
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return
 		}
 		streamManager.Add("1", stream0)
-		stream1, err := streamManager.OpenStream("input.txt", runtime.STREAM_FLAG_READ)
+		stream1, err := streamManager.OpenStream(shell.Path("input.txt"), runtime.STREAM_FLAG_READ)
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return
@@ -1028,13 +1028,13 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	func() {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
-		stream0, err := streamManager.OpenStream("file", runtime.STREAM_FLAG_WRITE)
+		stream0, err := streamManager.OpenStream(shell.Path("file"), runtime.STREAM_FLAG_WRITE)
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return
 		}
 		streamManager.Add("1", stream0)
-		stream1, err := streamManager.OpenStream("file2", runtime.STREAM_FLAG_READ)
+		stream1, err := streamManager.OpenStream(shell.Path("file2"), runtime.STREAM_FLAG_READ)
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return

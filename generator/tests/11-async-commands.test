@@ -11,7 +11,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	defer shell.Terminate(streamManager)
 	func() {
 		streamManager := streamManager.Clone()
-		stdin, err := streamManager.OpenStream("/dev/null", runtime.STREAM_FLAG_READ)
+		stdin, err := streamManager.OpenStream(shell.Path("/dev/null"), runtime.STREAM_FLAG_READ)
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return
@@ -60,7 +60,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	defer shell.Terminate(streamManager)
 	func() {
 		streamManager := streamManager.Clone()
-		stdin, err := streamManager.OpenStream("/dev/null", runtime.STREAM_FLAG_READ)
+		stdin, err := streamManager.OpenStream(shell.Path("/dev/null"), runtime.STREAM_FLAG_READ)
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return
@@ -167,7 +167,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	defer shell.Terminate(streamManager)
 	func() {
 		streamManager := streamManager.Clone()
-		stdin, err := streamManager.OpenStream("/dev/null", runtime.STREAM_FLAG_READ)
+		stdin, err := streamManager.OpenStream(shell.Path("/dev/null"), runtime.STREAM_FLAG_READ)
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return
@@ -234,7 +234,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	defer shell.Terminate(streamManager)
 	func() {
 		streamManager := streamManager.Clone()
-		stdin, err := streamManager.OpenStream("/dev/null", runtime.STREAM_FLAG_READ)
+		stdin, err := streamManager.OpenStream(shell.Path("/dev/null"), runtime.STREAM_FLAG_READ)
 		if err != nil {
 			shell.HandleError(streamManager, err)
 			return
