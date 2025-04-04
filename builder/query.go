@@ -17,7 +17,7 @@ func parseQuery(v string) (query, error) {
 	var q query
 
 	if !queryRegex.MatchString(v) {
-		return q, fmt.Errorf("module path is not in an expected format")
+		return q, fmt.Errorf("module path %q is not in an expected format", v)
 	}
 
 	vslice := strings.SplitN(v, "@", 2)
