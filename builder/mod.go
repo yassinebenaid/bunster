@@ -167,7 +167,7 @@ func (b *Builder) checkPackage(q query) bool {
 
 func _exec(dir string, args ...string) error {
 	var stderr bytes.Buffer
-	sh := exec.Command(args[0], args[1:]...)
+	sh := exec.Command(args[0], args[1:]...) //nolint:gosec
 	sh.Stderr = &stderr
 	sh.Dir = dir
 

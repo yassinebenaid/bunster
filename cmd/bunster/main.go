@@ -132,7 +132,7 @@ func get(_ context.Context, cmd *cli.Command) error {
 	if !locked {
 		return fmt.Errorf("this command is currently running in another process")
 	}
-	defer lock.Unlock()
+	defer func() { _ = lock.Unlock() }()
 
 	builder := builder.Builder{
 		Home:    path.Join(os.Getenv("HOME"), ".bunster"),
