@@ -29,7 +29,7 @@ cases:
 
   - name: can use external modules
     external_modules:
-      github.com/user/module/v123/.bunster.lock: ""
+      github.com/user/module/v123/.bunster.lock: "" # we use this to ensure module is available
       github.com/user/module/v123/script.sh: |
         function foo {
           echo foo from external package
@@ -43,3 +43,18 @@ cases:
     expect:
       stdout: |
         foo from external package
+
+  - name: external modules that are not locked are not usable
+    external_modules: # there is not .bunster.lock file
+      github.com/user/module/v123/script.sh: |
+        function foo {
+          echo foo from external package
+        }
+    module:
+      bunster.yml: |
+        require:
+          github.com/user/module: v123
+      main.sh: |
+        foo
+    expect:
+      build_error: the module "github.com/user/module" is not locally available
