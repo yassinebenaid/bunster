@@ -26,11 +26,11 @@ features:
   - title: Bash compatible
     details: Bunsters aims to be compatible with bash. expecting that exising bash scripts do not have to be edited to work with bunster.
   - title: Module System
-    details: You no longer have to write your scripts in a single file. Bunster allows you to distribute code across multiple files and directories thought of as single unit called module.
+    details: You are not limited to write all of your code in a single file. Your code can be distributed across as many files as needed.
+  - title: Package Manager
+    details: Bunster has a buitlin package manager that makes it easy to publish and consume modules as libraries.
   - title: Environment Files
     details: .env files are nativily supported in bunster. Allowing you to load variables from .env files at runtime.
   - title: Static Asset Embedding
     details: You can embed files and directories within your compiled program. And use them as if they were normal files in the system at runtime.
-  - title: Deferred commands
-    details: Bunster allows you to defer the execution of a command to the end of the program or function. Useful for commands that perform clean up.
 ---

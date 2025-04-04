@@ -104,14 +104,76 @@ bunster build foo.sh -o hello
 
 ## Publishing module as library
 
-You may publish your module publically in any git registry (such as github, gitlab etc). This allows others to use your module in their projects by requiring it as dependencies.
+Publishing a bunster module is as easy as hosting it in a git repository on your preferred git registry such as `github`, `gitlab`, `bitbucket` or even your own server.
 
-> [!WARNING]
-> This is a work-in-progrss feature, will be release soon.
+We call bunster modules published for others to use as `libraries`. as a library, the module may only contain declaration files. in other words. only functions declaraion are allowed in global scope.
+
+### Example library
+
+Create a file named `hello.sh` with given content:
+
+```sh
+function hello {
+   echo "Hello World ✨"
+}
+```
+
+that's it, your module is ready. go ahead an put it on a git repository of your choice. in our case we will put it at: `https://github.com/yassinebenaid/hello-bunster`
 
 ## Using external libraries
 
-If you want to use an external library, it must first be available in a git registry such `githab`, `gitlab` etc.
+As described above, bunster libraries are hosted on git repositories. for example, we have previously published a library at `https://github.com/yassinebenaid/hello-bunster`.
 
-> [!WARNING]
-> This is a work-in-progrss feature, will be release soon.
+Now, in your project directory, run the following command:
+
+```sh
+bunster get github.com/yassinebenaid/hello-bunster@684da09acea05d9351c4c61d4296bc696f729533
+```
+
+this command fetches the library from the repository `github.com/yassinebenaid/hello-bunster` at commit `684da09acea05d9351c4c61d4296bc696f729533`. And will update the file `bunster.yml` with the content:
+
+```yaml
+require:
+  github.com/yassinebenaid/hello-bunster: 684da09acea05d9351c4c61d4296bc696f729533
+```
+
+That's it, you can use the functions form the library in your own module :
+
+_main.sh_
+
+```sh
+hello
+```
+
+Output:
+
+```txt
+Hello World ✨
+```
+
+### Editing `bunster.yml` manually
+
+You can list your dependencies manually in `bunster.yml` file. for example:
+
+```yaml
+require:
+  github.com/foo/bar: 684da09acea05d9351c4c61d4296bc696f729533
+  gitlab.com/baz/boo: 0ef176a380bb9c2410298c7444c93d62fd915357
+  bitbucket.com/baz/boo: 086d715616f6ec157fb8f2544aa025883acba649
+```
+
+You can download these modules using the command:
+
+```sh
+bunster get --missing
+```
+
+### Why commit hash as version
+
+Security, yes, commit hash is the most secure way to trust the content of a library. it's not the most readable, beutiful or friendly. but that's not as important as security.
+
+If we were to use semantic versionning, library authors can still edit the release content. and no one can trust what the authors may change.
+
+However, commit hash is unique enough that can never be altered. worst thing that can happen is the commit to be deleted.
+
+At least for now, we will continue to use commit hash as version. I don't have the budget to host a checksum database and allow use of semantic versionning as well.
