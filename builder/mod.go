@@ -36,11 +36,16 @@ func (b *Builder) globModule(c *Config) (*Module, error) {
 	}
 
 	for path, version := range c.Require {
+		available := b.checkPackage(query{module: path, commit: version})
+		if !available {
+			return nil, fmt.Errorf("the module %q is not locally available", path)
+		}
+
 		var submodule Module
 		submodule.Path = path
 		submodule.Version = version
 		module.Require = append(module.Require, submodule)
-		files, err := filepath.Glob(filepath.Join(os.Getenv("HOME"), ".bunster", "pkg", path, version, "*.sh"))
+		files, err := filepath.Glob(filepath.Join(b.Home, "pkg", path, version, "*.sh"))
 		if err != nil {
 			return nil, err
 		}
@@ -52,7 +57,7 @@ func (b *Builder) globModule(c *Config) (*Module, error) {
 	return &module, nil
 }
 
-const configFile = "bunster.test.yml"
+const configFile = "bunster.yml"
 
 func (b *Builder) loadConfig() (*Config, error) {
 	var c = Config{

@@ -22,16 +22,17 @@ import (
 type Test struct {
 	NoParallel bool `yaml:"no-parallel"`
 	Cases      []struct {
-		Name    string            `yaml:"name"`
-		Stdin   string            `yaml:"stdin"`
-		RunsOn  string            `yaml:"runs_on"`
-		Env     []string          `yaml:"env"`
-		Args    []string          `yaml:"args"`
-		Files   map[string]string `yaml:"files"`
-		Timeout int               `yaml:"timeout"`
-		Module  map[string]string `yaml:"module"`
-		Script  string            `yaml:"script"`
-		Expect  struct {
+		Name            string            `yaml:"name"`
+		Stdin           string            `yaml:"stdin"`
+		RunsOn          string            `yaml:"runs_on"`
+		Env             []string          `yaml:"env"`
+		Args            []string          `yaml:"args"`
+		Files           map[string]string `yaml:"files"`
+		Timeout         int               `yaml:"timeout"`
+		ExternalModules map[string]string `yaml:"external_modules"`
+		Module          map[string]string `yaml:"module"`
+		Script          string            `yaml:"script"`
+		Expect          struct {
 			BuildError string            `yaml:"build_error"`
 			Stdout     string            `yaml:"stdout"`
 			Stderr     string            `yaml:"stderr"`
@@ -96,6 +97,10 @@ func TestBunster(t *testing.T) {
 				if err := os.MkdirAll(codedir, 0700); err != nil {
 					t.Fatalf("Failed to create dir, %v", err)
 				}
+				bunsterHome := path.Join(testdir, "home")
+				if err := os.MkdirAll(codedir, 0700); err != nil {
+					t.Fatalf("Failed to create dir, %v", err)
+				}
 
 				if testCase.Script != "" {
 					testCase.Module = map[string]string{"main.sh": testCase.Script}
@@ -111,6 +116,16 @@ func TestBunster(t *testing.T) {
 					}
 				}
 
+				for filename, content := range testCase.ExternalModules {
+					dir, _ := path.Split(filename)
+					if err := os.MkdirAll(path.Join(bunsterHome, "pkg", dir), 0700); err != nil {
+						t.Fatalf("\nTest(#%d): %sFailed to write dir %q, %v", i, dump(testCase.Name), dir, err)
+					}
+					if err := os.WriteFile(path.Join(bunsterHome, "pkg", filename), []byte(content), 0600); err != nil {
+						t.Fatalf("\nTest(#%d): %sFailed to write file %q, %v", i, dump(testCase.Name), filename, err)
+					}
+				}
+
 				for filename, content := range testCase.Files {
 					if err := os.WriteFile(path.Join(rundir, filename), []byte(content), 0600); err != nil {
 						t.Fatalf("\nTest(#%d): %sFailed to write file %q, %v", i, dump(testCase.Name), filename, err)
@@ -118,6 +133,7 @@ func TestBunster(t *testing.T) {
 				}
 
 				builder := builder.Builder{
+					Home:       bunsterHome,
 					Workdir:    codedir,
 					Builddir:   path.Join(testdir, "build"),
 					OutputFile: path.Join(codedir, "test.bin"),

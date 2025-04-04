@@ -1,7 +1,6 @@
 package builder
 
 import (
-	"fmt"
 	"io"
 	"io/fs"
 	"os"
@@ -105,11 +104,6 @@ func (b *Builder) Generate() (err error) {
 	}
 
 	for _, submodule := range module.Require {
-		available := b.checkPackage(query{module: submodule.Path, commit: submodule.Version})
-		if !available {
-			return fmt.Errorf("the module %q is not locally available", submodule.Path)
-		}
-
 		for _, f := range submodule.Tree {
 			v, err := os.ReadFile(f)
 			if err != nil {

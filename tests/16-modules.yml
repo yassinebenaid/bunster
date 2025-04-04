@@ -1,0 +1,45 @@
+cases:
+  - name: can use functions of other files
+    module:
+      file1.sh: |
+        function foo {
+          echo foo
+        }
+      file2.sh: |
+        bar(){
+          foo
+          echo bar
+        }
+      main.sh: |
+        bar
+    expect:
+      stdout: |
+        foo
+        bar
+
+  - name: cannot use unavailable external modules
+    module:
+      bunster.yml: |
+        require:
+          github.com/user/module: v123
+      main.sh: |
+        echo foobar
+    expect:
+      build_error: the module "github.com/user/module" is not locally available
+
+  - name: can use external modules
+    external_modules:
+      github.com/user/module/v123/.bunster.lock: ""
+      github.com/user/module/v123/script.sh: |
+        function foo {
+          echo foo from external package
+        }
+    module:
+      bunster.yml: |
+        require:
+          github.com/user/module: v123
+      main.sh: |
+        foo
+    expect:
+      stdout: |
+        foo from external package
