@@ -83,3 +83,10 @@ cases:
 
     expect:
       stdout: "dir\n"
+
+  - name: command `pwd` prints current working directory
+    script: |
+      cd /tmp
+      pwd
+    expect:
+      stdout: "/tmp\n"
