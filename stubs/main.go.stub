@@ -9,9 +9,16 @@ import (
 )
 
 func main() {
+	cwd,err := os.Getwd()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "crash: %v\n", err)
+    	os.Exit(1)
+	}
+
 	shell := runtime.NewShell()
 	shell.PID = os.Getpid()
-	shell.Path = os.Args[0]
+	shell.CWD = cwd
+	shell.Arg0 = os.Args[0]
 	shell.Args = os.Args[1:]
 
     builtin.Register(shell)
