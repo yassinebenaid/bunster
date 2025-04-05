@@ -30,8 +30,12 @@ features:
       src: ./assets/landing/bash.svg
     details: Bunsters aims to be compatible with bash. expecting that exising bash scripts do not have to be edited to work with bunster.
   - title: Module System
+    icon:
+      src: ./assets/landing/modular.svg
     details: You are not limited to write all of your code in a single file. Your code can be distributed across as many files as needed.
   - title: Package Manager
+    icon:
+      src: ./assets/landing/package-manager.svg
     details: Bunster has a buitlin package manager that makes it easy to publish and consume modules as libraries.
   - title: Environment Files
     icon:
