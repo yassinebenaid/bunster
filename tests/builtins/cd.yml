@@ -84,6 +84,30 @@ cases:
     expect:
       stdout: "dir\n"
 
+  - name: changing directory within functions affects parent shell
+    script: |
+      mkdir dir
+      touch dir/file.txt
+
+      func(){
+        cd dir
+
+        func2(){
+          cd ..
+        }
+      }
+
+      func
+      ls
+
+      func2
+      ls
+
+    expect:
+      stdout: |
+        file.txt
+        dir
+
   - name: command `pwd` prints current working directory
     script: |
       cd /tmp

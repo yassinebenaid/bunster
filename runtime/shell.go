@@ -60,7 +60,11 @@ func (shell *Shell) Shift(n int) {
 }
 
 func (shell *Shell) CD(dir string) {
-	shell.parent.CWD = dir
+	shell.CWD = dir
+
+	if shell.parent != nil {
+		shell.parent.CD(dir)
+	}
 }
 
 func (shell *Shell) Path(p string) string {
