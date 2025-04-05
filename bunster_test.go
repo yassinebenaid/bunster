@@ -82,7 +82,7 @@ func TestBunster(t *testing.T) {
 				}
 				logger.Print(dump(testCase.Name))
 
-				testdir := path.Join(os.TempDir(), "bunster-testing")
+				testdir := path.Join("/tmp", "bunster-testing")
 				if err := os.RemoveAll(testdir); err != nil {
 					t.Fatalf("Failed to clean old workspace, %v", err)
 				}

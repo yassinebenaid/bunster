@@ -296,8 +296,7 @@ cases:
         "file.txt": ""
 
   - name: "file-system errors are handled"
-    files:
-      "non-permitted-file.txt": ""
+    runs_on: linux
     script: |
       # file doesn't exists'
       cat <file.txt
@@ -306,8 +305,21 @@ cases:
     expect:
       exit_code: 1
       stderr: |
-        "file.txt": no such file or directory
-        "dir/file.txt": no such file or directory
+        "/tmp/bunster-testing/run/file.txt": no such file or directory
+        "/tmp/bunster-testing/run/dir/file.txt": no such file or directory
+
+  - name: "file-system errors are handled"
+    runs_on: darwin
+    script: |
+      # file doesn't exists'
+      cat <file.txt
+
+      cat >dir/file.txt
+    expect:
+      exit_code: 1
+      stderr: |
+        "/private/tmp/bunster-testing/run/file.txt": no such file or directory
+        "/private/tmp/bunster-testing/run/dir/file.txt": no such file or directory
 
   - name: "stdio files are treated specially"
     stdin: "direct-from-stdin\n"
@@ -331,6 +343,7 @@ cases:
         foobar
 
   - name: "shell errors can also be redirected"
+    runs_on: linux
     script: |
       # This error is thrown by the shell, not the command itself
       cat 2>error.txt <non-existing-file.txt
@@ -338,4 +351,15 @@ cases:
       exit_code: 1
       files:
         error.txt: |
-          "non-existing-file.txt": no such file or directory
+          "/tmp/bunster-testing/run/non-existing-file.txt": no such file or directory
+
+  - name: "shell errors can also be redirected"
+    runs_on: darwin
+    script: |
+      # This error is thrown by the shell, not the command itself
+      cat 2>error.txt <non-existing-file.txt
+    expect:
+      exit_code: 1
+      files:
+        error.txt: |
+          "/private/tmp/bunster-testing/run/non-existing-file.txt": no such file or directory
