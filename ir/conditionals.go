@@ -11,7 +11,7 @@ type Compare struct {
 }
 
 func (c Compare) togo() string {
-	return fmt.Sprintf("testResult = %s %s %s\n", c.Left.togo(), c.Operator, c.Right.togo())
+	return fmt.Sprintf("%s %s %s", c.Left.togo(), c.Operator, c.Right.togo())
 }
 
 type CompareArithmetics struct {
@@ -21,7 +21,7 @@ type CompareArithmetics struct {
 }
 
 func (c CompareArithmetics) togo() string {
-	return fmt.Sprintf("testResult = runtime.NumberCompare(%s, %q, %s)\n", c.Left.togo(), c.Operator, c.Right.togo())
+	return fmt.Sprintf("runtime.NumberCompare(%s, %q, %s)", c.Left.togo(), c.Operator, c.Right.togo())
 }
 
 type TestFilesHaveSameDevAndInoNumbers struct {
@@ -30,7 +30,7 @@ type TestFilesHaveSameDevAndInoNumbers struct {
 }
 
 func (c TestFilesHaveSameDevAndInoNumbers) togo() string {
-	return fmt.Sprintf("testResult = runtime.FilesHaveSameDevAndIno(shell.Path(%s), shell.Path(%s))\n", c.File1.togo(), c.File2.togo())
+	return fmt.Sprintf("runtime.FilesHaveSameDevAndIno(shell.Path(%s), shell.Path(%s))", c.File1.togo(), c.File2.togo())
 }
 
 type FileIsOlderThan struct {
@@ -39,7 +39,7 @@ type FileIsOlderThan struct {
 }
 
 func (c FileIsOlderThan) togo() string {
-	return fmt.Sprintf("testResult = runtime.FileIsOlderThan(shell.Path(%s), shell.Path(%s))\n", c.File1.togo(), c.File2.togo())
+	return fmt.Sprintf("runtime.FileIsOlderThan(shell.Path(%s), shell.Path(%s))", c.File1.togo(), c.File2.togo())
 }
 
 type TestAgainsStringLength struct {
@@ -53,7 +53,7 @@ func (c TestAgainsStringLength) togo() string {
 		operator = "!="
 	}
 
-	return fmt.Sprintf("testResult = len(%s) %s 0\n", c.String.togo(), operator)
+	return fmt.Sprintf("len(%s) %s 0", c.String.togo(), operator)
 }
 
 type TestFileExists struct {
@@ -61,7 +61,7 @@ type TestFileExists struct {
 }
 
 func (c TestFileExists) togo() string {
-	return fmt.Sprintf("testResult = runtime.FileExists(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.FileExists(shell.Path(%s))", c.File.togo())
 }
 
 type TestDirectoryExists struct {
@@ -69,7 +69,7 @@ type TestDirectoryExists struct {
 }
 
 func (c TestDirectoryExists) togo() string {
-	return fmt.Sprintf("testResult = runtime.DirectoryExists(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.DirectoryExists(shell.Path(%s))", c.File.togo())
 }
 
 type TestBlockSpecialFileExists struct {
@@ -77,7 +77,7 @@ type TestBlockSpecialFileExists struct {
 }
 
 func (c TestBlockSpecialFileExists) togo() string {
-	return fmt.Sprintf("testResult = runtime.BlockSpecialFileExists(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.BlockSpecialFileExists(shell.Path(%s))", c.File.togo())
 }
 
 type TestCharacterSpecialFileExists struct {
@@ -85,7 +85,7 @@ type TestCharacterSpecialFileExists struct {
 }
 
 func (c TestCharacterSpecialFileExists) togo() string {
-	return fmt.Sprintf("testResult = runtime.CharacterSpecialFileExists(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.CharacterSpecialFileExists(shell.Path(%s))", c.File.togo())
 }
 
 type TestRegularFileExists struct {
@@ -93,7 +93,7 @@ type TestRegularFileExists struct {
 }
 
 func (c TestRegularFileExists) togo() string {
-	return fmt.Sprintf("testResult = runtime.RegularFileExists(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.RegularFileExists(shell.Path(%s))", c.File.togo())
 }
 
 type TestFileSGIDIsSet struct {
@@ -101,7 +101,7 @@ type TestFileSGIDIsSet struct {
 }
 
 func (c TestFileSGIDIsSet) togo() string {
-	return fmt.Sprintf("testResult = runtime.FileSGIDIsSet(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.FileSGIDIsSet(shell.Path(%s))", c.File.togo())
 }
 
 type TestFileIsOwnedByEffectiveGroup struct {
@@ -109,7 +109,7 @@ type TestFileIsOwnedByEffectiveGroup struct {
 }
 
 func (c TestFileIsOwnedByEffectiveGroup) togo() string {
-	return fmt.Sprintf("testResult = runtime.FileIsOwnedByEffectiveGroup(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.FileIsOwnedByEffectiveGroup(shell.Path(%s))", c.File.togo())
 }
 
 type TestFileIsOwnedByEffectiveUser struct {
@@ -117,7 +117,7 @@ type TestFileIsOwnedByEffectiveUser struct {
 }
 
 func (c TestFileIsOwnedByEffectiveUser) togo() string {
-	return fmt.Sprintf("testResult = runtime.FileIsOwnedByEffectiveUser(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.FileIsOwnedByEffectiveUser(shell.Path(%s))", c.File.togo())
 }
 
 type TestFileHasBeenModifiedSinceLastRead struct {
@@ -125,7 +125,7 @@ type TestFileHasBeenModifiedSinceLastRead struct {
 }
 
 func (c TestFileHasBeenModifiedSinceLastRead) togo() string {
-	return fmt.Sprintf("testResult = runtime.FileHasBeenModifiedSinceLastRead(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.FileHasBeenModifiedSinceLastRead(shell.Path(%s))", c.File.togo())
 }
 
 type TestFileSUIDIsSet struct {
@@ -133,7 +133,7 @@ type TestFileSUIDIsSet struct {
 }
 
 func (c TestFileSUIDIsSet) togo() string {
-	return fmt.Sprintf("testResult = runtime.FileSUIDIsSet(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.FileSUIDIsSet(shell.Path(%s))", c.File.togo())
 }
 
 type TestFileIsSymbolic struct {
@@ -141,7 +141,7 @@ type TestFileIsSymbolic struct {
 }
 
 func (c TestFileIsSymbolic) togo() string {
-	return fmt.Sprintf("testResult = runtime.FileIsSymbolic(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.FileIsSymbolic(shell.Path(%s))", c.File.togo())
 }
 
 type TestFileIsSticky struct {
@@ -149,7 +149,7 @@ type TestFileIsSticky struct {
 }
 
 func (c TestFileIsSticky) togo() string {
-	return fmt.Sprintf("testResult = runtime.FileIsSticky(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.FileIsSticky(shell.Path(%s))", c.File.togo())
 }
 
 type TestFileIsFIFO struct {
@@ -157,7 +157,7 @@ type TestFileIsFIFO struct {
 }
 
 func (c TestFileIsFIFO) togo() string {
-	return fmt.Sprintf("testResult = runtime.FileIsFIFO(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.FileIsFIFO(shell.Path(%s))", c.File.togo())
 }
 
 type TestFileIsReadable struct {
@@ -165,7 +165,7 @@ type TestFileIsReadable struct {
 }
 
 func (c TestFileIsReadable) togo() string {
-	return fmt.Sprintf("testResult = runtime.FileIsReadable(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.FileIsReadable(shell.Path(%s))", c.File.togo())
 }
 
 type TestFileIsWritable struct {
@@ -173,7 +173,7 @@ type TestFileIsWritable struct {
 }
 
 func (c TestFileIsWritable) togo() string {
-	return fmt.Sprintf("testResult = runtime.FileIsWritable(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.FileIsWritable(shell.Path(%s))", c.File.togo())
 }
 
 type TestFileIsExecutable struct {
@@ -181,7 +181,7 @@ type TestFileIsExecutable struct {
 }
 
 func (c TestFileIsExecutable) togo() string {
-	return fmt.Sprintf("testResult = runtime.FileIsExecutable(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.FileIsExecutable(shell.Path(%s))", c.File.togo())
 }
 
 type TestFileHasAPositiveSize struct {
@@ -189,7 +189,7 @@ type TestFileHasAPositiveSize struct {
 }
 
 func (c TestFileHasAPositiveSize) togo() string {
-	return fmt.Sprintf("testResult = runtime.FileHasAPositiveSize(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.FileHasAPositiveSize(shell.Path(%s))", c.File.togo())
 }
 
 type TestFileDescriptorIsTerminal struct {
@@ -197,7 +197,7 @@ type TestFileDescriptorIsTerminal struct {
 }
 
 func (c TestFileDescriptorIsTerminal) togo() string {
-	return fmt.Sprintf("testResult = runtime.FileDescriptorIsTerminal(streamManager, %s)\n", c.File.togo())
+	return fmt.Sprintf("runtime.FileDescriptorIsTerminal(streamManager, %s)", c.File.togo())
 }
 
 type TestFileIsSocket struct {
@@ -205,7 +205,7 @@ type TestFileIsSocket struct {
 }
 
 func (c TestFileIsSocket) togo() string {
-	return fmt.Sprintf("testResult = runtime.FileIsSocket(shell.Path(%s))\n", c.File.togo())
+	return fmt.Sprintf("runtime.FileIsSocket(shell.Path(%s))", c.File.togo())
 }
 
 type TestVarIsSet struct {
@@ -213,5 +213,5 @@ type TestVarIsSet struct {
 }
 
 func (c TestVarIsSet) togo() string {
-	return fmt.Sprintf("testResult = shell.VarIsSet(%s)\n", c.Name.togo())
+	return fmt.Sprintf("shell.VarIsSet(%s)", c.Name.togo())
 }
