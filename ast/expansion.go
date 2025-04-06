@@ -13,11 +13,7 @@ type ParameterExpansion struct {
 type VarOrDefault struct {
 	Parameter Param
 	Default   Expression
-}
-
-type VarIssetOrDefault struct {
-	Parameter Param
-	Default   Expression
+	UnsetOnly bool
 }
 
 type VarOrSet struct {
@@ -79,7 +75,6 @@ type Slice struct {
 
 func (ParameterExpansion) node() {}
 func (VarOrDefault) node()       {}
-func (VarIssetOrDefault) node()  {}
 func (VarOrSet) node()           {}
 func (VarOrFail) node()          {}
 func (CheckAndUse) node()        {}
@@ -93,7 +88,6 @@ func (Slice) node()              {}
 // Expressions
 func (ParameterExpansion) expr() {}
 func (VarOrDefault) expr()       {}
-func (VarIssetOrDefault) expr()  {}
 func (VarOrSet) expr()           {}
 func (VarOrFail) expr()          {}
 func (CheckAndUse) expr()        {}
@@ -106,7 +100,6 @@ func (Slice) expr()              {}
 
 func (v ParameterExpansion) string() string { return string(v.Name) }
 func (VarOrDefault) string() string         { return "" }
-func (VarIssetOrDefault) string() string    { return "" }
 func (VarOrSet) string() string             { return "" }
 func (VarOrFail) string() string            { return "" }
 func (CheckAndUse) string() string          { return "" }

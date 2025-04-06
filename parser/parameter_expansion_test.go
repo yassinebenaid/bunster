@@ -32,18 +32,19 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.VarIssetOrDefault{Parameter: ast.Param{Name: "var"}, Default: ast.Word("default")},
-				ast.VarIssetOrDefault{Parameter: ast.Param{Name: "var"}, Default: ast.Word("default")},
-				ast.VarIssetOrDefault{Parameter: ast.Param{Name: "var"}, Default: ast.Var("default")},
-				ast.VarIssetOrDefault{
+				ast.VarOrDefault{Parameter: ast.Param{Name: "var"}, Default: ast.Word("default"), UnsetOnly: true},
+				ast.VarOrDefault{Parameter: ast.Param{Name: "var"}, Default: ast.Word("default"), UnsetOnly: true},
+				ast.VarOrDefault{Parameter: ast.Param{Name: "var"}, Default: ast.Var("default"), UnsetOnly: true},
+				ast.VarOrDefault{
 					Parameter: ast.Param{Name: "var"},
 					Default: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < "),
 					},
+					UnsetOnly: true,
 				},
-				ast.VarIssetOrDefault{Parameter: ast.Param{Name: "var"}},
+				ast.VarOrDefault{Parameter: ast.Param{Name: "var"}, UnsetOnly: true},
 			},
 		},
 	}},
