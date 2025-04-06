@@ -294,6 +294,10 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 func (a *analyser) analyseExpression(s ast.Expression) {
 	switch v := s.(type) {
 	case ast.Word, ast.Var, ast.SpecialVar, ast.Number:
+	case ast.VarLength:
+		if v.Parameter.Index != nil {
+			a.analyseExpression(v.Parameter.Index)
+		}
 	case ast.CommandSubstitution:
 		for _, s := range v {
 			a.analyseStatement(s)

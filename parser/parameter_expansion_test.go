@@ -19,9 +19,9 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.VarCount{Parameter: ast.Param{Name: "var"}},
-				ast.VarCount{Parameter: ast.Param{Name: "var"}},
-				ast.VarCount{Parameter: ast.Param{
+				ast.VarLength{Parameter: ast.Param{Name: "var"}},
+				ast.VarLength{Parameter: ast.Param{Name: "var"}},
+				ast.VarLength{Parameter: ast.Param{
 					Name:  "var",
 					Index: ast.Arithmetic{ast.Number("123")},
 				}},

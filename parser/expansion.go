@@ -98,7 +98,7 @@ func (p *parser) parseParameterExpansion() ast.Expression {
 
 	if p.curr.Type == token.HASH {
 		p.proceed()
-		exp = ast.VarCount{Parameter: p.parseParameter()}
+		exp = ast.VarLength{Parameter: p.parseParameter()}
 
 		if p.curr.Type != token.RIGHT_BRACE {
 			p.error("expected closing brace `}`, found `%s`", p.curr)

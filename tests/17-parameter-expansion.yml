@@ -1,0 +1,11 @@
+cases:
+  - name: can expand variables
+    script: |
+      var=foo
+
+      echo ${var}
+      echo ${#var}
+    expect:
+      stdout: |
+        foo
+        3
