@@ -13,6 +13,19 @@ func (g *generator) handleParameterExpansion(buf *InstructionBuffer, expression 
 		return ir.VarLength{
 			Name: v.Parameter.Name,
 		}
+	case ast.VarOrDefault:
+		name := fmt.Sprintf("expr%d", g.expressionsCount)
+		buf.add(ir.Declare{Name: name, Value: ir.ReadVar(v.Parameter.Name)})
+
+		var def ir.Instruction = ir.String("")
+		if v.Default != nil {
+			def = g.handleExpression(buf, v.Default)
+		}
+		buf.add(ir.If{
+			Condition: ir.TestAgainsStringLength{String: ir.Literal(name), Zero: true},
+			Body:      []ir.Instruction{ir.Set{Name: name, Value: def}},
+		})
+		return ir.Literal(name)
 	default:
 		panic(fmt.Sprintf("Unsupported expansion expression: %T", v))
 	}

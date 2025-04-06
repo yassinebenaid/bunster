@@ -12,7 +12,6 @@ type ParameterExpansion struct {
 
 type VarOrDefault struct {
 	Parameter    Param
-	Index        Expression
 	Default      Expression
 	CheckForNull bool
 }

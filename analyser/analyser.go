@@ -298,6 +298,13 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 		if v.Parameter.Index != nil {
 			a.analyseExpression(v.Parameter.Index)
 		}
+	case ast.VarOrDefault:
+		if v.Parameter.Index != nil {
+			a.analyseExpression(v.Parameter.Index)
+		}
+		if v.Default != nil {
+			a.analyseExpression(v.Default)
+		}
 	case ast.CommandSubstitution:
 		for _, s := range v {
 			a.analyseStatement(s)
