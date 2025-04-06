@@ -125,11 +125,13 @@ func (p *parser) parseParameterExpansion() ast.Expression {
 			Default:   p.parseExpansionOperandExpression(0),
 			UnsetOnly: unsetOnly,
 		}
-	case token.COLON_ASSIGN:
+	case token.ASSIGN, token.COLON_ASSIGN:
+		unsetOnly := p.curr.Type != token.COLON_ASSIGN
 		p.proceed()
 		exp = ast.VarOrSet{
 			Parameter: param,
 			Default:   p.parseExpansionOperandExpression(0),
+			UnsetOnly: unsetOnly,
 		}
 	case token.COLON_QUESTION:
 		p.proceed()

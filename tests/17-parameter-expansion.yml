@@ -30,14 +30,41 @@ cases:
         not-null:foo not-null:default not-null: not-null:foobar
         isset:foo isset:default isset: isset:foobar isset:
 
-  - name: set variable or default
+  - name: set variable or use default if its unset
     script: |
       var=foo
+      null_var=
+      null_var2=
+
+      echo  1:${var=default} \
+            2:${null_var=bar} \
+            3:$null_var \
+            4:${null_var2=} \
+            5:$null_var2 \
+            6:${unset_var=default} \
+            7:$unset_var \
+            8:${unset_var2=$(echo foobar)} \
+            9:$unset_var2
+    expect:
+      stdout: |
+        1:foo 2: 3: 4: 5: 6:default 7:default 8:foobar 9:foobar
+
+  - name: set variable or use default if it's null
+    script: |
+      var=foo
+      null_var=
+      null_var2=
 
       echo  1:${var:=default} \
-            2:${var2:=bar} \
-            3:$var2
+            2:${null_var:=bar} \
+            3:$null_var \
+            4:${null_var2:=} \
+            5:$null_var2 \
+            6:${unset_var:=foo} \
+            7:$unset_var \
+            8:${unset_var2:=$(echo foobar)} \
+            9:$unset_var2
 
     expect:
       stdout: |
-        1:foo 2:bar 3:bar
+        1:foo 2:bar 3:bar 4: 5: 6:foo 7:foo 8:foobar 9:foobar
