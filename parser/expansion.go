@@ -119,10 +119,17 @@ func (p *parser) parseParameterExpansion() ast.Expression {
 	case token.MINUS, token.COLON_MINUS:
 		checkForNull := p.curr.Type == token.COLON_MINUS
 		p.proceed()
-		exp = ast.VarOrDefault{
-			Parameter:    param,
-			Default:      p.parseExpansionOperandExpression(0),
-			CheckForNull: checkForNull,
+
+		if checkForNull {
+			exp = ast.VarOrDefault{
+				Parameter: param,
+				Default:   p.parseExpansionOperandExpression(0),
+			}
+		} else {
+			exp = ast.VarIssetOrDefault{
+				Parameter: param,
+				Default:   p.parseExpansionOperandExpression(0),
+			}
 		}
 	case token.COLON_ASSIGN:
 		p.proceed()
