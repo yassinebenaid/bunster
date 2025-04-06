@@ -2,15 +2,30 @@ cases:
   - name: can expand variables
     script: |
       var=foo
-      null_var=
 
       echo expansion:${var}
       echo length:${#var}
-      echo not-null:${var:-default} not-null:${null_var:-default} not-null:${null_var:-}  not-null:${null_var:-$(echo foobar)}
-      echo isset:${var-default} isset:${unset_var-default} isset:${unset_var-} isset:${unset_var-$(echo foobar)} isset:${null_var-default}
     expect:
       stdout: |
         expansion:foo
         length:3
+
+  - name: variable or default
+    script: |
+      var=foo
+      null_var=
+
+      echo  not-null:${var:-default} \
+            not-null:${null_var:-default} \
+            not-null:${null_var:-}  \
+            not-null:${null_var:-$(echo foobar)}
+
+      echo  isset:${var-default} \
+            isset:${unset_var-default} \
+            isset:${unset_var-} \
+            isset:${unset_var-$(echo foobar)} \
+            isset:${null_var-default}
+    expect:
+      stdout: |
         not-null:foo not-null:default not-null: not-null:foobar
         isset:foo isset:default isset: isset:foobar isset:
