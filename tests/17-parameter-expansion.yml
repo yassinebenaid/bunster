@@ -29,3 +29,15 @@ cases:
       stdout: |
         not-null:foo not-null:default not-null: not-null:foobar
         isset:foo isset:default isset: isset:foobar isset:
+
+  - name: set variable or default
+    script: |
+      var=foo
+
+      echo  1:${var:=default} \
+            2:${var2:=bar} \
+            3:$var2
+
+    expect:
+      stdout: |
+        1:foo 2:bar 3:bar

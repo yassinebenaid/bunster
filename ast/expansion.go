@@ -18,8 +18,8 @@ type VarOrDefault struct {
 
 type VarOrSet struct {
 	Parameter Param
-	Index     Expression
 	Default   Expression
+	UnsetOnly bool
 }
 
 type VarOrFail struct {
