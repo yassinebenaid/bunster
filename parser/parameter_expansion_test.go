@@ -121,6 +121,24 @@ var parameterExpansionTests = []testCase{
 			},
 		},
 	}},
+	{`cmd ${var+alternate} ${var+${alternate}} ${var+ $foo bar "baz" | & ; 2> < } ${var+}`, ast.Script{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.CheckAndUse{Parameter: ast.Param{Name: "var"}, Value: ast.Word("alternate"), UnsetOnly: true},
+				ast.CheckAndUse{Parameter: ast.Param{Name: "var"}, Value: ast.Var("alternate"), UnsetOnly: true},
+				ast.CheckAndUse{
+					Parameter: ast.Param{Name: "var"},
+					Value: ast.UnquotedString{
+						ast.Word(" "),
+						ast.Var("foo"),
+						ast.Word(" bar baz | & ; 2> < "),
+					}, UnsetOnly: true,
+				},
+				ast.CheckAndUse{Parameter: ast.Param{Name: "var"}, UnsetOnly: true},
+			},
+		},
+	}},
 	{`cmd ${var:+alternate} ${var:+${alternate}} ${var:+ $foo bar "baz" | & ; 2> < } ${var:+}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),

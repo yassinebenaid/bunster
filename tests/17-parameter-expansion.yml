@@ -68,3 +68,13 @@ cases:
     expect:
       stdout: |
         1:foo 2:bar 3:bar 4: 5: 6:foo 7:foo 8:foobar 9:foobar
+
+  - name: if variable is set then use default
+    script: |
+      var=foo
+
+      echo  1:${var+bar}
+
+    expect:
+      stdout: |
+        1:foo

@@ -139,11 +139,13 @@ func (p *parser) parseParameterExpansion() ast.Expression {
 			Parameter: param,
 			Error:     p.parseExpansionOperandExpression(0),
 		}
-	case token.COLON_PLUS:
+	case token.PLUS, token.COLON_PLUS:
+		unsetOnly := p.curr.Type != token.COLON_PLUS
 		p.proceed()
 		exp = ast.CheckAndUse{
 			Parameter: param,
 			Value:     p.parseExpansionOperandExpression(0),
+			UnsetOnly: unsetOnly,
 		}
 	case token.CIRCUMFLEX, token.DOUBLE_CIRCUMFLEX, token.COMMA, token.DOUBLE_COMMA:
 		operator := p.curr.Literal

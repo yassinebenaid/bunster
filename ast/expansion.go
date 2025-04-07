@@ -30,8 +30,8 @@ type VarOrFail struct {
 
 type CheckAndUse struct {
 	Parameter Param
-	Index     Expression
 	Value     Expression
+	UnsetOnly bool
 }
 
 type ChangeCase struct {
