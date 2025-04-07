@@ -15,6 +15,8 @@ func (g *generator) handleParameterExpansion(buf *InstructionBuffer, expression 
 		return g.handleParameterExpansionVarOrDefault(buf, v)
 	case ast.VarOrSet:
 		return g.handleParameterExpansionVarOrSet(buf, v)
+	case ast.CheckAndUse:
+		return g.handleParameterExpansionCheckAndUse(buf, v)
 	default:
 		panic(fmt.Sprintf("Unsupported expansion expression: %T", v))
 	}
@@ -65,4 +67,29 @@ func (g *generator) handleParameterExpansionVarOrSet(buf *InstructionBuffer, exp
 
 	buf.add(_if)
 	return ir.ReadVar(expression.Parameter.Name)
+}
+
+func (g *generator) handleParameterExpansionCheckAndUse(buf *InstructionBuffer, expression ast.CheckAndUse) ir.Instruction {
+	name := fmt.Sprintf("expr%d", g.expressionsCount)
+	buf.add(ir.Declare{Name: name, Value: ir.String("")})
+
+	var value ir.Instruction = ir.String("")
+	if expression.Value != nil {
+		value = g.handleExpression(buf, expression.Value)
+	}
+
+	_if := ir.If{
+		Body: []ir.Instruction{
+			ir.Set{Name: name, Value: value},
+		},
+	}
+
+	if expression.UnsetOnly {
+		_if.Condition = ir.TestVarIsSet{Name: ir.String(expression.Parameter.Name)}
+	} else {
+		_if.Condition = ir.TestAgainsStringLength{String: ir.ReadVar(expression.Parameter.Name)}
+	}
+
+	buf.add(_if)
+	return ir.Literal(name)
 }

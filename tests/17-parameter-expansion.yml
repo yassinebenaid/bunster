@@ -72,9 +72,27 @@ cases:
   - name: if variable is set then use default
     script: |
       var=foo
+      null_var=
 
-      echo  1:${var+bar}
+      echo  1:${var+bar} \
+            2:${null_var+bar} \
+            3:${unset_var+bar} \
+            4:${var+$(echo foobar)}
 
     expect:
       stdout: |
-        1:foo
+        1:bar 2:bar 3: 4:foobar
+
+  - name: if variable is set or is null then use default
+    script: |
+      var=foo
+      null_var=
+
+      echo  1:${var:+bar} \
+            2:${null_var:+bar} \
+            3:${unset_var:+bar} \
+            4:${var:+$(echo foobar)}
+
+    expect:
+      stdout: |
+        1:bar 2: 3: 4:foobar

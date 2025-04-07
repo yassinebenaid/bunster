@@ -312,6 +312,13 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 		if v.Default != nil {
 			a.analyseExpression(v.Default)
 		}
+	case ast.CheckAndUse:
+		if v.Parameter.Index != nil {
+			a.analyseExpression(v.Parameter.Index)
+		}
+		if v.Value != nil {
+			a.analyseExpression(v.Value)
+		}
 	case ast.CommandSubstitution:
 		for _, s := range v {
 			a.analyseStatement(s)
@@ -339,7 +346,7 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 			a.analyseArithmeticExpression(expr)
 		}
 	default:
-		a.report(Error{Msg: fmt.Sprintf("Unsupported statement type: %T", v)})
+		a.report(Error{Msg: fmt.Sprintf("Unsupported expression type: %T", v)})
 	}
 }
 
