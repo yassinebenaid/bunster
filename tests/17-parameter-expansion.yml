@@ -96,3 +96,27 @@ cases:
     expect:
       stdout: |
         1:bar 2: 3: 4:foobar
+
+  - name: can slice a string
+    script: |
+      var=abcdefghijklmnop
+
+      echo  1:${var:2} 
+      echo  2:${var:5}
+      echo  3:${var:5:5}
+      echo  4:${var: -4}
+      echo  5:${var: -2}
+      echo  6:${var: -7:5}
+      echo  7:${var: -7: -5}
+      echo  8:${var: -7: -1}
+
+    expect:
+      stdout: |
+        1:cdefghijklmnop
+        2:fghijklmnop
+        3:fghij
+        4:mnop
+        5:op
+        6:jklmn
+        7:jk
+        8:jklmno

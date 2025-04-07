@@ -7,21 +7,6 @@ import (
 	"github.com/yassinebenaid/bunster/ir"
 )
 
-func (g *generator) handleParameterExpansion(buf *InstructionBuffer, expression ast.Expression) ir.Instruction {
-	switch v := expression.(type) {
-	case ast.VarLength:
-		return ir.VarLength{Name: v.Parameter.Name}
-	case ast.VarOrDefault:
-		return g.handleParameterExpansionVarOrDefault(buf, v)
-	case ast.VarOrSet:
-		return g.handleParameterExpansionVarOrSet(buf, v)
-	case ast.CheckAndUse:
-		return g.handleParameterExpansionCheckAndUse(buf, v)
-	default:
-		panic(fmt.Sprintf("Unsupported expansion expression: %T", v))
-	}
-}
-
 func (g *generator) handleParameterExpansionVarOrDefault(buf *InstructionBuffer, expression ast.VarOrDefault) ir.Instruction {
 	name := fmt.Sprintf("expr%d", g.expressionsCount)
 	buf.add(ir.Declare{Name: name, Value: ir.String("")})
@@ -92,4 +77,26 @@ func (g *generator) handleParameterExpansionCheckAndUse(buf *InstructionBuffer, 
 
 	buf.add(_if)
 	return ir.Literal(name)
+}
+
+func (g *generator) handleParameterExpansionSlice(buf *InstructionBuffer, expression ast.Slice) ir.Instruction {
+	offset := fmt.Sprintf("offset%d", g.expressionsCount)
+	length := fmt.Sprintf("length%d", g.expressionsCount)
+
+	buf.add(ir.Declare{Name: offset, Value: ir.Literal("0")})
+	buf.add(ir.Declare{Name: length, Value: ir.Literal("int(^uint32(0))")})
+
+	for _, arithmetic := range expression.Offset {
+		buf.add(ir.Set{Name: offset, Value: g.handleArithmeticExpression(buf, arithmetic)})
+	}
+
+	for _, arithmetic := range expression.Length {
+		buf.add(ir.Set{Name: length, Value: g.handleArithmeticExpression(buf, arithmetic)})
+	}
+
+	return ir.Substring{
+		String: ir.ReadVar(expression.Parameter.Name),
+		Offset: ir.Literal(offset),
+		Length: ir.Literal(length),
+	}
 }

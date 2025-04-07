@@ -237,3 +237,34 @@ func PatternMatch(str string, p string) bool {
 	}
 	return regexp.MustCompile(rx).MatchString(str)
 }
+
+func Substring(str string, offset, length int) string {
+	runes := []rune(str)
+	n := len(runes)
+
+	// Handle negative offset (from end)
+	if offset < 0 {
+		offset = n + offset
+	}
+	if offset < 0 || offset > n {
+		return ""
+	}
+
+	// Handle negative length like Bash: treat as endpoint (from end)
+	var end int
+	if length < 0 {
+		end = n + length
+	} else {
+		end = offset + length
+	}
+
+	// Clamp bounds
+	if end < offset {
+		return ""
+	}
+	if end > n {
+		end = n
+	}
+
+	return string(runes[offset:end])
+}

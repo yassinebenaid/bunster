@@ -68,7 +68,6 @@ type Transform struct {
 
 type Slice struct {
 	Parameter Param
-	Index     Expression
 	Offset    Arithmetic
 	Length    Arithmetic
 }

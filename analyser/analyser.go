@@ -345,6 +345,14 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 		for _, expr := range v {
 			a.analyseArithmeticExpression(expr)
 		}
+	case ast.Slice:
+		if v.Parameter.Index != nil {
+			a.analyseExpression(v.Parameter.Index)
+		}
+		a.analyseExpression(v.Offset)
+		if v.Length != nil {
+			a.analyseExpression(v.Length)
+		}
 	default:
 		a.report(Error{Msg: fmt.Sprintf("Unsupported expression type: %T", v)})
 	}

@@ -209,8 +209,16 @@ func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expr
 		return g.handleCommandSubstitution(buf, v)
 	case ast.Arithmetic:
 		return g.handleArithmeticSubstitution(buf, v)
-	case ast.VarLength, ast.VarOrDefault, ast.VarOrSet, ast.CheckAndUse:
-		return g.handleParameterExpansion(buf, v)
+	case ast.VarLength:
+		return ir.VarLength{Name: v.Parameter.Name}
+	case ast.VarOrDefault:
+		return g.handleParameterExpansionVarOrDefault(buf, v)
+	case ast.VarOrSet:
+		return g.handleParameterExpansionVarOrSet(buf, v)
+	case ast.CheckAndUse:
+		return g.handleParameterExpansionCheckAndUse(buf, v)
+	case ast.Slice:
+		return g.handleParameterExpansionSlice(buf, v)
 	default:
 		panic(fmt.Sprintf("Unsupported expression: %T", v))
 	}
