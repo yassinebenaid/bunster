@@ -319,6 +319,13 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 		if v.Pattern != nil {
 			a.analyseExpression(v.Pattern)
 		}
+	case ast.MatchAndRemove:
+		if v.Parameter.Index != nil {
+			a.analyseExpression(v.Parameter.Index)
+		}
+		if v.Pattern != nil {
+			a.analyseExpression(v.Pattern)
+		}
 	case ast.CheckAndUse:
 		if v.Parameter.Index != nil {
 			a.analyseExpression(v.Parameter.Index)

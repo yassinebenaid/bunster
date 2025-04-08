@@ -280,7 +280,7 @@ func ChangeStringCase(upper bool, str string, _pattern string, all bool) string 
 	var result []rune
 	var matched = false
 
-	for _, ch := range []rune(str) {
+	for _, ch := range str {
 		var s = string(ch)
 		if (all || !matched) && regx.MatchString(s) {
 			matched = true
@@ -294,4 +294,20 @@ func ChangeStringCase(upper bool, str string, _pattern string, all bool) string 
 	}
 
 	return string(result)
+}
+
+func RemoveMatchingPrefix(str string, _pattern string, longest bool) string {
+	mode := pattern.Shortest
+	if longest {
+		mode = 0
+	}
+	rx, err := pattern.Regexp(_pattern, mode)
+	if err != nil {
+		return str
+	}
+	regx := regexp.MustCompile("^" + rx)
+
+	match := regx.FindString(str)
+
+	return strings.TrimPrefix(str, match)
 }

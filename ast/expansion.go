@@ -46,7 +46,6 @@ type VarLength struct {
 
 type MatchAndRemove struct {
 	Parameter Param
-	Index     Expression
 	Operator  string
 	Pattern   Expression
 }

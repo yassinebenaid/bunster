@@ -121,3 +121,24 @@ func (g *generator) handleParameterExpansionChangeCase(buf *InstructionBuffer, e
 		All:     expression.Operator == ",,",
 	}
 }
+
+func (g *generator) handleParameterExpansionMatchAndRemove(buf *InstructionBuffer, expression ast.MatchAndRemove) ir.Instruction {
+	var pattern ir.Instruction = ir.String("")
+	if expression.Pattern != nil {
+		pattern = g.handleExpression(buf, expression.Pattern)
+	}
+
+	if expression.Operator == "#" || expression.Operator == "##" {
+		return ir.RemoveMatchingPrefix{
+			String:  ir.ReadVar(expression.Parameter.Name),
+			Pattern: pattern,
+			Longest: expression.Operator == "##",
+		}
+	}
+
+	return ir.RemoveMatchingSuffix{
+		String:  ir.ReadVar(expression.Parameter.Name),
+		Pattern: pattern,
+		Longest: expression.Operator == "%%",
+	}
+}

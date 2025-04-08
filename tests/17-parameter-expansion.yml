@@ -168,3 +168,36 @@ cases:
         14:AAABBBCCCdddEEE
         15:aaabbbcccdddeee
         16:AAABBBcccDDDeee
+
+  - name: can match and remove prefix
+    script: |
+      var=aaabbbcccdddeee
+
+      echo  1:${var#a}
+      echo  2:${var#[a]}
+      echo  3:${var#b}
+      echo  4:${var#*b}
+      echo  5:${var#*bc}
+      echo  6:${var#*e}
+      echo
+      echo  7:${var##a}
+      echo  8:${var##[a]}
+      echo  9:${var##b}
+      echo  10:${var##*b}
+      echo  11:${var##*bc}
+      echo  12:${var##*e}
+    expect:
+      stdout: |
+        1:aabbbcccdddeee
+        2:aabbbcccdddeee
+        3:aaabbbcccdddeee
+        4:bbcccdddeee
+        5:ccdddeee
+        6:ee
+
+        7:aabbbcccdddeee
+        8:aabbbcccdddeee
+        9:aaabbbcccdddeee
+        10:cccdddeee
+        11:ccdddeee
+        12:

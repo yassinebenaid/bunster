@@ -39,3 +39,23 @@ type StringToLowerCase struct {
 func (d StringToLowerCase) togo() string {
 	return fmt.Sprintf("runtime.ChangeStringCase(false, %s, %s, %t)", d.String.togo(), d.Pattern.togo(), d.All)
 }
+
+type RemoveMatchingPrefix struct {
+	String  Instruction
+	Pattern Instruction
+	Longest bool
+}
+
+func (d RemoveMatchingPrefix) togo() string {
+	return fmt.Sprintf("runtime.RemoveMatchingPrefix(%s, %s, %t)", d.String.togo(), d.Pattern.togo(), d.Longest)
+}
+
+type RemoveMatchingSuffix struct {
+	String  Instruction
+	Pattern Instruction
+	Longest bool
+}
+
+func (d RemoveMatchingSuffix) togo() string {
+	return fmt.Sprintf("runtime.RemoveMatchingSuffix(%s, %s, %t)", d.String.togo(), d.Pattern.togo(), d.Longest)
+}
