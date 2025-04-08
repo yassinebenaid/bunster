@@ -1,14 +1,14 @@
 cases:
   - name: can expand variables
     script: |
-      var=foo
+      var=雷卷是一个好程序员！
 
       echo expansion:${var}
       echo length:${#var}
     expect:
       stdout: |
-        expansion:foo
-        length:3
+        expansion:雷卷是一个好程序员！
+        length:10
 
   - name: variable or default
     script: |
@@ -120,3 +120,51 @@ cases:
         6:jklmn
         7:jk
         8:jklmno
+
+  - name: can change case of alphbetical characters
+    script: |
+      var=aaabbbcccdddeee
+
+      echo  1:${var^}
+      echo  2:${var^d}
+      echo  3:${var^[[:alpha:]]}
+      echo  4:${var^[ce]}
+      echo
+      echo  5:${var^^}
+      echo  6:${var^^d}
+      echo  7:${var^^[[:alpha:]]}
+      echo  8:${var^^[ce]}
+
+      var=AAABBBCCCDDDEEE
+
+      echo
+      echo  9:${var,}
+      echo  10:${var,D}
+      echo  11:${var,[[:alpha:]]}
+      echo  12:${var,[CE]}
+      echo
+      echo  13:${var,,}
+      echo  14:${var,,D}
+      echo  15:${var,,[[:alpha:]]}
+      echo  16:${var,,[CE]}
+    expect:
+      stdout: |
+        1:Aaabbbcccdddeee
+        2:aaabbbcccDddeee
+        3:Aaabbbcccdddeee
+        4:aaabbbCccdddeee
+
+        5:AAABBBCCCDDDEEE
+        6:aaabbbcccDDDeee
+        7:AAABBBCCCDDDEEE
+        8:aaabbbCCCdddEEE
+
+        9:aAABBBCCCDDDEEE
+        10:AAABBBCCCdDDEEE
+        11:aAABBBCCCDDDEEE
+        12:AAABBBcCCDDDEEE
+
+        13:aaabbbcccdddeee
+        14:AAABBBCCCdddEEE
+        15:aaabbbcccdddeee
+        16:AAABBBcccDDDeee

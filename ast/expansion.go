@@ -36,7 +36,6 @@ type CheckAndUse struct {
 
 type ChangeCase struct {
 	Parameter Param
-	Index     Expression
 	Operator  string
 	Pattern   Expression
 }

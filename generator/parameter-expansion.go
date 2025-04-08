@@ -100,3 +100,24 @@ func (g *generator) handleParameterExpansionSlice(buf *InstructionBuffer, expres
 		Length: ir.Literal(length),
 	}
 }
+
+func (g *generator) handleParameterExpansionChangeCase(buf *InstructionBuffer, expression ast.ChangeCase) ir.Instruction {
+	var pattern ir.Instruction = ir.String("?")
+	if expression.Pattern != nil {
+		pattern = g.handleExpression(buf, expression.Pattern)
+	}
+
+	if expression.Operator == "^" || expression.Operator == "^^" {
+		return ir.StringToUpperCase{
+			String:  ir.ReadVar(expression.Parameter.Name),
+			Pattern: pattern,
+			All:     expression.Operator == "^^",
+		}
+	}
+
+	return ir.StringToLowerCase{
+		String:  ir.ReadVar(expression.Parameter.Name),
+		Pattern: pattern,
+		All:     expression.Operator == ",,",
+	}
+}

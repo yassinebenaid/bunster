@@ -4,6 +4,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 	"syscall"
 
 	"github.com/yassinebenaid/bunster/runtime/pattern"
@@ -267,4 +268,30 @@ func Substring(str string, offset, length int) string {
 	}
 
 	return string(runes[offset:end])
+}
+
+func ChangeStringCase(upper bool, str string, _pattern string, all bool) string {
+	rx, err := pattern.Regexp(_pattern, pattern.Filenames|pattern.EntireString)
+	if err != nil {
+		return str
+	}
+	regx := regexp.MustCompile(rx)
+
+	var result []rune
+	var matched = false
+
+	for _, ch := range []rune(str) {
+		var s = string(ch)
+		if (all || !matched) && regx.MatchString(s) {
+			matched = true
+			if upper {
+				s = strings.ToUpper(s)
+			} else {
+				s = strings.ToLower(s)
+			}
+		}
+		result = append(result, []rune(s)...)
+	}
+
+	return string(result)
 }
