@@ -311,3 +311,22 @@ func RemoveMatchingPrefix(str string, _pattern string, longest bool) string {
 
 	return strings.TrimPrefix(str, match)
 }
+
+func RemoveMatchingSuffix(str string, _pattern string, longest bool) string {
+	mode := pattern.Shortest
+	if longest {
+		mode = 0
+	}
+	rx, err := pattern.Regexp(_pattern, mode)
+	if err != nil {
+		return str
+	}
+	regx := regexp.MustCompile(rx + "$")
+
+	matches := regx.FindAllString(str, -1)
+	if len(matches) == 0 {
+		matches = append(matches, "")
+	}
+
+	return strings.TrimSuffix(str, matches[len(matches)-1])
+}

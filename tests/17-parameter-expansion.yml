@@ -209,3 +209,44 @@ cases:
         14:
         15:aaabbbcccdddeee
         16:
+
+  - name: can match and remove suffix
+    script: |
+      var=aaabbbcccdddeee
+
+      echo  1:${var%e}
+      echo  2:${var%[e]}
+      echo  3:${var%d}
+      echo  4:${var%d*}
+      echo  5:${var%de*}
+      echo  6:${var%a*}
+      echo  7:${var%*d}
+      echo  8:${var%*e}
+      echo
+      echo  9:${var%%e}
+      echo  10:${var%%[e]}
+      echo  11:${var%%d}
+      echo  12:${var%%d*}
+      echo  13:${var%%cd*}
+      echo  14:${var%%a*}
+      echo  15:${var%%*d}
+      echo  16:${var%%*e}
+    expect:
+      stdout: |
+        1:aaabbbcccdddee
+        2:aaabbbcccdddee
+        3:aaabbbcccdddeee
+        4:aaabbbccc
+        5:aaabbbcccdd
+        6:
+        7:aaabbbcccdddeee
+        8:
+
+        9:aaabbbcccdddee
+        10:aaabbbcccdddee
+        11:aaabbbcccdddeee
+        12:aaabbbccc
+        13:aaabbbcc
+        14:
+        15:aaabbbcccdddeee
+        16:
