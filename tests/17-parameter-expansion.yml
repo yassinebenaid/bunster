@@ -179,13 +179,17 @@ cases:
       echo  4:${var#*b}
       echo  5:${var#*bc}
       echo  6:${var#*e}
+      echo  7:${var#b*}
+      echo  8:${var#a*}
       echo
-      echo  7:${var##a}
-      echo  8:${var##[a]}
-      echo  9:${var##b}
-      echo  10:${var##*b}
-      echo  11:${var##*bc}
-      echo  12:${var##*e}
+      echo  9:${var##a}
+      echo  10:${var##[a]}
+      echo  11:${var##b}
+      echo  12:${var##*b}
+      echo  13:${var##*bc}
+      echo  14:${var##*e}
+      echo  15:${var##b*}
+      echo  16:${var##a*}
     expect:
       stdout: |
         1:aabbbcccdddeee
@@ -194,10 +198,14 @@ cases:
         4:bbcccdddeee
         5:ccdddeee
         6:ee
-
-        7:aabbbcccdddeee
+        7:aaabbbcccdddeee
         8:aabbbcccdddeee
-        9:aaabbbcccdddeee
-        10:cccdddeee
-        11:ccdddeee
-        12:
+
+        9:aabbbcccdddeee
+        10:aabbbcccdddeee
+        11:aaabbbcccdddeee
+        12:cccdddeee
+        13:ccdddeee
+        14:
+        15:aaabbbcccdddeee
+        16:
