@@ -59,3 +59,14 @@ type RemoveMatchingSuffix struct {
 func (d RemoveMatchingSuffix) togo() string {
 	return fmt.Sprintf("runtime.RemoveMatchingSuffix(%s, %s, %t)", d.String.togo(), d.Pattern.togo(), d.Longest)
 }
+
+type ReplaceMatching struct {
+	String  Instruction
+	Pattern Instruction
+	Value   Instruction
+	All     bool
+}
+
+func (d ReplaceMatching) togo() string {
+	return fmt.Sprintf("runtime.ReplaceMatching(%s, %s, %s, %t)", d.String.togo(), d.Pattern.togo(), d.Value.togo(), d.All)
+}

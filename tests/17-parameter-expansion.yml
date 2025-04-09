@@ -250,3 +250,32 @@ cases:
         14:
         15:aaabbbcccdddeee
         16:
+
+  - name: can match and replace
+    script: |
+      var=aaabbbcccdddeee
+
+      echo  1:${var/bbc/xyz}
+      echo  2:${var/[a]/z}
+      echo  3:${var/ccc/z}
+      echo  4:${var/ab*cd/foobar}
+      echo  5:${var/*/foobar}
+      echo  6:${var/?/x}
+      echo
+      echo  7:${var//b/x}
+      echo  8:${var//[c]/x}
+      echo  9:${var//d?/x}
+      echo  10:${var//?/x}
+    expect:
+      stdout: |
+        1:aaabxyzccdddeee
+        2:zaabbbcccdddeee
+        3:aaabbbzdddeee
+        4:aafoobarddeee
+        5:foobar
+        6:xaabbbcccdddeee
+
+        7:aaaxxxcccdddeee
+        8:aaabbbxxxdddeee
+        9:aaabbbcccxxee
+        10:xxxxxxxxxxxxxxx

@@ -223,6 +223,8 @@ func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expr
 		return g.handleParameterExpansionChangeCase(buf, v)
 	case ast.MatchAndRemove:
 		return g.handleParameterExpansionMatchAndRemove(buf, v)
+	case ast.MatchAndReplace:
+		return g.handleParameterExpansionMatchAndReplace(buf, v)
 	default:
 		panic(fmt.Sprintf("Unsupported expression: %T", v))
 	}

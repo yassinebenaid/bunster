@@ -330,3 +330,20 @@ func RemoveMatchingSuffix(str string, _pattern string, longest bool) string {
 
 	return strings.TrimSuffix(str, matches[len(matches)-1])
 }
+
+func ReplaceMatching(str string, _pattern string, replace string, all bool) string {
+	rx, err := pattern.Regexp(_pattern, 0)
+	if err != nil {
+		return str
+	}
+	regx := regexp.MustCompile(rx)
+	regx.Longest()
+
+	if all {
+		return regx.ReplaceAllString(str, replace)
+	}
+
+	first := regx.FindString(str)
+
+	return strings.Replace(str, first, replace, 1)
+}

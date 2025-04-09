@@ -142,3 +142,22 @@ func (g *generator) handleParameterExpansionMatchAndRemove(buf *InstructionBuffe
 		Longest: expression.Operator == "%%",
 	}
 }
+
+func (g *generator) handleParameterExpansionMatchAndReplace(buf *InstructionBuffer, expression ast.MatchAndReplace) ir.Instruction {
+	var pattern ir.Instruction = ir.String("")
+	if expression.Pattern != nil {
+		pattern = g.handleExpression(buf, expression.Pattern)
+	}
+
+	switch expression.Operator {
+	case "/", "//":
+		return ir.ReplaceMatching{
+			String:  ir.ReadVar(expression.Parameter.Name),
+			Pattern: pattern,
+			Value:   g.handleExpression(buf, expression.Value),
+			All:     expression.Operator == "//",
+		}
+	}
+
+	return nil
+}

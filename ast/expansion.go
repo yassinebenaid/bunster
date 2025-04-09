@@ -52,7 +52,6 @@ type MatchAndRemove struct {
 
 type MatchAndReplace struct {
 	Parameter Param
-	Index     Expression
 	Operator  string
 	Pattern   Expression
 	Value     Expression
