@@ -266,6 +266,9 @@ cases:
       echo  8:${var//[c]/x}
       echo  9:${var//d?/x}
       echo  10:${var//?/x}
+      echo
+      echo  11:${var/ccc}
+      echo  12:${var//c?}
     expect:
       stdout: |
         1:aaabxyzccdddeee
@@ -279,3 +282,6 @@ cases:
         8:aaabbbxxxdddeee
         9:aaabbbcccxxee
         10:xxxxxxxxxxxxxxx
+
+        11:aaabbbdddeee
+        12:aaabbbddeee
