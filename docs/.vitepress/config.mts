@@ -49,6 +49,10 @@ export default defineConfig({
 								link: "/features/loops",
 							},
 							{
+								text: "Conditional constructs",
+								link: "/features/conditional-constructs",
+							},
+							{
 								text: "Functions",
 								link: "/features/functions",
 							},
