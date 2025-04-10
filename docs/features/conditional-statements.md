@@ -90,3 +90,103 @@ else
 	echo baz
 fi
 ```
+
+## `case` statement
+
+The `case` statement is similar to the `switch` statement in languages like `C` and `Go`.
+
+The most basic format is:
+
+```sh
+case WORD in
+	(PATTERN) consequent-commands ;;
+esac
+```
+
+- `WORD` is the value to match against, can be any string.
+- `PATTERN` is a string that represents a [glob pattern](https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html).
+- `consequent-commands` is a list of one or commands.
+- `(PATTERN) consequent-commands ;;` is known as a **CLAUSE**.
+- the left parenthese `(` in the **clause** is optional
+
+The case statement can have one or more **clauses**, and each **clause** can have or or more patterns separated by `|`.
+
+The case statement will go through each clause, and match `WORD` against its patterns. if one of the patterns matches, then the `consequent-commands` corresponding to that clause will be executed.
+
+For example:
+
+```sh
+CWD=$(pwd)
+
+case $CWD in
+	/root ) echo "we are in the 'root' home directory";;
+	/home/* | /Users/*)  echo "we are in home directory";;
+	/var/www/html/*)  echo "we are in nginx default directory";;
+esac
+```
+
+### Default clause
+
+It's common to use the `*` as the final pattern to define the default **clause**, since that pattern will always match.
+
+for example:
+
+```sh
+OS=$(uname)
+
+case $OS in
+	Linux | Darwin ) echo "Unix system, cool";;
+	*)  echo "the operating system '$OS' is unknown";;
+esac
+```
+
+### Control the match flow
+
+Each clause must be terminated by `;;`, `;&` or `;;&`.
+
+- If the `;;` operator is used, no subsequent matches are attempted after the first pattern match.
+
+  ```sh
+  case foo in
+  f*) echo "it's foo";;
+  *oo) echo "it's foo as well";;
+  esac
+  ```
+
+  Outputs:
+
+  ```txt
+  it's foo
+  ```
+
+- The `;&` causes execution to continue with the `consequent-commands` associated with the next clause, if any. You can think of as the `fallthrough` keyword in `Go`.
+
+  ```sh
+  case foo in
+  	f*) echo "it's foo";&
+  	bar) echo "it's bar";;
+  esac
+  ```
+
+  Outputs:
+
+  ```txt
+  it's foo
+  it's bar
+  ```
+
+- The `;;&` causes the case statement to test the patterns in the next clause, if any, and execute any associated `consequent-commands` on a successful match, continuing the execution as if the pattern list had not matched.
+
+  ```sh
+  case foo in
+  	f*) echo "it's foo";;&
+  	*oo) echo "it's foo as well";;
+  esac
+  ```
+
+  Outputs:
+
+  ```txt
+  it's foo
+  it's foo as well
+  ```
