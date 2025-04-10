@@ -48,3 +48,18 @@ cases:
         0
 
         1
+
+  - name: the 'which' command expects exactly one argument
+    script: |
+      which
+      echo $?
+
+      which sh sh
+      echo $?
+    expect:
+      stderr: |
+        which: expected exactly 1
+        which: expected exactly 1
+      stdout: |
+        1
+        1
