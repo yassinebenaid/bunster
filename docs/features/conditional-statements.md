@@ -1,6 +1,8 @@
-# Conditional Constructs
+# Conditional Statements
 
-Conditional constructs allows you to run certain commands based on a certain condition. This is just the same as `if` and `switch` statements in languages like `C`, `PHP` and others.
+Conditional statements allows you to run certain commands based on a certain condition. This is just the same as `if` and `switch` statements in languages like `C`, `PHP` and others.
+
+The input and output of conditional statements are connected to the input and output of all commands within the statement. This means that any redirections applied on conditional statements are automatically applied on all commands within the statement. The same rule applies when you use conditional statement within pipelines.
 
 Note that in any of the examples below, whenever a semiclon is used. can be replaced by one or more newlines as [mentioned before](/features/simple-commands#separator)
 
