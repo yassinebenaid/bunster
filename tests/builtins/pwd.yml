@@ -1,0 +1,14 @@
+cases:
+  - name: command `pwd` prints current working directory
+    script: |
+      cd /tmp
+      pwd
+    expect:
+      stdout: "/tmp\n"
+
+  - name: commands `pwd` expects one argument
+    script: |
+      pwd path
+    expect:
+      exit_code: 1
+      stderr: "pwd: too many arguments\n"
