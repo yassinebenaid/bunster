@@ -285,3 +285,32 @@ cases:
 
         11:aaabbbdddeee
         12:aaabbbddeee
+
+  - name: can match and replace prefix and suffix
+    script: |
+      var=aaabbbcccdddeee
+
+      echo  1:${var/#a/x}
+      echo  2:${var/#b*/x}
+      echo  3:${var/#*b/x}
+      echo  4:${var/#?/x}
+      echo  5:${var/#a}
+      echo
+      echo  6:${var/%e/x}
+      echo  7:${var/%e*/x}
+      echo  8:${var/%a/x}
+      echo  9:${var/%c*/x}
+      echo  10:${var/%c*}
+    expect:
+      stdout: |
+        1:xaabbbcccdddeee
+        2:aaabbbcccdddeee
+        3:xcccdddeee
+        4:xaabbbcccdddeee
+        5:aabbbcccdddeee
+
+        6:aaabbbcccdddeex
+        7:aaabbbcccdddx
+        8:aaabbbcccdddeee
+        9:aaabbbx
+        10:aaabbb

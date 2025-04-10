@@ -347,3 +347,34 @@ func ReplaceMatching(str string, _pattern string, replace string, all bool) stri
 
 	return strings.Replace(str, first, replace, 1)
 }
+
+func ReplaceMatchingPrefix(str string, _pattern string, replace string) string {
+	rx, err := pattern.Regexp(_pattern, 0)
+	if err != nil {
+		return str
+	}
+	regx := regexp.MustCompile("^" + rx)
+	regx.Longest()
+	first := regx.FindString(str)
+	if first == "" {
+		return str
+	}
+
+	return strings.Replace(str, first, replace, 1)
+}
+
+func ReplaceMatchingSuffix(str string, _pattern string, replace string) string {
+	rx, err := pattern.Regexp(_pattern, 0)
+	if err != nil {
+		return str
+	}
+	regx := regexp.MustCompile(rx + "$")
+	regx.Longest()
+
+	matches := regx.FindAllString(str, -1)
+	if len(matches) == 0 {
+		return str
+	}
+
+	return strings.TrimSuffix(str, matches[len(matches)-1]) + replace
+}

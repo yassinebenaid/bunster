@@ -162,6 +162,18 @@ func (g *generator) handleParameterExpansionMatchAndReplace(buf *InstructionBuff
 			Value:   repl,
 			All:     expression.Operator == "//",
 		}
+	case "/#":
+		return ir.ReplaceMatchingPrefix{
+			String:  ir.ReadVar(expression.Parameter.Name),
+			Pattern: pattern,
+			Value:   repl,
+		}
+	case "/%":
+		return ir.ReplaceMatchingSuffix{
+			String:  ir.ReadVar(expression.Parameter.Name),
+			Pattern: pattern,
+			Value:   repl,
+		}
 	}
 
 	return nil
