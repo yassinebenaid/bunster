@@ -1,0 +1,655 @@
+#(TEST: simple parameter expansion)
+
+${varname}
+${#varname}
+
+${varname:-}
+${varname:-word}
+${varname-word}
+${varname-}
+
+${varname:=}
+${varname:=word}
+${varname=word}
+${varname=}
+
+${varname:+}
+${varname:+word}
+${varname+word}
+${varname+}
+
+${varname:3}
+${varname:3:8}
+
+${varname^}
+${varname^word}
+${varname^^word}
+${varname^^}
+
+
+${varname,}
+${varname,word}
+${varname,,word}
+${varname,,}
+
+${varname#}
+${varname#word}
+${varname##word}
+${varname##}
+
+${varname%}
+${varname%word}
+${varname%%word}
+${varname%%}
+
+${varname/}
+${varname/pattern}
+${varname/pattern/word}
+${varname//}
+${varname//pattern}
+${varname//pattern/word}
+${varname/#}
+${varname/#pattern}
+${varname/#pattern/word}
+${varname/%}
+${varname/%pattern}
+${varname/%pattern/word}
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = shell.ReadVar("varname")
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.FormatInt(len([]rune(shell.ReadVar("varname"))))
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var expr3 = ""
+		if len(shell.ReadVar("varname")) != 0 {
+			expr3 = shell.ReadVar("varname")
+		} else {
+			expr3 = ""
+		}
+		var commandName = expr3
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var expr4 = ""
+		if len(shell.ReadVar("varname")) != 0 {
+			expr4 = shell.ReadVar("varname")
+		} else {
+			expr4 = "word"
+		}
+		var commandName = expr4
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var expr6 = ""
+		if shell.VarIsSet("varname") {
+			expr6 = shell.ReadVar("varname")
+		} else {
+			expr6 = "word"
+		}
+		var commandName = expr6
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var expr8 = ""
+		if shell.VarIsSet("varname") {
+			expr8 = shell.ReadVar("varname")
+		} else {
+			expr8 = ""
+		}
+		var commandName = expr8
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		if !(len(shell.ReadVar("varname")) != 0) {
+			shell.SetVar("varname", "")
+		}
+		var commandName = shell.ReadVar("varname")
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		if !(len(shell.ReadVar("varname")) != 0) {
+			shell.SetVar("varname", "word")
+		}
+		var commandName = shell.ReadVar("varname")
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		if !(shell.VarIsSet("varname")) {
+			shell.SetVar("varname", "word")
+		}
+		var commandName = shell.ReadVar("varname")
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		if !(shell.VarIsSet("varname")) {
+			shell.SetVar("varname", "")
+		}
+		var commandName = shell.ReadVar("varname")
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var expr15 = ""
+		if len(shell.ReadVar("varname")) != 0 {
+			expr15 = ""
+		}
+		var commandName = expr15
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var expr16 = ""
+		if len(shell.ReadVar("varname")) != 0 {
+			expr16 = "word"
+		}
+		var commandName = expr16
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var expr18 = ""
+		if shell.VarIsSet("varname") {
+			expr18 = "word"
+		}
+		var commandName = expr18
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var expr20 = ""
+		if shell.VarIsSet("varname") {
+			expr20 = ""
+		}
+		var commandName = expr20
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var offset21 = 0
+		var length21 = int(^uint32(0))
+		offset21 = 3
+		var commandName = runtime.Substring(shell.ReadVar("varname"), offset21, length21)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var offset22 = 0
+		var length22 = int(^uint32(0))
+		offset22 = 3
+		length22 = 8
+		var commandName = runtime.Substring(shell.ReadVar("varname"), offset22, length22)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ChangeStringCase(true, shell.ReadVar("varname"), "?", false)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ChangeStringCase(true, shell.ReadVar("varname"), "word", false)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ChangeStringCase(true, shell.ReadVar("varname"), "word", true)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ChangeStringCase(true, shell.ReadVar("varname"), "?", true)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ChangeStringCase(false, shell.ReadVar("varname"), "?", false)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ChangeStringCase(false, shell.ReadVar("varname"), "word", false)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ChangeStringCase(false, shell.ReadVar("varname"), "word", true)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ChangeStringCase(false, shell.ReadVar("varname"), "?", true)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.RemoveMatchingPrefix(shell.ReadVar("varname"), "", false)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.RemoveMatchingPrefix(shell.ReadVar("varname"), "word", false)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.RemoveMatchingPrefix(shell.ReadVar("varname"), "word", true)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.RemoveMatchingPrefix(shell.ReadVar("varname"), "", true)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.RemoveMatchingSuffix(shell.ReadVar("varname"), "", false)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.RemoveMatchingSuffix(shell.ReadVar("varname"), "word", false)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.RemoveMatchingSuffix(shell.ReadVar("varname"), "word", true)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.RemoveMatchingSuffix(shell.ReadVar("varname"), "", true)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ReplaceMatching(shell.ReadVar("varname"), "", "", false)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ReplaceMatching(shell.ReadVar("varname"), "pattern", "", false)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ReplaceMatching(shell.ReadVar("varname"), "pattern", "word", false)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ReplaceMatching(shell.ReadVar("varname"), "", "", true)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ReplaceMatching(shell.ReadVar("varname"), "pattern", "", true)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ReplaceMatching(shell.ReadVar("varname"), "pattern", "word", true)
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ReplaceMatchingPrefix(shell.ReadVar("varname"), "", "")
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ReplaceMatchingPrefix(shell.ReadVar("varname"), "pattern", "")
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ReplaceMatchingPrefix(shell.ReadVar("varname"), "pattern", "word")
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ReplaceMatchingSuffix(shell.ReadVar("varname"), "", "")
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ReplaceMatchingSuffix(shell.ReadVar("varname"), "pattern", "")
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = runtime.ReplaceMatchingSuffix(shell.ReadVar("varname"), "pattern", "word")
+		var arguments []string
+		var env = make(map[string]string)
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+}
+
+
+#(ENDTEST)
