@@ -1,0 +1,24 @@
+cases:
+  - name: can lookup PATH for binaries
+    script: |
+      which sh
+      echo $?
+
+      echo
+
+      which which
+      echo $?
+
+      echo
+
+      which unknown
+      echo $?
+    expect:
+      stdout: |
+        /usr/bin/sh
+        0
+
+        builtin
+        0
+
+        1
