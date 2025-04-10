@@ -348,13 +348,20 @@ func (i ConcatInstruction) togo() string {
 }
 
 type If struct {
+	Not       bool
 	Condition Instruction
 	Body      []Instruction
 	Alternate []Instruction
 }
 
 func (i If) togo() string {
-	cond := fmt.Sprintf("if %s {\n", i.Condition.togo())
+	var cond string
+	if i.Not {
+		cond = fmt.Sprintf("if ! (%s) {\n", i.Condition.togo())
+	} else {
+		cond = fmt.Sprintf("if %s {\n", i.Condition.togo())
+	}
+
 	for _, ins := range i.Body {
 		cond += ins.togo()
 	}

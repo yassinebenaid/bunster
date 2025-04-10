@@ -19,9 +19,9 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.VarCount{Parameter: ast.Param{Name: "var"}},
-				ast.VarCount{Parameter: ast.Param{Name: "var"}},
-				ast.VarCount{Parameter: ast.Param{
+				ast.VarLength{Parameter: ast.Param{Name: "var"}},
+				ast.VarLength{Parameter: ast.Param{Name: "var"}},
+				ast.VarLength{Parameter: ast.Param{
 					Name:  "var",
 					Index: ast.Arithmetic{ast.Number("123")},
 				}},
@@ -32,7 +32,26 @@ var parameterExpansionTests = []testCase{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.VarOrDefault{Parameter: ast.Param{Name: "var"}, Default: ast.Word("default")},
+				ast.VarOrDefault{Parameter: ast.Param{Name: "var"}, Default: ast.Word("default"), UnsetOnly: true},
+				ast.VarOrDefault{Parameter: ast.Param{Name: "var"}, Default: ast.Word("default"), UnsetOnly: true},
+				ast.VarOrDefault{Parameter: ast.Param{Name: "var"}, Default: ast.Var("default"), UnsetOnly: true},
+				ast.VarOrDefault{
+					Parameter: ast.Param{Name: "var"},
+					Default: ast.UnquotedString{
+						ast.Word(" "),
+						ast.Var("foo"),
+						ast.Word(" bar baz | & ; 2> < "),
+					},
+					UnsetOnly: true,
+				},
+				ast.VarOrDefault{Parameter: ast.Param{Name: "var"}, UnsetOnly: true},
+			},
+		},
+	}},
+	{`cmd ${var:-default} ${var:-${default}} ${var:- $foo bar "baz" | & ; 2> < } ${var:-}`, ast.Script{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
 				ast.VarOrDefault{Parameter: ast.Param{Name: "var"}, Default: ast.Word("default")},
 				ast.VarOrDefault{Parameter: ast.Param{Name: "var"}, Default: ast.Var("default")},
 				ast.VarOrDefault{
@@ -47,22 +66,22 @@ var parameterExpansionTests = []testCase{
 			},
 		},
 	}},
-	{`cmd ${var:-default} ${var:-${default}} ${var:- $foo bar "baz" | & ; 2> < } ${var:-}`, ast.Script{
+	{`cmd ${var=default} ${var=${default}} ${var= $foo bar "baz" | & ; 2> < } ${var=}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
-				ast.VarOrDefault{Parameter: ast.Param{Name: "var"}, Default: ast.Word("default"), CheckForNull: true},
-				ast.VarOrDefault{Parameter: ast.Param{Name: "var"}, Default: ast.Var("default"), CheckForNull: true},
-				ast.VarOrDefault{
+				ast.VarOrSet{Parameter: ast.Param{Name: "var"}, Default: ast.Word("default"), UnsetOnly: true},
+				ast.VarOrSet{Parameter: ast.Param{Name: "var"}, Default: ast.Var("default"), UnsetOnly: true},
+				ast.VarOrSet{
 					Parameter: ast.Param{Name: "var"},
 					Default: ast.UnquotedString{
 						ast.Word(" "),
 						ast.Var("foo"),
 						ast.Word(" bar baz | & ; 2> < "),
 					},
-					CheckForNull: true,
+					UnsetOnly: true,
 				},
-				ast.VarOrDefault{Parameter: ast.Param{Name: "var"}, CheckForNull: true},
+				ast.VarOrSet{Parameter: ast.Param{Name: "var"}, UnsetOnly: true},
 			},
 		},
 	}},
@@ -99,6 +118,24 @@ var parameterExpansionTests = []testCase{
 					},
 				},
 				ast.VarOrFail{Parameter: ast.Param{Name: "var"}},
+			},
+		},
+	}},
+	{`cmd ${var+alternate} ${var+${alternate}} ${var+ $foo bar "baz" | & ; 2> < } ${var+}`, ast.Script{
+		ast.Command{
+			Name: ast.Word("cmd"),
+			Args: []ast.Expression{
+				ast.CheckAndUse{Parameter: ast.Param{Name: "var"}, Value: ast.Word("alternate"), UnsetOnly: true},
+				ast.CheckAndUse{Parameter: ast.Param{Name: "var"}, Value: ast.Var("alternate"), UnsetOnly: true},
+				ast.CheckAndUse{
+					Parameter: ast.Param{Name: "var"},
+					Value: ast.UnquotedString{
+						ast.Word(" "),
+						ast.Var("foo"),
+						ast.Word(" bar baz | & ; 2> < "),
+					}, UnsetOnly: true,
+				},
+				ast.CheckAndUse{Parameter: ast.Param{Name: "var"}, UnsetOnly: true},
 			},
 		},
 	}},

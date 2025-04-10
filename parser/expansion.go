@@ -98,7 +98,7 @@ func (p *parser) parseParameterExpansion() ast.Expression {
 
 	if p.curr.Type == token.HASH {
 		p.proceed()
-		exp = ast.VarCount{Parameter: p.parseParameter()}
+		exp = ast.VarLength{Parameter: p.parseParameter()}
 
 		if p.curr.Type != token.RIGHT_BRACE {
 			p.error("expected closing brace `}`, found `%s`", p.curr)
@@ -117,18 +117,21 @@ func (p *parser) parseParameterExpansion() ast.Expression {
 			exp = ast.Var(param.Name)
 		}
 	case token.MINUS, token.COLON_MINUS:
-		checkForNull := p.curr.Type == token.COLON_MINUS
+		unsetOnly := p.curr.Type != token.COLON_MINUS
 		p.proceed()
+
 		exp = ast.VarOrDefault{
-			Parameter:    param,
-			Default:      p.parseExpansionOperandExpression(0),
-			CheckForNull: checkForNull,
+			Parameter: param,
+			Default:   p.parseExpansionOperandExpression(0),
+			UnsetOnly: unsetOnly,
 		}
-	case token.COLON_ASSIGN:
+	case token.ASSIGN, token.COLON_ASSIGN:
+		unsetOnly := p.curr.Type != token.COLON_ASSIGN
 		p.proceed()
 		exp = ast.VarOrSet{
 			Parameter: param,
 			Default:   p.parseExpansionOperandExpression(0),
+			UnsetOnly: unsetOnly,
 		}
 	case token.COLON_QUESTION:
 		p.proceed()
@@ -136,11 +139,13 @@ func (p *parser) parseParameterExpansion() ast.Expression {
 			Parameter: param,
 			Error:     p.parseExpansionOperandExpression(0),
 		}
-	case token.COLON_PLUS:
+	case token.PLUS, token.COLON_PLUS:
+		unsetOnly := p.curr.Type != token.COLON_PLUS
 		p.proceed()
 		exp = ast.CheckAndUse{
 			Parameter: param,
 			Value:     p.parseExpansionOperandExpression(0),
+			UnsetOnly: unsetOnly,
 		}
 	case token.CIRCUMFLEX, token.DOUBLE_CIRCUMFLEX, token.COMMA, token.DOUBLE_COMMA:
 		operator := p.curr.Literal

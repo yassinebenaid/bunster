@@ -1,0 +1,316 @@
+cases:
+  - name: can expand variables
+    script: |
+      var=雷卷是一个好程序员！
+
+      echo expansion:${var}
+      echo length:${#var}
+    expect:
+      stdout: |
+        expansion:雷卷是一个好程序员！
+        length:10
+
+  - name: variable or default
+    script: |
+      var=foo
+      null_var=
+
+      echo  not-null:${var:-default} \
+            not-null:${null_var:-default} \
+            not-null:${null_var:-}  \
+            not-null:${null_var:-$(echo foobar)}
+
+      echo  isset:${var-default} \
+            isset:${unset_var-default} \
+            isset:${unset_var-} \
+            isset:${unset_var-$(echo foobar)} \
+            isset:${null_var-default}
+    expect:
+      stdout: |
+        not-null:foo not-null:default not-null: not-null:foobar
+        isset:foo isset:default isset: isset:foobar isset:
+
+  - name: set variable or use default if its unset
+    script: |
+      var=foo
+      null_var=
+      null_var2=
+
+      echo  1:${var=default} \
+            2:${null_var=bar} \
+            3:$null_var \
+            4:${null_var2=} \
+            5:$null_var2 \
+            6:${unset_var=default} \
+            7:$unset_var \
+            8:${unset_var2=$(echo foobar)} \
+            9:$unset_var2
+    expect:
+      stdout: |
+        1:foo 2: 3: 4: 5: 6:default 7:default 8:foobar 9:foobar
+
+  - name: set variable or use default if it's null
+    script: |
+      var=foo
+      null_var=
+      null_var2=
+
+      echo  1:${var:=default} \
+            2:${null_var:=bar} \
+            3:$null_var \
+            4:${null_var2:=} \
+            5:$null_var2 \
+            6:${unset_var:=foo} \
+            7:$unset_var \
+            8:${unset_var2:=$(echo foobar)} \
+            9:$unset_var2
+
+    expect:
+      stdout: |
+        1:foo 2:bar 3:bar 4: 5: 6:foo 7:foo 8:foobar 9:foobar
+
+  - name: if variable is set then use default
+    script: |
+      var=foo
+      null_var=
+
+      echo  1:${var+bar} \
+            2:${null_var+bar} \
+            3:${unset_var+bar} \
+            4:${var+$(echo foobar)}
+
+    expect:
+      stdout: |
+        1:bar 2:bar 3: 4:foobar
+
+  - name: if variable is set or is null then use default
+    script: |
+      var=foo
+      null_var=
+
+      echo  1:${var:+bar} \
+            2:${null_var:+bar} \
+            3:${unset_var:+bar} \
+            4:${var:+$(echo foobar)}
+
+    expect:
+      stdout: |
+        1:bar 2: 3: 4:foobar
+
+  - name: can slice a string
+    script: |
+      var=abcdefghijklmnop
+
+      echo  1:${var:2} 
+      echo  2:${var:5}
+      echo  3:${var:5:5}
+      echo  4:${var: -4}
+      echo  5:${var: -2}
+      echo  6:${var: -7:5}
+      echo  7:${var: -7: -5}
+      echo  8:${var: -7: -1}
+
+    expect:
+      stdout: |
+        1:cdefghijklmnop
+        2:fghijklmnop
+        3:fghij
+        4:mnop
+        5:op
+        6:jklmn
+        7:jk
+        8:jklmno
+
+  - name: can change case of alphbetical characters
+    script: |
+      var=aaabbbcccdddeee
+
+      echo  1:${var^}
+      echo  2:${var^d}
+      echo  3:${var^[[:alpha:]]}
+      echo  4:${var^[ce]}
+      echo
+      echo  5:${var^^}
+      echo  6:${var^^d}
+      echo  7:${var^^[[:alpha:]]}
+      echo  8:${var^^[ce]}
+
+      var=AAABBBCCCDDDEEE
+
+      echo
+      echo  9:${var,}
+      echo  10:${var,D}
+      echo  11:${var,[[:alpha:]]}
+      echo  12:${var,[CE]}
+      echo
+      echo  13:${var,,}
+      echo  14:${var,,D}
+      echo  15:${var,,[[:alpha:]]}
+      echo  16:${var,,[CE]}
+    expect:
+      stdout: |
+        1:Aaabbbcccdddeee
+        2:aaabbbcccDddeee
+        3:Aaabbbcccdddeee
+        4:aaabbbCccdddeee
+
+        5:AAABBBCCCDDDEEE
+        6:aaabbbcccDDDeee
+        7:AAABBBCCCDDDEEE
+        8:aaabbbCCCdddEEE
+
+        9:aAABBBCCCDDDEEE
+        10:AAABBBCCCdDDEEE
+        11:aAABBBCCCDDDEEE
+        12:AAABBBcCCDDDEEE
+
+        13:aaabbbcccdddeee
+        14:AAABBBCCCdddEEE
+        15:aaabbbcccdddeee
+        16:AAABBBcccDDDeee
+
+  - name: can match and remove prefix
+    script: |
+      var=aaabbbcccdddeee
+
+      echo  1:${var#a}
+      echo  2:${var#[a]}
+      echo  3:${var#b}
+      echo  4:${var#*b}
+      echo  5:${var#*bc}
+      echo  6:${var#*e}
+      echo  7:${var#b*}
+      echo  8:${var#a*}
+      echo
+      echo  9:${var##a}
+      echo  10:${var##[a]}
+      echo  11:${var##b}
+      echo  12:${var##*b}
+      echo  13:${var##*bc}
+      echo  14:${var##*e}
+      echo  15:${var##b*}
+      echo  16:${var##a*}
+    expect:
+      stdout: |
+        1:aabbbcccdddeee
+        2:aabbbcccdddeee
+        3:aaabbbcccdddeee
+        4:bbcccdddeee
+        5:ccdddeee
+        6:ee
+        7:aaabbbcccdddeee
+        8:aabbbcccdddeee
+
+        9:aabbbcccdddeee
+        10:aabbbcccdddeee
+        11:aaabbbcccdddeee
+        12:cccdddeee
+        13:ccdddeee
+        14:
+        15:aaabbbcccdddeee
+        16:
+
+  - name: can match and remove suffix
+    script: |
+      var=aaabbbcccdddeee
+
+      echo  1:${var%e}
+      echo  2:${var%[e]}
+      echo  3:${var%d}
+      echo  4:${var%d*}
+      echo  5:${var%de*}
+      echo  6:${var%a*}
+      echo  7:${var%*d}
+      echo  8:${var%*e}
+      echo
+      echo  9:${var%%e}
+      echo  10:${var%%[e]}
+      echo  11:${var%%d}
+      echo  12:${var%%d*}
+      echo  13:${var%%cd*}
+      echo  14:${var%%a*}
+      echo  15:${var%%*d}
+      echo  16:${var%%*e}
+    expect:
+      stdout: |
+        1:aaabbbcccdddee
+        2:aaabbbcccdddee
+        3:aaabbbcccdddeee
+        4:aaabbbccc
+        5:aaabbbcccdd
+        6:
+        7:aaabbbcccdddeee
+        8:
+
+        9:aaabbbcccdddee
+        10:aaabbbcccdddee
+        11:aaabbbcccdddeee
+        12:aaabbbccc
+        13:aaabbbcc
+        14:
+        15:aaabbbcccdddeee
+        16:
+
+  - name: can match and replace
+    script: |
+      var=aaabbbcccdddeee
+
+      echo  1:${var/bbc/xyz}
+      echo  2:${var/[a]/z}
+      echo  3:${var/ccc/z}
+      echo  4:${var/ab*cd/foobar}
+      echo  5:${var/*/foobar}
+      echo  6:${var/?/x}
+      echo
+      echo  7:${var//b/x}
+      echo  8:${var//[c]/x}
+      echo  9:${var//d?/x}
+      echo  10:${var//?/x}
+      echo
+      echo  11:${var/ccc}
+      echo  12:${var//c?}
+    expect:
+      stdout: |
+        1:aaabxyzccdddeee
+        2:zaabbbcccdddeee
+        3:aaabbbzdddeee
+        4:aafoobarddeee
+        5:foobar
+        6:xaabbbcccdddeee
+
+        7:aaaxxxcccdddeee
+        8:aaabbbxxxdddeee
+        9:aaabbbcccxxee
+        10:xxxxxxxxxxxxxxx
+
+        11:aaabbbdddeee
+        12:aaabbbddeee
+
+  - name: can match and replace prefix and suffix
+    script: |
+      var=aaabbbcccdddeee
+
+      echo  1:${var/#a/x}
+      echo  2:${var/#b*/x}
+      echo  3:${var/#*b/x}
+      echo  4:${var/#?/x}
+      echo  5:${var/#a}
+      echo
+      echo  6:${var/%e/x}
+      echo  7:${var/%e*/x}
+      echo  8:${var/%a/x}
+      echo  9:${var/%c*/x}
+      echo  10:${var/%c*}
+    expect:
+      stdout: |
+        1:xaabbbcccdddeee
+        2:aaabbbcccdddeee
+        3:xcccdddeee
+        4:xaabbbcccdddeee
+        5:aabbbcccdddeee
+
+        6:aaabbbcccdddeex
+        7:aaabbbcccdddx
+        8:aaabbbcccdddeee
+        9:aaabbbx
+        10:aaabbb

@@ -248,3 +248,34 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 }
 
 #(ENDTEST)
+
+
+#(TEST: exit builtin)
+
+exit
+exit 1
+exit $exit_code
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	if err := shell.Exit("0"); err != nil {
+		shell.HandleError(streamManager, err)
+		return
+	}
+	if err := shell.Exit("1"); err != nil {
+		shell.HandleError(streamManager, err)
+		return
+	}
+	if err := shell.Exit(shell.ReadVar("exit_code")); err != nil {
+		shell.HandleError(streamManager, err)
+		return
+	}
+}
+
+#(ENDTEST)

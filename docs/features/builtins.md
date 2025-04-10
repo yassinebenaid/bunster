@@ -2,7 +2,7 @@
 
 There are a bunch of commands built into the language. meaning that they are not external programs in the system. Thry are implemented internally in bunster.
 
-[`true`](#true) [`false`](#false) [`shift`](#shift) [`loadenv`](#loadenv) [`embed`](#embed)
+[`true`](#true) [`false`](#false) [`shift`](#shift) [`loadenv`](#loadenv) [`embed`](#embed) [`cd`](#cd) [`pwd`](#pwd)
 
 ### `true`
 
@@ -25,3 +25,14 @@ Used to deal with `.env` files. more information about it in [Environment Files 
 ### `embed`
 
 Used to access embedded files. more information about it in [Embedding section](/features/embedding)
+
+### `cd`
+
+Change the current working directory to the path supplied at first argument. for example `cd /tmp` changes current diretory to `/tmp`.
+if no arguments are supplied. the value of `$HOME` variable is used.
+
+The exit status is zero unless there was an error changing directory.
+
+### `pwd`
+
+Prints the absolute path of current working directory.

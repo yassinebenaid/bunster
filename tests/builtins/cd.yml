@@ -114,3 +114,10 @@ cases:
       pwd
     expect:
       stdout: "/tmp\n"
+
+  - name: command `cd` cannot be supplied by bad path
+    script: |
+      cd /bad-path
+    expect:
+      exit_code: 1
+      stderr: "cd: stat /bad-path: no such file or directory\n"

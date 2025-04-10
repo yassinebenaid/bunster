@@ -4,6 +4,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 	"syscall"
 
 	"github.com/yassinebenaid/bunster/runtime/pattern"
@@ -236,4 +237,144 @@ func PatternMatch(str string, p string) bool {
 		return false
 	}
 	return regexp.MustCompile(rx).MatchString(str)
+}
+
+func Substring(str string, offset, length int) string {
+	runes := []rune(str)
+	n := len(runes)
+
+	// Handle negative offset (from end)
+	if offset < 0 {
+		offset = n + offset
+	}
+	if offset < 0 || offset > n {
+		return ""
+	}
+
+	// Handle negative length like Bash: treat as endpoint (from end)
+	var end int
+	if length < 0 {
+		end = n + length
+	} else {
+		end = offset + length
+	}
+
+	// Clamp bounds
+	if end < offset {
+		return ""
+	}
+	if end > n {
+		end = n
+	}
+
+	return string(runes[offset:end])
+}
+
+func ChangeStringCase(upper bool, str string, _pattern string, all bool) string {
+	rx, err := pattern.Regexp(_pattern, pattern.Filenames|pattern.EntireString)
+	if err != nil {
+		return str
+	}
+	regx := regexp.MustCompile(rx)
+
+	var result []rune
+	var matched = false
+
+	for _, ch := range str {
+		var s = string(ch)
+		if (all || !matched) && regx.MatchString(s) {
+			matched = true
+			if upper {
+				s = strings.ToUpper(s)
+			} else {
+				s = strings.ToLower(s)
+			}
+		}
+		result = append(result, []rune(s)...)
+	}
+
+	return string(result)
+}
+
+func RemoveMatchingPrefix(str string, _pattern string, longest bool) string {
+	mode := pattern.Shortest
+	if longest {
+		mode = 0
+	}
+	rx, err := pattern.Regexp(_pattern, mode)
+	if err != nil {
+		return str
+	}
+	regx := regexp.MustCompile("^" + rx)
+
+	match := regx.FindString(str)
+
+	return strings.TrimPrefix(str, match)
+}
+
+func RemoveMatchingSuffix(str string, _pattern string, longest bool) string {
+	mode := pattern.Shortest
+	if longest {
+		mode = 0
+	}
+	rx, err := pattern.Regexp(_pattern, mode)
+	if err != nil {
+		return str
+	}
+	regx := regexp.MustCompile(rx + "$")
+
+	matches := regx.FindAllString(str, -1)
+	if len(matches) == 0 {
+		matches = append(matches, "")
+	}
+
+	return strings.TrimSuffix(str, matches[len(matches)-1])
+}
+
+func ReplaceMatching(str string, _pattern string, replace string, all bool) string {
+	rx, err := pattern.Regexp(_pattern, 0)
+	if err != nil {
+		return str
+	}
+	regx := regexp.MustCompile(rx)
+	regx.Longest()
+
+	if all {
+		return regx.ReplaceAllString(str, replace)
+	}
+
+	first := regx.FindString(str)
+
+	return strings.Replace(str, first, replace, 1)
+}
+
+func ReplaceMatchingPrefix(str string, _pattern string, replace string) string {
+	rx, err := pattern.Regexp(_pattern, 0)
+	if err != nil {
+		return str
+	}
+	regx := regexp.MustCompile("^" + rx)
+	regx.Longest()
+	first := regx.FindString(str)
+	if first == "" {
+		return str
+	}
+
+	return strings.Replace(str, first, replace, 1)
+}
+
+func ReplaceMatchingSuffix(str string, _pattern string, replace string) string {
+	rx, err := pattern.Regexp(_pattern, 0)
+	if err != nil {
+		return str
+	}
+	regx := regexp.MustCompile(rx + "$")
+	regx.Longest()
+
+	matches := regx.FindAllString(str, -1)
+	if len(matches) == 0 {
+		return str
+	}
+
+	return strings.TrimSuffix(str, matches[len(matches)-1]) + replace
 }

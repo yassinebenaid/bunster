@@ -11,16 +11,15 @@ type ParameterExpansion struct {
 }
 
 type VarOrDefault struct {
-	Parameter    Param
-	Index        Expression
-	Default      Expression
-	CheckForNull bool
+	Parameter Param
+	Default   Expression
+	UnsetOnly bool
 }
 
 type VarOrSet struct {
 	Parameter Param
-	Index     Expression
 	Default   Expression
+	UnsetOnly bool
 }
 
 type VarOrFail struct {
@@ -31,32 +30,28 @@ type VarOrFail struct {
 
 type CheckAndUse struct {
 	Parameter Param
-	Index     Expression
 	Value     Expression
+	UnsetOnly bool
 }
 
 type ChangeCase struct {
 	Parameter Param
-	Index     Expression
 	Operator  string
 	Pattern   Expression
 }
 
-type VarCount struct {
+type VarLength struct {
 	Parameter Param
-	Index     Expression
 }
 
 type MatchAndRemove struct {
 	Parameter Param
-	Index     Expression
 	Operator  string
 	Pattern   Expression
 }
 
 type MatchAndReplace struct {
 	Parameter Param
-	Index     Expression
 	Operator  string
 	Pattern   Expression
 	Value     Expression
@@ -70,7 +65,6 @@ type Transform struct {
 
 type Slice struct {
 	Parameter Param
-	Index     Expression
 	Offset    Arithmetic
 	Length    Arithmetic
 }
@@ -81,7 +75,7 @@ func (VarOrSet) node()           {}
 func (VarOrFail) node()          {}
 func (CheckAndUse) node()        {}
 func (ChangeCase) node()         {}
-func (VarCount) node()           {}
+func (VarLength) node()          {}
 func (MatchAndRemove) node()     {}
 func (MatchAndReplace) node()    {}
 func (Transform) node()          {}
@@ -94,7 +88,7 @@ func (VarOrSet) expr()           {}
 func (VarOrFail) expr()          {}
 func (CheckAndUse) expr()        {}
 func (ChangeCase) expr()         {}
-func (VarCount) expr()           {}
+func (VarLength) expr()          {}
 func (MatchAndRemove) expr()     {}
 func (MatchAndReplace) expr()    {}
 func (Transform) expr()          {}
@@ -106,7 +100,7 @@ func (VarOrSet) string() string             { return "" }
 func (VarOrFail) string() string            { return "" }
 func (CheckAndUse) string() string          { return "" }
 func (ChangeCase) string() string           { return "" }
-func (VarCount) string() string             { return "" }
+func (VarLength) string() string            { return "" }
 func (MatchAndRemove) string() string       { return "" }
 func (MatchAndReplace) string() string      { return "" }
 func (Transform) string() string            { return "" }

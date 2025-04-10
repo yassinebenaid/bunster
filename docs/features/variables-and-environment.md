@@ -147,3 +147,66 @@ There are some special variables that are treated specially. Assignment to them 
 | `$#`      | Expands to the number of positional parameters in decimal.                                                                                              |
 | `$?`      | Expands to the exit status of the most recently executed command.                                                                                       |
 | `$$`      | Expands to the process ID of the program                                                                                                                |
+
+## Parameter expansion
+
+Parameter expansion is a special notation that when used allows you to perform special functions on the substitution of a variable.
+
+### `${varname}`
+
+The most basic form is :
+
+```sh
+echo ${varname}
+```
+
+This is equivalent to `echo $varname`, which reads the value of the variable `$varname`. The value of this syntax does not appear until you try to read a variable named `foo` like this:
+
+```sh
+foo=baz
+echo "$foobar"
+```
+
+This won't work because it will try to read the variable `$foobar`, so it must be rewritten to `${foo}bar`.
+
+### `${varname:-word}`
+
+If `varname` is unset or is null, the value of `word` is substituted. Otherwise the value of `varname` is substituted.
+
+for example:
+
+```sh
+var=foo
+null_var=
+
+echo ${var:-bar}
+echo ${null_var:-baz}
+echo ${unset_var:-boo}
+```
+
+Outputs:
+
+```txt
+foo
+baz
+boo
+```
+
+You can get omit the colon `:`. in that case bunster only checks if `varname` is unset. for example
+
+```sh
+var=foo
+null_var=
+
+echo ${var-bar}
+echo ${null_var-baz}
+echo ${unset_var-boo}
+```
+
+Outputs:
+
+```txt
+foo
+
+boo
+```
