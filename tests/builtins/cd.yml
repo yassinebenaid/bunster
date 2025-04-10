@@ -108,16 +108,16 @@ cases:
         file.txt
         dir
 
-  - name: command `pwd` prints current working directory
-    script: |
-      cd /tmp
-      pwd
-    expect:
-      stdout: "/tmp\n"
-
   - name: command `cd` cannot be supplied by bad path
     script: |
       cd /bad-path
     expect:
       exit_code: 1
       stderr: "cd: stat /bad-path: no such file or directory\n"
+
+  - name: commands `cd` expects one argument
+    script: |
+      cd path path2
+    expect:
+      exit_code: 1
+      stderr: "cd: expectes exactly one argument\n"

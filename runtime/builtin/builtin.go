@@ -81,6 +81,11 @@ func Shift(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 }
 
 func Pwd(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
+	if len(shell.Args) != 0 {
+		fmt.Fprintln(stderr, "pwd: too many arguments")
+		shell.ExitCode = 1
+		return
+	}
 	fmt.Fprintln(stdout, shell.CWD)
 }
 
