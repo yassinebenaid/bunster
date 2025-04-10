@@ -22,7 +22,7 @@ hero:
 features:
   - title: Static binaries
     icon:
-      src: ./assets/landing/binary.svg
+      src: ./assets/landing/binary-code.png
     details: |
       Scripts compiled with bunster are not just wrappers around your script, nor do they rely on any external shells on your system.
   - title: Bash compatible
@@ -43,6 +43,6 @@ features:
     details: .env files are nativily supported in bunster. Allowing you to load variables from .env files at runtime.
   - title: Static Asset Embedding
     icon:
-      src: ./assets/landing/static-assets.png
+      src: ./assets/landing/static-assets.svg
     details: You can embed files and directories within your compiled program. And use them as if they were normal files in the system at runtime.
 ---
