@@ -1,5 +1,6 @@
 cases:
   - name: can lookup PATH for binaries
+    runs_on: linux
     script: |
       which sh
       echo $?
@@ -16,6 +17,31 @@ cases:
     expect:
       stdout: |
         /usr/bin/sh
+        0
+
+        builtin
+        0
+
+        1
+
+  - name: can lookup PATH for binaries
+    runs_on: darwin
+    script: |
+      which sh
+      echo $?
+
+      echo
+
+      which which
+      echo $?
+
+      echo
+
+      which unknown
+      echo $?
+    expect:
+      stdout: |
+        /bin/sh
         0
 
         builtin
