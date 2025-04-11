@@ -3,6 +3,7 @@ package builtin
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"strconv"
 
 	"github.com/yassinebenaid/bunster/runtime"
@@ -16,6 +17,7 @@ func Register(shell *runtime.Shell) {
 	shell.RegisterBuiltin("shift", Shift)
 	shell.RegisterBuiltin("cd", CD)
 	shell.RegisterBuiltin("pwd", Pwd)
+	shell.RegisterBuiltin("which", Which)
 }
 
 func True(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
@@ -79,5 +81,31 @@ func Shift(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
 }
 
 func Pwd(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
+	if len(shell.Args) != 0 {
+		fmt.Fprintln(stderr, "pwd: too many arguments")
+		shell.ExitCode = 1
+		return
+	}
 	fmt.Fprintln(stdout, shell.CWD)
+}
+
+func Which(shell *runtime.Shell, stdin, stdout, stderr runtime.Stream) {
+	if len(shell.Args) != 1 {
+		fmt.Fprintln(stderr, "which: expected exactly 1")
+		shell.ExitCode = 1
+		return
+	}
+
+	if shell.IsBuiltin(shell.Args[0]) {
+		fmt.Fprintln(stdout, "builtin")
+		return
+	}
+
+	path, err := exec.LookPath(shell.Args[0])
+	if err != nil {
+		shell.ExitCode = 1
+		return
+	}
+
+	fmt.Fprintln(stdout, path)
 }

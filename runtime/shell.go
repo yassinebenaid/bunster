@@ -225,6 +225,16 @@ func (shell *Shell) RegisterBuiltin(name string, handler Builtin) {
 	shell.builtins.set(name, handler)
 }
 
+func (shell *Shell) IsFunction(name string) bool {
+	_, ok := shell.functions.get(name)
+	return ok
+}
+
+func (shell *Shell) IsBuiltin(name string) bool {
+	_, ok := shell.builtins.get(name)
+	return ok
+}
+
 func (shell *Shell) Defer(handler func(*Shell, *StreamManager)) {
 	shell.defered = append(shell.defered, handler)
 }
