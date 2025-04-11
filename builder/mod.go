@@ -113,6 +113,8 @@ func (b *Builder) ResolveDeps(packages []string, missing bool) (err error) {
 			return err
 		}
 
+		config.Require[query.module] = query.commit
+
 		if b.checkPackage(query) {
 			continue
 		}
@@ -120,8 +122,6 @@ func (b *Builder) ResolveDeps(packages []string, missing bool) (err error) {
 		if err := b.getPackage(query); err != nil {
 			return err
 		}
-
-		config.Require[query.module] = query.commit
 	}
 
 	return b.writeConfig(config)
