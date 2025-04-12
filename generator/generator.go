@@ -55,7 +55,7 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement) {
 		g.handleIf(buf, v)
 	case *ast.Break:
 		g.handleBreak(buf, v)
-	case ast.Continue:
+	case *ast.Continue:
 		g.handleContinue(buf, v)
 	case *ast.Loop:
 		g.handleLoop(buf, v)

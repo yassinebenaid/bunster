@@ -195,7 +195,7 @@ func (p *parser) parseContinue() ast.Statement {
 		p.error("unexpected token `%s`", p.curr)
 		return nil
 	}
-	return ast.Continue(1)
+	return &ast.Continue{}
 }
 
 func (p *parser) parseWait() ast.Statement {

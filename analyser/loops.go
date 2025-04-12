@@ -20,9 +20,7 @@ func (a *analyser) analyseLoop(loop *ast.Loop) {
 
 func (a *analyser) analyseBreak(b *ast.Break) {
 	a.breakpoints++
-	*b = ast.Break{
-		BreakPoint: a.breakpoints,
-	}
+	b.BreakPoint = a.breakpoints
 
 	var withinLoop bool
 	var last int
@@ -54,7 +52,46 @@ loop:
 	switch v := a.stack[last].(type) {
 	case *ast.If:
 		v.BreakPoints.Add(a.breakpoints, ast.BREAK)
-	case *ast.Break:
-		v.Type = ast.BREAK
+	case *ast.Break, ast.List:
+		b.Type = ast.CONTINUE
+	}
+}
+
+func (a *analyser) analyseContinue(b *ast.Continue) {
+	a.breakpoints++
+	b.BreakPoint = a.breakpoints
+
+	var withinLoop bool
+	var last int
+
+loop:
+	for i := len(a.stack) - 1; i >= 0; i-- {
+		switch v := a.stack[i].(type) {
+		case *ast.Loop:
+			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
+			withinLoop = true
+			break loop
+		case ast.RangeLoop, ast.For:
+			withinLoop = true
+			break loop
+		case *ast.If:
+			v.BreakPoints.Add(a.breakpoints, ast.RETURN)
+		case *ast.Continue:
+			v.Type = ast.RETURN
+		case ast.List:
+		}
+		last = i
+	}
+
+	if !withinLoop {
+		a.report(Error{Msg: "the `break` keyword cannot be used here"})
+		return
+	}
+
+	switch v := a.stack[last].(type) {
+	case *ast.If:
+		v.BreakPoints.Add(a.breakpoints, ast.CONTINUE)
+	case *ast.Continue, ast.List:
+		b.Type = ast.CONTINUE
 	}
 }

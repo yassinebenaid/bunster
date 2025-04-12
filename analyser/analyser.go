@@ -150,22 +150,8 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 		a.analyseLoop(v)
 	case *ast.Break:
 		a.analyseBreak(v)
-	case ast.Continue:
-		var withinLoop bool
-	loop2:
-		for i := len(a.stack) - 1; i >= 0; i-- {
-			switch a.stack[i].(type) {
-			case ast.Loop, ast.RangeLoop, ast.For:
-				withinLoop = true
-				break loop2
-			case ast.List, ast.Continue:
-			default:
-				a.report(Error{Msg: "the `continue` keyword cannot be used here"})
-			}
-		}
-		if !withinLoop {
-			a.report(Error{Msg: "the `continue` keyword cannot be used here"})
-		}
+	case *ast.Continue:
+		a.analyseContinue(v)
 	case ast.Pipeline:
 		for _, cmd := range v {
 			a.analyseStatement(cmd.Command)

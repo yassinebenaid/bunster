@@ -24,18 +24,25 @@ func (g *generator) handleExit(buf *InstructionBuffer, exit ast.Exit) {
 }
 
 func (g *generator) handleBreak(buf *InstructionBuffer, b *ast.Break) {
-	buf.add(ir.Set{Name: fmt.Sprintf("breakpoint%d", *&b.BreakPoint), Value: ir.Literal("true")})
+	buf.add(ir.Set{Name: fmt.Sprintf("breakpoint%d", b.BreakPoint), Value: ir.Literal("true")})
 
 	switch b.Type {
 	case ast.RETURN:
 		buf.add(ir.Literal("return;"))
-	case ast.BREAK:
+	default:
 		buf.add(ir.Literal("break;"))
 	}
 }
 
-func (g *generator) handleContinue(buf *InstructionBuffer, _ ast.Continue) {
-	buf.add(ir.Literal("continue\n"))
+func (g *generator) handleContinue(buf *InstructionBuffer, b *ast.Continue) {
+	buf.add(ir.Set{Name: fmt.Sprintf("breakpoint%d", b.BreakPoint), Value: ir.Literal("true")})
+
+	switch b.Type {
+	case ast.RETURN:
+		buf.add(ir.Literal("return;"))
+	default:
+		buf.add(ir.Literal("continue;"))
+	}
 }
 
 func (g *generator) handleWait(buf *InstructionBuffer, _ ast.Wait) {

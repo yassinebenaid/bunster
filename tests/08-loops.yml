@@ -121,6 +121,44 @@ cases:
         2:end
         3:start
 
+  - name: "`break`  can be nested in if statements within `while` loops"
+    script: |
+      while true; do
+        echo foo
+        if true; then
+          break
+        fi
+        echo bar
+      done
+
+      while true; do
+        echo baz
+        if true; then
+          if true; then 
+            if true; then
+              break
+            fi
+          fi
+        fi
+        echo boo
+      done
+
+      while true; do
+          if false; then 
+            echo bee
+            break
+          fi
+
+          if true; then
+            break
+          fi
+        echo boo
+      done
+    expect:
+      stdout: |
+        foo
+        baz
+
   - name: "can continue a `while` loop"
     script: |
       n=0
@@ -164,6 +202,70 @@ cases:
         4:end
         5:start
         5:end
+
+  - name: "`continue`  can be nested in if statements within `while` loops"
+    script: |
+      let n = 0
+      while ((n < 3)); do
+        let n++
+
+        echo $n:foo
+        if true; then
+          continue
+        fi
+        echo bar
+      done
+
+      echo 
+
+      let n = 0
+      while ((n < 3)); do
+        let n++
+
+        echo $n:foo
+        if true; then
+          if true; then
+            if true; then
+              continue
+            fi
+          fi
+        fi
+        echo bar
+      done
+
+      echo 
+
+      let n = 0
+
+      while ((n < 3)); do
+        let n++
+        
+        echo $n:foo
+        
+        if false; then 
+          echo bar
+          continue
+        fi
+
+        if true; then
+          continue
+        fi
+        
+        echo baz
+      done
+    expect:
+      stdout: |
+        1:foo
+        2:foo
+        3:foo
+
+        1:foo
+        2:foo
+        3:foo
+
+        1:foo
+        2:foo
+        3:foo
 
   - name: "simple `until` command"
     script: |
@@ -662,41 +764,3 @@ cases:
       done
     expect:
       build_error: "main.sh(0:0): semantic error: the `break` keyword cannot be used here."
-
-  - name: "`break`  can be nested in if statements within loops"
-    script: |
-      while true; do
-        echo foo
-        if true; then
-          break
-        fi
-        echo bar
-      done
-
-      while true; do
-        echo baz
-        if true; then
-          if true; then 
-            if true; then
-              break
-            fi
-          fi
-        fi
-        echo boo
-      done
-
-      while true; do
-          if false; then 
-            echo bee
-            break
-          fi
-
-          if true; then
-            break
-          fi
-        echo boo
-      done
-    expect:
-      stdout: |
-        foo
-        baz

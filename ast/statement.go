@@ -94,7 +94,11 @@ type Exit struct {
 	Code Expression
 }
 
-type Continue int
+type Continue struct {
+	BreakPoint int
+	Type       BreakPointsType
+}
+
 type Wait struct{}
 
 type For struct {
