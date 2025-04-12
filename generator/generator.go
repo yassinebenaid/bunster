@@ -374,3 +374,28 @@ func (g *generator) handleBackgroundConstruction(buf *InstructionBuffer, b ast.B
 
 	buf.add(ir.Closure(scope))
 }
+
+func (g *generator) handleStatementContext(buf *InstructionBuffer, b ast.BreakPoints) {
+	for id, _type := range b {
+		switch _type {
+		case ast.RETURN:
+			buf.add(ir.If{
+				Condition: ir.Literal(fmt.Sprintf("breakpoint%d", id)),
+				Body:      []ir.Instruction{ir.Literal("return")},
+			})
+		case ast.BREAK:
+			buf.add(ir.If{
+				Condition: ir.Literal(fmt.Sprintf("breakpoint%d", id)),
+				Body:      []ir.Instruction{ir.Literal("break")},
+			})
+		case ast.CONTINUE:
+			buf.add(ir.If{
+				Condition: ir.Literal(fmt.Sprintf("breakpoint%d", id)),
+				Body:      []ir.Instruction{ir.Literal("continue")},
+			})
+		case ast.DECLARE:
+			buf.add(ir.Declare{Name: fmt.Sprintf("breakpoint%d", id), Value: ir.Literal("false")})
+		}
+	}
+
+}

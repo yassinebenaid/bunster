@@ -72,14 +72,7 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond *ast.If) {
 	cmdbuf = append(cmdbuf, innerBuf...)
 	*buf = append(*buf, ir.Closure(cmdbuf))
 
-	for _, b := range cond.Breaks {
-		buf.add(ir.If{
-			Condition: ir.Literal(b),
-			Body: []ir.Instruction{
-				ir.Literal("return"),
-			},
-		})
-	}
+	g.handleStatementContext(buf, cond.BreakPoints)
 
 }
 
@@ -113,9 +106,7 @@ func (g *generator) handleElif(elifs []ast.Elif) []ir.Instruction {
 func (g *generator) handleLoop(buf *InstructionBuffer, loop *ast.Loop) {
 	var cmdbuf InstructionBuffer
 
-	for _, b := range loop.Breaks {
-		cmdbuf.add(ir.Declare{Name: b, Value: ir.Literal("false")})
-	}
+	g.handleStatementContext(buf, loop.BreakPoints)
 
 	cmdbuf.add(ir.CloneStreamManager{})
 	g.handleRedirections(&cmdbuf, loop.Redirections)

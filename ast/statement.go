@@ -9,6 +9,24 @@ type Statement interface {
 	stmt()
 }
 
+type BreakPointsType byte
+
+const (
+	RETURN   BreakPointsType = iota
+	BREAK                    = iota
+	CONTINUE                 = iota
+	DECLARE                  = iota
+)
+
+type BreakPoints map[int]BreakPointsType
+
+func (b *BreakPoints) Add(k int, t BreakPointsType) {
+	if *b == nil {
+		*b = make(BreakPoints)
+	}
+	(*b)[k] = t
+}
+
 type Expression interface {
 	Node
 	expr()
@@ -57,7 +75,7 @@ type Loop struct {
 	Head         []Statement
 	Body         []Statement
 	Redirections []Redirection
-	Breaks       []string
+	BreakPoints
 }
 
 type RangeLoop struct {
@@ -93,7 +111,7 @@ type If struct {
 	Elifs        []Elif
 	Alternate    []Statement
 	Redirections []Redirection
-	Breaks       []string
+	BreakPoints
 }
 
 type Elif struct {
