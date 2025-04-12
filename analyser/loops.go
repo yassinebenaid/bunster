@@ -44,7 +44,11 @@ loop:
 
 	if !withinLoop {
 		a.report(Error{Msg: "the `break` keyword cannot be used here"})
+		return
 	}
 
-	_ = last
+	switch v := a.stack[last].(type) {
+	case *ast.If:
+		v.BreakPoints.Add(a.breakpoints, ast.BREAK)
+	}
 }
