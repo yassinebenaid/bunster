@@ -51,13 +51,13 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement) {
 		g.handleGroup(buf, v)
 	case ast.SubShell:
 		g.handleSubshell(buf, v)
-	case ast.If:
+	case *ast.If:
 		g.handleIf(buf, v)
-	case ast.Break:
+	case *ast.Break:
 		g.handleBreak(buf, v)
 	case ast.Continue:
 		g.handleContinue(buf, v)
-	case ast.Loop:
+	case *ast.Loop:
 		g.handleLoop(buf, v)
 	case ast.BackgroundConstruction:
 		g.handleBackgroundConstruction(buf, v)

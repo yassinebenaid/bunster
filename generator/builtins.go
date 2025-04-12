@@ -1,6 +1,8 @@
 package generator
 
 import (
+	"fmt"
+
 	"github.com/yassinebenaid/bunster/ast"
 	"github.com/yassinebenaid/bunster/ir"
 )
@@ -21,8 +23,9 @@ func (g *generator) handleExit(buf *InstructionBuffer, exit ast.Exit) {
 	buf.add(ir.Exit{Code: g.handleExpression(buf, exit.Code)})
 }
 
-func (g *generator) handleBreak(buf *InstructionBuffer, _ ast.Break) {
-	buf.add(ir.Literal("break\n"))
+func (g *generator) handleBreak(buf *InstructionBuffer, b *ast.Break) {
+	buf.add(ir.Set{Name: fmt.Sprintf("break%d", *b), Value: ir.Literal("true")})
+	buf.add(ir.Literal("return;"))
 }
 
 func (g *generator) handleContinue(buf *InstructionBuffer, _ ast.Continue) {

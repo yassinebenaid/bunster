@@ -120,7 +120,7 @@ func (p *parser) parseWhileLoop() ast.Statement {
 
 	p.loopLevel--
 
-	return loop
+	return &loop
 }
 
 func (p *parser) parseForLoop() ast.Statement {
@@ -470,7 +470,7 @@ func (p *parser) parseIf() ast.Statement {
 		return nil
 	}
 
-	return cond
+	return &cond
 }
 
 func (p *parser) parseCase() ast.Statement {

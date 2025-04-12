@@ -35,7 +35,7 @@ func (g *generator) handleSubshell(buf *InstructionBuffer, subshell ast.SubShell
 	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
-func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If) {
+func (g *generator) handleIf(buf *InstructionBuffer, cond *ast.If) {
 	g.scopesCount++
 
 	var cmdbuf, innerBuf InstructionBuffer
@@ -71,6 +71,16 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond ast.If) {
 
 	cmdbuf = append(cmdbuf, innerBuf...)
 	*buf = append(*buf, ir.Closure(cmdbuf))
+
+	for _, b := range cond.Breaks {
+		buf.add(ir.If{
+			Condition: ir.Literal(b),
+			Body: []ir.Instruction{
+				ir.Literal("return"),
+			},
+		})
+	}
+
 }
 
 func (g *generator) handleElif(elifs []ast.Elif) []ir.Instruction {
@@ -100,10 +110,14 @@ func (g *generator) handleElif(elifs []ast.Elif) []ir.Instruction {
 
 }
 
-func (g *generator) handleLoop(buf *InstructionBuffer, loop ast.Loop) {
+func (g *generator) handleLoop(buf *InstructionBuffer, loop *ast.Loop) {
 	var cmdbuf InstructionBuffer
-	cmdbuf.add(ir.CloneStreamManager{})
 
+	for _, b := range loop.Breaks {
+		cmdbuf.add(ir.Declare{Name: b, Value: ir.Literal("false")})
+	}
+
+	cmdbuf.add(ir.CloneStreamManager{})
 	g.handleRedirections(&cmdbuf, loop.Redirections)
 
 	var innerBuf, body InstructionBuffer

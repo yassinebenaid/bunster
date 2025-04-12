@@ -137,7 +137,10 @@ func (p *parser) parseBreak() ast.Statement {
 		p.error("unexpected token `%s`", p.curr)
 		return nil
 	}
-	return ast.Break(1)
+
+	b := ast.Break(1)
+
+	return &b
 }
 
 func (p *parser) parseExit() ast.Statement {

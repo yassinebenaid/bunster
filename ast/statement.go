@@ -57,6 +57,7 @@ type Loop struct {
 	Head         []Statement
 	Body         []Statement
 	Redirections []Redirection
+	Breaks       []string
 }
 
 type RangeLoop struct {
@@ -92,6 +93,7 @@ type If struct {
 	Elifs        []Elif
 	Alternate    []Statement
 	Redirections []Redirection
+	Breaks       []string
 }
 
 type Elif struct {

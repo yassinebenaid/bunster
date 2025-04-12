@@ -662,3 +662,41 @@ cases:
       done
     expect:
       build_error: "main.sh(0:0): semantic error: the `break` keyword cannot be used here."
+
+  - name: "`break`  can be nested in if statements within loops"
+    script: |
+      while true; do
+        echo foo
+        if true; then
+          break
+        fi
+        echo bar
+      done
+
+      while true; do
+        echo baz
+        if true; then
+          if true; then 
+            if true; then
+              break
+            fi
+          fi
+        fi
+        echo boo
+      done
+
+      while true; do
+          if false; then 
+            echo bee
+            break
+          fi
+
+          if true; then
+            break
+          fi
+        echo boo
+      done
+    expect:
+      stdout: |
+        foo
+        baz
