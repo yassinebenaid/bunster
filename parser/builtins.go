@@ -138,9 +138,7 @@ func (p *parser) parseBreak() ast.Statement {
 		return nil
 	}
 
-	b := ast.Break(1)
-
-	return &b
+	return &ast.Break{}
 }
 
 func (p *parser) parseExit() ast.Statement {

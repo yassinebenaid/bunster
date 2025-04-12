@@ -20,7 +20,9 @@ func (a *analyser) analyseLoop(loop *ast.Loop) {
 
 func (a *analyser) analyseBreak(b *ast.Break) {
 	a.breakpoints++
-	*b = ast.Break(a.breakpoints)
+	*b = ast.Break{
+		BreakPoint: a.breakpoints,
+	}
 
 	var withinLoop bool
 	var last int
@@ -37,7 +39,9 @@ loop:
 			break loop
 		case *ast.If:
 			v.BreakPoints.Add(a.breakpoints, ast.RETURN)
-		case ast.List, *ast.Break:
+		case *ast.Break:
+			v.Type = ast.RETURN
+		case ast.List:
 		}
 		last = i
 	}
@@ -50,5 +54,7 @@ loop:
 	switch v := a.stack[last].(type) {
 	case *ast.If:
 		v.BreakPoints.Add(a.breakpoints, ast.BREAK)
+	case *ast.Break:
+		v.Type = ast.BREAK
 	}
 }

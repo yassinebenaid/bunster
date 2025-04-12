@@ -395,6 +395,7 @@ func (g *generator) handleStatementContext(buf *InstructionBuffer, b ast.BreakPo
 			})
 		case ast.DECLARE:
 			buf.add(ir.Declare{Name: fmt.Sprintf("breakpoint%d", id), Value: ir.Literal("false")})
+			buf.add(ir.Set{Name: "_", Value: ir.Literal(fmt.Sprintf("breakpoint%d", id))})
 		}
 	}
 

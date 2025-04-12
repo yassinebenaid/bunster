@@ -85,7 +85,11 @@ type RangeLoop struct {
 	Redirections []Redirection
 }
 
-type Break int
+type Break struct {
+	BreakPoint int
+	Type       BreakPointsType
+}
+
 type Exit struct {
 	Code Expression
 }

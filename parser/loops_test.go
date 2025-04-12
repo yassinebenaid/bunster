@@ -1011,7 +1011,7 @@ var loopsTests = []testCase{
 	{`while true;do break;done`, ast.Script{
 		ast.Loop{
 			Head: []ast.Statement{ast.Command{Name: ast.Word("true")}},
-			Body: []ast.Statement{ast.Break(1)},
+			Body: []ast.Statement{ast.Break{}},
 		},
 	}},
 	{`while true; do
@@ -1024,7 +1024,7 @@ var loopsTests = []testCase{
 			Body: []ast.Statement{
 				ast.Loop{
 					Head: []ast.Statement{ast.Command{Name: ast.Word("true")}},
-					Body: []ast.Statement{ast.Break(1)},
+					Body: []ast.Statement{ast.Break{}},
 				},
 			},
 		},
@@ -1033,7 +1033,7 @@ var loopsTests = []testCase{
 		ast.Loop{
 			Negate: true,
 			Head:   []ast.Statement{ast.Command{Name: ast.Word("true")}},
-			Body:   []ast.Statement{ast.Break(1)},
+			Body:   []ast.Statement{ast.Break{}},
 		},
 	}},
 	{`until true; do
@@ -1048,13 +1048,13 @@ var loopsTests = []testCase{
 				ast.Loop{
 					Negate: true,
 					Head:   []ast.Statement{ast.Command{Name: ast.Word("true")}},
-					Body:   []ast.Statement{ast.Break(1)},
+					Body:   []ast.Statement{ast.Break{}},
 				},
 			},
 		},
 	}},
 	{`break # comment`, ast.Script{
-		ast.Break(1),
+		ast.Break{},
 	}},
 
 	// Continue
