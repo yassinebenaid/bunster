@@ -212,7 +212,7 @@ func (p *parser) parseReturn() ast.Statement {
 		return nil
 	}
 
-	return ast.Return{
+	return &ast.Return{
 		Code: code,
 	}
 }

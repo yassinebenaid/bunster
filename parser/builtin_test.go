@@ -26,23 +26,23 @@ var builtinTests = []testCase{
 	}},
 
 	{`return`, ast.Script{
-		ast.Return{
+		&ast.Return{
 			Code: ast.Word("0"),
 		},
 	}},
 	{`return 123`, ast.Script{
-		ast.Return{
+		&ast.Return{
 			Code: ast.Word("123"),
 		},
 	}},
 	{`return #comment`, ast.Script{
-		ast.Return{
+		&ast.Return{
 			Code: ast.Word("0"),
 		},
 	}},
 
 	{`return 1 #comment`, ast.Script{
-		ast.Return{
+		&ast.Return{
 			Code: ast.Word("1"),
 		},
 	}},
