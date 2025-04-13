@@ -158,6 +158,52 @@ cases:
         foo
         baz
 
+  - name: "`break`  can be nested in case statements within `until` loops"
+    script: |
+      until false; do
+        echo foo
+
+        case foo in
+          *) break
+        esac
+        
+        echo bar
+      done
+
+      until false; do
+        echo baz
+        
+        case foo in
+          *) case foo in
+            *) 
+            case foo in
+              *) break
+            esac
+          esac
+        esac
+        
+        echo boo
+      done
+
+      until false; do
+          case foo in
+            bar) 
+              echo bee
+              break
+            ;;
+          esac
+
+          case foo in
+            *) break
+          esac
+
+        echo boo
+      done
+    expect:
+      stdout: |
+        foo
+        baz
+
   - name: "can continue a `until` loop"
     script: |
       n=0
@@ -249,6 +295,76 @@ cases:
         if true; then
           continue
         fi
+        
+        echo baz
+      done
+    expect:
+      stdout: |
+        1:foo
+        2:foo
+        3:foo
+
+        1:foo
+        2:foo
+        3:foo
+
+        1:foo
+        2:foo
+        3:foo
+
+  - name: "`continue`  can be nested in case statements within `until` loops"
+    script: |
+      let n = 0
+      until ((n >= 3)); do
+        let n++
+
+        echo $n:foo
+        
+        case foo in
+          *) continue
+        esac
+        
+        echo bar
+      done
+
+      echo 
+
+      let n = 0
+      until ((n >= 3)); do
+        let n++
+
+        echo $n:foo
+        
+        case foo in
+          *) case foo in
+            *) case foo in
+              *) continue
+            esac
+          esac
+        esac
+
+        echo bar
+      done
+
+      echo 
+
+      let n = 0
+
+      until ((n >= 3)); do
+        let n++
+        
+        echo $n:foo
+        
+        case foo in 
+          bar)
+            echo bar
+            continue
+          ;;
+        esac
+
+        case foo in
+          *) continue
+        esac
         
         echo baz
       done
