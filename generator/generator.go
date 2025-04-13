@@ -59,7 +59,7 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement) {
 		g.handleContinue(buf, v)
 	case *ast.Loop:
 		g.handleLoop(buf, v)
-	case ast.For:
+	case *ast.For:
 		g.handleForLoop(buf, v)
 	case *ast.RangeLoop:
 		g.handleRangeLoop(buf, v)

@@ -106,6 +106,7 @@ type For struct {
 	Head         ForHead
 	Body         []Statement
 	Redirections []Redirection
+	BreakPoints
 }
 
 type ForHead struct {

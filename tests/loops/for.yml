@@ -1,0 +1,290 @@
+cases:
+  - name: "simple `for((...))` loop"
+    script: |
+      for (( i = 0; i < 5; i++ )) do
+        echo $i
+      done
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+
+  - name: "`for((...))` without init branch"
+    script: |
+      for (( ; i < 5; i++ )) do
+        echo $i
+      done
+    expect:
+      stdout: |
+
+        1
+        2
+        3
+        4
+
+  - name: "`for((...))` with init branch only"
+    script: |
+      for (( i=0 ; ; )) do
+        echo $i
+
+        (( i >= 5 )) && break || (( i++ )) 
+      done
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+        5
+
+  - name: "`for((...))` without update branch"
+    script: |
+      for (( i = 0; i < 5; )) do
+        echo $i
+
+        (( i++ ))
+      done
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+
+  - name: "`for((...))` with update branch only"
+    script: |
+      let i=0
+
+      for (( ; ; i++ )) do
+        echo $i
+        (( i >= 5 )) && break
+       done
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+        5
+
+  - name: "`for((...))` without test branch"
+    script: |
+      for (( i = 0; ; i++ )) do
+        echo $i
+
+        (( i >= 5 )) && break
+      done
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+        5
+
+  - name: "`for((...))` with test branch only"
+    script: |
+      let i = 0
+      for (( ; i <= 5; )) do
+        echo $i
+
+        (( i++ ))
+      done
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+        5
+
+  - name: "`for((...))` without any branches"
+    script: |
+      let i = 1
+
+      for (( ; ; )) do
+        echo $i
+
+        (( i >= 5 )) && break || (( i++ )) 
+      done
+    expect:
+      stdout: |
+        1
+        2
+        3
+        4
+        5
+
+  - name: "`for((...))` can accept redirections"
+    script: |
+      for (( i=0 ; i<5; i++)) do
+        echo $i
+      done >output.txt
+    expect:
+      files:
+        output.txt: |
+          0
+          1
+          2
+          3
+          4
+
+  - name: "`for((...))` can be used within pipeline"
+    script: |
+      for (( i=0 ; i<5; i++)) do
+        echo $i
+      done | cat
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+
+  - name: "`for((...))` exit code is the last command's exit code"
+    script: |
+      for (( i=0 ; i<5; i++)) do
+        true
+      done 
+      echo $?
+
+
+      for (( i=0 ; i<5; i++)) do
+        false
+      done 
+      echo $?
+    expect:
+      stdout: |
+        0
+        1
+
+  - name: "`for((...))` heeader does not affect exit code"
+    script: |
+      for (( 0 ; 0; 0)) do
+        false
+      done
+    expect:
+      exit_code: 0
+
+  - name: "`for((...))` can have 'continue'"
+    script: |
+      for (( i=0 ; i < 3; i++)) do
+        echo start:$i
+        continue
+        echo end:$i
+      done
+    expect:
+      stdout: |
+        start:0
+        start:1
+        start:2
+
+  - name: "`for((...))` can have 'break'"
+    script: |
+      for (( i=0 ; i < 3; i++)) do
+        echo start:$i
+        break
+        echo end:$i
+      done
+    expect:
+      stdout: |
+        start:0
+
+  - name: "`break`  can be nested in if statements within `for` loops"
+    script: |
+      for ((i=0; i<3; i++)); do
+        echo foo
+        if true; then
+          break
+        fi
+        echo bar
+      done
+
+      for ((i=0; i<3; i++)); do
+        echo baz
+        if true; then
+          if true; then 
+            if true; then
+              break
+            fi
+          fi
+        fi
+        echo boo
+      done
+
+      for ((i=0; i<3; i++)); do
+          if false; then 
+            echo bee
+            break
+          fi
+
+          if true; then
+            break
+          fi
+        echo boo
+      done
+    expect:
+      stdout: |
+        foo
+        baz
+
+  - name: "`continue`  can be nested in if statements within `for` loops"
+    script: |
+      for ((i=0; i<3; i++)); do
+        echo foo
+        if true; then
+          continue
+        fi
+        echo bar
+      done
+
+      echo
+
+      for ((i=0; i<3; i++)); do
+        echo baz
+        if true; then
+          if true; then 
+            if true; then
+              continue
+            fi
+          fi
+        fi
+        echo boo
+      done
+
+      echo
+
+      for ((i=0; i<3; i++)); do
+          if false; then 
+            echo bee
+            continue
+          fi
+
+          echo boo
+          if true; then
+            continue
+          fi
+        echo boo
+      done
+    expect:
+      stdout: |
+        foo
+        foo
+        foo
+
+        baz
+        baz
+        baz
+
+        boo
+        boo
+        boo

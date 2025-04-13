@@ -4,6 +4,26 @@ import (
 	"github.com/yassinebenaid/bunster/ast"
 )
 
+func (a *analyser) analyseFor(loop *ast.For) {
+	for _, expr := range loop.Head.Init {
+		a.analyseArithmeticExpression(expr)
+	}
+	for _, expr := range loop.Head.Test {
+		a.analyseArithmeticExpression(expr)
+	}
+	for _, expr := range loop.Head.Update {
+		a.analyseArithmeticExpression(expr)
+	}
+	for _, s := range loop.Body {
+		a.analyseStatement(s)
+	}
+	for _, r := range loop.Redirections {
+		if r.Dst != nil {
+			a.analyseExpression(r.Dst)
+		}
+	}
+}
+
 func (a *analyser) analyseRangeLoop(loop *ast.RangeLoop) {
 	for _, expr := range loop.Operands {
 		a.analyseExpression(expr)
@@ -50,7 +70,8 @@ loop:
 			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
 			withinLoop = true
 			break loop
-		case ast.For:
+		case *ast.For:
+			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
 			withinLoop = true
 			break loop
 		case *ast.If:
@@ -95,7 +116,8 @@ loop:
 			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
 			withinLoop = true
 			break loop
-		case ast.For:
+		case *ast.For:
+			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
 			withinLoop = true
 			break loop
 		case *ast.If:
