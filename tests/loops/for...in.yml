@@ -158,6 +158,51 @@ cases:
         foo
         baz
 
+  - name: "`break`  can be nested in case statements within `for` loops"
+    script: |
+      for i in a b c; do
+        echo foo
+        
+        case foo in
+          *) break
+        esac
+        
+        echo bar
+      done
+
+      for i in a b c; do
+        echo baz
+        
+        case foo in
+          *) case foo in
+            *) 
+            case foo in
+              *) break
+            esac
+          esac
+        esac
+        
+        echo boo
+      done
+
+      for i in a b c; do
+          case foo in
+            bar)
+              echo bee
+              break
+            ;;
+          esac
+
+          case foo in
+            *) break
+          esac
+        echo boo
+      done
+    expect:
+      stdout: |
+        foo
+        baz
+
   - name: "`continue`  can be nested in if statements within `for` loops"
     script: |
       for i in a b c; do
@@ -194,6 +239,66 @@ cases:
           if true; then
             continue
           fi
+        echo boo
+      done
+    expect:
+      stdout: |
+        foo
+        foo
+        foo
+
+        baz
+        baz
+        baz
+
+        boo
+        boo
+        boo
+
+  - name: "`continue`  can be nested in case statements within `for` loops"
+    script: |
+      for i in a b c; do
+        echo foo
+        
+        case foo in
+          *) continue
+        esac
+        
+        echo bar
+      done
+
+      echo
+
+      for i in a b c; do
+        echo baz
+        
+        case foo in
+          *) case foo in
+            *) case foo in
+              *) continue
+            esac
+          esac
+        esac
+        
+        echo boo
+      done
+
+      echo
+
+      for i in a b c; do
+        case foo in
+          bar)
+            echo bee
+            continue
+          ;;
+        esac
+
+        echo boo
+
+        case foo in
+          *) continue
+        esac
+
         echo boo
       done
     expect:
