@@ -14,24 +14,28 @@
 
 A shell compiler that converts shell scripts into secure, portable and static binaries. Unlike other tools (ie. [shc](https://github.com/neurobin/shc)), Bunster does not just wrap your script within a binary. It literally compiles them to standalone shell-independent programs.
 
-Technically speaking, **Bunster** in fact is a `shell-to-Go` [Transpiler](https://en.wikipedia.org/wiki/Source-to-source_compiler) that generates [Go](https://go.dev) source out of your scripts. Then, optionally uses the [Go Toolchain](https://go.dev/dl) to compile the code to an executable.
+Under the hood, **Bunster** transpiles shell scripts into [Go](https://go.dev) code. Then uses the [Go Toolchain](https://go.dev/dl) to compile the code to an executable.
 
-**Bunster** aims to be compatible with `bash` as a starting move. You should expect your `bash` scripts to just work with bunster. Additional shells will be supported as soon as we release v1.
+**Bunster** aims to be compatible with `bash` as a starting move. Expecting that most `bash` scripts will just work with bunster. Additional shells will be supported as soon as we release v1.
 
 > [!WARNING]
 > This project is in its early stages of development. [Only a subset of features are supported so far](https://bunster.netlify.app/features/simple-commands).
 
-## Vision
+## Features
 
-Bunster has a vision to make shell scripts feel like any modern programming language. With as many features as we could, without any bloating. anything that
-makes you feel happy when writing shell scripts. a feeling that shells usually don't provide, a feeling that languages like Go give you, we aim to:
+In addition to being compatible with bash. bunster offers a lot of additional features that empower its uniqueness:
 
-- Improve error handling and messages, we want to help everyone write error-aware scripts. And when they fail, we want to give them clear, concise error messages.
-- Introduce a module system that allows you to publish and consume scripts as libraries, with a builtin package manager.
-- Add first-class support for a wide collection of builtin commands that just work out of the box. You don't need external programs to use them.
-- Add first-class support for `.env` files. Allowing you to load variables from `.env`.
-- Support static asset embedding. This feature allows you to embed a file's content to a variable at build time. ([Go has one already](https://pkg.go.dev/embed))
-- Support different shells and POSIX.
+- **Static binaries**: scripts compiled with bunster are not just wrappers around your script, nor do they rely on any external shells on your system.
+
+- **Modular**: unlike traditional shells scripts that are written in a single file. bunster offers a module system that allows you to distribute code across as many files as needed. (learn more)(https://bunster.netlify.app/workspace/modules)
+
+- **Package Manager**: bunster has a buitlin package manager that makes it easy to publish and consume modules as libraries. (learn more)(https://bunster.netlify.app/workspace/modules)
+
+- **Native `.env` files support**: `.env` files are nativily supported in bunster. Allowing you to load variables from `.env` files at runtime. (learn more)(https://bunster.netlify.app/features/environment-files)
+
+- **Static assets embedding**: bunster allows you to embed files and directories within your compiled program at compile time. And use them as if they were normal files in the system at runtime. (learn more)(https://bunster.netlify.app/features/embedding)
+
+- **Static analysis**: bunster statically analizes your scripts and reports potential bugs at compile time. (_wip_)
 
 ## Get Started
 
