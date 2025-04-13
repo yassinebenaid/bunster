@@ -82,7 +82,7 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement) {
 		g.handleEmbed(buf, v)
 	case ast.ArithmeticCommand:
 		g.handleArithmeticCommand(buf, v)
-	case ast.Case:
+	case *ast.Case:
 		g.handleCase(buf, v)
 	case ast.Exit:
 		g.handleExit(buf, v)

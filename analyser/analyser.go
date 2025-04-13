@@ -205,7 +205,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.analyseExpression(r.Dst)
 			}
 		}
-	case ast.Case:
+	case *ast.Case:
 		a.analyseExpression(v.Word)
 
 		for _, _case := range v.Cases {

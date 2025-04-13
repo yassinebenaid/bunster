@@ -158,6 +158,51 @@ cases:
         foo
         baz
 
+  - name: "`break`  can be nested in case statements within `while` loops"
+    script: |
+      while true; do
+        echo foo
+        
+        case foo in
+          *) break
+        esac
+        
+        echo bar
+      done
+
+      while true; do
+        echo baz
+        
+        case foo in
+          *) case foo in
+            *)  case foo in
+              *) break
+            esac
+          esac
+        esac
+        
+        echo boo
+      done
+
+      while true; do
+          case foo in
+            bar) 
+              echo bee
+              break
+            ;;
+          esac
+
+          case foo in
+            *) break
+          esac
+
+        echo boo
+      done
+    expect:
+      stdout: |
+        foo
+        baz
+
   - name: "can continue a `while` loop"
     script: |
       n=0
@@ -249,6 +294,76 @@ cases:
         if true; then
           continue
         fi
+        
+        echo baz
+      done
+    expect:
+      stdout: |
+        1:foo
+        2:foo
+        3:foo
+
+        1:foo
+        2:foo
+        3:foo
+
+        1:foo
+        2:foo
+        3:foo
+
+  - name: "`continue`  can be nested in case statements within `while` loops"
+    script: |
+      let n = 0
+      while ((n < 3)); do
+        let n++
+
+        echo $n:foo
+
+        case foo in
+          *) continue
+        esac
+        
+        echo bar
+      done
+
+      echo 
+
+      let n = 0
+      while ((n < 3)); do
+        let n++
+
+        echo $n:foo
+       
+        case foo in
+          *) case foo in
+            *) case foo in
+              *) continue
+            esac
+          esac
+        esac
+       
+        echo bar
+      done
+
+      echo 
+
+      let n = 0
+
+      while ((n < 3)); do
+        let n++
+        
+        echo $n:foo
+        
+         case foo in
+          bar)
+            echo bar
+            continue
+          ;;
+        esac
+
+        case foo in
+          *) continue
+        esac
         
         echo baz
       done

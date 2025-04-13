@@ -603,7 +603,7 @@ func (p *parser) parseCase() ast.Statement {
 		return nil
 	}
 
-	return stmt
+	return &stmt
 }
 
 func (p *parser) parseGroup() ast.Statement {

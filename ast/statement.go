@@ -133,6 +133,7 @@ type Case struct {
 	Word         Expression
 	Cases        []CaseItem
 	Redirections []Redirection
+	BreakPoints
 }
 
 type CaseItem struct {

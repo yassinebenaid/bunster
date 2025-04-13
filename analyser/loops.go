@@ -76,6 +76,8 @@ loop:
 			break loop
 		case *ast.If:
 			v.BreakPoints.Add(a.breakpoints, ast.RETURN)
+		case *ast.Case:
+			v.BreakPoints.Add(a.breakpoints, ast.RETURN)
 		case *ast.Break:
 			v.Type = ast.RETURN
 		case ast.List:
@@ -92,6 +94,8 @@ loop:
 
 	switch v := a.stack[last].(type) {
 	case *ast.If:
+		v.BreakPoints.Add(a.breakpoints, ast.BREAK)
+	case *ast.Case:
 		v.BreakPoints.Add(a.breakpoints, ast.BREAK)
 	case *ast.Break, ast.List:
 		b.Type = ast.CONTINUE
@@ -122,6 +126,8 @@ loop:
 			break loop
 		case *ast.If:
 			v.BreakPoints.Add(a.breakpoints, ast.RETURN)
+		case *ast.Case:
+			v.BreakPoints.Add(a.breakpoints, ast.RETURN)
 		case *ast.Continue:
 			v.Type = ast.RETURN
 		case ast.List:
@@ -138,6 +144,8 @@ loop:
 
 	switch v := a.stack[last].(type) {
 	case *ast.If:
+		v.BreakPoints.Add(a.breakpoints, ast.CONTINUE)
+	case *ast.Case:
 		v.BreakPoints.Add(a.breakpoints, ast.CONTINUE)
 	case *ast.Continue, ast.List:
 		b.Type = ast.CONTINUE
