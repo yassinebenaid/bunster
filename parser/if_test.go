@@ -4,7 +4,7 @@ import "github.com/yassinebenaid/bunster/ast"
 
 var ifCommandTests = []testCase{
 	{`if cmd; then cmd2; fi`, ast.Script{
-		ast.If{
+		&ast.If{
 			Head: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
 			},
@@ -18,7 +18,7 @@ var ifCommandTests = []testCase{
 	 then
 		cmd2;
 	fi`, ast.Script{
-		ast.If{
+		&ast.If{
 			Head: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
 			},
@@ -32,7 +32,7 @@ var ifCommandTests = []testCase{
 	 then
 		echo 'baz'
 	fi`, ast.Script{
-		ast.If{
+		&ast.If{
 			Head: []ast.Statement{
 				ast.List{
 					Left: ast.Pipeline{
@@ -59,7 +59,7 @@ var ifCommandTests = []testCase{
 		cmd >foo $var 3<<<"foo bar" |&
 		cmd2 "foo bar baz" <input.txt &
 	fi;`, ast.Script{
-		ast.If{
+		&ast.If{
 			Head: []ast.Statement{
 				ast.List{
 					Left: ast.Pipeline{
@@ -168,7 +168,7 @@ var ifCommandTests = []testCase{
 	}},
 	{`if cmd; then echo "foo"; fi & if cmd; then cmd; fi & cmd`, ast.Script{
 		ast.BackgroundConstruction{
-			Statement: ast.If{
+			Statement: &ast.If{
 				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
@@ -178,7 +178,7 @@ var ifCommandTests = []testCase{
 			},
 		},
 		ast.BackgroundConstruction{
-			Statement: ast.If{
+			Statement: &ast.If{
 				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
@@ -192,7 +192,7 @@ var ifCommandTests = []testCase{
 	{`if cmd; then echo "foo"; fi | if cmd; then echo "foo"; fi |& if cmd; then echo "foo"; fi `, ast.Script{
 		ast.Pipeline{
 			ast.PipelineCommand{
-				Command: ast.If{
+				Command: &ast.If{
 					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
@@ -202,7 +202,7 @@ var ifCommandTests = []testCase{
 				},
 			},
 			ast.PipelineCommand{
-				Command: ast.If{
+				Command: &ast.If{
 					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
@@ -213,7 +213,7 @@ var ifCommandTests = []testCase{
 				Stderr: true,
 			},
 			ast.PipelineCommand{
-				Command: ast.If{
+				Command: &ast.If{
 					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
@@ -226,7 +226,7 @@ var ifCommandTests = []testCase{
 	}},
 	{`if cmd; then echo "foo"; fi && if cmd; then echo "foo"; fi;`, ast.Script{
 		ast.List{
-			Left: ast.If{
+			Left: &ast.If{
 				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
@@ -235,7 +235,7 @@ var ifCommandTests = []testCase{
 				},
 			},
 			Operator: "&&",
-			Right: ast.If{
+			Right: &ast.If{
 				Head: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
 				},
@@ -251,9 +251,9 @@ var ifCommandTests = []testCase{
 	then
 		if cmd; then echo "foo"; fi
 	fi`, ast.Script{
-		ast.If{
+		&ast.If{
 			Head: []ast.Statement{
-				ast.If{
+				&ast.If{
 					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
@@ -263,7 +263,7 @@ var ifCommandTests = []testCase{
 				},
 			},
 			Body: []ast.Statement{
-				ast.If{
+				&ast.If{
 					Head: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
@@ -276,7 +276,7 @@ var ifCommandTests = []testCase{
 	}},
 	{`if cmd; then echo "foo"; fi >output.txt <input.txt 2>error.txt >&3 \
 	 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6`, ast.Script{
-		ast.If{
+		&ast.If{
 			Head: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
 			},
@@ -299,7 +299,7 @@ var ifCommandTests = []testCase{
 		},
 	}},
 	{"if cmd; then cmd2; fi; if cmd; then cmd2; fi \n  if cmd; then cmd2; fi", ast.Script{
-		ast.If{
+		&ast.If{
 			Head: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
 			},
@@ -307,7 +307,7 @@ var ifCommandTests = []testCase{
 				ast.Command{Name: ast.Word("cmd2")},
 			},
 		},
-		ast.If{
+		&ast.If{
 			Head: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
 			},
@@ -315,7 +315,7 @@ var ifCommandTests = []testCase{
 				ast.Command{Name: ast.Word("cmd2")},
 			},
 		},
-		ast.If{
+		&ast.If{
 			Head: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
 			},
@@ -326,7 +326,7 @@ var ifCommandTests = []testCase{
 	}},
 
 	{`if cmd; then cmd2; else cmd3; fi`, ast.Script{
-		ast.If{
+		&ast.If{
 			Head: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
 			},
@@ -345,7 +345,7 @@ var ifCommandTests = []testCase{
 	else
 		cmd3;
 	fi`, ast.Script{
-		ast.If{
+		&ast.If{
 			Head: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
 			},
@@ -358,7 +358,7 @@ var ifCommandTests = []testCase{
 		},
 	}},
 	{`if cmd; then cmd2; elif cmd3; then cmd4; fi`, ast.Script{
-		ast.If{
+		&ast.If{
 			Head: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
 			},
@@ -388,7 +388,7 @@ var ifCommandTests = []testCase{
 	else
 		cmd
 	fi`, ast.Script{
-		ast.If{
+		&ast.If{
 			Head: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
 			},
@@ -448,7 +448,7 @@ var ifCommandTests = []testCase{
 		# comment
 	fi # comment
 	`, ast.Script{
-		ast.If{
+		&ast.If{
 			Head: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
 			},
