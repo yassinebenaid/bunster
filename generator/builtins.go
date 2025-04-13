@@ -27,7 +27,7 @@ func (g *generator) handleExit(buf *InstructionBuffer, exit ast.Exit) {
 
 func (g *generator) handleReturn(buf *InstructionBuffer, b *ast.Return) {
 	buf.add(ir.Set{Name: fmt.Sprintf("breakpoint%d", b.BreakPoint), Value: ir.Literal("true")})
-
+	buf.add(ir.Set{Name: "shell.ExitCode", Value: ir.ParseInt{Value: g.handleExpression(buf, b.Code)}})
 	buf.add(ir.Literal("return;"))
 }
 
