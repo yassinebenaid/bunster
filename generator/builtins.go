@@ -1,6 +1,8 @@
 package generator
 
 import (
+	"fmt"
+
 	"github.com/yassinebenaid/bunster/ast"
 	"github.com/yassinebenaid/bunster/ir"
 )
@@ -21,12 +23,26 @@ func (g *generator) handleExit(buf *InstructionBuffer, exit ast.Exit) {
 	buf.add(ir.Exit{Code: g.handleExpression(buf, exit.Code)})
 }
 
-func (g *generator) handleBreak(buf *InstructionBuffer, _ ast.Break) {
-	buf.add(ir.Literal("break\n"))
+func (g *generator) handleBreak(buf *InstructionBuffer, b *ast.Break) {
+	buf.add(ir.Set{Name: fmt.Sprintf("breakpoint%d", b.BreakPoint), Value: ir.Literal("true")})
+
+	switch b.Type {
+	case ast.RETURN:
+		buf.add(ir.Literal("return;"))
+	default:
+		buf.add(ir.Literal("break;"))
+	}
 }
 
-func (g *generator) handleContinue(buf *InstructionBuffer, _ ast.Continue) {
-	buf.add(ir.Literal("continue\n"))
+func (g *generator) handleContinue(buf *InstructionBuffer, b *ast.Continue) {
+	buf.add(ir.Set{Name: fmt.Sprintf("breakpoint%d", b.BreakPoint), Value: ir.Literal("true")})
+
+	switch b.Type {
+	case ast.RETURN:
+		buf.add(ir.Literal("return;"))
+	default:
+		buf.add(ir.Literal("continue;"))
+	}
 }
 
 func (g *generator) handleWait(buf *InstructionBuffer, _ ast.Wait) {

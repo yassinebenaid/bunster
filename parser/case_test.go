@@ -4,7 +4,7 @@ import "github.com/yassinebenaid/bunster/ast"
 
 var caseTests = []testCase{
 	{`case foo in bar) cmd; esac`, ast.Script{
-		ast.Case{
+		&ast.Case{
 			Word: ast.Word("foo"),
 			Cases: []ast.CaseItem{
 				{
@@ -20,7 +20,7 @@ var caseTests = []testCase{
 	in
 		bar) cmd
 	esac`, ast.Script{
-		ast.Case{
+		&ast.Case{
 			Word: ast.Word("foo"),
 			Cases: []ast.CaseItem{
 				{
@@ -39,7 +39,7 @@ var caseTests = []testCase{
 			cmd arg 'arg'
 			cmd arg 'arg'
 	esac`, ast.Script{
-		ast.Case{
+		&ast.Case{
 			Word: ast.Word("foo"),
 			Cases: []ast.CaseItem{
 				{
@@ -72,7 +72,7 @@ var caseTests = []testCase{
 			cmd arg 'arg'
 			cmd arg 'arg'
 	esac`, ast.Script{
-		ast.Case{
+		&ast.Case{
 			Word: ast.Word("foo"),
 			Cases: []ast.CaseItem{
 				{
@@ -117,7 +117,7 @@ var caseTests = []testCase{
 		bar|'foo'|$var ) cmd "arg" arg;;
 		bar    |   'foo'   |   $var   ) cmd "arg" arg;;
 	esac`, ast.Script{
-		ast.Case{
+		&ast.Case{
 			Word: ast.Var("foo"),
 			Cases: []ast.CaseItem{
 				{
@@ -149,7 +149,7 @@ var caseTests = []testCase{
 		(bar) cmd;;
 		(bar | 'foo') cmd;;
 	esac`, ast.Script{
-		ast.Case{
+		&ast.Case{
 			Word: ast.Var("foo"),
 			Cases: []ast.CaseItem{
 				{
@@ -173,7 +173,7 @@ var caseTests = []testCase{
 		},
 	}},
 	{`case $foo in (bar) cmd;; (bar | 'foo') cmd;; esac`, ast.Script{
-		ast.Case{
+		&ast.Case{
 			Word: ast.Var("foo"),
 			Cases: []ast.CaseItem{
 				{
@@ -198,7 +198,7 @@ var caseTests = []testCase{
 	}},
 	{`case $foo in bar) cmd;; esac & case $foo in bar) cmd;; esac & cmd`, ast.Script{
 		ast.BackgroundConstruction{
-			Statement: ast.Case{
+			Statement: &ast.Case{
 				Word: ast.Var("foo"),
 				Cases: []ast.CaseItem{
 					{
@@ -212,7 +212,7 @@ var caseTests = []testCase{
 			},
 		},
 		ast.BackgroundConstruction{
-			Statement: ast.Case{
+			Statement: &ast.Case{
 				Word: ast.Var("foo"),
 				Cases: []ast.CaseItem{
 					{
@@ -230,7 +230,7 @@ var caseTests = []testCase{
 	{`case $foo in bar) cmd;; esac | case $foo in bar) cmd;; esac |& cmd`, ast.Script{
 		ast.Pipeline{
 			ast.PipelineCommand{
-				Command: ast.Case{
+				Command: &ast.Case{
 					Word: ast.Var("foo"),
 					Cases: []ast.CaseItem{
 						{
@@ -244,7 +244,7 @@ var caseTests = []testCase{
 				},
 			},
 			ast.PipelineCommand{
-				Command: ast.Case{
+				Command: &ast.Case{
 					Word: ast.Var("foo"),
 					Cases: []ast.CaseItem{
 						{
@@ -265,7 +265,7 @@ var caseTests = []testCase{
 	}},
 	{`case $foo in bar) cmd;; esac || case $foo in bar) cmd;; esac`, ast.Script{
 		ast.List{
-			Left: ast.Case{
+			Left: &ast.Case{
 				Word: ast.Var("foo"),
 				Cases: []ast.CaseItem{
 					{
@@ -278,7 +278,7 @@ var caseTests = []testCase{
 				},
 			},
 			Operator: "||",
-			Right: ast.Case{
+			Right: &ast.Case{
 				Word: ast.Var("foo"),
 				Cases: []ast.CaseItem{
 					{
@@ -299,13 +299,13 @@ var caseTests = []testCase{
 					cmd;;
 			esac;;
 	esac`, ast.Script{
-		ast.Case{
+		&ast.Case{
 			Word: ast.Var("foo"),
 			Cases: []ast.CaseItem{
 				{
 					Patterns: []ast.Expression{ast.Word("bar")},
 					Body: []ast.Statement{
-						ast.Case{
+						&ast.Case{
 							Word: ast.Var("foo"),
 							Cases: []ast.CaseItem{
 								{
@@ -329,7 +329,7 @@ var caseTests = []testCase{
 			cmd;;
 	esac >output.txt <input.txt 2>error.txt >&3 \
 	 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6`, ast.Script{
-		ast.Case{
+		&ast.Case{
 			Word: ast.Var("foo"),
 			Cases: []ast.CaseItem{
 				{
@@ -359,7 +359,7 @@ var caseTests = []testCase{
 		case $foo in	bar) cmd;;esac
 		case $foo in	bar) cmd;;esac; case $foo in	bar) cmd;;esac
 	`, ast.Script{
-		ast.Case{
+		&ast.Case{
 			Word: ast.Var("foo"),
 			Cases: []ast.CaseItem{
 				{
@@ -369,7 +369,7 @@ var caseTests = []testCase{
 				},
 			},
 		},
-		ast.Case{
+		&ast.Case{
 			Word: ast.Var("foo"),
 			Cases: []ast.CaseItem{
 				{
@@ -379,7 +379,7 @@ var caseTests = []testCase{
 				},
 			},
 		},
-		ast.Case{
+		&ast.Case{
 			Word: ast.Var("foo"),
 			Cases: []ast.CaseItem{
 				{
@@ -392,7 +392,7 @@ var caseTests = []testCase{
 	}},
 
 	{`case in in bar) cmd;; esac`, ast.Script{
-		ast.Case{
+		&ast.Case{
 			Word: ast.Word("in"),
 			Cases: []ast.CaseItem{
 				{
@@ -405,7 +405,7 @@ var caseTests = []testCase{
 	}},
 
 	{`case esac in bar) cmd;; esac`, ast.Script{
-		ast.Case{
+		&ast.Case{
 			Word: ast.Word("esac"),
 			Cases: []ast.CaseItem{
 				{
@@ -422,7 +422,7 @@ var caseTests = []testCase{
    		pattern ) cmd; ;&
 	 	pattern ) cmd; ;;&
 	esac`, ast.Script{
-		ast.Case{
+		&ast.Case{
 			Word: ast.Word("word"),
 			Cases: []ast.CaseItem{
 				{

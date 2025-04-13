@@ -51,14 +51,18 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement) {
 		g.handleGroup(buf, v)
 	case ast.SubShell:
 		g.handleSubshell(buf, v)
-	case ast.If:
+	case *ast.If:
 		g.handleIf(buf, v)
-	case ast.Break:
+	case *ast.Break:
 		g.handleBreak(buf, v)
-	case ast.Continue:
+	case *ast.Continue:
 		g.handleContinue(buf, v)
-	case ast.Loop:
+	case *ast.Loop:
 		g.handleLoop(buf, v)
+	case *ast.For:
+		g.handleForLoop(buf, v)
+	case *ast.RangeLoop:
+		g.handleRangeLoop(buf, v)
 	case ast.BackgroundConstruction:
 		g.handleBackgroundConstruction(buf, v)
 	case ast.InvertExitCode:
@@ -72,17 +76,13 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement) {
 		var body InstructionBuffer
 		g.generate(&body, v.Command)
 		buf.add(ir.Defer{Body: body})
-	case ast.RangeLoop:
-		g.handleRangeLoop(buf, v)
 	case ast.Test:
 		g.handleTest(buf, v)
 	case ast.Embed:
 		g.handleEmbed(buf, v)
 	case ast.ArithmeticCommand:
 		g.handleArithmeticCommand(buf, v)
-	case ast.For:
-		g.handleForLoop(buf, v)
-	case ast.Case:
+	case *ast.Case:
 		g.handleCase(buf, v)
 	case ast.Exit:
 		g.handleExit(buf, v)
@@ -373,4 +373,30 @@ func (g *generator) handleBackgroundConstruction(buf *InstructionBuffer, b ast.B
 	scope.add(ir.Gorouting(body))
 
 	buf.add(ir.Closure(scope))
+}
+
+func (g *generator) handleStatementContext(buf *InstructionBuffer, b ast.BreakPoints) {
+	for _, breakpoint := range b {
+		switch breakpoint.Type {
+		case ast.RETURN:
+			buf.add(ir.If{
+				Condition: ir.Literal(fmt.Sprintf("breakpoint%d", breakpoint.Id)),
+				Body:      []ir.Instruction{ir.Literal("return")},
+			})
+		case ast.BREAK:
+			buf.add(ir.If{
+				Condition: ir.Literal(fmt.Sprintf("breakpoint%d", breakpoint.Id)),
+				Body:      []ir.Instruction{ir.Literal("break")},
+			})
+		case ast.CONTINUE:
+			buf.add(ir.If{
+				Condition: ir.Literal(fmt.Sprintf("breakpoint%d", breakpoint.Id)),
+				Body:      []ir.Instruction{ir.Literal("continue")},
+			})
+		case ast.DECLARE:
+			buf.add(ir.Declare{Name: fmt.Sprintf("breakpoint%d", breakpoint.Id), Value: ir.Literal("false")})
+			buf.add(ir.Set{Name: "_", Value: ir.Literal(fmt.Sprintf("breakpoint%d", breakpoint.Id))})
+		}
+	}
+
 }

@@ -1,0 +1,383 @@
+cases:
+  - name: "simple `until` command"
+    script: |
+      n=0
+
+      until [ $n -ge 5 ]; do
+        echo $n
+
+        n=$(expr $n + 1)
+      done
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+
+  - name: "`until` command only cares about last command's exit code"
+    script: |
+      n=0
+
+      until
+        false 
+        [ $n -ge 5 ]
+      do
+        echo $n
+
+        n=$(expr $n + 1)
+      done
+    expect:
+      stdout: |
+        0
+        1
+        2
+        3
+        4
+
+  - name: "`until` command header does not affect the shell's status code"
+    script: |
+      until  true ; do
+        echo foo
+      done
+    expect:
+      exit_code: 0
+
+  - name: "can use redirctions on `until` loop"
+    script: |
+      n=0
+
+      until  [ $n -ge 3 ] ; do
+        cat
+          echo error >&2
+          echo alternative output >&3
+
+          n=$(expr $n + 1)
+      done <<<"Hello World" >output.txt 2>error.txt 3>alternate.txt
+    expect:
+      files:
+        output.txt: "Hello World\n"
+        error.txt: |
+          error
+          error
+          error
+        alternate.txt: |
+          alternative output
+          alternative output
+          alternative output
+
+  - name: "`until` loop within pipeline"
+    script: |
+      n=0
+
+      until  [ $n -ge 3 ] ; do
+           echo $n
+
+          n=$(expr $n + 1)
+      done | cat
+    expect:
+      stdout: |
+        0
+        1
+        2
+
+  - name: "can break out of `until` loop"
+    script: |
+      n=0
+
+      until false; do
+          echo $n:start
+
+          break
+
+          echo $n:end
+      done | cat
+    expect:
+      stdout: |
+        0:start
+
+  - name: "`break` can be in list within `until` loop"
+    script: |
+      n=0
+
+      until false; do
+          echo $n:start
+
+          [ $n -ge 3 ] && break
+
+          echo $n:end
+
+          n=$(expr $n + 1)
+      done | cat
+    expect:
+      stdout: |
+        0:start
+        0:end
+        1:start
+        1:end
+        2:start
+        2:end
+        3:start
+
+  - name: "`break`  can be nested in if statements within `until` loops"
+    script: |
+      until false; do
+        echo foo
+        if true; then
+          break
+        fi
+        echo bar
+      done
+
+      until false; do
+        echo baz
+        if true; then
+          if true; then 
+            if true; then
+              break
+            fi
+          fi
+        fi
+        echo boo
+      done
+
+      until false; do
+          if false; then 
+            echo bee
+            break
+          fi
+
+          if true; then
+            break
+          fi
+        echo boo
+      done
+    expect:
+      stdout: |
+        foo
+        baz
+
+  - name: "`break`  can be nested in case statements within `until` loops"
+    script: |
+      until false; do
+        echo foo
+
+        case foo in
+          *) break
+        esac
+        
+        echo bar
+      done
+
+      until false; do
+        echo baz
+        
+        case foo in
+          *) case foo in
+            *) 
+            case foo in
+              *) break
+            esac
+          esac
+        esac
+        
+        echo boo
+      done
+
+      until false; do
+          case foo in
+            bar) 
+              echo bee
+              break
+            ;;
+          esac
+
+          case foo in
+            *) break
+          esac
+
+        echo boo
+      done
+    expect:
+      stdout: |
+        foo
+        baz
+
+  - name: "can continue a `until` loop"
+    script: |
+      n=0
+
+      until [ $n -ge 3 ]; do
+          echo $n:start
+
+          n=$(expr $n + 1)
+
+          continue
+
+          echo $n:end
+      done | cat
+    expect:
+      stdout: |
+        0:start
+        1:start
+        2:start
+
+  - name: "`continue` can be in list within `until` loop"
+    script: |
+      n=0
+
+      until  [ $n -ge 5 ] ; do
+          n=$(expr $n + 1)
+
+          echo $n:start
+
+          [ $n -eq 3 ] && continue
+
+          echo $n:end
+      done | cat
+    expect:
+      stdout: |
+        1:start
+        1:end
+        2:start
+        2:end
+        3:start
+        4:start
+        4:end
+        5:start
+        5:end
+
+  - name: "`continue`  can be nested in if statements within `until` loops"
+    script: |
+      let n = 0
+      until ((n >= 3)); do
+        let n++
+
+        echo $n:foo
+        if true; then
+          continue
+        fi
+        echo bar
+      done
+
+      echo 
+
+      let n = 0
+      until ((n >= 3)); do
+        let n++
+
+        echo $n:foo
+        if true; then
+          if true; then
+            if true; then
+              continue
+            fi
+          fi
+        fi
+        echo bar
+      done
+
+      echo 
+
+      let n = 0
+
+      until ((n >= 3)); do
+        let n++
+        
+        echo $n:foo
+        
+        if false; then 
+          echo bar
+          continue
+        fi
+
+        if true; then
+          continue
+        fi
+        
+        echo baz
+      done
+    expect:
+      stdout: |
+        1:foo
+        2:foo
+        3:foo
+
+        1:foo
+        2:foo
+        3:foo
+
+        1:foo
+        2:foo
+        3:foo
+
+  - name: "`continue`  can be nested in case statements within `until` loops"
+    script: |
+      let n = 0
+      until ((n >= 3)); do
+        let n++
+
+        echo $n:foo
+        
+        case foo in
+          *) continue
+        esac
+        
+        echo bar
+      done
+
+      echo 
+
+      let n = 0
+      until ((n >= 3)); do
+        let n++
+
+        echo $n:foo
+        
+        case foo in
+          *) case foo in
+            *) case foo in
+              *) continue
+            esac
+          esac
+        esac
+
+        echo bar
+      done
+
+      echo 
+
+      let n = 0
+
+      until ((n >= 3)); do
+        let n++
+        
+        echo $n:foo
+        
+        case foo in 
+          bar)
+            echo bar
+            continue
+          ;;
+        esac
+
+        case foo in
+          *) continue
+        esac
+        
+        echo baz
+      done
+    expect:
+      stdout: |
+        1:foo
+        2:foo
+        3:foo
+
+        1:foo
+        2:foo
+        3:foo
+
+        1:foo
+        2:foo
+        3:foo

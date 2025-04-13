@@ -33,9 +33,10 @@ func Analyse(s ast.Script, main bool) error {
 }
 
 type analyser struct {
-	script ast.Script
-	errors []error
-	stack  []ast.Statement
+	script      ast.Script
+	errors      []error
+	stack       []ast.Statement
+	breakpoints int
 }
 
 func (a *analyser) analyse(main bool) {
@@ -73,7 +74,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 	case ast.List:
 		a.analyseStatement(v.Left)
 		a.analyseStatement(v.Right)
-	case ast.If:
+	case *ast.If:
 		for _, s := range v.Head {
 			a.analyseStatement(s)
 		}
@@ -145,50 +146,16 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.analyseExpression(pa.Value)
 			}
 		}
-	case ast.Loop:
-		for _, s := range v.Head {
-			a.analyseStatement(s)
-		}
-		for _, s := range v.Body {
-			a.analyseStatement(s)
-		}
-		for _, r := range v.Redirections {
-			if r.Dst != nil {
-				a.analyseExpression(r.Dst)
-			}
-		}
-	case ast.Break:
-		var withinLoop bool
-	loop:
-		for i := len(a.stack) - 1; i >= 0; i-- {
-			switch a.stack[i].(type) {
-			case ast.Loop, ast.RangeLoop, ast.For:
-				withinLoop = true
-				break loop
-			case ast.List, ast.Break:
-			default:
-				a.report(Error{Msg: "the `break` keyword cannot be used here"})
-			}
-		}
-		if !withinLoop {
-			a.report(Error{Msg: "the `break` keyword cannot be used here"})
-		}
-	case ast.Continue:
-		var withinLoop bool
-	loop2:
-		for i := len(a.stack) - 1; i >= 0; i-- {
-			switch a.stack[i].(type) {
-			case ast.Loop, ast.RangeLoop, ast.For:
-				withinLoop = true
-				break loop2
-			case ast.List, ast.Continue:
-			default:
-				a.report(Error{Msg: "the `continue` keyword cannot be used here"})
-			}
-		}
-		if !withinLoop {
-			a.report(Error{Msg: "the `continue` keyword cannot be used here"})
-		}
+	case *ast.For:
+		a.analyseFor(v)
+	case *ast.RangeLoop:
+		a.analyseRangeLoop(v)
+	case *ast.Loop:
+		a.analyseLoop(v)
+	case *ast.Break:
+		a.analyseBreak(v)
+	case *ast.Continue:
+		a.analyseContinue(v)
 	case ast.Pipeline:
 		for _, cmd := range v {
 			a.analyseStatement(cmd.Command)
@@ -208,36 +175,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.analyseExpression(r.Dst)
 			}
 		}
-	case ast.RangeLoop:
-		for _, expr := range v.Operands {
-			a.analyseExpression(expr)
-		}
-		for _, s := range v.Body {
-			a.analyseStatement(s)
-		}
-		for _, r := range v.Redirections {
-			if r.Dst != nil {
-				a.analyseExpression(r.Dst)
-			}
-		}
-	case ast.For:
-		for _, expr := range v.Head.Init {
-			a.analyseArithmeticExpression(expr)
-		}
-		for _, expr := range v.Head.Test {
-			a.analyseArithmeticExpression(expr)
-		}
-		for _, expr := range v.Head.Update {
-			a.analyseArithmeticExpression(expr)
-		}
-		for _, s := range v.Body {
-			a.analyseStatement(s)
-		}
-		for _, r := range v.Redirections {
-			if r.Dst != nil {
-				a.analyseExpression(r.Dst)
-			}
-		}
+
 	case ast.Test:
 		a.analyseExpression(v.Expr)
 
@@ -267,7 +205,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.analyseExpression(r.Dst)
 			}
 		}
-	case ast.Case:
+	case *ast.Case:
 		a.analyseExpression(v.Word)
 
 		for _, _case := range v.Cases {

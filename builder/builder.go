@@ -1,6 +1,8 @@
 package builder
 
 import (
+	"bytes"
+	"fmt"
 	"io"
 	"io/fs"
 	"os"
@@ -26,18 +28,31 @@ type Builder struct {
 	Home       string
 }
 
+type GoCompileError struct {
+	Err    error
+	Stderr string
+}
+
+func (e GoCompileError) Error() string {
+	return fmt.Sprintf("go compile error: %v, stderr: %s", e.Err.Error(), e.Stderr)
+}
+
 func (b *Builder) Build() (err error) {
 	if err := b.Generate(); err != nil {
 		return err
 	}
 
 	gocmd := exec.Command("go", "build", "-o", b.OutputFile) //nolint:gosec
-	gocmd.Stdin = os.Stdin
-	gocmd.Stdout = os.Stdout
-	gocmd.Stderr = os.Stderr
 	gocmd.Dir = b.Builddir
+
+	var stderr bytes.Buffer
+	gocmd.Stderr = &stderr
+
 	if err := gocmd.Run(); err != nil {
-		return err
+		return GoCompileError{
+			Err:    err,
+			Stderr: stderr.String(),
+		}
 	}
 
 	return nil

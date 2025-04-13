@@ -9,6 +9,44 @@ type Statement interface {
 	stmt()
 }
 
+type BreakPointsType byte
+
+const (
+	RETURN   BreakPointsType = iota
+	BREAK                    = iota
+	CONTINUE                 = iota
+	DECLARE                  = iota
+)
+
+type BreakPoints []struct {
+	Id   int
+	Type BreakPointsType
+}
+
+func (b *BreakPoints) Add(id int, t BreakPointsType) {
+	ind := -1
+
+	for index, bp := range *b {
+		if bp.Id == id {
+			ind = index
+		}
+	}
+
+	breakpoint := struct {
+		Id   int
+		Type BreakPointsType
+	}{
+		Id:   id,
+		Type: t,
+	}
+
+	if ind != -1 {
+		(*b)[ind] = breakpoint
+	} else {
+		*b = append((*b), breakpoint)
+	}
+}
+
 type Expression interface {
 	Node
 	expr()
@@ -57,6 +95,7 @@ type Loop struct {
 	Head         []Statement
 	Body         []Statement
 	Redirections []Redirection
+	BreakPoints
 }
 
 type RangeLoop struct {
@@ -64,20 +103,30 @@ type RangeLoop struct {
 	Operands     []Expression
 	Body         []Statement
 	Redirections []Redirection
+	BreakPoints
 }
 
-type Break int
+type Break struct {
+	BreakPoint int
+	Type       BreakPointsType
+}
+
 type Exit struct {
 	Code Expression
 }
 
-type Continue int
+type Continue struct {
+	BreakPoint int
+	Type       BreakPointsType
+}
+
 type Wait struct{}
 
 type For struct {
 	Head         ForHead
 	Body         []Statement
 	Redirections []Redirection
+	BreakPoints
 }
 
 type ForHead struct {
@@ -92,6 +141,7 @@ type If struct {
 	Elifs        []Elif
 	Alternate    []Statement
 	Redirections []Redirection
+	BreakPoints
 }
 
 type Elif struct {
@@ -103,6 +153,7 @@ type Case struct {
 	Word         Expression
 	Cases        []CaseItem
 	Redirections []Redirection
+	BreakPoints
 }
 
 type CaseItem struct {

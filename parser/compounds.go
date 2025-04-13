@@ -120,7 +120,7 @@ func (p *parser) parseWhileLoop() ast.Statement {
 
 	p.loopLevel--
 
-	return loop
+	return &loop
 }
 
 func (p *parser) parseForLoop() ast.Statement {
@@ -271,14 +271,14 @@ func (p *parser) parseForLoop() ast.Statement {
 	}
 
 	if loopVar == "" {
-		return ast.For{
+		return &ast.For{
 			Head:         loopHead,
 			Body:         loopBody,
 			Redirections: loopRedirections,
 		}
 	}
 
-	return ast.RangeLoop{
+	return &ast.RangeLoop{
 		Var:          loopVar,
 		Operands:     loopOperands,
 		Body:         loopBody,
@@ -470,7 +470,7 @@ func (p *parser) parseIf() ast.Statement {
 		return nil
 	}
 
-	return cond
+	return &cond
 }
 
 func (p *parser) parseCase() ast.Statement {
@@ -603,7 +603,7 @@ func (p *parser) parseCase() ast.Statement {
 		return nil
 	}
 
-	return stmt
+	return &stmt
 }
 
 func (p *parser) parseGroup() ast.Statement {
