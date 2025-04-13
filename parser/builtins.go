@@ -100,7 +100,7 @@ func (p *parser) parseFunction() ast.Statement {
 		return nil
 	}
 
-	return fn
+	return &fn
 }
 
 func (p *parser) parseDefer() ast.Statement {

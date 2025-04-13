@@ -6,7 +6,7 @@ import (
 
 var functionsTests = []testCase{
 	{`foo(){ cmd; }`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
@@ -14,7 +14,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`foo-bar-baz () { cmd; }`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
@@ -22,7 +22,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`"foo-bar-baz" () { cmd; }`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
@@ -30,7 +30,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`"foo"-"bar"-'baz' () { cmd; } `, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
@@ -38,7 +38,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`foo () { cmd; } >output.txt`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
@@ -52,7 +52,7 @@ var functionsTests = []testCase{
 	 {
 		cmd
 	}`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
@@ -62,14 +62,14 @@ var functionsTests = []testCase{
 	{`foo(){cmd;}&&foo(){cmd;} || foo(){cmd;}`, ast.Script{
 		ast.List{
 			Left: ast.List{
-				Left: ast.Function{
+				Left: &ast.Function{
 					Name: "foo",
 					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
 				},
 				Operator: "&&",
-				Right: ast.Function{
+				Right: &ast.Function{
 					Name: "foo",
 					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
@@ -77,7 +77,7 @@ var functionsTests = []testCase{
 				},
 			},
 			Operator: "||",
-			Right: ast.Function{
+			Right: &ast.Function{
 				Name: "foo",
 				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
@@ -87,7 +87,7 @@ var functionsTests = []testCase{
 	}},
 
 	{`function foo(){ cmd; }`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
@@ -95,7 +95,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`function foo-bar-baz () { cmd; }`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
@@ -103,7 +103,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`function "foo-bar-baz" () { cmd; }`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
@@ -111,7 +111,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`function "foo"-"bar"-'baz' () { cmd; } `, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
@@ -119,7 +119,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`function foo () { cmd; } >output.txt`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
@@ -133,7 +133,7 @@ var functionsTests = []testCase{
 	 {
 		cmd
 	}`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
@@ -143,7 +143,7 @@ var functionsTests = []testCase{
 	{`function foo {
 		cmd
 	}`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
@@ -153,14 +153,14 @@ var functionsTests = []testCase{
 	{`function foo(){cmd;}&&function foo {cmd;} || function foo(){cmd;}`, ast.Script{
 		ast.List{
 			Left: ast.List{
-				Left: ast.Function{
+				Left: &ast.Function{
 					Name: "foo",
 					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
 					},
 				},
 				Operator: "&&",
-				Right: ast.Function{
+				Right: &ast.Function{
 					Name: "foo",
 					Body: []ast.Statement{
 						ast.Command{Name: ast.Word("cmd")},
@@ -168,7 +168,7 @@ var functionsTests = []testCase{
 				},
 			},
 			Operator: "||",
-			Right: ast.Function{
+			Right: &ast.Function{
 				Name: "foo",
 				Body: []ast.Statement{
 					ast.Command{Name: ast.Word("cmd")},
@@ -177,7 +177,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`foo() { cmd; } # comment`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
@@ -185,7 +185,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`function foo() { cmd; } # comment`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
 				ast.Command{Name: ast.Word("cmd")},
@@ -194,7 +194,7 @@ var functionsTests = []testCase{
 	}},
 
 	{`foo()( cmd )`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
@@ -203,7 +203,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`foo-bar-baz () ( cmd )`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
@@ -212,7 +212,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`"foo-bar-baz" () ( cmd )`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
@@ -221,7 +221,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`"foo"-"bar"-'baz' () ( cmd ) `, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
@@ -230,7 +230,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`foo () ( cmd ) >output.txt`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
@@ -245,7 +245,7 @@ var functionsTests = []testCase{
 	 (
 		cmd
 	)`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
@@ -256,7 +256,7 @@ var functionsTests = []testCase{
 	{`foo()(cmd)&&foo()(cmd) || foo()(cmd)`, ast.Script{
 		ast.List{
 			Left: ast.List{
-				Left: ast.Function{
+				Left: &ast.Function{
 					Name:     "foo",
 					SubShell: true,
 					Body: []ast.Statement{
@@ -264,7 +264,7 @@ var functionsTests = []testCase{
 					},
 				},
 				Operator: "&&",
-				Right: ast.Function{
+				Right: &ast.Function{
 					Name:     "foo",
 					SubShell: true,
 					Body: []ast.Statement{
@@ -273,7 +273,7 @@ var functionsTests = []testCase{
 				},
 			},
 			Operator: "||",
-			Right: ast.Function{
+			Right: &ast.Function{
 				Name:     "foo",
 				SubShell: true,
 				Body: []ast.Statement{
@@ -284,7 +284,7 @@ var functionsTests = []testCase{
 	}},
 
 	{`function foo()( cmd )`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
@@ -293,7 +293,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`function foo-bar-baz () ( cmd )`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
@@ -302,7 +302,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`function "foo-bar-baz" () ( cmd )`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
@@ -311,7 +311,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`function "foo"-"bar"-'baz' () ( cmd ) `, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
@@ -320,7 +320,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`function foo () ( cmd ) >output.txt`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
@@ -335,7 +335,7 @@ var functionsTests = []testCase{
 	 (
 		cmd
 	)`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
@@ -347,7 +347,7 @@ var functionsTests = []testCase{
 	(
 		cmd
 	)`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
@@ -358,7 +358,7 @@ var functionsTests = []testCase{
 	{`function foo()(cmd)&&function foo() (cmd) || function foo()(cmd)`, ast.Script{
 		ast.List{
 			Left: ast.List{
-				Left: ast.Function{
+				Left: &ast.Function{
 					Name:     "foo",
 					SubShell: true,
 					Body: []ast.Statement{
@@ -366,7 +366,7 @@ var functionsTests = []testCase{
 					},
 				},
 				Operator: "&&",
-				Right: ast.Function{
+				Right: &ast.Function{
 					Name:     "foo",
 					SubShell: true,
 					Body: []ast.Statement{
@@ -375,7 +375,7 @@ var functionsTests = []testCase{
 				},
 			},
 			Operator: "||",
-			Right: ast.Function{
+			Right: &ast.Function{
 				Name:     "foo",
 				SubShell: true,
 				Body: []ast.Statement{
@@ -385,7 +385,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`foo() ( cmd ) # comment`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
@@ -394,7 +394,7 @@ var functionsTests = []testCase{
 		},
 	}},
 	{`function foo() ( cmd ) # comment`, ast.Script{
-		ast.Function{
+		&ast.Function{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
