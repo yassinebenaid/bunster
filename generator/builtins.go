@@ -7,8 +7,10 @@ import (
 	"github.com/yassinebenaid/bunster/ir"
 )
 
-func (g *generator) handleFunction(buf *InstructionBuffer, function ast.Function) {
+func (g *generator) handleFunction(buf *InstructionBuffer, function *ast.Function) {
 	var body InstructionBuffer
+
+	g.handleStatementContext(buf, function.BreakPoints)
 
 	g.handleRedirections(&body, function.Redirections)
 
@@ -21,6 +23,12 @@ func (g *generator) handleFunction(buf *InstructionBuffer, function ast.Function
 
 func (g *generator) handleExit(buf *InstructionBuffer, exit ast.Exit) {
 	buf.add(ir.Exit{Code: g.handleExpression(buf, exit.Code)})
+}
+
+func (g *generator) handleReturn(buf *InstructionBuffer, b *ast.Return) {
+	buf.add(ir.Set{Name: fmt.Sprintf("breakpoint%d", b.BreakPoint), Value: ir.Literal("true")})
+
+	buf.add(ir.Literal("return;"))
 }
 
 func (g *generator) handleBreak(buf *InstructionBuffer, b *ast.Break) {

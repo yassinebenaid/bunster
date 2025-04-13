@@ -116,7 +116,8 @@ type Exit struct {
 }
 
 type Return struct {
-	Code Expression
+	Code       Expression
+	BreakPoint int
 }
 
 type Continue struct {
@@ -188,6 +189,7 @@ type Function struct {
 	SubShell     bool
 	Body         []Statement
 	Redirections []Redirection
+	BreakPoints
 }
 
 type Defer struct {

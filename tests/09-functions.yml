@@ -393,3 +393,29 @@ cases:
       local var
     expect:
       build_error: "main.sh(0:0): semantic error: the `local` keyword cannot be used outside functions."
+
+  - name: "can return from a function"
+    script: |
+      func(){
+        echo foo
+        return
+        echo bar
+      }
+
+      func
+      echo $?
+
+      func2(){
+        echo baz
+        return 3
+        echo boo
+      }
+
+      func2
+      echo $?
+    expect:
+      stdout: |
+        foo
+        0
+        baz
+        3

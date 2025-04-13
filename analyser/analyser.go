@@ -166,16 +166,10 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 		//TODO: ensure 'wait' is not invokes when no commands are put in background.
 	case ast.InvertExitCode:
 		a.analyseStatement(v.Statement)
-	case ast.Function:
-		for _, s := range v.Body {
-			a.analyseStatement(s)
-		}
-		for _, r := range v.Redirections {
-			if r.Dst != nil {
-				a.analyseExpression(r.Dst)
-			}
-		}
-
+	case *ast.Function:
+		a.analyseFunction(v)
+	case *ast.Return:
+		a.analyseReturn(v)
 	case ast.Test:
 		a.analyseExpression(v.Expr)
 
