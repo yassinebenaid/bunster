@@ -27,13 +27,13 @@ In addition to being compatible with bash. bunster offers a lot of additional fe
 
 - **Static binaries**: scripts compiled with bunster are not just wrappers around your script, nor do they rely on any external shells on your system.
 
-- **Modular**: unlike traditional shells scripts that are written in a single file. bunster offers a module system that allows you to distribute code across as many files as needed. (learn more)(https://bunster.netlify.app/workspace/modules)
+- **Modular**: unlike traditional shells scripts that are written in a single file. bunster offers a module system that allows you to distribute code across as many files as needed. [learn more](https://bunster.netlify.app/workspace/modules)
 
-- **Package Manager**: bunster has a buitlin package manager that makes it easy to publish and consume modules as libraries. (learn more)(https://bunster.netlify.app/workspace/modules)
+- **Package Manager**: bunster has a buitlin package manager that makes it easy to publish and consume modules as libraries. [learn more](https://bunster.netlify.app/workspace/modules)
 
-- **Native `.env` files support**: `.env` files are nativily supported in bunster. Allowing you to load variables from `.env` files at runtime. (learn more)(https://bunster.netlify.app/features/environment-files)
+- **Native `.env` files support**: `.env` files are nativily supported in bunster. Allowing you to load variables from `.env` files at runtime. [learn more](https://bunster.netlify.app/features/environment-files)
 
-- **Static assets embedding**: bunster allows you to embed files and directories within your compiled program at compile time. And use them as if they were normal files in the system at runtime. (learn more)(https://bunster.netlify.app/features/embedding)
+- **Static assets embedding**: bunster allows you to embed files and directories within your compiled program at compile time. And use them as if they were normal files in the system at runtime. [learn more](https://bunster.netlify.app/features/embedding)
 
 - **Static analysis**: bunster statically analizes your scripts and reports potential bugs at compile time. (_wip_)
 
