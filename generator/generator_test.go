@@ -2,6 +2,7 @@ package generator_test
 
 import (
 	"bytes"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -23,7 +24,7 @@ var dump = (&godump.Dumper{
 }).Sprintln
 
 func TestGenerator(t *testing.T) {
-	testFiles, err := filepath.Glob("./tests/*.test")
+	testFiles, err := globFiles("./tests")
 	if err != nil {
 		t.Fatalf("Failed to `Glob` test files, %v", err)
 	}
@@ -87,4 +88,18 @@ func gofmt(s string) (gofmtOut string, gofmtErr string, err error) {
 	gofmtErr = stderr.String()
 
 	return
+}
+
+func globFiles(path string) ([]string, error) {
+	var paths []string
+
+	err := filepath.WalkDir(path, func(path string, d fs.DirEntry, err error) error {
+		if err != nil || d.IsDir() {
+			return err
+		}
+		paths = append(paths, path)
+		return nil
+	})
+
+	return paths, err
 }

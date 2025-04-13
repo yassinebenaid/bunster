@@ -1,7 +1,6 @@
+#(TEST: simple `while` loop)
 
-#(TEST: simple `until` loop)
-
-until true; do
+while true; do
     echo "foo bar"
 done
 
@@ -31,7 +30,75 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			}()
 			var condition = shell.ExitCode == 0
 			shell.ExitCode = 0
-			if condition {
+			if !condition {
+				break
+			}
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "echo"
+				var arguments []string
+				var env = make(map[string]string)
+				arguments = append(arguments, "foo bar")
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+
+#(TEST: `while` loop within maultiple commands in the header)
+
+while true; true; do
+    echo "foo bar"
+done
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		for {
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "true"
+				var arguments []string
+				var env = make(map[string]string)
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "true"
+				var arguments []string
+				var env = make(map[string]string)
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+			var condition = shell.ExitCode == 0
+			shell.ExitCode = 0
+			if !condition {
 				break
 			}
 			func() {
@@ -56,15 +123,13 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 #(ENDTEST)
 
 
+#(TEST: `while` loop with redirections)
 
-#(TEST: `until` loop with redirections)
-
-until true; do
+while true; do
     echo "foo bar"
 done >file.txt <input.txt
 
 #(RESULT)
-
 package main
 
 import "github.com/yassinebenaid/bunster/runtime"
@@ -101,7 +166,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			}()
 			var condition = shell.ExitCode == 0
 			shell.ExitCode = 0
-			if condition {
+			if !condition {
 				break
 			}
 			func() {
@@ -122,262 +187,16 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	}()
 }
 
-#(ENDTEST)
-
-
-
-#(TEST: simple `for` loop)
-
-for arg; do
-    echo $arg
-done
-
-#(RESULT)
-package main
-
-import "github.com/yassinebenaid/bunster/runtime"
-
-func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	defer shell.Terminate(streamManager)
-	func() {
-		streamManager := streamManager.Clone()
-		defer streamManager.Destroy()
-		for _, member := range shell.Args {
-			shell.SetVar("arg", member)
-			func() {
-				streamManager := streamManager.Clone()
-				defer streamManager.Destroy()
-				var commandName = "echo"
-				var arguments []string
-				var env = make(map[string]string)
-				arguments = append(arguments, shell.ReadVar("arg"))
-				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-					shell.HandleError(streamManager, err)
-					return
-				}
-
-			}()
-		}
-
-	}()
-}
-
-
-#(ENDTEST)
-
-
-
-#(TEST: simple `for` loop over operands)
-
-for arg in foo bar baz; do
-    echo $arg
-done
-
-#(RESULT)
-package main
-
-import "github.com/yassinebenaid/bunster/runtime"
-
-func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	defer shell.Terminate(streamManager)
-	func() {
-		streamManager := streamManager.Clone()
-		defer streamManager.Destroy()
-		var members []string
-		members = append(members, "foo")
-		members = append(members, "bar")
-		members = append(members, "baz")
-		for _, member := range members {
-			shell.SetVar("arg", member)
-			func() {
-				streamManager := streamManager.Clone()
-				defer streamManager.Destroy()
-				var commandName = "echo"
-				var arguments []string
-				var env = make(map[string]string)
-				arguments = append(arguments, shell.ReadVar("arg"))
-				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-					shell.HandleError(streamManager, err)
-					return
-				}
-
-			}()
-		}
-
-	}()
-}
-
-#(ENDTEST)
-
-
-
-#(TEST: redirections on `for` loops)
-
-for arg; do
-    echo $arg
-done >file.txt <input.txt
-
-#(RESULT)
-package main
-
-import "github.com/yassinebenaid/bunster/runtime"
-
-func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	defer shell.Terminate(streamManager)
-	func() {
-		streamManager := streamManager.Clone()
-		defer streamManager.Destroy()
-		stream0, err := streamManager.OpenStream(shell.Path("file.txt"), runtime.STREAM_FLAG_WRITE)
-		if err != nil {
-			shell.HandleError(streamManager, err)
-			return
-		}
-		streamManager.Add("1", stream0)
-		stream1, err := streamManager.OpenStream(shell.Path("input.txt"), runtime.STREAM_FLAG_READ)
-		if err != nil {
-			shell.HandleError(streamManager, err)
-			return
-		}
-		streamManager.Add("0", stream1)
-		for _, member := range shell.Args {
-			shell.SetVar("arg", member)
-			func() {
-				streamManager := streamManager.Clone()
-				defer streamManager.Destroy()
-				var commandName = "echo"
-				var arguments []string
-				var env = make(map[string]string)
-				arguments = append(arguments, shell.ReadVar("arg"))
-				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-					shell.HandleError(streamManager, err)
-					return
-				}
-
-			}()
-		}
-
-	}()
-}
-
 
 #(ENDTEST)
 
 
 
 
-#(TEST: for((...)) loops)
+#(TEST: the `break` builtin within loop)
 
-for (( i=0; i<10; i++)); do
-    cmd
-done
-
-#(RESULT)
-package main
-
-import "github.com/yassinebenaid/bunster/runtime"
-
-func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	defer shell.Terminate(streamManager)
-	func() {
-		streamManager := streamManager.Clone()
-		defer streamManager.Destroy()
-		var arithmeticResult = 1
-		_ = arithmeticResult
-		var init = func() {
-			shell.SetVar("i", runtime.FormatInt(0))
-			arithmeticResult = runtime.ParseInt(shell.ReadVar("i"))
-
-		}
-		var test = func() int {
-			arithmeticResult = runtime.CompareInt(runtime.ParseInt(shell.ReadVar("i")), "<", 10)
-			return arithmeticResult
-
-		}
-		var update = func() {
-			arithmeticResult = runtime.VarIncrement(shell, "i", 1, true)
-
-		}
-		for init(); test() != 0; update() {
-			func() {
-				streamManager := streamManager.Clone()
-				defer streamManager.Destroy()
-				var commandName = "cmd"
-				var arguments []string
-				var env = make(map[string]string)
-				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-					shell.HandleError(streamManager, err)
-					return
-				}
-
-			}()
-		}
-
-	}()
-}
-
-
-#(ENDTEST)
-
-
-
-
-#(TEST: for((...)) loop without init branch)
-
-for (( ; i<10; i++)); do
-    cmd
-done
-
-#(RESULT)
-package main
-
-import "github.com/yassinebenaid/bunster/runtime"
-
-func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	defer shell.Terminate(streamManager)
-	func() {
-		streamManager := streamManager.Clone()
-		defer streamManager.Destroy()
-		var arithmeticResult = 1
-		_ = arithmeticResult
-		var test = func() int {
-			arithmeticResult = runtime.CompareInt(runtime.ParseInt(shell.ReadVar("i")), "<", 10)
-			return arithmeticResult
-
-		}
-		var update = func() {
-			arithmeticResult = runtime.VarIncrement(shell, "i", 1, true)
-
-		}
-		for ; test() != 0; update() {
-			func() {
-				streamManager := streamManager.Clone()
-				defer streamManager.Destroy()
-				var commandName = "cmd"
-				var arguments []string
-				var env = make(map[string]string)
-				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-					shell.HandleError(streamManager, err)
-					return
-				}
-
-			}()
-		}
-
-	}()
-}
-
-#(ENDTEST)
-
-
-
-
-
-
-
-#(TEST: for((...)) loop with init branch only)
-
-for (( i=0 ; ; )); do
-    cmd
+while true; do
+    break
 done
 
 #(RESULT)
@@ -389,262 +208,15 @@ import "github.com/yassinebenaid/bunster/runtime"
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	defer shell.Terminate(streamManager)
 	func() {
+		var breakpoint1 = false
+		_ = breakpoint1
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
-		var arithmeticResult = 1
-		_ = arithmeticResult
-		var init = func() {
-			shell.SetVar("i", runtime.FormatInt(0))
-			arithmeticResult = runtime.ParseInt(shell.ReadVar("i"))
-
-		}
-		for init(); ; {
-			func() {
-				streamManager := streamManager.Clone()
-				defer streamManager.Destroy()
-				var commandName = "cmd"
-				var arguments []string
-				var env = make(map[string]string)
-				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-					shell.HandleError(streamManager, err)
-					return
-				}
-
-			}()
-		}
-
-	}()
-}
-
-
-#(ENDTEST)
-
-
-
-#(TEST: for((...)) loop without test branch)
-
-for (( i=0 ; ;i++ )); do
-    cmd
-done
-
-#(RESULT)
-
-package main
-
-import "github.com/yassinebenaid/bunster/runtime"
-
-func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	defer shell.Terminate(streamManager)
-	func() {
-		streamManager := streamManager.Clone()
-		defer streamManager.Destroy()
-		var arithmeticResult = 1
-		_ = arithmeticResult
-		var init = func() {
-			shell.SetVar("i", runtime.FormatInt(0))
-			arithmeticResult = runtime.ParseInt(shell.ReadVar("i"))
-
-		}
-		var update = func() {
-			arithmeticResult = runtime.VarIncrement(shell, "i", 1, true)
-
-		}
-		for init(); ; update() {
-			func() {
-				streamManager := streamManager.Clone()
-				defer streamManager.Destroy()
-				var commandName = "cmd"
-				var arguments []string
-				var env = make(map[string]string)
-				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-					shell.HandleError(streamManager, err)
-					return
-				}
-
-			}()
-		}
-
-	}()
-}
-
-#(ENDTEST)
-
-
-
-
-
-#(TEST: for((...)) loop with test branch only)
-
-for ((  ; i<10 ; )); do
-    cmd
-done
-
-#(RESULT)
-
-
-package main
-
-import "github.com/yassinebenaid/bunster/runtime"
-
-func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	defer shell.Terminate(streamManager)
-	func() {
-		streamManager := streamManager.Clone()
-		defer streamManager.Destroy()
-		var arithmeticResult = 1
-		_ = arithmeticResult
-		var test = func() int {
-			arithmeticResult = runtime.CompareInt(runtime.ParseInt(shell.ReadVar("i")), "<", 10)
-			return arithmeticResult
-
-		}
-		for test() != 0 {
-			func() {
-				streamManager := streamManager.Clone()
-				defer streamManager.Destroy()
-				var commandName = "cmd"
-				var arguments []string
-				var env = make(map[string]string)
-				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-					shell.HandleError(streamManager, err)
-					return
-				}
-
-			}()
-		}
-
-	}()
-}
-
-#(ENDTEST)
-
-
-
-
-
-#(TEST: for((...)) loop without update branch )
-
-for ((  i=0; i<10 ; )); do
-    cmd
-done
-
-#(RESULT)
-
-package main
-
-import "github.com/yassinebenaid/bunster/runtime"
-
-func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	defer shell.Terminate(streamManager)
-	func() {
-		streamManager := streamManager.Clone()
-		defer streamManager.Destroy()
-		var arithmeticResult = 1
-		_ = arithmeticResult
-		var init = func() {
-			shell.SetVar("i", runtime.FormatInt(0))
-			arithmeticResult = runtime.ParseInt(shell.ReadVar("i"))
-
-		}
-		var test = func() int {
-			arithmeticResult = runtime.CompareInt(runtime.ParseInt(shell.ReadVar("i")), "<", 10)
-			return arithmeticResult
-
-		}
-		for init(); test() != 0; {
-			func() {
-				streamManager := streamManager.Clone()
-				defer streamManager.Destroy()
-				var commandName = "cmd"
-				var arguments []string
-				var env = make(map[string]string)
-				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-					shell.HandleError(streamManager, err)
-					return
-				}
-
-			}()
-		}
-
-	}()
-}
-
-#(ENDTEST)
-
-
-
-
-
-#(TEST: for((...)) loop with update branch only)
-
-for ((  ; ;i++ )); do
-    cmd
-done
-
-#(RESULT)
-
-package main
-
-import "github.com/yassinebenaid/bunster/runtime"
-
-func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	defer shell.Terminate(streamManager)
-	func() {
-		streamManager := streamManager.Clone()
-		defer streamManager.Destroy()
-		var arithmeticResult = 1
-		_ = arithmeticResult
-		var update = func() {
-			arithmeticResult = runtime.VarIncrement(shell, "i", 1, true)
-
-		}
-		for ; ; update() {
-			func() {
-				streamManager := streamManager.Clone()
-				defer streamManager.Destroy()
-				var commandName = "cmd"
-				var arguments []string
-				var env = make(map[string]string)
-				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-					shell.HandleError(streamManager, err)
-					return
-				}
-
-			}()
-		}
-
-	}()
-}
-
-
-#(ENDTEST)
-
-
-
-
-#(TEST: for((...)) loop without any branches)
-
-for ((  ; ; )); do
-    cmd
-done
-
-#(RESULT)
-package main
-
-import "github.com/yassinebenaid/bunster/runtime"
-
-func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
-	defer shell.Terminate(streamManager)
-	func() {
-		streamManager := streamManager.Clone()
-		defer streamManager.Destroy()
-		var arithmeticResult = 1
-		_ = arithmeticResult
 		for {
 			func() {
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
-				var commandName = "cmd"
+				var commandName = "true"
 				var arguments []string
 				var env = make(map[string]string)
 				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
@@ -653,21 +225,28 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				}
 
 			}()
+			var condition = shell.ExitCode == 0
+			shell.ExitCode = 0
+			if !condition {
+				break
+			}
+			breakpoint1 = true
+			break
 		}
 
 	}()
 }
 
+
 #(ENDTEST)
 
 
 
+#(TEST: the `continue` builtin within loop)
 
-#(TEST: for((...)) loop can have redirections)
-
-for ((  ; ; )); do
-    cmd
-done >file <file2
+while true; do
+    continue
+done
 
 #(RESULT)
 
@@ -678,27 +257,15 @@ import "github.com/yassinebenaid/bunster/runtime"
 func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	defer shell.Terminate(streamManager)
 	func() {
+		var breakpoint1 = false
+		_ = breakpoint1
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
-		stream0, err := streamManager.OpenStream(shell.Path("file"), runtime.STREAM_FLAG_WRITE)
-		if err != nil {
-			shell.HandleError(streamManager, err)
-			return
-		}
-		streamManager.Add("1", stream0)
-		stream1, err := streamManager.OpenStream(shell.Path("file2"), runtime.STREAM_FLAG_READ)
-		if err != nil {
-			shell.HandleError(streamManager, err)
-			return
-		}
-		streamManager.Add("0", stream1)
-		var arithmeticResult = 1
-		_ = arithmeticResult
 		for {
 			func() {
 				streamManager := streamManager.Clone()
 				defer streamManager.Destroy()
-				var commandName = "cmd"
+				var commandName = "true"
 				var arguments []string
 				var env = make(map[string]string)
 				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
@@ -707,6 +274,299 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 				}
 
 			}()
+			var condition = shell.ExitCode == 0
+			shell.ExitCode = 0
+			if !condition {
+				break
+			}
+			breakpoint1 = true
+			continue
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+
+
+#(TEST: the `break` & `continue` builtins within `list` in loops)
+
+while true; do
+    true && continue ||  break
+done
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		var breakpoint2 = false
+		_ = breakpoint2
+		var breakpoint1 = false
+		_ = breakpoint1
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		for {
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "true"
+				var arguments []string
+				var env = make(map[string]string)
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+			var condition = shell.ExitCode == 0
+			shell.ExitCode = 0
+			if !condition {
+				break
+			}
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "true"
+				var arguments []string
+				var env = make(map[string]string)
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+			if shell.ExitCode == 0 {
+				breakpoint1 = true
+				continue
+			}
+			if shell.ExitCode != 0 {
+				breakpoint2 = true
+				break
+			}
+		}
+
+	}()
+}
+
+#(ENDTEST)
+
+
+
+
+
+#(TEST: the `break` & `continue` builtins nested `if` in loops)
+
+while true; do
+	if true; then 
+		break 
+	elif false; then 
+		continue 
+    fi
+done
+
+while true; do
+	if true; then 
+		if true; then 
+			break 
+		elif false; then 
+			continue 
+		fi
+	fi
+done
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		var breakpoint1 = false
+		_ = breakpoint1
+		var breakpoint2 = false
+		_ = breakpoint2
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		for {
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "true"
+				var arguments []string
+				var env = make(map[string]string)
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+			var condition = shell.ExitCode == 0
+			shell.ExitCode = 0
+			if !condition {
+				break
+			}
+			func() {
+				var condition = false
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				func() {
+					streamManager := streamManager.Clone()
+					defer streamManager.Destroy()
+					var commandName = "true"
+					var arguments []string
+					var env = make(map[string]string)
+					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+						shell.HandleError(streamManager, err)
+						return
+					}
+
+				}()
+				condition = shell.ExitCode == 0
+				shell.ExitCode = 0
+				if condition {
+					breakpoint1 = true
+					return
+				} else {
+					func() {
+						streamManager := streamManager.Clone()
+						defer streamManager.Destroy()
+						var commandName = "false"
+						var arguments []string
+						var env = make(map[string]string)
+						if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+							shell.HandleError(streamManager, err)
+							return
+						}
+
+					}()
+					condition = shell.ExitCode == 0
+					shell.ExitCode = 0
+					if condition {
+						breakpoint2 = true
+						return
+					}
+				}
+
+			}()
+			if breakpoint1 {
+				break
+			}
+			if breakpoint2 {
+				continue
+			}
+		}
+
+	}()
+	func() {
+		var breakpoint3 = false
+		_ = breakpoint3
+		var breakpoint4 = false
+		_ = breakpoint4
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		for {
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "true"
+				var arguments []string
+				var env = make(map[string]string)
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+			var condition = shell.ExitCode == 0
+			shell.ExitCode = 0
+			if !condition {
+				break
+			}
+			func() {
+				var condition = false
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				func() {
+					streamManager := streamManager.Clone()
+					defer streamManager.Destroy()
+					var commandName = "true"
+					var arguments []string
+					var env = make(map[string]string)
+					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+						shell.HandleError(streamManager, err)
+						return
+					}
+
+				}()
+				condition = shell.ExitCode == 0
+				shell.ExitCode = 0
+				if condition {
+					func() {
+						var condition = false
+						streamManager := streamManager.Clone()
+						defer streamManager.Destroy()
+						func() {
+							streamManager := streamManager.Clone()
+							defer streamManager.Destroy()
+							var commandName = "true"
+							var arguments []string
+							var env = make(map[string]string)
+							if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+								shell.HandleError(streamManager, err)
+								return
+							}
+
+						}()
+						condition = shell.ExitCode == 0
+						shell.ExitCode = 0
+						if condition {
+							breakpoint3 = true
+							return
+						} else {
+							func() {
+								streamManager := streamManager.Clone()
+								defer streamManager.Destroy()
+								var commandName = "false"
+								var arguments []string
+								var env = make(map[string]string)
+								if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+									shell.HandleError(streamManager, err)
+									return
+								}
+
+							}()
+							condition = shell.ExitCode == 0
+							shell.ExitCode = 0
+							if condition {
+								breakpoint4 = true
+								return
+							}
+						}
+
+					}()
+					if breakpoint3 {
+						return
+					}
+					if breakpoint4 {
+						return
+					}
+				}
+
+			}()
+			if breakpoint3 {
+				break
+			}
+			if breakpoint4 {
+				continue
+			}
 		}
 
 	}()
@@ -714,3 +574,162 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 
 #(ENDTEST)
+
+
+
+#(TEST: the `break` & `continue` builtins nested `case` in loops)
+
+while true; do
+	case foo in 
+		*) break;; 
+		bar) continue;; 
+    esac
+done
+
+while true; do
+	case foo in 
+		*)
+			case foo in 
+				*) break;; 
+				bar) continue;; 
+			esac
+		;;
+	esac
+done
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		var breakpoint1 = false
+		_ = breakpoint1
+		var breakpoint2 = false
+		_ = breakpoint2
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		for {
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "true"
+				var arguments []string
+				var env = make(map[string]string)
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+			var condition = shell.ExitCode == 0
+			shell.ExitCode = 0
+			if !condition {
+				break
+			}
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var needle = "foo"
+				var fallback = false
+				var _ = fallback
+				if runtime.PatternMatch(needle, "*") {
+					breakpoint1 = true
+					return
+					return
+				}
+				if runtime.PatternMatch(needle, "bar") {
+					breakpoint2 = true
+					return
+					return
+				}
+
+			}()
+			if breakpoint1 {
+				break
+			}
+			if breakpoint2 {
+				continue
+			}
+		}
+
+	}()
+	func() {
+		var breakpoint3 = false
+		_ = breakpoint3
+		var breakpoint4 = false
+		_ = breakpoint4
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		for {
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "true"
+				var arguments []string
+				var env = make(map[string]string)
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+			var condition = shell.ExitCode == 0
+			shell.ExitCode = 0
+			if !condition {
+				break
+			}
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var needle = "foo"
+				var fallback = false
+				var _ = fallback
+				if runtime.PatternMatch(needle, "*") {
+					func() {
+						streamManager := streamManager.Clone()
+						defer streamManager.Destroy()
+						var needle = "foo"
+						var fallback = false
+						var _ = fallback
+						if runtime.PatternMatch(needle, "*") {
+							breakpoint3 = true
+							return
+							return
+						}
+						if runtime.PatternMatch(needle, "bar") {
+							breakpoint4 = true
+							return
+							return
+						}
+
+					}()
+					if breakpoint3 {
+						return
+					}
+					if breakpoint4 {
+						return
+					}
+					return
+				}
+
+			}()
+			if breakpoint3 {
+				break
+			}
+			if breakpoint4 {
+				continue
+			}
+		}
+
+	}()
+}
+
+
+#(ENDTEST)
+
+
+
