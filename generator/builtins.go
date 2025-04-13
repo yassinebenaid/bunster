@@ -10,7 +10,7 @@ import (
 func (g *generator) handleFunction(buf *InstructionBuffer, function *ast.Function) {
 	var body InstructionBuffer
 
-	g.handleStatementContext(buf, function.BreakPoints)
+	g.handleBreakPoints(buf, function.BreakPoints)
 
 	g.handleRedirections(&body, function.Redirections)
 

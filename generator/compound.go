@@ -72,7 +72,7 @@ func (g *generator) handleIf(buf *InstructionBuffer, cond *ast.If) {
 	cmdbuf = append(cmdbuf, innerBuf...)
 	*buf = append(*buf, ir.Closure(cmdbuf))
 
-	g.handleStatementContext(buf, cond.BreakPoints)
+	g.handleBreakPoints(buf, cond.BreakPoints)
 
 }
 
@@ -106,7 +106,7 @@ func (g *generator) handleElif(elifs []ast.Elif) []ir.Instruction {
 func (g *generator) handleLoop(buf *InstructionBuffer, loop *ast.Loop) {
 	var cmdbuf InstructionBuffer
 
-	g.handleStatementContext(&cmdbuf, loop.BreakPoints)
+	g.handleBreakPoints(&cmdbuf, loop.BreakPoints)
 
 	cmdbuf.add(ir.CloneStreamManager{})
 	g.handleRedirections(&cmdbuf, loop.Redirections)
@@ -150,7 +150,7 @@ func (g *generator) handleLoop(buf *InstructionBuffer, loop *ast.Loop) {
 func (g *generator) handleRangeLoop(buf *InstructionBuffer, loop *ast.RangeLoop) {
 	var cmdbuf InstructionBuffer
 
-	g.handleStatementContext(&cmdbuf, loop.BreakPoints)
+	g.handleBreakPoints(&cmdbuf, loop.BreakPoints)
 
 	cmdbuf.add(ir.CloneStreamManager{})
 
@@ -186,7 +186,7 @@ func (g *generator) handleForLoop(buf *InstructionBuffer, loop *ast.For) {
 	var cmdbuf, body InstructionBuffer
 	var init, test, update ir.Literal
 
-	g.handleStatementContext(&cmdbuf, loop.BreakPoints)
+	g.handleBreakPoints(&cmdbuf, loop.BreakPoints)
 
 	cmdbuf.add(ir.CloneStreamManager{})
 	g.handleRedirections(&cmdbuf, loop.Redirections)
@@ -282,5 +282,5 @@ func (g *generator) handleCase(buf *InstructionBuffer, _case *ast.Case) {
 	}
 
 	buf.add(ir.Closure(cmdbuf))
-	g.handleStatementContext(buf, _case.BreakPoints)
+	g.handleBreakPoints(buf, _case.BreakPoints)
 }
