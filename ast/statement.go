@@ -18,13 +18,33 @@ const (
 	DECLARE                  = iota
 )
 
-type BreakPoints map[int]BreakPointsType
+type BreakPoints []struct {
+	Id   int
+	Type BreakPointsType
+}
 
-func (b *BreakPoints) Add(k int, t BreakPointsType) {
-	if *b == nil {
-		*b = make(BreakPoints)
+func (b *BreakPoints) Add(id int, t BreakPointsType) {
+	ind := -1
+
+	for index, bp := range *b {
+		if bp.Id == id {
+			ind = index
+		}
 	}
-	(*b)[k] = t
+
+	breakpoint := struct {
+		Id   int
+		Type BreakPointsType
+	}{
+		Id:   id,
+		Type: t,
+	}
+
+	if ind != -1 {
+		(*b)[ind] = breakpoint
+	} else {
+		*b = append((*b), breakpoint)
+	}
 }
 
 type Expression interface {

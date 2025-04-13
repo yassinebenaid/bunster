@@ -376,26 +376,26 @@ func (g *generator) handleBackgroundConstruction(buf *InstructionBuffer, b ast.B
 }
 
 func (g *generator) handleStatementContext(buf *InstructionBuffer, b ast.BreakPoints) {
-	for id, _type := range b {
-		switch _type {
+	for _, breakpoint := range b {
+		switch breakpoint.Type {
 		case ast.RETURN:
 			buf.add(ir.If{
-				Condition: ir.Literal(fmt.Sprintf("breakpoint%d", id)),
+				Condition: ir.Literal(fmt.Sprintf("breakpoint%d", breakpoint.Id)),
 				Body:      []ir.Instruction{ir.Literal("return")},
 			})
 		case ast.BREAK:
 			buf.add(ir.If{
-				Condition: ir.Literal(fmt.Sprintf("breakpoint%d", id)),
+				Condition: ir.Literal(fmt.Sprintf("breakpoint%d", breakpoint.Id)),
 				Body:      []ir.Instruction{ir.Literal("break")},
 			})
 		case ast.CONTINUE:
 			buf.add(ir.If{
-				Condition: ir.Literal(fmt.Sprintf("breakpoint%d", id)),
+				Condition: ir.Literal(fmt.Sprintf("breakpoint%d", breakpoint.Id)),
 				Body:      []ir.Instruction{ir.Literal("continue")},
 			})
 		case ast.DECLARE:
-			buf.add(ir.Declare{Name: fmt.Sprintf("breakpoint%d", id), Value: ir.Literal("false")})
-			buf.add(ir.Set{Name: "_", Value: ir.Literal(fmt.Sprintf("breakpoint%d", id))})
+			buf.add(ir.Declare{Name: fmt.Sprintf("breakpoint%d", breakpoint.Id), Value: ir.Literal("false")})
+			buf.add(ir.Set{Name: "_", Value: ir.Literal(fmt.Sprintf("breakpoint%d", breakpoint.Id))})
 		}
 	}
 

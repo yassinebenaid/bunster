@@ -1,6 +1,7 @@
-#(TEST: simple `while` loop)
 
-while true; do
+#(TEST: simple `until` loop)
+
+until true; do
     echo "foo bar"
 done
 
@@ -30,7 +31,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			}()
 			var condition = shell.ExitCode == 0
 			shell.ExitCode = 0
-			if !condition {
+			if condition {
 				break
 			}
 			func() {
@@ -51,12 +52,14 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	}()
 }
 
+
 #(ENDTEST)
 
 
-#(TEST: `while` loop within maultiple commands in the header)
 
-while true; true; do
+#(TEST: `until` loop with multiple commands in header)
+
+until true; true; do
     echo "foo bar"
 done
 
@@ -98,7 +101,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			}()
 			var condition = shell.ExitCode == 0
 			shell.ExitCode = 0
-			if !condition {
+			if condition {
 				break
 			}
 			func() {
@@ -123,13 +126,16 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 #(ENDTEST)
 
 
-#(TEST: `while` loop with redirections)
 
-while true; do
+
+#(TEST: `until` loop with redirections)
+
+until true; do
     echo "foo bar"
 done >file.txt <input.txt
 
 #(RESULT)
+
 package main
 
 import "github.com/yassinebenaid/bunster/runtime"
@@ -166,7 +172,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			}()
 			var condition = shell.ExitCode == 0
 			shell.ExitCode = 0
-			if !condition {
+			if condition {
 				break
 			}
 			func() {
@@ -187,15 +193,15 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 	}()
 }
 
-
 #(ENDTEST)
+
 
 
 
 
 #(TEST: the `break` builtin within loop)
 
-while true; do
+until true; do
     break
 done
 
@@ -227,7 +233,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			}()
 			var condition = shell.ExitCode == 0
 			shell.ExitCode = 0
-			if !condition {
+			if condition {
 				break
 			}
 			breakpoint1 = true
@@ -244,7 +250,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 #(TEST: the `continue` builtin within loop)
 
-while true; do
+until true; do
     continue
 done
 
@@ -276,7 +282,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			}()
 			var condition = shell.ExitCode == 0
 			shell.ExitCode = 0
-			if !condition {
+			if condition {
 				break
 			}
 			breakpoint1 = true
@@ -292,7 +298,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 #(TEST: the `break` & `continue` builtins within `list` in loops)
 
-while true; do
+until true; do
     true && continue ||  break
 done
 
@@ -326,7 +332,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			}()
 			var condition = shell.ExitCode == 0
 			shell.ExitCode = 0
-			if !condition {
+			if condition {
 				break
 			}
 			func() {
@@ -362,7 +368,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 #(TEST: the `break` & `continue` builtins nested `if` in loops)
 
-while true; do
+until true; do
 	if true; then 
 		break 
 	elif false; then 
@@ -370,7 +376,7 @@ while true; do
     fi
 done
 
-while true; do
+until true; do
 	if true; then 
 		if true; then 
 			break 
@@ -410,7 +416,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			}()
 			var condition = shell.ExitCode == 0
 			shell.ExitCode = 0
-			if !condition {
+			if condition {
 				break
 			}
 			func() {
@@ -487,7 +493,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			}()
 			var condition = shell.ExitCode == 0
 			shell.ExitCode = 0
-			if !condition {
+			if condition {
 				break
 			}
 			func() {
@@ -579,14 +585,14 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 #(TEST: the `break` & `continue` builtins nested `case` in loops)
 
-while true; do
+until true; do
 	case foo in 
 		*) break;; 
 		bar) continue;; 
     esac
 done
 
-while true; do
+until true; do
 	case foo in 
 		*)
 			case foo in 
@@ -627,7 +633,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			}()
 			var condition = shell.ExitCode == 0
 			shell.ExitCode = 0
-			if !condition {
+			if condition {
 				break
 			}
 			func() {
@@ -679,7 +685,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 			}()
 			var condition = shell.ExitCode == 0
 			shell.ExitCode = 0
-			if !condition {
+			if condition {
 				break
 			}
 			func() {
