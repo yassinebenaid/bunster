@@ -4,6 +4,20 @@ import (
 	"github.com/yassinebenaid/bunster/ast"
 )
 
+func (a *analyser) analyseRangeLoop(loop *ast.RangeLoop) {
+	for _, expr := range loop.Operands {
+		a.analyseExpression(expr)
+	}
+	for _, s := range loop.Body {
+		a.analyseStatement(s)
+	}
+	for _, r := range loop.Redirections {
+		if r.Dst != nil {
+			a.analyseExpression(r.Dst)
+		}
+	}
+}
+
 func (a *analyser) analyseLoop(loop *ast.Loop) {
 	for _, s := range loop.Head {
 		a.analyseStatement(s)
@@ -32,7 +46,11 @@ loop:
 			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
 			withinLoop = true
 			break loop
-		case ast.RangeLoop, ast.For:
+		case *ast.RangeLoop:
+			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
+			withinLoop = true
+			break loop
+		case ast.For:
 			withinLoop = true
 			break loop
 		case *ast.If:
@@ -40,6 +58,8 @@ loop:
 		case *ast.Break:
 			v.Type = ast.RETURN
 		case ast.List:
+		default:
+			break loop
 		}
 		last = i
 	}
@@ -71,7 +91,11 @@ loop:
 			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
 			withinLoop = true
 			break loop
-		case ast.RangeLoop, ast.For:
+		case *ast.RangeLoop:
+			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
+			withinLoop = true
+			break loop
+		case ast.For:
 			withinLoop = true
 			break loop
 		case *ast.If:
@@ -79,12 +103,14 @@ loop:
 		case *ast.Continue:
 			v.Type = ast.RETURN
 		case ast.List:
+		default:
+			break loop
 		}
 		last = i
 	}
 
 	if !withinLoop {
-		a.report(Error{Msg: "the `break` keyword cannot be used here"})
+		a.report(Error{Msg: "the `continue` keyword cannot be used here"})
 		return
 	}
 

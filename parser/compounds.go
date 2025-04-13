@@ -271,14 +271,14 @@ func (p *parser) parseForLoop() ast.Statement {
 	}
 
 	if loopVar == "" {
-		return ast.For{
+		return &ast.For{
 			Head:         loopHead,
 			Body:         loopBody,
 			Redirections: loopRedirections,
 		}
 	}
 
-	return ast.RangeLoop{
+	return &ast.RangeLoop{
 		Var:          loopVar,
 		Operands:     loopOperands,
 		Body:         loopBody,

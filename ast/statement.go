@@ -83,6 +83,7 @@ type RangeLoop struct {
 	Operands     []Expression
 	Body         []Statement
 	Redirections []Redirection
+	BreakPoints
 }
 
 type Break struct {

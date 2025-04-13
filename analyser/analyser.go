@@ -146,6 +146,8 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.analyseExpression(pa.Value)
 			}
 		}
+	case *ast.RangeLoop:
+		a.analyseRangeLoop(v)
 	case *ast.Loop:
 		a.analyseLoop(v)
 	case *ast.Break:
@@ -163,18 +165,6 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 	case ast.InvertExitCode:
 		a.analyseStatement(v.Statement)
 	case ast.Function:
-		for _, s := range v.Body {
-			a.analyseStatement(s)
-		}
-		for _, r := range v.Redirections {
-			if r.Dst != nil {
-				a.analyseExpression(r.Dst)
-			}
-		}
-	case ast.RangeLoop:
-		for _, expr := range v.Operands {
-			a.analyseExpression(expr)
-		}
 		for _, s := range v.Body {
 			a.analyseStatement(s)
 		}

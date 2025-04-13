@@ -147,8 +147,11 @@ func (g *generator) handleLoop(buf *InstructionBuffer, loop *ast.Loop) {
 	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 
-func (g *generator) handleRangeLoop(buf *InstructionBuffer, loop ast.RangeLoop) {
+func (g *generator) handleRangeLoop(buf *InstructionBuffer, loop *ast.RangeLoop) {
 	var cmdbuf InstructionBuffer
+
+	g.handleStatementContext(buf, loop.BreakPoints)
+
 	cmdbuf.add(ir.CloneStreamManager{})
 
 	g.handleRedirections(&cmdbuf, loop.Redirections)

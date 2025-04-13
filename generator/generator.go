@@ -59,6 +59,10 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement) {
 		g.handleContinue(buf, v)
 	case *ast.Loop:
 		g.handleLoop(buf, v)
+	case ast.For:
+		g.handleForLoop(buf, v)
+	case *ast.RangeLoop:
+		g.handleRangeLoop(buf, v)
 	case ast.BackgroundConstruction:
 		g.handleBackgroundConstruction(buf, v)
 	case ast.InvertExitCode:
@@ -72,16 +76,12 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement) {
 		var body InstructionBuffer
 		g.generate(&body, v.Command)
 		buf.add(ir.Defer{Body: body})
-	case ast.RangeLoop:
-		g.handleRangeLoop(buf, v)
 	case ast.Test:
 		g.handleTest(buf, v)
 	case ast.Embed:
 		g.handleEmbed(buf, v)
 	case ast.ArithmeticCommand:
 		g.handleArithmeticCommand(buf, v)
-	case ast.For:
-		g.handleForLoop(buf, v)
 	case ast.Case:
 		g.handleCase(buf, v)
 	case ast.Exit:
