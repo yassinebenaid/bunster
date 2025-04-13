@@ -115,6 +115,10 @@ type Exit struct {
 	Code Expression
 }
 
+type Return struct {
+	Code Expression
+}
+
 type Continue struct {
 	BreakPoint int
 	Type       BreakPointsType
@@ -216,6 +220,7 @@ func (Test) node()                {}
 func (Break) node()               {}
 func (Continue) node()            {}
 func (Exit) node()                {}
+func (Return) node()              {}
 func (Wait) node()                {}
 func (Embed) node()               {}
 func (Defer) node()               {}
@@ -244,6 +249,7 @@ func (Test) stmt()           {}
 func (Break) stmt()          {}
 func (Continue) stmt()       {}
 func (Exit) stmt()           {}
+func (Return) stmt()         {}
 func (Wait) stmt()           {}
 func (Embed) stmt()          {}
 func (Defer) stmt()          {}
