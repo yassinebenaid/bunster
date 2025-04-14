@@ -128,24 +128,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			}
 		}
 	case ast.LocalParameterAssignement:
-		var withinFunction bool
-	funcLoop:
-		for i := len(a.stack) - 1; i >= 0; i-- {
-			switch a.stack[i].(type) {
-			case ast.Function:
-				withinFunction = true
-				break funcLoop
-			}
-		}
-		if !withinFunction {
-			a.report(Error{Msg: "the `local` keyword cannot be used outside functions"})
-		}
-
-		for _, pa := range v {
-			if pa.Value != nil {
-				a.analyseExpression(pa.Value)
-			}
-		}
+		a.analyseLocalParameterAssignement(v)
 	case *ast.For:
 		a.analyseFor(v)
 	case *ast.RangeLoop:
