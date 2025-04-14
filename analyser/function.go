@@ -28,6 +28,8 @@ loop:
 			break loop
 		case *ast.If:
 			v.BreakPoints.Add(a.breakpoints, ast.RETURN)
+		case *ast.Case:
+			v.BreakPoints.Add(a.breakpoints, ast.RETURN)
 		case *ast.Return:
 		default:
 			break loop

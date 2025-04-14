@@ -461,3 +461,45 @@ cases:
         2
         baz
         4
+
+  - name: "can return keyword can be nested in case statements "
+    script: |
+      func(){
+        echo foo
+        
+        case foo in
+          *) case foo in
+            *) case foo in
+              *) return 2
+            esac
+          esac
+        esac
+
+        echo bar
+      }
+
+      func
+      echo $?
+
+      func2(){
+        echo baz
+        
+        case foo in
+          bar) return 3
+        esac
+
+        case foo in
+          *) return 4
+        esac
+
+        echo boo
+      }
+
+      func2
+      echo $?
+    expect:
+      stdout: |
+        foo
+        2
+        baz
+        4
