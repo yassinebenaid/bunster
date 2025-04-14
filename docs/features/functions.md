@@ -110,3 +110,42 @@ Outputs:
 foo
 foo
 ```
+
+## Return from function
+
+the `return` keyword is used to return from a function.
+
+for example:
+
+```sh
+function foo(){
+	echo foo
+
+	return
+
+	echo bar
+}
+
+foo
+```
+
+Outputs:
+
+```txt
+foo
+```
+
+an optional argument specifies the return status.
+
+```sh
+function foo(){
+	# ...
+	return 3
+	# ...
+}
+
+foo
+
+```
+
+This function exits with `3` exit code.
