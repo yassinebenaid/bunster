@@ -26,6 +26,8 @@ loop:
 			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
 			withinFunction = true
 			break loop
+		case *ast.If:
+			v.BreakPoints.Add(a.breakpoints, ast.RETURN)
 		case *ast.Return:
 		default:
 			break loop

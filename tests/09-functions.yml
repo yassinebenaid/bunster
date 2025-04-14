@@ -419,3 +419,45 @@ cases:
         0
         baz
         3
+
+  - name: "can return keyword can be nested in if statements "
+    script: |
+      func(){
+        echo foo
+        
+        if true; then 
+          if true; then 
+            if true; then 
+              return 2
+            fi
+          fi
+        fi
+
+        echo bar
+      }
+
+      func
+      echo $?
+
+      func2(){
+        echo baz
+        
+        if false; then 
+          return 3
+        fi
+
+        if true; then 
+          return 4
+        fi
+
+        echo boo
+      }
+
+      func2
+      echo $?
+    expect:
+      stdout: |
+        foo
+        2
+        baz
+        4
