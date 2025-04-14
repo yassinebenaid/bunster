@@ -545,3 +545,45 @@ cases:
         2
         baz
         4
+
+  - name: "can return keyword can be nested in until loop"
+    script: |
+      func(){
+        echo foo
+        
+        until false; do
+          until false; do
+            until false; do
+              return 2
+            done
+          done
+        done
+
+        echo bar
+      }
+
+      func
+      echo $?
+
+      func2(){
+        echo baz
+        
+        until true; do
+          return 3
+        done
+
+        until false; do
+          return 4
+        done
+
+        echo boo
+      }
+
+      func2
+      echo $?
+    expect:
+      stdout: |
+        foo
+        2
+        baz
+        4
