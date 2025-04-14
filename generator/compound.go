@@ -106,7 +106,7 @@ func (g *generator) handleElif(elifs []ast.Elif) []ir.Instruction {
 func (g *generator) handleLoop(buf *InstructionBuffer, loop *ast.Loop) {
 	var cmdbuf InstructionBuffer
 
-	g.handleBreakPoints(&cmdbuf, loop.BreakPoints)
+	g.handleBreakPoints(&cmdbuf, loop.PreBreakPoints)
 
 	cmdbuf.add(ir.CloneStreamManager{})
 	g.handleRedirections(&cmdbuf, loop.Redirections)
@@ -145,6 +145,7 @@ func (g *generator) handleLoop(buf *InstructionBuffer, loop *ast.Loop) {
 
 	cmdbuf = append(cmdbuf, innerBuf...)
 	*buf = append(*buf, ir.Closure(cmdbuf))
+	g.handleBreakPoints(buf, loop.PostBreakPoints)
 }
 
 func (g *generator) handleRangeLoop(buf *InstructionBuffer, loop *ast.RangeLoop) {

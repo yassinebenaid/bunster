@@ -91,11 +91,12 @@ type Command struct {
 }
 
 type Loop struct {
-	Negate       bool
-	Head         []Statement
-	Body         []Statement
-	Redirections []Redirection
-	BreakPoints
+	Negate          bool
+	Head            []Statement
+	Body            []Statement
+	Redirections    []Redirection
+	PreBreakPoints  BreakPoints
+	PostBreakPoints BreakPoints
 }
 
 type RangeLoop struct {
