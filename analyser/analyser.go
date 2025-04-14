@@ -42,7 +42,7 @@ type analyser struct {
 func (a *analyser) analyse(main bool) {
 	for _, statement := range a.script {
 		if !main {
-			_, ok := statement.(ast.Function)
+			_, ok := statement.(*ast.Function)
 			if !ok {
 				a.report(Error{Msg: "only functions can exist in global scope"})
 				return
@@ -128,24 +128,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			}
 		}
 	case ast.LocalParameterAssignement:
-		var withinFunction bool
-	funcLoop:
-		for i := len(a.stack) - 1; i >= 0; i-- {
-			switch a.stack[i].(type) {
-			case ast.Function:
-				withinFunction = true
-				break funcLoop
-			}
-		}
-		if !withinFunction {
-			a.report(Error{Msg: "the `local` keyword cannot be used outside functions"})
-		}
-
-		for _, pa := range v {
-			if pa.Value != nil {
-				a.analyseExpression(pa.Value)
-			}
-		}
+		a.analyseLocalParameterAssignement(v)
 	case *ast.For:
 		a.analyseFor(v)
 	case *ast.RangeLoop:
@@ -166,16 +149,10 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 		//TODO: ensure 'wait' is not invokes when no commands are put in background.
 	case ast.InvertExitCode:
 		a.analyseStatement(v.Statement)
-	case ast.Function:
-		for _, s := range v.Body {
-			a.analyseStatement(s)
-		}
-		for _, r := range v.Redirections {
-			if r.Dst != nil {
-				a.analyseExpression(r.Dst)
-			}
-		}
-
+	case *ast.Function:
+		a.analyseFunction(v)
+	case *ast.Return:
+		a.analyseReturn(v)
 	case ast.Test:
 		a.analyseExpression(v.Expr)
 

@@ -70,8 +70,10 @@ func (g *generator) generate(buf *InstructionBuffer, statement ast.Statement) {
 		buf.add(ir.InvertExitCode{})
 	case ast.Wait:
 		g.handleWait(buf, v)
-	case ast.Function:
+	case *ast.Function:
 		g.handleFunction(buf, v)
+	case *ast.Return:
+		g.handleReturn(buf, v)
 	case ast.Defer:
 		var body InstructionBuffer
 		g.generate(&body, v.Command)
@@ -375,7 +377,7 @@ func (g *generator) handleBackgroundConstruction(buf *InstructionBuffer, b ast.B
 	buf.add(ir.Closure(scope))
 }
 
-func (g *generator) handleStatementContext(buf *InstructionBuffer, b ast.BreakPoints) {
+func (g *generator) handleBreakPoints(buf *InstructionBuffer, b ast.BreakPoints) {
 	for _, breakpoint := range b {
 		switch breakpoint.Type {
 		case ast.RETURN:

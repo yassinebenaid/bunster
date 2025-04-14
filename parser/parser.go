@@ -400,7 +400,7 @@ func (p *parser) parseNakedFunction(nameExpr ast.Expression) ast.Statement {
 		return nil
 	}
 
-	return fn
+	return &fn
 }
 
 func concat(n []ast.Expression, quoted bool) ast.Expression {

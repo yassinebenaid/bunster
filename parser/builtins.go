@@ -13,6 +13,8 @@ func (p *parser) getBuiltinParser() func() ast.Statement {
 		return p.parseBreak
 	case token.EXIT:
 		return p.parseExit
+	case token.RETURN:
+		return p.parseReturn
 	case token.CONTINUE:
 		return p.parseContinue
 	case token.FUNCTION:
@@ -98,7 +100,7 @@ func (p *parser) parseFunction() ast.Statement {
 		return nil
 	}
 
-	return fn
+	return &fn
 }
 
 func (p *parser) parseDefer() ast.Statement {
@@ -174,6 +176,43 @@ func (p *parser) parseExit() ast.Statement {
 	}
 
 	return ast.Exit{
+		Code: code,
+	}
+}
+
+func (p *parser) parseReturn() ast.Statement {
+	p.proceed()
+
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
+
+	var code ast.Expression = ast.Word("0")
+	if exp := p.parseExpression(); exp != nil {
+		code = exp
+	}
+
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
+
+	if !p.isControlToken() && p.curr.Type != token.EOF {
+		p.error("unexpected token `%s`", p.curr)
+		return nil
+	}
+
+	return &ast.Return{
 		Code: code,
 	}
 }

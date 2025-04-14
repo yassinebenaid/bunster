@@ -91,19 +91,21 @@ type Command struct {
 }
 
 type Loop struct {
-	Negate       bool
-	Head         []Statement
-	Body         []Statement
-	Redirections []Redirection
-	BreakPoints
+	Negate          bool
+	Head            []Statement
+	Body            []Statement
+	Redirections    []Redirection
+	PreBreakPoints  BreakPoints
+	PostBreakPoints BreakPoints
 }
 
 type RangeLoop struct {
-	Var          string
-	Operands     []Expression
-	Body         []Statement
-	Redirections []Redirection
-	BreakPoints
+	Var             string
+	Operands        []Expression
+	Body            []Statement
+	Redirections    []Redirection
+	PreBreakPoints  BreakPoints
+	PostBreakPoints BreakPoints
 }
 
 type Break struct {
@@ -115,6 +117,11 @@ type Exit struct {
 	Code Expression
 }
 
+type Return struct {
+	Code       Expression
+	BreakPoint int
+}
+
 type Continue struct {
 	BreakPoint int
 	Type       BreakPointsType
@@ -123,10 +130,11 @@ type Continue struct {
 type Wait struct{}
 
 type For struct {
-	Head         ForHead
-	Body         []Statement
-	Redirections []Redirection
-	BreakPoints
+	Head            ForHead
+	Body            []Statement
+	Redirections    []Redirection
+	PreBreakPoints  BreakPoints
+	PostBreakPoints BreakPoints
 }
 
 type ForHead struct {
@@ -184,6 +192,7 @@ type Function struct {
 	SubShell     bool
 	Body         []Statement
 	Redirections []Redirection
+	BreakPoints
 }
 
 type Defer struct {
@@ -216,6 +225,7 @@ func (Test) node()                {}
 func (Break) node()               {}
 func (Continue) node()            {}
 func (Exit) node()                {}
+func (Return) node()              {}
 func (Wait) node()                {}
 func (Embed) node()               {}
 func (Defer) node()               {}
@@ -244,6 +254,7 @@ func (Test) stmt()           {}
 func (Break) stmt()          {}
 func (Continue) stmt()       {}
 func (Exit) stmt()           {}
+func (Return) stmt()         {}
 func (Wait) stmt()           {}
 func (Embed) stmt()          {}
 func (Defer) stmt()          {}

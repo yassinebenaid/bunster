@@ -393,3 +393,307 @@ cases:
       local var
     expect:
       build_error: "main.sh(0:0): semantic error: the `local` keyword cannot be used outside functions."
+
+  - name: "can return from a function"
+    script: |
+      func(){
+        echo foo
+        return
+        echo bar
+      }
+
+      func
+      echo $?
+
+      func2(){
+        echo baz
+        return 3
+        echo boo
+      }
+
+      func2
+      echo $?
+    expect:
+      stdout: |
+        foo
+        0
+        baz
+        3
+
+  - name: "can return keyword can be nested in lists "
+    script: |
+      func(){
+        echo foo
+        true && return
+        echo bar
+      }
+
+      func
+      echo $?
+
+      func2(){
+        echo baz
+        false || return 3
+        echo boo
+      }
+
+      func2
+      echo $?
+    expect:
+      stdout: |
+        foo
+        0
+        baz
+        3
+
+  - name: "can return keyword can be nested in if statements "
+    script: |
+      func(){
+        echo foo
+        
+        if true; then 
+          if true; then 
+            if true; then 
+              return 2
+            fi
+          fi
+        fi
+
+        echo bar
+      }
+
+      func
+      echo $?
+
+      func2(){
+        echo baz
+        
+        if false; then 
+          return 3
+        fi
+
+        if true; then 
+          return 4
+        fi
+
+        echo boo
+      }
+
+      func2
+      echo $?
+    expect:
+      stdout: |
+        foo
+        2
+        baz
+        4
+
+  - name: "can return keyword can be nested in case statements "
+    script: |
+      func(){
+        echo foo
+        
+        case foo in
+          *) case foo in
+            *) case foo in
+              *) return 2
+            esac
+          esac
+        esac
+
+        echo bar
+      }
+
+      func
+      echo $?
+
+      func2(){
+        echo baz
+        
+        case foo in
+          bar) return 3
+        esac
+
+        case foo in
+          *) return 4
+        esac
+
+        echo boo
+      }
+
+      func2
+      echo $?
+    expect:
+      stdout: |
+        foo
+        2
+        baz
+        4
+
+  - name: "can return keyword can be nested in while loop"
+    script: |
+      func(){
+        echo foo
+        
+        while true; do
+          while true; do
+            while true; do
+              return 2
+            done
+          done
+        done
+
+        echo bar
+      }
+
+      func
+      echo $?
+
+      func2(){
+        echo baz
+        
+        while false; do
+          return 3
+        done
+
+        while true; do
+          return 4
+        done
+
+        echo boo
+      }
+
+      func2
+      echo $?
+    expect:
+      stdout: |
+        foo
+        2
+        baz
+        4
+
+  - name: "can return keyword can be nested in until loop"
+    script: |
+      func(){
+        echo foo
+        
+        until false; do
+          until false; do
+            until false; do
+              return 2
+            done
+          done
+        done
+
+        echo bar
+      }
+
+      func
+      echo $?
+
+      func2(){
+        echo baz
+        
+        until true; do
+          return 3
+        done
+
+        until false; do
+          return 4
+        done
+
+        echo boo
+      }
+
+      func2
+      echo $?
+    expect:
+      stdout: |
+        foo
+        2
+        baz
+        4
+
+  - name: "can return keyword can be nested in for..in loop"
+    script: |
+      func(){
+        echo foo
+        
+        for arg in a b c; do
+          for arg in a b c; do
+            for arg in a b c; do
+              return 2
+            done
+          done
+        done
+
+        echo bar
+      }
+
+      func
+      echo $?
+
+      func2(){
+        echo baz
+        
+        for arg; do
+          return 3
+        done
+
+        for arg in a b c; do
+          return 4
+        done
+
+        echo boo
+      }
+
+      func2
+      echo $?
+    expect:
+      stdout: |
+        foo
+        2
+        baz
+        4
+
+  - name: "can return keyword can be nested in for((...)) loop"
+    script: |
+      func(){
+        echo foo
+        
+        for (( i=0; i<3; i++ )) do
+          for (( i=0; i<3; i++ )) do
+            for (( i=0; i<3; i++ )) do
+              return 2
+            done
+          done
+        done
+
+        echo bar
+      }
+
+      func
+      echo $?
+
+      func2(){
+        echo baz
+        
+        for (( i=4; i<3; i++ )) do
+          return 3
+        done
+
+        for (( i=0; i<3; i++ )) do
+          return 4
+        done
+
+        echo boo
+      }
+
+      func2
+      echo $?
+    expect:
+      stdout: |
+        foo
+        2
+        baz
+        4

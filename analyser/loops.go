@@ -63,15 +63,15 @@ loop:
 	for i := len(a.stack) - 1; i >= 0; i-- {
 		switch v := a.stack[i].(type) {
 		case *ast.Loop:
-			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
+			v.PreBreakPoints.Add(a.breakpoints, ast.DECLARE)
 			withinLoop = true
 			break loop
 		case *ast.RangeLoop:
-			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
+			v.PreBreakPoints.Add(a.breakpoints, ast.DECLARE)
 			withinLoop = true
 			break loop
 		case *ast.For:
-			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
+			v.PreBreakPoints.Add(a.breakpoints, ast.DECLARE)
 			withinLoop = true
 			break loop
 		case *ast.If:
@@ -113,15 +113,15 @@ loop:
 	for i := len(a.stack) - 1; i >= 0; i-- {
 		switch v := a.stack[i].(type) {
 		case *ast.Loop:
-			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
+			v.PreBreakPoints.Add(a.breakpoints, ast.DECLARE)
 			withinLoop = true
 			break loop
 		case *ast.RangeLoop:
-			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
+			v.PreBreakPoints.Add(a.breakpoints, ast.DECLARE)
 			withinLoop = true
 			break loop
 		case *ast.For:
-			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
+			v.PreBreakPoints.Add(a.breakpoints, ast.DECLARE)
 			withinLoop = true
 			break loop
 		case *ast.If:
