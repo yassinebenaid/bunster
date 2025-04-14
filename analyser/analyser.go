@@ -42,7 +42,7 @@ type analyser struct {
 func (a *analyser) analyse(main bool) {
 	for _, statement := range a.script {
 		if !main {
-			_, ok := statement.(ast.Function)
+			_, ok := statement.(*ast.Function)
 			if !ok {
 				a.report(Error{Msg: "only functions can exist in global scope"})
 				return
