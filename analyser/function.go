@@ -36,7 +36,7 @@ loop:
 			v.PostBreakPoints.Add(a.breakpoints, ast.RETURN)
 		case *ast.For:
 			v.PostBreakPoints.Add(a.breakpoints, ast.RETURN)
-		case *ast.Return:
+		case *ast.Return, ast.List:
 		default:
 			break loop
 		}

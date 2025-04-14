@@ -420,6 +420,32 @@ cases:
         baz
         3
 
+  - name: "can return keyword can be nested in lists "
+    script: |
+      func(){
+        echo foo
+        true && return
+        echo bar
+      }
+
+      func
+      echo $?
+
+      func2(){
+        echo baz
+        false || return 3
+        echo boo
+      }
+
+      func2
+      echo $?
+    expect:
+      stdout: |
+        foo
+        0
+        baz
+        3
+
   - name: "can return keyword can be nested in if statements "
     script: |
       func(){
