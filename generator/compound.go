@@ -151,7 +151,7 @@ func (g *generator) handleLoop(buf *InstructionBuffer, loop *ast.Loop) {
 func (g *generator) handleRangeLoop(buf *InstructionBuffer, loop *ast.RangeLoop) {
 	var cmdbuf InstructionBuffer
 
-	g.handleBreakPoints(&cmdbuf, loop.BreakPoints)
+	g.handleBreakPoints(&cmdbuf, loop.PreBreakPoints)
 
 	cmdbuf.add(ir.CloneStreamManager{})
 
@@ -181,6 +181,7 @@ func (g *generator) handleRangeLoop(buf *InstructionBuffer, loop *ast.RangeLoop)
 
 	cmdbuf = append(cmdbuf, innerBuf...)
 	*buf = append(*buf, ir.Closure(cmdbuf))
+	g.handleBreakPoints(buf, loop.PostBreakPoints)
 }
 
 func (g *generator) handleForLoop(buf *InstructionBuffer, loop *ast.For) {

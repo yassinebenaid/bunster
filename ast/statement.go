@@ -100,11 +100,12 @@ type Loop struct {
 }
 
 type RangeLoop struct {
-	Var          string
-	Operands     []Expression
-	Body         []Statement
-	Redirections []Redirection
-	BreakPoints
+	Var             string
+	Operands        []Expression
+	Body            []Statement
+	Redirections    []Redirection
+	PreBreakPoints  BreakPoints
+	PostBreakPoints BreakPoints
 }
 
 type Break struct {
