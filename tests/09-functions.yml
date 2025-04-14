@@ -629,3 +629,45 @@ cases:
         2
         baz
         4
+
+  - name: "can return keyword can be nested in for((...)) loop"
+    script: |
+      func(){
+        echo foo
+        
+        for (( i=0; i<3; i++ )) do
+          for (( i=0; i<3; i++ )) do
+            for (( i=0; i<3; i++ )) do
+              return 2
+            done
+          done
+        done
+
+        echo bar
+      }
+
+      func
+      echo $?
+
+      func2(){
+        echo baz
+        
+        for (( i=4; i<3; i++ )) do
+          return 3
+        done
+
+        for (( i=0; i<3; i++ )) do
+          return 4
+        done
+
+        echo boo
+      }
+
+      func2
+      echo $?
+    expect:
+      stdout: |
+        foo
+        2
+        baz
+        4

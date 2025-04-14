@@ -130,10 +130,11 @@ type Continue struct {
 type Wait struct{}
 
 type For struct {
-	Head         ForHead
-	Body         []Statement
-	Redirections []Redirection
-	BreakPoints
+	Head            ForHead
+	Body            []Statement
+	Redirections    []Redirection
+	PreBreakPoints  BreakPoints
+	PostBreakPoints BreakPoints
 }
 
 type ForHead struct {

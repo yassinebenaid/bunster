@@ -188,7 +188,7 @@ func (g *generator) handleForLoop(buf *InstructionBuffer, loop *ast.For) {
 	var cmdbuf, body InstructionBuffer
 	var init, test, update ir.Literal
 
-	g.handleBreakPoints(&cmdbuf, loop.BreakPoints)
+	g.handleBreakPoints(&cmdbuf, loop.PreBreakPoints)
 
 	cmdbuf.add(ir.CloneStreamManager{})
 	g.handleRedirections(&cmdbuf, loop.Redirections)
@@ -237,6 +237,7 @@ func (g *generator) handleForLoop(buf *InstructionBuffer, loop *ast.For) {
 	cmdbuf.add(ir.For{Init: init, Test: test, Update: update, Body: body})
 
 	buf.add(ir.Closure(cmdbuf))
+	g.handleBreakPoints(buf, loop.PostBreakPoints)
 }
 
 func (g *generator) handleCase(buf *InstructionBuffer, _case *ast.Case) {

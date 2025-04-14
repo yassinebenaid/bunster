@@ -71,7 +71,7 @@ loop:
 			withinLoop = true
 			break loop
 		case *ast.For:
-			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
+			v.PreBreakPoints.Add(a.breakpoints, ast.DECLARE)
 			withinLoop = true
 			break loop
 		case *ast.If:
@@ -121,7 +121,7 @@ loop:
 			withinLoop = true
 			break loop
 		case *ast.For:
-			v.BreakPoints.Add(a.breakpoints, ast.DECLARE)
+			v.PreBreakPoints.Add(a.breakpoints, ast.DECLARE)
 			withinLoop = true
 			break loop
 		case *ast.If:
