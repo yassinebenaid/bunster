@@ -995,6 +995,24 @@ var loopsTests = []testCase{
 			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
 		},
 	}},
+	{`
+	for ((;;)) # comment
+	# comment
+	# comment
+	 do cmd;done # comment
+	 
+	 for ((;;)) ; # comment
+	 do cmd;done
+	 `, ast.Script{
+		&ast.For{
+			Head: ast.ForHead{},
+			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+		},
+		&ast.For{
+			Head: ast.ForHead{},
+			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+		},
+	}},
 	{`for arg # comment
 		# comment
 		# comment

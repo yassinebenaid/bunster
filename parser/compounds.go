@@ -206,7 +206,15 @@ func (p *parser) parseForLoop() ast.Statement {
 		}
 	}
 
+	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+		p.proceed()
+	}
+
 	if p.curr.Type == token.SEMICOLON {
+		p.proceed()
+	}
+
+	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 		p.proceed()
 	}
 
@@ -220,9 +228,6 @@ func (p *parser) parseForLoop() ast.Statement {
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
 		}
-	}
-	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
-		p.proceed()
 	}
 
 	if p.curr.Type != token.DO {
