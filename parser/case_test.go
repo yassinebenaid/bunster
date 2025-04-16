@@ -444,6 +444,93 @@ var caseTests = []testCase{
 		},
 	}},
 
+	{`
+	# comment
+	case word # comment
+	# comment
+	# comment
+	in # comment
+	   # comment
+	   # comment
+ 		(   pattern   ) # comment
+		   # comment 
+		   # comment 
+		   # comment 
+		   cmd;   # comment
+		   # comment 
+		   # comment 
+		;;
+		   # comment 
+		   # comment 
+		   # comment 
+   		pattern ) cmd; ;& # comment 
+		# comment 
+		# comment 
+		pattern ) cmd; ;;& # comment 
+		# comment 
+		# comment 
+	esac # comment
+`, ast.Script{
+		&ast.Case{
+			Word: ast.Word("word"),
+			Cases: []ast.CaseItem{
+				{
+					Patterns:   []ast.Expression{ast.Word("pattern")},
+					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Terminator: ";;",
+				},
+				{
+					Patterns:   []ast.Expression{ast.Word("pattern")},
+					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Terminator: ";&",
+				},
+				{
+					Patterns:   []ast.Expression{ast.Word("pattern")},
+					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Terminator: ";;&",
+				},
+			},
+		},
+	}},
+
+	// 	{`
+	// 	# comment
+	// 	case foo # comment
+	// 	in # comment
+	// 		# comment
+	// 		pattern	) # comment
+	// 			 cmd; # comment
+	// 		;; # comment
+
+	// 		# comment
+	// 		pattern ) cmd; ;& # comment
+	// 		pattern ) cmd; ;;&# comment
+	// 		# comment
+	// 	esac # comment
+	// 	# comment
+	// `, ast.Script{
+	// 		&ast.Case{
+	// 			Word: ast.Word("word"),
+	// 			Cases: []ast.CaseItem{
+	// 				{
+	// 					Patterns:   []ast.Expression{ast.Word("pattern")},
+	// 					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+	// 					Terminator: ";;",
+	// 				},
+	// 				{
+	// 					Patterns:   []ast.Expression{ast.Word("pattern")},
+	// 					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+	// 					Terminator: ";&",
+	// 				},
+	// 				{
+	// 					Patterns:   []ast.Expression{ast.Word("pattern")},
+	// 					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+	// 					Terminator: ";;&",
+	// 				},
+	// 			},
+	// 		},
+	// 	}},
+
 	// TODO: see if we must resolve compatibility here or not
 	// Inputs: `case esac in bar);; esac`, `case esac in bar);& esac`, `case esac in bar);;& esac`
 }
