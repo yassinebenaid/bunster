@@ -44,6 +44,12 @@ loop:
 		}
 	}
 
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
+
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
 		return nil
@@ -88,6 +94,12 @@ loop:
 			p.HandleRedirection(&test.Redirections)
 		default:
 			break loop
+		}
+	}
+
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
 		}
 	}
 

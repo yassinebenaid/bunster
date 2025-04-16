@@ -426,25 +426,35 @@ var ifCommandTests = []testCase{
 			},
 		},
 	}},
-	{`if
+	{`if # comment
+		# comment
 		# comment
 		cmd; # comment
+		# comment
 		# comment
 	 then # comment
 		# comment
+		# comment
 		cmd; # comment
+		# comment
 		# comment
 	elif
 		# comment
+		# comment
 		cmd; # comment
+		# comment
 		# comment
 	then # comment
 		# comment
+		# comment
 		cmd; # comment
+		# comment
 		# comment
 	else # comment
 		# comment
+		# comment
 		cmd # comment
+		# comment
 		# comment
 	fi # comment
 	`, ast.Script{

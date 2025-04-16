@@ -292,7 +292,9 @@ var groupAndSubshellTests = []testCase{
 		#comment
 		cmd # comment
 		#comment
+		#comment
 		cmd2 #comment
+		#comment
 		#comment
 		) #comment`, ast.Script{
 		ast.SubShell{

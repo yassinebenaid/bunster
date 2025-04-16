@@ -534,6 +534,22 @@ var arithmeticsTests = []testCase{
 			},
 		},
 	}},
+
+	{`let x # comment`, ast.Script{
+		ast.ArithmeticCommand{
+			Arithmetic: ast.Arithmetic{
+				ast.Var("x"),
+			},
+		},
+	}},
+
+	{`(( x )) # comment`, ast.Script{
+		ast.ArithmeticCommand{
+			Arithmetic: ast.Arithmetic{
+				ast.Var("x"),
+			},
+		},
+	}},
 }
 
 var arithmeticsPrecedenceTests = []struct {

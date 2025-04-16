@@ -206,16 +206,28 @@ func (p *parser) parseForLoop() ast.Statement {
 		}
 	}
 
+	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+		p.proceed()
+	}
+
 	if p.curr.Type == token.SEMICOLON {
 		p.proceed()
 	}
-	if p.curr.Type == token.HASH {
+
+	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+		p.proceed()
+	}
+
+	for {
+		if p.curr.Type != token.HASH {
+			break
+		}
 		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
 			p.proceed()
 		}
-	}
-	for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
-		p.proceed()
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+			p.proceed()
+		}
 	}
 
 	if p.curr.Type != token.DO {
@@ -490,6 +502,18 @@ func (p *parser) parseCase() ast.Statement {
 		p.proceed()
 	}
 
+	for {
+		if p.curr.Type != token.HASH {
+			break
+		}
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+			p.proceed()
+		}
+	}
+
 	if p.curr.Type != token.IN {
 		p.error("expected `in`, found `%s`", p.curr)
 		return nil
@@ -499,9 +523,24 @@ func (p *parser) parseCase() ast.Statement {
 		p.proceed()
 	}
 
+	for {
+		if p.curr.Type != token.HASH {
+			break
+		}
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+			p.proceed()
+		}
+	}
+
 	for p.curr.Type != token.ESAC && p.curr.Type != token.EOF {
 		var item ast.CaseItem
 		if p.curr.Type == token.LEFT_PAREN {
+			p.proceed()
+		}
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
 		}
 
@@ -535,6 +574,18 @@ func (p *parser) parseCase() ast.Statement {
 		}
 
 		for {
+			if p.curr.Type != token.HASH {
+				break
+			}
+			for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+				p.proceed()
+			}
+			for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+				p.proceed()
+			}
+		}
+
+		for {
 			if p.curr.Type == token.ESAC || p.curr.Type == token.EOF {
 				break
 			}
@@ -552,6 +603,18 @@ func (p *parser) parseCase() ast.Statement {
 			}
 			for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 				p.proceed()
+			}
+
+			for {
+				if p.curr.Type != token.HASH {
+					break
+				}
+				for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+					p.proceed()
+				}
+				for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+					p.proceed()
+				}
 			}
 
 			if p.curr.Type == token.SEMICOLON && p.next.Type == token.AMPERSAND {
@@ -582,6 +645,18 @@ func (p *parser) parseCase() ast.Statement {
 				break
 			}
 		}
+
+		for {
+			if p.curr.Type != token.HASH {
+				break
+			}
+			for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+				p.proceed()
+			}
+			for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+				p.proceed()
+			}
+		}
 		stmt.Cases = append(stmt.Cases, item)
 	}
 
@@ -597,6 +672,12 @@ func (p *parser) parseCase() ast.Statement {
 	}
 
 	p.parseCompoundRedirections(&stmt.Redirections)
+
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
@@ -746,6 +827,12 @@ loop:
 		}
 	}
 
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
+
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
 		return nil
@@ -762,6 +849,12 @@ func (p *parser) parseLetArithmeticCommand() ast.Statement {
 
 	var arth ast.ArithmeticCommand
 	arth.Arithmetic = ast.Arithmetic{p.parseArithmeticExpression(pBASIC)}
+
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
