@@ -724,10 +724,16 @@ var loopsTests = []testCase{
 
 	{`
 	while # comment
+		# comment
+		# comment
 		cmd # comment
 		# comment
+		# comment
 	do # comment
+	# comment
+	# comment
 		cmd2 # comment
+		# comment
 		# comment
 	done # comment
 
