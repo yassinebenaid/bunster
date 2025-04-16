@@ -815,6 +815,12 @@ loop:
 		}
 	}
 
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
+
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
 		return nil
@@ -831,6 +837,12 @@ func (p *parser) parseLetArithmeticCommand() ast.Statement {
 
 	var arth ast.ArithmeticCommand
 	arth.Arithmetic = ast.Arithmetic{p.parseArithmeticExpression(pBASIC)}
+
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
 
 	if !p.isControlToken() && p.curr.Type != token.EOF {
 		p.error("unexpected token `%s`", p.curr)
