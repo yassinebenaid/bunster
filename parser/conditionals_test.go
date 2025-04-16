@@ -881,6 +881,16 @@ var conditionalsTests = []testCase{
 	{`[[ str =~ $((var)) ]]`, ast.Script{ast.Test{Expr: ast.Binary{
 		Left: ast.Word("str"), Operator: "=~", Right: ast.Arithmetic{ast.Var("var")},
 	}}}},
+
+	{`[[ -f file ]] # comment`, ast.Script{ast.Test{Expr: ast.Unary{
+		Operand: ast.Word("file"), Operator: "-f"},
+	}}},
+	{`[ -f file ] # comment`, ast.Script{ast.Test{Expr: ast.Unary{
+		Operand: ast.Word("file"), Operator: "-f"},
+	}}},
+	{`test -f file # comment`, ast.Script{ast.Test{Expr: ast.Unary{
+		Operand: ast.Word("file"), Operator: "-f"},
+	}}},
 }
 
 var conditionalsErrorHandlingCases = []errorHandlingTestCase{
