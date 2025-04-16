@@ -996,9 +996,13 @@ var loopsTests = []testCase{
 		},
 	}},
 	{`for arg # comment
+		# comment
+		# comment
 	 do # comment
 		# comment
+		# comment
 		cmd # comment
+		# comment
 		# comment
 	done # comment`, ast.Script{
 		&ast.RangeLoop{

@@ -209,8 +209,15 @@ func (p *parser) parseForLoop() ast.Statement {
 	if p.curr.Type == token.SEMICOLON {
 		p.proceed()
 	}
-	if p.curr.Type == token.HASH {
+
+	for {
+		if p.curr.Type != token.HASH {
+			break
+		}
 		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
 		}
 	}
