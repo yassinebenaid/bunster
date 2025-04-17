@@ -154,6 +154,18 @@ func (shell *Shell) MarkVarAsExported(name string) {
 	shell.exportedVars.set(name, struct{}{})
 }
 
+func (shell *Shell) Unset(names ...string) {
+	for _, name := range names {
+		if shell.localVars.forget(name) {
+			continue
+		} else if shell.vars.forget(name) {
+			continue
+		} else if shell.env.forget(name) {
+			continue
+		}
+	}
+}
+
 func (shell *Shell) ReadSpecialVar(name string) string {
 	switch name {
 	case "0":
@@ -346,6 +358,17 @@ func (r *repository[T]) set(key string, value T) {
 	r.mx.Lock()
 	defer r.mx.Unlock()
 	r.data[key] = value
+}
+
+func (r *repository[T]) forget(key string) bool {
+	r.mx.Lock()
+	defer r.mx.Unlock()
+	_, ok := r.data[key]
+	if !ok {
+		return false
+	}
+	delete(r.data, key)
+	return true
 }
 
 func (r *repository[T]) clone() *repository[T] {

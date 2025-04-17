@@ -1,0 +1,14 @@
+cases:
+  - name: unset keyword removes variables
+    script: |
+      var=foo
+
+      echo 1:$var
+
+      unset var
+
+      echo 2:$var
+    expect:
+      stdout: |
+        1:foo
+        2:

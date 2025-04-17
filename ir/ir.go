@@ -178,6 +178,19 @@ func (e Exit) togo() string {
 		};`, e.Code.togo())
 }
 
+type Unset struct {
+	Names []Instruction
+}
+
+func (e Unset) togo() string {
+	var names []string
+	for _, name := range e.Names {
+		names = append(names, name.togo())
+	}
+
+	return fmt.Sprintf(` shell.Unset(%s);`, strings.Join(names, ", "))
+}
+
 type ReadVar string
 
 func (rv ReadVar) togo() string {
