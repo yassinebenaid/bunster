@@ -46,9 +46,48 @@ var builtinTests = []testCase{
 			Code: ast.Word("1"),
 		},
 	}},
+
+	{`unset var`, ast.Script{
+		ast.Unset{
+			Names: []ast.Expression{
+				ast.Word("var"),
+			},
+		},
+	}},
+	{`unset var1 $var2 var3`, ast.Script{
+		ast.Unset{
+			Names: []ast.Expression{
+				ast.Word("var1"),
+				ast.Var("var2"),
+				ast.Word("var3")},
+		},
+	}},
+	{`unset var1 # comment`, ast.Script{
+		ast.Unset{
+			Names: []ast.Expression{
+				ast.Word("var1"),
+			},
+		},
+	}},
+	{`unset var1 && unset var1`, ast.Script{
+		ast.List{
+			Left: ast.Unset{
+				Names: []ast.Expression{
+					ast.Word("var1"),
+				},
+			},
+			Operator: "&&",
+			Right: ast.Unset{
+				Names: []ast.Expression{
+					ast.Word("var1"),
+				},
+			},
+		},
+	}},
 }
 
 var builtinsErrorHandlingCases = []errorHandlingTestCase{
 	{`exit <foo`, "syntax error: unexpected token `<`. (line: 1, column: 6)"},
 	{`return <foo`, "syntax error: unexpected token `<`. (line: 1, column: 8)"},
+	{`unset`, "syntax error: unexpected token `end of file`. (line: 1, column: 6)"},
 }

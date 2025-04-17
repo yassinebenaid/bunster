@@ -27,6 +27,8 @@ func (p *parser) getBuiltinParser() func() ast.Statement {
 		return p.parseLocal
 	case token.EXPORT:
 		return p.parseExport
+	case token.UNSET:
+		return p.parseUnset
 	case token.AT:
 		if p.next.Type != token.EMBED {
 			return nil
@@ -339,6 +341,37 @@ func (p *parser) parseExport() ast.Statement {
 	}
 
 	return assignements
+}
+
+func (p *parser) parseUnset() ast.Statement {
+	p.proceed()
+
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
+	var names []ast.Expression
+
+	for !p.isControlToken() && p.curr.Type != token.EOF {
+		name := p.parseExpression()
+		names = append(names, name)
+		p.proceed()
+
+		if p.curr.Type == token.HASH {
+			for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+				p.proceed()
+			}
+		}
+	}
+
+	if names == nil || (!p.isControlToken() && p.curr.Type != token.EOF) {
+		p.error("unexpected token `%s`", p.curr)
+		return nil
+	}
+
+	return ast.Unset{
+		Names: names,
+	}
 }
 
 func (p *parser) parseEmbedDirective() ast.Statement {

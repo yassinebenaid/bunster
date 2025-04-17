@@ -122,6 +122,10 @@ type Return struct {
 	BreakPoint int
 }
 
+type Unset struct {
+	Names []Expression
+}
+
 type Continue struct {
 	BreakPoint int
 	Type       BreakPointsType
@@ -229,6 +233,7 @@ func (Return) node()              {}
 func (Wait) node()                {}
 func (Embed) node()               {}
 func (Defer) node()               {}
+func (Unset) node()               {}
 
 // Expressions
 func (CommandSubstitution) expr() {}
@@ -258,3 +263,4 @@ func (Return) stmt()         {}
 func (Wait) stmt()           {}
 func (Embed) stmt()          {}
 func (Defer) stmt()          {}
+func (Unset) stmt()          {}
