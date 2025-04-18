@@ -64,6 +64,32 @@ cases:
         2:
         isset:1
 
+  - name: unset keyword removes local variables of parent functions too
+    script: |
+      func1(){
+        local var=foo
+
+        func2(){
+          unset var
+        }
+
+        echo var:$var
+        func2
+        echo var:$var
+      }
+
+      func1
+    expect:
+      stdout: |
+        var:foo
+        var:
+
+  - name: unset keyword can be supplied by unset variables
+    script: |
+      unset var
+    expect:
+      exit_code: 0
+
   - name: unset keyword removes functions
     script: |
       foo-bar(){

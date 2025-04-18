@@ -355,7 +355,10 @@ func (p *parser) parseUnset() ast.Statement {
 	for !p.isControlToken() && p.curr.Type != token.EOF {
 		name := p.parseExpression()
 		names = append(names, name)
-		p.proceed()
+
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
 
 		if p.curr.Type == token.HASH {
 			for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {

@@ -84,6 +84,13 @@ var builtinTests = []testCase{
 			},
 		},
 	}},
+	{`
+	unset var1
+	unset var2
+	`, ast.Script{
+		ast.Unset{Names: []ast.Expression{ast.Word("var1")}},
+		ast.Unset{Names: []ast.Expression{ast.Word("var2")}},
+	}},
 }
 
 var builtinsErrorHandlingCases = []errorHandlingTestCase{
