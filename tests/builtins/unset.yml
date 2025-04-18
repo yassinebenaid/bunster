@@ -19,6 +19,51 @@ cases:
         2:
         isset:1
 
+  - name: unset keyword removes environment variables
+    env:
+      - foo=bar
+    script: |
+      echo 1:$foo
+      test -v foo
+      echo isset:$?
+
+      unset foo
+
+      echo 2:$foo
+      test -v foo
+      echo isset:$?
+    expect:
+      stdout: |
+        1:bar
+        isset:0
+        2:
+        isset:1
+
+  - name: unset keyword removes local variables
+    script: |
+
+      func(){
+        local foo=bar
+
+        echo 1:$foo
+        test -v foo
+        echo isset:$?
+
+        unset foo
+
+        echo 2:$foo
+        test -v foo
+        echo isset:$?
+      }
+
+      func
+    expect:
+      stdout: |
+        1:bar
+        isset:0
+        2:
+        isset:1
+
   - name: unset keyword removes functions
     script: |
       foo-bar(){
@@ -35,4 +80,26 @@ cases:
       stderr: |
         "foo-bar": executable file not found in $PATH
       stdout: |
+        foo
+
+  - name: unset gives variables precedence higher than functions
+    script: |
+      foobar=baz
+
+      foobar(){
+        echo foo
+      }
+
+      echo var:$foobar
+      foobar
+
+      unset foobar
+
+      echo var:$foobar
+      foobar
+    expect:
+      stdout: |
+        var:baz
+        foo
+        var:
         foo
