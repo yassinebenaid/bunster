@@ -123,6 +123,7 @@ type Return struct {
 }
 
 type Unset struct {
+	Flag  string
 	Names []Expression
 }
 

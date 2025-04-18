@@ -91,10 +91,19 @@ var builtinTests = []testCase{
 		ast.Unset{Names: []ast.Expression{ast.Word("var1")}},
 		ast.Unset{Names: []ast.Expression{ast.Word("var2")}},
 	}},
+	{`
+	unset -f var1
+	unset -v var2
+	`, ast.Script{
+		ast.Unset{Flag: "-f", Names: []ast.Expression{ast.Word("var1")}},
+		ast.Unset{Flag: "-v", Names: []ast.Expression{ast.Word("var2")}},
+	}},
 }
 
 var builtinsErrorHandlingCases = []errorHandlingTestCase{
 	{`exit <foo`, "syntax error: unexpected token `<`. (line: 1, column: 6)"},
 	{`return <foo`, "syntax error: unexpected token `<`. (line: 1, column: 8)"},
 	{`unset`, "syntax error: unexpected token `end of file`. (line: 1, column: 6)"},
+	{`unset -`, "syntax error: expected a valid flag character after `-`, found `end of file`. (line: 1, column: 8)"},
+	{`unset -k`, "syntax error: expected a valid flag character after `-`, found `k`. (line: 1, column: 8)"},
 }

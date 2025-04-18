@@ -350,6 +350,22 @@ func (p *parser) parseUnset() ast.Statement {
 		p.proceed()
 	}
 
+	var flag string
+
+	if p.curr.Type == token.MINUS {
+		p.proceed()
+		if p.curr.Type == token.WORD && (p.curr.Literal == "f" || p.curr.Literal == "v") {
+			flag = "-" + p.curr.Literal
+			p.proceed()
+		} else {
+			p.error("expected a valid flag character after `-`, found `%v`", p.curr)
+		}
+	}
+
+	if p.curr.Type == token.BLANK {
+		p.proceed()
+	}
+
 	var names []ast.Expression
 
 	for !p.isControlToken() && p.curr.Type != token.EOF {
@@ -373,6 +389,7 @@ func (p *parser) parseUnset() ast.Statement {
 	}
 
 	return ast.Unset{
+		Flag:  flag,
 		Names: names,
 	}
 }
