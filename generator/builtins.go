@@ -32,7 +32,11 @@ func (g *generator) handleUnset(buf *InstructionBuffer, unset ast.Unset) {
 		names.add(g.handleExpression(buf, name))
 	}
 
-	buf.add(ir.Unset{Names: names})
+	if unset.Flag == "" || unset.Flag == "-v" {
+		buf.add(ir.Unset{Names: names, VarsOnly: unset.Flag == "-v"})
+	} else {
+		buf.add(ir.UnsetFunctions(names))
+	}
 }
 
 func (g *generator) handleReturn(buf *InstructionBuffer, b *ast.Return) {

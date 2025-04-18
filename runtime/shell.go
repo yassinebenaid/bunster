@@ -154,18 +154,27 @@ func (shell *Shell) MarkVarAsExported(name string) {
 	shell.exportedVars.set(name, struct{}{})
 }
 
-func (shell *Shell) Unset(names ...string) {
+func (shell *Shell) Unset(vars_only bool, names ...string) {
 	for _, name := range names {
 		if shell.localVars.forget(name) ||
 			shell.vars.forget(name) ||
-			shell.env.forget(name) ||
-			shell.functions.forget(name) {
+			shell.env.forget(name) {
+			continue
+		}
+
+		if !vars_only && shell.functions.forget(name) {
 			continue
 		}
 
 		if shell.parent != nil {
-			shell.parent.Unset(name)
+			shell.parent.Unset(vars_only, name)
 		}
+	}
+}
+
+func (shell *Shell) UnsetFunctions(names ...string) {
+	for _, name := range names {
+		shell.functions.forget(name)
 	}
 }
 

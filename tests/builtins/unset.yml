@@ -108,6 +108,43 @@ cases:
       stdout: |
         foo
 
+  - name: the "-v" flag causes unset to only removes variables
+    script: |
+      foobar(){
+        echo foo
+      }
+
+      var=baz
+
+      unset -v foobar
+      unset -v var
+
+      foobar
+      echo var:$var
+    expect:
+      stdout: |
+        foo
+        var:
+
+  - name: the "-f" flag causes unset to only removes functions
+    script: |
+      foobar(){
+        echo foo
+      }
+
+      var=baz
+
+      unset -f foobar
+      unset -f var
+
+      foobar
+      echo var:$var
+    expect:
+      stderr: |
+        "foobar": executable file not found in $PATH
+      stdout: |
+        var:baz
+
   - name: unset gives variables precedence higher than functions
     script: |
       foobar=baz

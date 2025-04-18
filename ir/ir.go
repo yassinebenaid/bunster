@@ -179,7 +179,8 @@ func (e Exit) togo() string {
 }
 
 type Unset struct {
-	Names []Instruction
+	VarsOnly bool
+	Names    []Instruction
 }
 
 func (e Unset) togo() string {
@@ -188,7 +189,18 @@ func (e Unset) togo() string {
 		names = append(names, name.togo())
 	}
 
-	return fmt.Sprintf(` shell.Unset(%s);`, strings.Join(names, ", "))
+	return fmt.Sprintf(` shell.Unset(%t, %s);`, e.VarsOnly, strings.Join(names, ", "))
+}
+
+type UnsetFunctions []Instruction
+
+func (e UnsetFunctions) togo() string {
+	var names []string
+	for _, name := range e {
+		names = append(names, name.togo())
+	}
+
+	return fmt.Sprintf(` shell.UnsetFunctions( %s);`, strings.Join(names, ", "))
 }
 
 type ReadVar string
