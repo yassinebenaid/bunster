@@ -4,11 +4,35 @@ cases:
       var=foo
 
       echo 1:$var
+      test -v var
+      echo isset:$?
 
       unset var
 
       echo 2:$var
+      test -v var
+      echo isset:$?
     expect:
       stdout: |
         1:foo
+        isset:0
         2:
+        isset:1
+
+  - name: unset keyword removes functions
+    script: |
+      foo-bar(){
+        echo foo
+      }
+
+      foo-bar
+
+      unset foo-bar
+
+      foo-bar
+    expect:
+      exit_code: 1
+      stderr: |
+        "foo-bar": executable file not found in $PATH
+      stdout: |
+        foo

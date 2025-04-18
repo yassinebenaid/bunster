@@ -156,13 +156,10 @@ func (shell *Shell) MarkVarAsExported(name string) {
 
 func (shell *Shell) Unset(names ...string) {
 	for _, name := range names {
-		if shell.localVars.forget(name) {
-			continue
-		} else if shell.vars.forget(name) {
-			continue
-		} else if shell.env.forget(name) {
-			continue
-		}
+		_ = shell.localVars.forget(name) ||
+			shell.vars.forget(name) ||
+			shell.env.forget(name) ||
+			shell.functions.forget(name)
 	}
 }
 
