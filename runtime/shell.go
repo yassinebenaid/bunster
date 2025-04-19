@@ -15,15 +15,15 @@ func NewShell() *Shell {
 	shell := &Shell{}
 
 	shell.vars = newRepository[parameter]()
-	shell.env = newRepository[string]()
-	shell.localVars = newRepository[string]()
+	shell.env = newRepository[parameter]()
+	shell.localVars = newRepository[parameter]()
 	shell.exportedVars = newRepository[struct{}]()
 	shell.functions = newRepository[Function]()
 	shell.builtins = newRepository[Builtin]()
 
 	for _, env := range os.Environ() {
 		envs := strings.SplitN(env, "=", 2)
-		shell.env.set(envs[0], envs[1])
+		shell.env.set(envs[0], parameter{value: envs[1]})
 	}
 
 	return shell
@@ -43,8 +43,8 @@ type Shell struct {
 	Embed     fs.FS
 
 	vars         *repository[parameter]
-	env          *repository[string]
-	localVars    *repository[string]
+	env          *repository[parameter]
+	localVars    *repository[parameter]
 	exportedVars *repository[struct{}]
 	functions    *repository[Function]
 	builtins     *repository[Builtin]
@@ -93,7 +93,7 @@ func (shell *Shell) ReadVar(name string) string {
 		return value.String()
 	}
 	if value, ok := shell.env.get(name); ok {
-		return value
+		return value.String()
 	}
 	if shell.parent != nil {
 		return shell.parent.ReadVar(name)
@@ -114,9 +114,9 @@ func (shell *Shell) VarIsSet(name string) bool {
 	return false
 }
 
-func (shell *Shell) setLocalVar(name, value string) bool {
+func (shell *Shell) setLocalVar(name string, value any) bool {
 	if _, ok := shell.localVars.get(name); ok {
-		shell.localVars.set(name, value)
+		shell.localVars.set(name, parameter{value: value})
 		return true
 	}
 	if shell.parent != nil {
@@ -127,7 +127,7 @@ func (shell *Shell) setLocalVar(name, value string) bool {
 
 func (shell *Shell) getLocalVar(name string) (string, bool) {
 	if value, ok := shell.localVars.get(name); ok {
-		return value, true
+		return value.String(), true
 	}
 	if shell.parent != nil {
 		return shell.parent.getLocalVar(name)
@@ -135,20 +135,14 @@ func (shell *Shell) getLocalVar(name string) (string, bool) {
 	return "", false
 }
 
-func (shell *Shell) SetVar(name string, value string) {
+func (shell *Shell) SetVar(name string, value any) {
 	if !shell.setLocalVar(name, value) {
 		shell.vars.set(name, parameter{value: value})
 	}
 }
 
-func (shell *Shell) SetArrayVar(name string, value []string) {
-	if !shell.setLocalVar(name, value[0]) {
-		shell.vars.set(name, parameter{value: value})
-	}
-}
-
 func (shell *Shell) SetLocalVar(name string, value string) {
-	shell.localVars.set(name, value)
+	shell.localVars.set(name, parameter{value: value})
 }
 
 func (shell *Shell) SetExportVar(name string, value string) {
@@ -293,13 +287,13 @@ func (shell *Shell) Exec(streamManager *StreamManager, name string, args []strin
 			builtins:     shell.builtins,
 			vars:         shell.vars,
 			env:          shell.env.clone(),
-			localVars:    newRepository[string](),
+			localVars:    newRepository[parameter](),
 			ExitCode:     shell.ExitCode,
 			exportedVars: shell.exportedVars,
 		}
 
 		for key, value := range env {
-			childShell.env.set(key, value)
+			childShell.env.set(key, parameter{value: value})
 		}
 	}
 
@@ -334,8 +328,8 @@ func (shell *Shell) Exec(streamManager *StreamManager, name string, args []strin
 	execCmd.Stderr = stderr
 	execCmd.Dir = shell.CWD
 
-	shell.env.foreach(func(key string, value string) bool {
-		execCmd.Env = append(execCmd.Env, key+"="+value)
+	shell.env.foreach(func(key string, p parameter) bool {
+		execCmd.Env = append(execCmd.Env, key+"="+p.String())
 		return true
 	})
 	shell.exportedVars.foreach(func(key string, _ struct{}) bool {

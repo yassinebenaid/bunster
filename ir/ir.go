@@ -210,15 +210,11 @@ func (rv ReadVar) togo() string {
 }
 
 type SetVar struct {
-	Key     string
-	Value   Instruction
-	IsArray bool
+	Key   string
+	Value Instruction
 }
 
 func (s SetVar) togo() string {
-	if s.IsArray {
-		return fmt.Sprintf("shell.SetArrayVar(%q, %v)\n", s.Key, s.Value.togo())
-	}
 	return fmt.Sprintf("shell.SetVar(%q, %v)\n", s.Key, s.Value.togo())
 }
 

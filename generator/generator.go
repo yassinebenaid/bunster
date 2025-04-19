@@ -321,14 +321,8 @@ func (g *generator) handleParameterAssignment(buf *InstructionBuffer, p ast.Para
 			Key:   assignment.Name,
 			Value: ir.String(""),
 		}
-		switch assignment.Value.(type) {
-		case ast.ArrayLiteral:
-			ins.IsArray = true
+		if assignment.Value != nil {
 			ins.Value = g.handleExpression(&scope, assignment.Value)
-		default:
-			if assignment.Value != nil {
-				ins.Value = g.handleExpression(&scope, assignment.Value)
-			}
 		}
 
 		scope.add(ins)
