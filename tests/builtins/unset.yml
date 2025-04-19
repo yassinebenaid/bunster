@@ -1,0 +1,168 @@
+cases:
+  - name: unset keyword removes variables
+    script: |
+      var=foo
+
+      echo 1:$var
+      test -v var
+      echo isset:$?
+
+      unset var
+
+      echo 2:$var
+      test -v var
+      echo isset:$?
+    expect:
+      stdout: |
+        1:foo
+        isset:0
+        2:
+        isset:1
+
+  - name: unset keyword removes environment variables
+    env:
+      - foo=bar
+    script: |
+      echo 1:$foo
+      test -v foo
+      echo isset:$?
+
+      unset foo
+
+      echo 2:$foo
+      test -v foo
+      echo isset:$?
+    expect:
+      stdout: |
+        1:bar
+        isset:0
+        2:
+        isset:1
+
+  - name: unset keyword removes local variables
+    script: |
+
+      func(){
+        local foo=bar
+
+        echo 1:$foo
+        test -v foo
+        echo isset:$?
+
+        unset foo
+
+        echo 2:$foo
+        test -v foo
+        echo isset:$?
+      }
+
+      func
+    expect:
+      stdout: |
+        1:bar
+        isset:0
+        2:
+        isset:1
+
+  - name: unset keyword removes local variables of parent functions too
+    script: |
+      func1(){
+        local var=foo
+
+        func2(){
+          unset var
+        }
+
+        echo var:$var
+        func2
+        echo var:$var
+      }
+
+      func1
+    expect:
+      stdout: |
+        var:foo
+        var:
+
+  - name: unset keyword can be supplied by unset variables
+    script: |
+      unset var
+    expect:
+      exit_code: 0
+
+  - name: unset keyword removes functions
+    script: |
+      foo-bar(){
+        echo foo
+      }
+
+      foo-bar
+
+      unset foo-bar
+
+      foo-bar
+    expect:
+      exit_code: 1
+      stderr: |
+        "foo-bar": executable file not found in $PATH
+      stdout: |
+        foo
+
+  - name: the "-v" flag causes unset to only removes variables
+    script: |
+      foobar(){
+        echo foo
+      }
+
+      var=baz
+
+      unset -v foobar
+      unset -v var
+
+      foobar
+      echo var:$var
+    expect:
+      stdout: |
+        foo
+        var:
+
+  - name: the "-f" flag causes unset to only removes functions
+    script: |
+      foobar(){
+        echo foo
+      }
+
+      var=baz
+
+      unset -f foobar
+      unset -f var
+
+      foobar
+      echo var:$var
+    expect:
+      stderr: |
+        "foobar": executable file not found in $PATH
+      stdout: |
+        var:baz
+
+  - name: unset gives variables precedence higher than functions
+    script: |
+      foobar=baz
+
+      foobar(){
+        echo foo
+      }
+
+      echo var:$foobar
+      foobar
+
+      unset foobar
+
+      echo var:$foobar
+      foobar
+    expect:
+      stdout: |
+        var:baz
+        foo
+        var:
+        foo

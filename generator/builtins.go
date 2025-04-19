@@ -25,6 +25,20 @@ func (g *generator) handleExit(buf *InstructionBuffer, exit ast.Exit) {
 	buf.add(ir.Exit{Code: g.handleExpression(buf, exit.Code)})
 }
 
+func (g *generator) handleUnset(buf *InstructionBuffer, unset ast.Unset) {
+	var names InstructionBuffer
+
+	for _, name := range unset.Names {
+		names.add(g.handleExpression(buf, name))
+	}
+
+	if unset.Flag == "" || unset.Flag == "-v" {
+		buf.add(ir.Unset{Names: names, VarsOnly: unset.Flag == "-v"})
+	} else {
+		buf.add(ir.UnsetFunctions(names))
+	}
+}
+
 func (g *generator) handleReturn(buf *InstructionBuffer, b *ast.Return) {
 	buf.add(ir.Set{Name: fmt.Sprintf("breakpoint%d", b.BreakPoint), Value: ir.Literal("true")})
 	buf.add(ir.Set{Name: "shell.ExitCode", Value: ir.ParseInt{Value: g.handleExpression(buf, b.Code)}})

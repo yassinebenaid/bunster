@@ -199,6 +199,10 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 				a.analyseExpression(r.Dst)
 			}
 		}
+	case ast.Unset:
+		for _, name := range v.Names {
+			a.analyseExpression(name)
+		}
 	default:
 		a.report(Error{Msg: fmt.Sprintf("Unsupported statement type: %T", v)})
 	}
