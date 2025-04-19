@@ -66,7 +66,7 @@ func (p *parser) parseAssignement() ast.ParameterAssignement {
 
 		assigns = append(assigns, assignment)
 
-		if p.curr.Type == token.BLANK {
+		for p.curr.Type == token.BLANK {
 			p.proceed()
 		}
 	}

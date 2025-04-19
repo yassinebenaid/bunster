@@ -14,7 +14,7 @@ import (
 func NewShell() *Shell {
 	shell := &Shell{}
 
-	shell.vars = newRepository[string]()
+	shell.vars = newRepository[parameter]()
 	shell.env = newRepository[string]()
 	shell.localVars = newRepository[string]()
 	shell.exportedVars = newRepository[struct{}]()
@@ -42,7 +42,7 @@ type Shell struct {
 	WaitGroup sync.WaitGroup
 	Embed     fs.FS
 
-	vars         *repository[string]
+	vars         *repository[parameter]
 	env          *repository[string]
 	localVars    *repository[string]
 	exportedVars *repository[struct{}]
@@ -90,7 +90,7 @@ func (shell *Shell) ReadVar(name string) string {
 		return value
 	}
 	if value, ok := shell.vars.get(name); ok {
-		return value
+		return value.String()
 	}
 	if value, ok := shell.env.get(name); ok {
 		return value
@@ -137,13 +137,13 @@ func (shell *Shell) getLocalVar(name string) (string, bool) {
 
 func (shell *Shell) SetVar(name string, value string) {
 	if !shell.setLocalVar(name, value) {
-		shell.vars.set(name, value)
+		shell.vars.set(name, parameter{value: value})
 	}
 }
 
 func (shell *Shell) SetArrayVar(name string, value []string) {
 	if !shell.setLocalVar(name, value[0]) {
-		shell.vars.set(name, value[0])
+		shell.vars.set(name, parameter{value: value})
 	}
 }
 
@@ -153,7 +153,7 @@ func (shell *Shell) SetLocalVar(name string, value string) {
 
 func (shell *Shell) SetExportVar(name string, value string) {
 	shell.exportedVars.set(name, struct{}{})
-	shell.vars.set(name, value)
+	shell.vars.set(name, parameter{value: value})
 }
 
 func (shell *Shell) MarkVarAsExported(name string) {
@@ -405,4 +405,21 @@ func (r *repository[T]) foreach(fn func(key string, value T) bool) {
 			break
 		}
 	}
+}
+
+type parameter struct {
+	value any
+}
+
+func (p parameter) String() string {
+	switch v := p.value.(type) {
+	case string:
+		return v
+	case []string:
+		if len(v) == 0 {
+			return ""
+		}
+		return v[0]
+	}
+	return ""
 }
