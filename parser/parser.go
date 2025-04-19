@@ -196,6 +196,13 @@ func (p *parser) parseCommand() ast.Statement {
 	}
 
 	env := p.parseAssignement()
+
+	if p.curr.Type == token.HASH {
+		for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+			p.proceed()
+		}
+	}
+
 	if env != nil && (p.isControlToken() || p.curr.Type == token.EOF) {
 		return env
 	}
