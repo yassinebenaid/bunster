@@ -1,0 +1,28 @@
+#(TEST: can unset variables)
+
+unset var 
+
+unset var $var var
+
+unset -v var var
+
+unset -f var var
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	shell.Unset(false, "var")
+	shell.Unset(false, "var", shell.ReadVar("var"), "var")
+	shell.Unset(true, "var", "var")
+	shell.UnsetFunctions("var", "var")
+}
+
+#(ENDTEST)
+
+
+ 
