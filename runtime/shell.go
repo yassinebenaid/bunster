@@ -141,6 +141,12 @@ func (shell *Shell) SetVar(name string, value string) {
 	}
 }
 
+func (shell *Shell) SetArrayVar(name string, value []string) {
+	if !shell.setLocalVar(name, value[0]) {
+		shell.vars.set(name, value[0])
+	}
+}
+
 func (shell *Shell) SetLocalVar(name string, value string) {
 	shell.localVars.set(name, value)
 }

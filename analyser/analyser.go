@@ -293,6 +293,10 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 		if v.Length != nil {
 			a.analyseExpression(v.Length)
 		}
+	case ast.ArrayLiteral:
+		for _, exp := range v {
+			a.analyseExpression(exp)
+		}
 	default:
 		a.report(Error{Msg: fmt.Sprintf("Unsupported expression type: %T", v)})
 	}

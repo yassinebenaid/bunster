@@ -1,0 +1,9 @@
+cases:
+  - name: can declare and use arrays
+    script: |
+      var=(foo bar baz)
+
+      echo $var
+    expect:
+      stdout: |
+        foo

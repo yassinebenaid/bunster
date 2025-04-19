@@ -210,11 +210,15 @@ func (rv ReadVar) togo() string {
 }
 
 type SetVar struct {
-	Key   string
-	Value Instruction
+	Key     string
+	Value   Instruction
+	IsArray bool
 }
 
 func (s SetVar) togo() string {
+	if s.IsArray {
+		return fmt.Sprintf("shell.SetArrayVar(%q, %v)\n", s.Key, s.Value.togo())
+	}
 	return fmt.Sprintf("shell.SetVar(%q, %v)\n", s.Key, s.Value.togo())
 }
 
@@ -519,4 +523,16 @@ type MatchPattern struct {
 
 func (s MatchPattern) togo() string {
 	return fmt.Sprintf(`runtime.PatternMatch(%s, %s)`, s.Hystack, s.Needle.togo())
+}
+
+type ArrayLiteral []Instruction
+
+func (al ArrayLiteral) togo() string {
+	var arr []string
+
+	for _, a := range al {
+		arr = append(arr, a.togo())
+	}
+
+	return fmt.Sprintf(`[]string{%s}`, strings.Join(arr, ", "))
 }

@@ -229,6 +229,12 @@ func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expr
 		return g.handleParameterExpansionMatchAndRemove(buf, v)
 	case ast.MatchAndReplace:
 		return g.handleParameterExpansionMatchAndReplace(buf, v)
+	case ast.ArrayLiteral:
+		var al ir.ArrayLiteral
+		for _, expr := range v {
+			al = append(al, g.handleExpression(buf, expr))
+		}
+		return al
 	default:
 		panic(fmt.Sprintf("Unsupported expression: %T", v))
 	}
@@ -315,8 +321,14 @@ func (g *generator) handleParameterAssignment(buf *InstructionBuffer, p ast.Para
 			Key:   assignment.Name,
 			Value: ir.String(""),
 		}
-		if assignment.Value != nil {
+		switch assignment.Value.(type) {
+		case ast.ArrayLiteral:
+			ins.IsArray = true
 			ins.Value = g.handleExpression(&scope, assignment.Value)
+		default:
+			if assignment.Value != nil {
+				ins.Value = g.handleExpression(&scope, assignment.Value)
+			}
 		}
 
 		scope.add(ins)
