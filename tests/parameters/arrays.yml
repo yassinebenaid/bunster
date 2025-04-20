@@ -30,3 +30,9 @@ cases:
         var:foo
         var:baz
         var:
+
+  - name: cannot pass arrays as environment variables
+    script: |
+      var=(foo bar baz) command
+    expect:
+      build_error: "main.sh(0:0): semantic error: passing an array to a command's environment is illigal."

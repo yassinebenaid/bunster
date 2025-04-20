@@ -67,6 +67,9 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			}
 		}
 		for _, env := range v.Env {
+			if _, ok := env.Value.(ast.ArrayLiteral); ok {
+				a.report(Error{Msg: "passing an array to a command's environment is illigal"})
+			}
 			if env.Value != nil {
 				a.analyseExpression(env.Value)
 			}
