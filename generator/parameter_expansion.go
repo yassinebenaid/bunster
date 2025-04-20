@@ -27,14 +27,14 @@ func (g *generator) handleParameterExpansionVarOrDefault(buf *InstructionBuffer,
 	}
 
 	_if := ir.If{
-		Body:      []ir.Instruction{ir.Set{Name: name, Value: g.handleExpression(buf, expression.Parameter)}},
+		Body:      []ir.Instruction{ir.Set{Name: name, Value: g.handleParameter(buf, expression.Parameter)}},
 		Alternate: []ir.Instruction{ir.Set{Name: name, Value: def}},
 	}
 
 	if expression.UnsetOnly {
 		_if.Condition = ir.TestVarIsSet{Name: ir.String(string(expression.Parameter.(ast.Var)))}
 	} else {
-		_if.Condition = ir.TestAgainsStringLength{String: g.handleExpression(buf, expression.Parameter)}
+		_if.Condition = ir.TestAgainsStringLength{String: g.handleParameter(buf, expression.Parameter)}
 	}
 
 	buf.add(_if)
@@ -82,7 +82,7 @@ func (g *generator) handleParameterExpansionCheckAndUse(buf *InstructionBuffer, 
 	if expression.UnsetOnly {
 		_if.Condition = ir.TestVarIsSet{Name: ir.String(string(expression.Parameter.(ast.Var)))}
 	} else {
-		_if.Condition = ir.TestAgainsStringLength{String: ir.ReadVar(string(expression.Parameter.(ast.Var)))}
+		_if.Condition = ir.TestAgainsStringLength{String: g.handleParameter(buf, expression.Parameter)}
 	}
 
 	buf.add(_if)
@@ -105,7 +105,7 @@ func (g *generator) handleParameterExpansionSlice(buf *InstructionBuffer, expres
 	}
 
 	return ir.Substring{
-		String: ir.ReadVar(string(expression.Parameter.(ast.Var))),
+		String: g.handleParameter(buf, expression.Parameter),
 		Offset: ir.Literal(offset),
 		Length: ir.Literal(length),
 	}
@@ -183,6 +183,20 @@ func (g *generator) handleParameterExpansionMatchAndReplace(buf *InstructionBuff
 			String:  ir.ReadVar(string(expression.Parameter.(ast.Var))),
 			Pattern: pattern,
 			Value:   repl,
+		}
+	}
+
+	return nil
+}
+
+func (g *generator) handleParameter(buf *InstructionBuffer, param ast.Parameter) ir.Instruction {
+	switch v := param.(type) {
+	case ast.Var:
+		return ir.ReadVar(v)
+	case ast.ArrayAccess:
+		return ir.ReadArrayVar{
+			Name:  v.Name,
+			Index: ir.ParseInt{Value: g.handleExpression(buf, v.Index)},
 		}
 	}
 
