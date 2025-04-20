@@ -119,14 +119,14 @@ func (g *generator) handleParameterExpansionChangeCase(buf *InstructionBuffer, e
 
 	if expression.Operator == "^" || expression.Operator == "^^" {
 		return ir.StringToUpperCase{
-			String:  ir.ReadVar(string(expression.Parameter.(ast.Var))),
+			String:  g.handleParameter(buf, expression.Parameter),
 			Pattern: pattern,
 			All:     expression.Operator == "^^",
 		}
 	}
 
 	return ir.StringToLowerCase{
-		String:  ir.ReadVar(string(expression.Parameter.(ast.Var))),
+		String:  g.handleParameter(buf, expression.Parameter),
 		Pattern: pattern,
 		All:     expression.Operator == ",,",
 	}

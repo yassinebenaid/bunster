@@ -39,13 +39,15 @@ cases:
 
   - name: can perform parameter expansion on arrays
     script: |
-      var=(foo bar baz booo)
+      var=(foo BAR baz booo)
 
       echo 1:${#var}
       echo 2:${#var[0]}-${#var[1]}-${#var[3]}
       echo 3:${var[0]:-x}-${var[10]:-x}
       echo 4:${var[0]:+x}-${var[10]:+x}
       echo 5:${var[3]:1:3}-${var[10]:1:3}
+      echo 6:${var[2]^}-${var[10]^}-${var[2]^^}-${var[10]^^}
+      echo 7:${var[1],}-${var[10],}-${var[1],,}-${var[10],,}
     expect:
       stdout: |
         1:3
@@ -53,3 +55,5 @@ cases:
         3:foo-x
         4:x-
         5:ooo-
+        6:Baz--BAZ-
+        7:bAR--bar-
