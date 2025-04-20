@@ -195,7 +195,7 @@ func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expr
 		return ir.String(v)
 	case ast.Var:
 		return ir.ReadVar(v)
-	case ast.ParameterExpansion:
+	case ast.ArrayAccess:
 		return ir.ReadArrayVar{Name: v.Name, Index: ir.ParseInt{Value: g.handleExpression(buf, v.Index)}}
 	case ast.SpecialVar:
 		return ir.ReadSpecialVar(v)
@@ -216,7 +216,7 @@ func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expr
 	case ast.Arithmetic:
 		return g.handleArithmeticSubstitution(buf, v)
 	case ast.VarLength:
-		return ir.VarLength{Name: v.Parameter.Name}
+		return ir.VarLength{Name: string(v.Parameter.(ast.Var))}
 	case ast.VarOrDefault:
 		return g.handleParameterExpansionVarOrDefault(buf, v)
 	case ast.VarOrSet:

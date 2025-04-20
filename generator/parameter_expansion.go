@@ -17,14 +17,14 @@ func (g *generator) handleParameterExpansionVarOrDefault(buf *InstructionBuffer,
 	}
 
 	_if := ir.If{
-		Body:      []ir.Instruction{ir.Set{Name: name, Value: ir.ReadVar(expression.Parameter.Name)}},
+		Body:      []ir.Instruction{ir.Set{Name: name, Value: ir.ReadVar(string(expression.Parameter.(ast.Var)))}},
 		Alternate: []ir.Instruction{ir.Set{Name: name, Value: def}},
 	}
 
 	if expression.UnsetOnly {
-		_if.Condition = ir.TestVarIsSet{Name: ir.String(expression.Parameter.Name)}
+		_if.Condition = ir.TestVarIsSet{Name: ir.String(string(expression.Parameter.(ast.Var)))}
 	} else {
-		_if.Condition = ir.TestAgainsStringLength{String: ir.ReadVar(expression.Parameter.Name)}
+		_if.Condition = ir.TestAgainsStringLength{String: ir.ReadVar(string(expression.Parameter.(ast.Var)))}
 	}
 
 	buf.add(_if)
@@ -40,18 +40,18 @@ func (g *generator) handleParameterExpansionVarOrSet(buf *InstructionBuffer, exp
 	_if := ir.If{
 		Not: true,
 		Body: []ir.Instruction{
-			ir.SetVar{Key: expression.Parameter.Name, Value: def},
+			ir.SetVar{Key: string(expression.Parameter.(ast.Var)), Value: def},
 		},
 	}
 
 	if expression.UnsetOnly {
-		_if.Condition = ir.TestVarIsSet{Name: ir.String(expression.Parameter.Name)}
+		_if.Condition = ir.TestVarIsSet{Name: ir.String(string(expression.Parameter.(ast.Var)))}
 	} else {
-		_if.Condition = ir.TestAgainsStringLength{String: ir.ReadVar(expression.Parameter.Name)}
+		_if.Condition = ir.TestAgainsStringLength{String: ir.ReadVar(string(expression.Parameter.(ast.Var)))}
 	}
 
 	buf.add(_if)
-	return ir.ReadVar(expression.Parameter.Name)
+	return ir.ReadVar(string(expression.Parameter.(ast.Var)))
 }
 
 func (g *generator) handleParameterExpansionCheckAndUse(buf *InstructionBuffer, expression ast.CheckAndUse) ir.Instruction {
@@ -70,9 +70,9 @@ func (g *generator) handleParameterExpansionCheckAndUse(buf *InstructionBuffer, 
 	}
 
 	if expression.UnsetOnly {
-		_if.Condition = ir.TestVarIsSet{Name: ir.String(expression.Parameter.Name)}
+		_if.Condition = ir.TestVarIsSet{Name: ir.String(string(expression.Parameter.(ast.Var)))}
 	} else {
-		_if.Condition = ir.TestAgainsStringLength{String: ir.ReadVar(expression.Parameter.Name)}
+		_if.Condition = ir.TestAgainsStringLength{String: ir.ReadVar(string(expression.Parameter.(ast.Var)))}
 	}
 
 	buf.add(_if)
@@ -95,7 +95,7 @@ func (g *generator) handleParameterExpansionSlice(buf *InstructionBuffer, expres
 	}
 
 	return ir.Substring{
-		String: ir.ReadVar(expression.Parameter.Name),
+		String: ir.ReadVar(string(expression.Parameter.(ast.Var))),
 		Offset: ir.Literal(offset),
 		Length: ir.Literal(length),
 	}
@@ -109,14 +109,14 @@ func (g *generator) handleParameterExpansionChangeCase(buf *InstructionBuffer, e
 
 	if expression.Operator == "^" || expression.Operator == "^^" {
 		return ir.StringToUpperCase{
-			String:  ir.ReadVar(expression.Parameter.Name),
+			String:  ir.ReadVar(string(expression.Parameter.(ast.Var))),
 			Pattern: pattern,
 			All:     expression.Operator == "^^",
 		}
 	}
 
 	return ir.StringToLowerCase{
-		String:  ir.ReadVar(expression.Parameter.Name),
+		String:  ir.ReadVar(string(expression.Parameter.(ast.Var))),
 		Pattern: pattern,
 		All:     expression.Operator == ",,",
 	}
@@ -130,14 +130,14 @@ func (g *generator) handleParameterExpansionMatchAndRemove(buf *InstructionBuffe
 
 	if expression.Operator == "#" || expression.Operator == "##" {
 		return ir.RemoveMatchingPrefix{
-			String:  ir.ReadVar(expression.Parameter.Name),
+			String:  ir.ReadVar(string(expression.Parameter.(ast.Var))),
 			Pattern: pattern,
 			Longest: expression.Operator == "##",
 		}
 	}
 
 	return ir.RemoveMatchingSuffix{
-		String:  ir.ReadVar(expression.Parameter.Name),
+		String:  ir.ReadVar(string(expression.Parameter.(ast.Var))),
 		Pattern: pattern,
 		Longest: expression.Operator == "%%",
 	}
@@ -157,20 +157,20 @@ func (g *generator) handleParameterExpansionMatchAndReplace(buf *InstructionBuff
 	switch expression.Operator {
 	case "/", "//":
 		return ir.ReplaceMatching{
-			String:  ir.ReadVar(expression.Parameter.Name),
+			String:  ir.ReadVar(string(expression.Parameter.(ast.Var))),
 			Pattern: pattern,
 			Value:   repl,
 			All:     expression.Operator == "//",
 		}
 	case "/#":
 		return ir.ReplaceMatchingPrefix{
-			String:  ir.ReadVar(expression.Parameter.Name),
+			String:  ir.ReadVar(string(expression.Parameter.(ast.Var))),
 			Pattern: pattern,
 			Value:   repl,
 		}
 	case "/%":
 		return ir.ReplaceMatchingSuffix{
-			String:  ir.ReadVar(expression.Parameter.Name),
+			String:  ir.ReadVar(string(expression.Parameter.(ast.Var))),
 			Pattern: pattern,
 			Value:   repl,
 		}

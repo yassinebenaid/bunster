@@ -1,6 +1,10 @@
 package analyser
 
-import "github.com/yassinebenaid/bunster/ast"
+import (
+	"fmt"
+
+	"github.com/yassinebenaid/bunster/ast"
+)
 
 func (a *analyser) analyseParameterAssignement(pa ast.ParameterAssignement) {
 	for _, pa := range pa {
@@ -36,5 +40,15 @@ loop:
 		if pa.Value != nil {
 			a.analyseExpression(pa.Value)
 		}
+	}
+}
+
+func (a *analyser) analyseParameter(param ast.Parameter) {
+	switch v := param.(type) {
+	case ast.Var:
+	case ast.ArrayAccess:
+		a.analyseExpression(v.Index)
+	default:
+		a.report(Error{Msg: fmt.Sprintf("unknown parameter kind: %T", param)})
 	}
 }

@@ -209,48 +209,34 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 	switch v := s.(type) {
 	case ast.Word, ast.Var, ast.SpecialVar, ast.Number:
 	case ast.VarLength:
-		if v.Parameter.Index != nil {
-			a.analyseExpression(v.Parameter.Index)
-		}
+		a.analyseParameter(v.Parameter)
 	case ast.VarOrDefault:
-		if v.Parameter.Index != nil {
-			a.analyseExpression(v.Parameter.Index)
-		}
+		a.analyseParameter(v.Parameter)
 		if v.Default != nil {
 			a.analyseExpression(v.Default)
 		}
 	case ast.VarOrSet:
-		if v.Parameter.Index != nil {
-			a.analyseExpression(v.Parameter.Index)
-		}
+		a.analyseParameter(v.Parameter)
 		if v.Default != nil {
 			a.analyseExpression(v.Default)
 		}
 	case ast.ChangeCase:
-		if v.Parameter.Index != nil {
-			a.analyseExpression(v.Parameter.Index)
-		}
+		a.analyseParameter(v.Parameter)
 		if v.Pattern != nil {
 			a.analyseExpression(v.Pattern)
 		}
 	case ast.MatchAndRemove:
-		if v.Parameter.Index != nil {
-			a.analyseExpression(v.Parameter.Index)
-		}
+		a.analyseParameter(v.Parameter)
 		if v.Pattern != nil {
 			a.analyseExpression(v.Pattern)
 		}
 	case ast.MatchAndReplace:
-		if v.Parameter.Index != nil {
-			a.analyseExpression(v.Parameter.Index)
-		}
+		a.analyseParameter(v.Parameter)
 		if v.Pattern != nil {
 			a.analyseExpression(v.Pattern)
 		}
 	case ast.CheckAndUse:
-		if v.Parameter.Index != nil {
-			a.analyseExpression(v.Parameter.Index)
-		}
+		a.analyseParameter(v.Parameter)
 		if v.Value != nil {
 			a.analyseExpression(v.Value)
 		}
@@ -281,9 +267,7 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 			a.analyseArithmeticExpression(expr)
 		}
 	case ast.Slice:
-		if v.Parameter.Index != nil {
-			a.analyseExpression(v.Parameter.Index)
-		}
+		a.analyseParameter(v.Parameter)
 		a.analyseExpression(v.Offset)
 		if v.Length != nil {
 			a.analyseExpression(v.Length)
@@ -292,7 +276,7 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 		for _, exp := range v {
 			a.analyseExpression(exp)
 		}
-	case ast.ParameterExpansion:
+	case ast.ArrayAccess:
 		a.analyseExpression(v.Index)
 	default:
 		a.report(Error{Msg: fmt.Sprintf("Unsupported expression type: %T", v)})
