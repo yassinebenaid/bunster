@@ -1,0 +1,67 @@
+cases:
+  - name: can declare and use arrays
+    script: |
+      var=(foo bar baz)
+
+      echo var:$var
+      echo var:${var}
+      echo var:${var[0]}
+      echo var:${var[1]}
+      echo var:${var[2]}
+      echo var:${var[3]}
+      echo var:${var[-3]}
+      echo var:${var[3, 0]}
+
+      index=2
+      echo var:${var[$index]}
+
+
+      var=()
+      echo var:$var
+    expect:
+      stdout: |
+        var:foo
+        var:foo
+        var:foo
+        var:bar
+        var:baz
+        var:
+        var:
+        var:foo
+        var:baz
+        var:
+
+  - name: cannot pass arrays as environment variables
+    script: |
+      var=(foo bar baz) command
+    expect:
+      build_error: "main.sh(0:0): semantic error: passing an array to a command's environment is illigal."
+
+  - name: can perform parameter expansion on arrays
+    script: |
+      var=(foo BAR baz booo aaabbb)
+
+      echo 1:${#var}
+      echo 2:${#var[0]}-${#var[1]}-${#var[3]}
+      echo 3:${var[0]:-x}-${var[10]:-x}
+      echo 4:${var[0]:+x}-${var[10]:+x}
+      echo 5:${var[3]:1:3}-${var[10]:1:3}
+      echo 6:${var[2]^}-${var[10]^}-${var[2]^^}-${var[10]^^}
+      echo 7:${var[1],}-${var[10],}-${var[1],,}-${var[10],,}
+      echo 8:${var[4]#*a}-${var[10]#*a}-${var[4]##*a}-${var[10]##*a}
+      echo 9:${var[4]%b*}-${var[10]%b*}-${var[4]%%b*}-${var[10]%%b*}
+      echo 10:${var[0]/o/x}-${var[10]/o/x}-${var[0]//o/x}-${var[10]//o/x}
+      echo 11:${var[0]/#?/x}-${var[10]/#?/x}-${var[0]/%?/x}-${var[10]/%?/x}
+    expect:
+      stdout: |
+        1:3
+        2:3-3-4
+        3:foo-x
+        4:x-
+        5:ooo-
+        6:Baz--BAZ-
+        7:bAR--bar-
+        8:aabbb--bbb-
+        9:aaa--aaa-
+        10:fxo--fxx-
+        11:xoo--fox-

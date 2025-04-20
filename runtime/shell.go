@@ -14,16 +14,16 @@ import (
 func NewShell() *Shell {
 	shell := &Shell{}
 
-	shell.vars = newRepository[string]()
-	shell.env = newRepository[string]()
-	shell.localVars = newRepository[string]()
+	shell.vars = newRepository[parameter]()
+	shell.env = newRepository[parameter]()
+	shell.localVars = newRepository[parameter]()
 	shell.exportedVars = newRepository[struct{}]()
 	shell.functions = newRepository[Function]()
 	shell.builtins = newRepository[Builtin]()
 
 	for _, env := range os.Environ() {
 		envs := strings.SplitN(env, "=", 2)
-		shell.env.set(envs[0], envs[1])
+		shell.env.set(envs[0], parameter{value: envs[1]})
 	}
 
 	return shell
@@ -42,9 +42,9 @@ type Shell struct {
 	WaitGroup sync.WaitGroup
 	Embed     fs.FS
 
-	vars         *repository[string]
-	env          *repository[string]
-	localVars    *repository[string]
+	vars         *repository[parameter]
+	env          *repository[parameter]
+	localVars    *repository[parameter]
 	exportedVars *repository[struct{}]
 	functions    *repository[Function]
 	builtins     *repository[Builtin]
@@ -86,6 +86,18 @@ func (shell *Shell) Exit(ecode string) error {
 }
 
 func (shell *Shell) ReadVar(name string) string {
+	p := shell.readVar(name)
+
+	return p.String()
+}
+
+func (shell *Shell) ReadArrayVar(name string, index int) string {
+	p := shell.readVar(name)
+
+	return p.AtIndex(index)
+}
+
+func (shell *Shell) readVar(name string) parameter {
 	if value, ok := shell.getLocalVar(name); ok {
 		return value
 	}
@@ -96,9 +108,9 @@ func (shell *Shell) ReadVar(name string) string {
 		return value
 	}
 	if shell.parent != nil {
-		return shell.parent.ReadVar(name)
+		return shell.parent.readVar(name)
 	}
-	return ""
+	return parameter{}
 }
 
 func (shell *Shell) VarIsSet(name string) bool {
@@ -114,9 +126,9 @@ func (shell *Shell) VarIsSet(name string) bool {
 	return false
 }
 
-func (shell *Shell) setLocalVar(name, value string) bool {
+func (shell *Shell) setLocalVar(name string, value any) bool {
 	if _, ok := shell.localVars.get(name); ok {
-		shell.localVars.set(name, value)
+		shell.localVars.set(name, parameter{value: value})
 		return true
 	}
 	if shell.parent != nil {
@@ -125,29 +137,29 @@ func (shell *Shell) setLocalVar(name, value string) bool {
 	return false
 }
 
-func (shell *Shell) getLocalVar(name string) (string, bool) {
+func (shell *Shell) getLocalVar(name string) (parameter, bool) {
 	if value, ok := shell.localVars.get(name); ok {
 		return value, true
 	}
 	if shell.parent != nil {
 		return shell.parent.getLocalVar(name)
 	}
-	return "", false
+	return parameter{}, false
 }
 
-func (shell *Shell) SetVar(name string, value string) {
+func (shell *Shell) SetVar(name string, value any) {
 	if !shell.setLocalVar(name, value) {
-		shell.vars.set(name, value)
+		shell.vars.set(name, parameter{value: value})
 	}
 }
 
 func (shell *Shell) SetLocalVar(name string, value string) {
-	shell.localVars.set(name, value)
+	shell.localVars.set(name, parameter{value: value})
 }
 
 func (shell *Shell) SetExportVar(name string, value string) {
 	shell.exportedVars.set(name, struct{}{})
-	shell.vars.set(name, value)
+	shell.vars.set(name, parameter{value: value})
 }
 
 func (shell *Shell) MarkVarAsExported(name string) {
@@ -287,13 +299,13 @@ func (shell *Shell) Exec(streamManager *StreamManager, name string, args []strin
 			builtins:     shell.builtins,
 			vars:         shell.vars,
 			env:          shell.env.clone(),
-			localVars:    newRepository[string](),
+			localVars:    newRepository[parameter](),
 			ExitCode:     shell.ExitCode,
 			exportedVars: shell.exportedVars,
 		}
 
 		for key, value := range env {
-			childShell.env.set(key, value)
+			childShell.env.set(key, parameter{value: value})
 		}
 	}
 
@@ -328,8 +340,8 @@ func (shell *Shell) Exec(streamManager *StreamManager, name string, args []strin
 	execCmd.Stderr = stderr
 	execCmd.Dir = shell.CWD
 
-	shell.env.foreach(func(key string, value string) bool {
-		execCmd.Env = append(execCmd.Env, key+"="+value)
+	shell.env.foreach(func(key string, p parameter) bool {
+		execCmd.Env = append(execCmd.Env, key+"="+p.String())
 		return true
 	})
 	shell.exportedVars.foreach(func(key string, _ struct{}) bool {
@@ -399,4 +411,34 @@ func (r *repository[T]) foreach(fn func(key string, value T) bool) {
 			break
 		}
 	}
+}
+
+type parameter struct {
+	value any
+}
+
+func (p parameter) String() string {
+	switch v := p.value.(type) {
+	case string:
+		return v
+	case []string:
+		if len(v) == 0 {
+			return ""
+		}
+		return v[0]
+	}
+	return ""
+}
+
+func (p parameter) AtIndex(index int) string {
+	switch v := p.value.(type) {
+	case []string:
+		if len(v) == 0 {
+			return ""
+		}
+		if index >= 0 && index <= len(v)-1 {
+			return v[index]
+		}
+	}
+	return ""
 }

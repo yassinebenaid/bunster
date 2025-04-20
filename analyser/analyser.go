@@ -67,6 +67,9 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			}
 		}
 		for _, env := range v.Env {
+			if _, ok := env.Value.(ast.ArrayLiteral); ok {
+				a.report(Error{Msg: "passing an array to a command's environment is illigal"})
+			}
 			if env.Value != nil {
 				a.analyseExpression(env.Value)
 			}
@@ -116,17 +119,9 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			}
 		}
 	case ast.ParameterAssignement:
-		for _, pa := range v {
-			if pa.Value != nil {
-				a.analyseExpression(pa.Value)
-			}
-		}
+		a.analyseParameterAssignement(v)
 	case ast.ExportParameterAssignement:
-		for _, pa := range v {
-			if pa.Value != nil {
-				a.analyseExpression(pa.Value)
-			}
-		}
+		a.analyseExportParameterAssignement(v)
 	case ast.LocalParameterAssignement:
 		a.analyseLocalParameterAssignement(v)
 	case *ast.For:
@@ -214,48 +209,34 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 	switch v := s.(type) {
 	case ast.Word, ast.Var, ast.SpecialVar, ast.Number:
 	case ast.VarLength:
-		if v.Parameter.Index != nil {
-			a.analyseExpression(v.Parameter.Index)
-		}
+		a.analyseParameter(v.Parameter)
 	case ast.VarOrDefault:
-		if v.Parameter.Index != nil {
-			a.analyseExpression(v.Parameter.Index)
-		}
+		a.analyseParameter(v.Parameter)
 		if v.Default != nil {
 			a.analyseExpression(v.Default)
 		}
 	case ast.VarOrSet:
-		if v.Parameter.Index != nil {
-			a.analyseExpression(v.Parameter.Index)
-		}
+		a.analyseParameter(v.Parameter)
 		if v.Default != nil {
 			a.analyseExpression(v.Default)
 		}
 	case ast.ChangeCase:
-		if v.Parameter.Index != nil {
-			a.analyseExpression(v.Parameter.Index)
-		}
+		a.analyseParameter(v.Parameter)
 		if v.Pattern != nil {
 			a.analyseExpression(v.Pattern)
 		}
 	case ast.MatchAndRemove:
-		if v.Parameter.Index != nil {
-			a.analyseExpression(v.Parameter.Index)
-		}
+		a.analyseParameter(v.Parameter)
 		if v.Pattern != nil {
 			a.analyseExpression(v.Pattern)
 		}
 	case ast.MatchAndReplace:
-		if v.Parameter.Index != nil {
-			a.analyseExpression(v.Parameter.Index)
-		}
+		a.analyseParameter(v.Parameter)
 		if v.Pattern != nil {
 			a.analyseExpression(v.Pattern)
 		}
 	case ast.CheckAndUse:
-		if v.Parameter.Index != nil {
-			a.analyseExpression(v.Parameter.Index)
-		}
+		a.analyseParameter(v.Parameter)
 		if v.Value != nil {
 			a.analyseExpression(v.Value)
 		}
@@ -286,13 +267,17 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 			a.analyseArithmeticExpression(expr)
 		}
 	case ast.Slice:
-		if v.Parameter.Index != nil {
-			a.analyseExpression(v.Parameter.Index)
-		}
+		a.analyseParameter(v.Parameter)
 		a.analyseExpression(v.Offset)
 		if v.Length != nil {
 			a.analyseExpression(v.Length)
 		}
+	case ast.ArrayLiteral:
+		for _, exp := range v {
+			a.analyseExpression(exp)
+		}
+	case ast.ArrayAccess:
+		a.analyseExpression(v.Index)
 	default:
 		a.report(Error{Msg: fmt.Sprintf("Unsupported expression type: %T", v)})
 	}

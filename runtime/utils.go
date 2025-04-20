@@ -332,6 +332,9 @@ func RemoveMatchingSuffix(str string, _pattern string, longest bool) string {
 }
 
 func ReplaceMatching(str string, _pattern string, replace string, all bool) string {
+	if str == "" {
+		return str
+	}
 	rx, err := pattern.Regexp(_pattern, 0)
 	if err != nil {
 		return str
