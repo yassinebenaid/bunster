@@ -269,6 +269,7 @@ cases:
       echo
       echo  11:${var/ccc}
       echo  12:${var//c?}
+      echo  13:${var2/x/z}
     expect:
       stdout: |
         1:aaabxyzccdddeee
@@ -285,6 +286,7 @@ cases:
 
         11:aaabbbdddeee
         12:aaabbbddeee
+        13:
 
   - name: can match and replace prefix and suffix
     script: |

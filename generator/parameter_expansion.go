@@ -140,14 +140,14 @@ func (g *generator) handleParameterExpansionMatchAndRemove(buf *InstructionBuffe
 
 	if expression.Operator == "#" || expression.Operator == "##" {
 		return ir.RemoveMatchingPrefix{
-			String:  ir.ReadVar(string(expression.Parameter.(ast.Var))),
+			String:  g.handleParameter(buf, expression.Parameter),
 			Pattern: pattern,
 			Longest: expression.Operator == "##",
 		}
 	}
 
 	return ir.RemoveMatchingSuffix{
-		String:  ir.ReadVar(string(expression.Parameter.(ast.Var))),
+		String:  g.handleParameter(buf, expression.Parameter),
 		Pattern: pattern,
 		Longest: expression.Operator == "%%",
 	}
@@ -167,20 +167,20 @@ func (g *generator) handleParameterExpansionMatchAndReplace(buf *InstructionBuff
 	switch expression.Operator {
 	case "/", "//":
 		return ir.ReplaceMatching{
-			String:  ir.ReadVar(string(expression.Parameter.(ast.Var))),
+			String:  g.handleParameter(buf, expression.Parameter),
 			Pattern: pattern,
 			Value:   repl,
 			All:     expression.Operator == "//",
 		}
 	case "/#":
 		return ir.ReplaceMatchingPrefix{
-			String:  ir.ReadVar(string(expression.Parameter.(ast.Var))),
+			String:  g.handleParameter(buf, expression.Parameter),
 			Pattern: pattern,
 			Value:   repl,
 		}
 	case "/%":
 		return ir.ReplaceMatchingSuffix{
-			String:  ir.ReadVar(string(expression.Parameter.(ast.Var))),
+			String:  g.handleParameter(buf, expression.Parameter),
 			Pattern: pattern,
 			Value:   repl,
 		}
