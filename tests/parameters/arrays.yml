@@ -36,3 +36,16 @@ cases:
       var=(foo bar baz) command
     expect:
       build_error: "main.sh(0:0): semantic error: passing an array to a command's environment is illigal."
+
+  - name: can perform parameter expansion on arrays
+    script: |
+      var=(foo bar baz booo)
+
+      echo 1:${#var}
+      echo 2:${#var[0]}-${#var[1]}-${#var[3]}
+      echo 3:${var[0]:-x}-${var[10]:-x}
+    expect:
+      stdout: |
+        1:3
+        2:3-3-4
+        3:foo-x

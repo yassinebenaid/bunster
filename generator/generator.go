@@ -216,7 +216,7 @@ func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expr
 	case ast.Arithmetic:
 		return g.handleArithmeticSubstitution(buf, v)
 	case ast.VarLength:
-		return ir.VarLength{Name: string(v.Parameter.(ast.Var))}
+		return g.handleParameterExpansionVarLength(buf, v)
 	case ast.VarOrDefault:
 		return g.handleParameterExpansionVarOrDefault(buf, v)
 	case ast.VarOrSet:

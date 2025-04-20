@@ -7,6 +7,16 @@ import (
 	"github.com/yassinebenaid/bunster/ir"
 )
 
+func (g *generator) handleParameterExpansionVarLength(buf *InstructionBuffer, expression ast.VarLength) ir.Instruction {
+	switch v := expression.Parameter.(type) {
+	case ast.Var:
+		return ir.VarLength{Name: string(v)}
+	case ast.ArrayAccess:
+		return ir.VarLength{Name: string(v.Name), Index: ir.ParseInt{Value: g.handleExpression(buf, v.Index)}}
+	}
+	panic("unknown parameter kind")
+}
+
 func (g *generator) handleParameterExpansionVarOrDefault(buf *InstructionBuffer, expression ast.VarOrDefault) ir.Instruction {
 	name := fmt.Sprintf("expr%d", g.expressionsCount)
 	buf.add(ir.Declare{Name: name, Value: ir.String("")})
@@ -17,14 +27,14 @@ func (g *generator) handleParameterExpansionVarOrDefault(buf *InstructionBuffer,
 	}
 
 	_if := ir.If{
-		Body:      []ir.Instruction{ir.Set{Name: name, Value: ir.ReadVar(string(expression.Parameter.(ast.Var)))}},
+		Body:      []ir.Instruction{ir.Set{Name: name, Value: g.handleExpression(buf, expression.Parameter)}},
 		Alternate: []ir.Instruction{ir.Set{Name: name, Value: def}},
 	}
 
 	if expression.UnsetOnly {
 		_if.Condition = ir.TestVarIsSet{Name: ir.String(string(expression.Parameter.(ast.Var)))}
 	} else {
-		_if.Condition = ir.TestAgainsStringLength{String: ir.ReadVar(string(expression.Parameter.(ast.Var)))}
+		_if.Condition = ir.TestAgainsStringLength{String: g.handleExpression(buf, expression.Parameter)}
 	}
 
 	buf.add(_if)
