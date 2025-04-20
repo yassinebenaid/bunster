@@ -3,7 +3,30 @@ cases:
     script: |
       var=(foo bar baz)
 
-      echo $var
+      echo var:$var
+      echo var:${var}
+      echo var:${var[0]}
+      echo var:${var[1]}
+      echo var:${var[2]}
+      echo var:${var[3]}
+      echo var:${var[-3]}
+      echo var:${var[3, 0]}
+
+      index=2
+      echo var:${var[$index]}
+
+
+      var=()
+      echo var:$var
     expect:
       stdout: |
-        foo
+        var:foo
+        var:foo
+        var:foo
+        var:bar
+        var:baz
+        var:
+        var:
+        var:foo
+        var:baz
+        var:

@@ -297,6 +297,8 @@ func (a *analyser) analyseExpression(s ast.Expression) {
 		for _, exp := range v {
 			a.analyseExpression(exp)
 		}
+	case ast.ParameterExpansion:
+		a.analyseExpression(v.Index)
 	default:
 		a.report(Error{Msg: fmt.Sprintf("Unsupported expression type: %T", v)})
 	}

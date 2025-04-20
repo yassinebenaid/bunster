@@ -195,6 +195,8 @@ func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expr
 		return ir.String(v)
 	case ast.Var:
 		return ir.ReadVar(v)
+	case ast.ParameterExpansion:
+		return ir.ReadArrayVar{Name: v.Name, Index: ir.ParseInt{Value: g.handleExpression(buf, v.Index)}}
 	case ast.SpecialVar:
 		return ir.ReadSpecialVar(v)
 	case ast.QuotedString:

@@ -209,6 +209,15 @@ func (rv ReadVar) togo() string {
 	return fmt.Sprintf("shell.ReadVar(%q)", rv)
 }
 
+type ReadArrayVar struct {
+	Name  string
+	Index Instruction
+}
+
+func (rv ReadArrayVar) togo() string {
+	return fmt.Sprintf("shell.ReadArrayVar(%q, %s)", rv.Name, rv.Index.togo())
+}
+
 type SetVar struct {
 	Key   string
 	Value Instruction
