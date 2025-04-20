@@ -46,24 +46,3 @@ loop:
 		a.report(Error{Msg: "the `return` keyword cannot be used here"})
 	}
 }
-
-func (a *analyser) analyseLocalParameterAssignement(local ast.LocalParameterAssignement) {
-	var withinFunction bool
-loop:
-	for i := len(a.stack) - 1; i >= 0; i-- {
-		switch a.stack[i].(type) {
-		case *ast.Function:
-			withinFunction = true
-			break loop
-		}
-	}
-	if !withinFunction {
-		a.report(Error{Msg: "the `local` keyword cannot be used outside functions"})
-	}
-
-	for _, pa := range local {
-		if pa.Value != nil {
-			a.analyseExpression(pa.Value)
-		}
-	}
-}

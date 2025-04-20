@@ -119,17 +119,9 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 			}
 		}
 	case ast.ParameterAssignement:
-		for _, pa := range v {
-			if pa.Value != nil {
-				a.analyseExpression(pa.Value)
-			}
-		}
+		a.analyseParameterAssignement(v)
 	case ast.ExportParameterAssignement:
-		for _, pa := range v {
-			if pa.Value != nil {
-				a.analyseExpression(pa.Value)
-			}
-		}
+		a.analyseExportParameterAssignement(v)
 	case ast.LocalParameterAssignement:
 		a.analyseLocalParameterAssignement(v)
 	case *ast.For:
