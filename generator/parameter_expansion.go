@@ -32,7 +32,12 @@ func (g *generator) handleParameterExpansionVarOrDefault(buf *InstructionBuffer,
 	}
 
 	if expression.UnsetOnly {
-		_if.Condition = ir.TestVarIsSet{Name: ir.String(string(expression.Parameter.(ast.Var)))}
+		switch v := expression.Parameter.(type) {
+		case ast.Var:
+			_if.Condition = ir.TestVarIsSet{Name: ir.String(v)}
+		case ast.ArrayAccess:
+			_if.Condition = ir.TestVarIsSet{Name: ir.String(v.Name), Index: ir.ParseInt{Value: g.handleExpression(buf, v.Index)}}
+		}
 	} else {
 		_if.Condition = ir.TestAgainsStringLength{String: g.handleParameter(buf, expression.Parameter)}
 	}
@@ -80,7 +85,12 @@ func (g *generator) handleParameterExpansionCheckAndUse(buf *InstructionBuffer, 
 	}
 
 	if expression.UnsetOnly {
-		_if.Condition = ir.TestVarIsSet{Name: ir.String(string(expression.Parameter.(ast.Var)))}
+		switch v := expression.Parameter.(type) {
+		case ast.Var:
+			_if.Condition = ir.TestVarIsSet{Name: ir.String(v)}
+		case ast.ArrayAccess:
+			_if.Condition = ir.TestVarIsSet{Name: ir.String(v.Name), Index: ir.ParseInt{Value: g.handleExpression(buf, v.Index)}}
+		}
 	} else {
 		_if.Condition = ir.TestAgainsStringLength{String: g.handleParameter(buf, expression.Parameter)}
 	}

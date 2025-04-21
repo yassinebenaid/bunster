@@ -126,6 +126,19 @@ func (shell *Shell) VarIsSet(name string) bool {
 	return false
 }
 
+func (shell *Shell) VarIndexIsSet(name string, index int) bool {
+	if v, ok := shell.getLocalVar(name); ok {
+		return v.HasIndex(index)
+	}
+	if v, ok := shell.vars.get(name); ok {
+		return v.HasIndex(index)
+	}
+	if v, ok := shell.env.get(name); ok {
+		return v.HasIndex(index)
+	}
+	return false
+}
+
 func (shell *Shell) setLocalVar(name string, value any) bool {
 	if _, ok := shell.localVars.get(name); ok {
 		shell.localVars.set(name, parameter{value: value})
@@ -441,4 +454,17 @@ func (p parameter) AtIndex(index int) string {
 		}
 	}
 	return ""
+}
+
+func (p parameter) HasIndex(index int) bool {
+	switch v := p.value.(type) {
+	case []string:
+		if len(v) == 0 {
+			return false
+		}
+		if index >= 0 && index <= len(v)-1 {
+			return true
+		}
+	}
+	return false
 }

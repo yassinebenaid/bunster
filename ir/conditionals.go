@@ -209,9 +209,13 @@ func (c TestFileIsSocket) togo() string {
 }
 
 type TestVarIsSet struct {
-	Name Instruction
+	Name  Instruction
+	Index Instruction
 }
 
 func (c TestVarIsSet) togo() string {
+	if c.Index != nil {
+		return fmt.Sprintf("shell.VarIndexIsSet(%s, %s)", c.Name.togo(), c.Index.togo())
+	}
 	return fmt.Sprintf("shell.VarIsSet(%s)", c.Name.togo())
 }
