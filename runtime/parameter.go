@@ -1,10 +1,15 @@
 package runtime
 
+import (
+	"strconv"
+	"strings"
+)
+
 type parameter struct {
 	value any
 }
 
-func (p parameter) String() string {
+func (p *parameter) String() string {
 	switch v := p.value.(type) {
 	case string:
 		return v
@@ -17,7 +22,7 @@ func (p parameter) String() string {
 	return ""
 }
 
-func (p parameter) AtIndex(index int) string {
+func (p *parameter) AtIndex(index int) string {
 	switch v := p.value.(type) {
 	case []string:
 		if len(v) == 0 {
@@ -30,7 +35,20 @@ func (p parameter) AtIndex(index int) string {
 	return ""
 }
 
-func (p parameter) HasIndex(index int) bool {
+func (p *parameter) setIndex(index int, value string) {
+	switch v := p.value.(type) {
+	case []string:
+		if index >= len(v) {
+			v = append(v, make([]string, index)...)
+		}
+		if index >= 0 {
+			v[index] = value
+		}
+		p.value = v
+	}
+}
+
+func (p *parameter) HasIndex(index int) bool {
 	switch v := p.value.(type) {
 	case []string:
 		if len(v) == 0 {
@@ -55,7 +73,7 @@ func (shell *Shell) ReadArrayVar(name string, index int) string {
 	return p.AtIndex(index)
 }
 
-func (shell *Shell) readVar(name string) parameter {
+func (shell *Shell) readVar(name string) *parameter {
 	if value, ok := shell.getLocalVar(name); ok {
 		return value
 	}
@@ -68,7 +86,7 @@ func (shell *Shell) readVar(name string) parameter {
 	if shell.parent != nil {
 		return shell.parent.readVar(name)
 	}
-	return parameter{}
+	return &parameter{}
 }
 
 func (shell *Shell) VarIsSet(name string) bool {
@@ -99,7 +117,7 @@ func (shell *Shell) VarIndexIsSet(name string, index int) bool {
 
 func (shell *Shell) setLocalVar(name string, value any) bool {
 	if _, ok := shell.localVars.get(name); ok {
-		shell.localVars.set(name, parameter{value: value})
+		shell.localVars.set(name, &parameter{value: value})
 		return true
 	}
 	if shell.parent != nil {
@@ -108,29 +126,42 @@ func (shell *Shell) setLocalVar(name string, value any) bool {
 	return false
 }
 
-func (shell *Shell) getLocalVar(name string) (parameter, bool) {
+func (shell *Shell) getLocalVar(name string) (*parameter, bool) {
 	if value, ok := shell.localVars.get(name); ok {
 		return value, true
 	}
 	if shell.parent != nil {
 		return shell.parent.getLocalVar(name)
 	}
-	return parameter{}, false
+	return &parameter{}, false
 }
 
 func (shell *Shell) SetVar(name string, value any) {
 	if !shell.setLocalVar(name, value) {
-		shell.vars.set(name, parameter{value: value})
+		shell.vars.set(name, &parameter{value: value})
 	}
 }
 
+func (shell *Shell) SetArrayVar(name string, index int, value string) {
+	if p, ok := shell.getLocalVar(name); ok {
+		p.setIndex(index, value)
+	} else if p, ok := shell.vars.get(name); ok {
+		p.setIndex(index, value)
+	} else if p, ok := shell.env.get(name); ok {
+		p.setIndex(index, value)
+	} else if shell.parent != nil {
+		shell.parent.SetArrayVar(name, index, value)
+	}
+
+}
+
 func (shell *Shell) SetLocalVar(name string, value string) {
-	shell.localVars.set(name, parameter{value: value})
+	shell.localVars.set(name, &parameter{value: value})
 }
 
 func (shell *Shell) SetExportVar(name string, value string) {
 	shell.exportedVars.set(name, struct{}{})
-	shell.vars.set(name, parameter{value: value})
+	shell.vars.set(name, &parameter{value: value})
 }
 
 func (shell *Shell) MarkVarAsExported(name string) {
@@ -152,5 +183,29 @@ func (shell *Shell) Unset(vars_only bool, names ...string) {
 		if shell.parent != nil {
 			shell.parent.Unset(vars_only, name)
 		}
+	}
+}
+
+func (shell *Shell) ReadSpecialVar(name string) string {
+	switch name {
+	case "0":
+		return shell.Arg0
+	case "$":
+		return strconv.FormatInt(int64(shell.PID), 10)
+	case "#":
+		return strconv.FormatInt(int64(len(shell.Args)), 10)
+	case "?":
+		return strconv.FormatInt(int64(shell.ExitCode), 10)
+	case "*", "@":
+		return strings.Join(shell.Args, " ")
+	default:
+		index, err := strconv.ParseUint(name, 10, 64)
+		if err != nil {
+			return ""
+		}
+		if index <= uint64(len(shell.Args)) {
+			return shell.Args[index-1]
+		}
+		return ""
 	}
 }

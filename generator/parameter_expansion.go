@@ -52,21 +52,39 @@ func (g *generator) handleParameterExpansionVarOrSet(buf *InstructionBuffer, exp
 		def = g.handleExpression(buf, expression.Default)
 	}
 
-	_if := ir.If{
-		Not: true,
-		Body: []ir.Instruction{
-			ir.SetVar{Key: string(expression.Parameter.(ast.Var)), Value: def},
-		},
+	_if := ir.If{Not: true}
+	switch v := expression.Parameter.(type) {
+	case ast.Var:
+		_if.Body = append(_if.Body, ir.SetVar{Key: string(v), Value: def})
+	case ast.ArrayAccess:
+		_if.Body = append(_if.Body, ir.SetVar{
+			Key:   v.Name,
+			Index: ir.ParseInt{Value: g.handleExpression(buf, v.Index)},
+			Value: def,
+		})
 	}
 
 	if expression.UnsetOnly {
-		_if.Condition = ir.TestVarIsSet{Name: ir.String(string(expression.Parameter.(ast.Var)))}
+		switch v := expression.Parameter.(type) {
+		case ast.Var:
+			_if.Condition = ir.TestVarIsSet{Name: ir.String(v)}
+		case ast.ArrayAccess:
+			_if.Condition = ir.TestVarIsSet{Name: ir.String(v.Name), Index: ir.ParseInt{Value: g.handleExpression(buf, v.Index)}}
+		}
 	} else {
-		_if.Condition = ir.TestAgainsStringLength{String: ir.ReadVar(string(expression.Parameter.(ast.Var)))}
+		_if.Condition = ir.TestAgainsStringLength{String: g.handleParameter(buf, expression.Parameter)}
 	}
 
 	buf.add(_if)
-	return ir.ReadVar(string(expression.Parameter.(ast.Var)))
+
+	switch v := expression.Parameter.(type) {
+	case ast.Var:
+		return ir.ReadVar(v)
+	case ast.ArrayAccess:
+		return ir.ReadArrayVar{Name: v.Name, Index: ir.ParseInt{Value: g.handleExpression(buf, v.Index)}}
+	default:
+		panic("unhandled case")
+	}
 }
 
 func (g *generator) handleParameterExpansionCheckAndUse(buf *InstructionBuffer, expression ast.CheckAndUse) ir.Instruction {

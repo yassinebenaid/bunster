@@ -13,9 +13,9 @@ import (
 
 func NewShell() *Shell {
 	shell := &Shell{
-		vars:         newRepository[parameter](),
-		env:          newRepository[parameter](),
-		localVars:    newRepository[parameter](),
+		vars:         newRepository[*parameter](),
+		env:          newRepository[*parameter](),
+		localVars:    newRepository[*parameter](),
 		exportedVars: newRepository[struct{}](),
 		functions:    newRepository[Function](),
 		builtins:     newRepository[Builtin](),
@@ -23,7 +23,7 @@ func NewShell() *Shell {
 
 	for _, env := range os.Environ() {
 		envs := strings.SplitN(env, "=", 2)
-		shell.env.set(envs[0], parameter{value: envs[1]})
+		shell.env.set(envs[0], &parameter{value: envs[1]})
 	}
 
 	return shell
@@ -42,9 +42,9 @@ type Shell struct {
 	WaitGroup sync.WaitGroup
 	Embed     fs.FS
 
-	vars         *repository[parameter]
-	env          *repository[parameter]
-	localVars    *repository[parameter]
+	vars         *repository[*parameter]
+	env          *repository[*parameter]
+	localVars    *repository[*parameter]
 	exportedVars *repository[struct{}]
 	functions    *repository[Function]
 	builtins     *repository[Builtin]
@@ -88,30 +88,6 @@ func (shell *Shell) Exit(ecode string) error {
 func (shell *Shell) UnsetFunctions(names ...string) {
 	for _, name := range names {
 		shell.functions.forget(name)
-	}
-}
-
-func (shell *Shell) ReadSpecialVar(name string) string {
-	switch name {
-	case "0":
-		return shell.Arg0
-	case "$":
-		return strconv.FormatInt(int64(shell.PID), 10)
-	case "#":
-		return strconv.FormatInt(int64(len(shell.Args)), 10)
-	case "?":
-		return strconv.FormatInt(int64(shell.ExitCode), 10)
-	case "*", "@":
-		return strings.Join(shell.Args, " ")
-	default:
-		index, err := strconv.ParseUint(name, 10, 64)
-		if err != nil {
-			return ""
-		}
-		if index <= uint64(len(shell.Args)) {
-			return shell.Args[index-1]
-		}
-		return ""
 	}
 }
 
@@ -200,13 +176,13 @@ func (shell *Shell) Exec(streamManager *StreamManager, name string, args []strin
 			builtins:     shell.builtins,
 			vars:         shell.vars,
 			env:          shell.env.clone(),
-			localVars:    newRepository[parameter](),
+			localVars:    newRepository[*parameter](),
 			ExitCode:     shell.ExitCode,
 			exportedVars: shell.exportedVars,
 		}
 
 		for key, value := range env {
-			childShell.env.set(key, parameter{value: value})
+			childShell.env.set(key, &parameter{value: value})
 		}
 	}
 
@@ -241,7 +217,7 @@ func (shell *Shell) Exec(streamManager *StreamManager, name string, args []strin
 	execCmd.Stderr = stderr
 	execCmd.Dir = shell.CWD
 
-	shell.env.foreach(func(key string, p parameter) bool {
+	shell.env.foreach(func(key string, p *parameter) bool {
 		execCmd.Env = append(execCmd.Env, key+"="+p.String())
 		return true
 	})

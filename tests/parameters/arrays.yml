@@ -39,7 +39,7 @@ cases:
 
   - name: can perform parameter expansion on arrays
     script: |
-      var=(foo BAR baz booo aaabbb "")
+      var=(foo BAR baz booo aaabbb "" "")
 
       echo 1:${#var}
       echo 2:${#var[0]}-${#var[1]}-${#var[3]}
@@ -52,6 +52,8 @@ cases:
       echo 9:${var[4]%b*}-${var[10]%b*}-${var[4]%%b*}-${var[10]%%b*}
       echo 10:${var[0]/o/x}-${var[10]/o/x}-${var[0]//o/x}-${var[10]//o/x}
       echo 11:${var[0]/#?/x}-${var[10]/#?/x}-${var[0]/%?/x}-${var[10]/%?/x}
+      echo 12:${var[0]:=x}-${var[5]:=x}-${var[0]}-${var[5]}
+      echo 13:${var[0]=x}-${var[50]=x}-${var[0]}-${var[50]}-${var[6]=x}-${var[6]}
     expect:
       stdout: |
         1:3
@@ -65,3 +67,5 @@ cases:
         9:aaa--aaa-
         10:fxo--fxx-
         11:xoo--fox-
+        12:foo-x-foo-x
+        13:foo-x-foo-x--
