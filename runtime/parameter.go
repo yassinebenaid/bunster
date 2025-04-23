@@ -36,16 +36,20 @@ func (p *parameter) AtIndex(index int) string {
 }
 
 func (p *parameter) setIndex(index int, value string) {
-	switch v := p.value.(type) {
-	case []string:
-		if index >= len(v) {
-			v = append(v, make([]string, index)...)
-		}
-		if index >= 0 {
-			v[index] = value
-		}
-		p.value = v
+	v, ok := p.value.([]string)
+	if !ok {
+		v = make([]string, index+1)
 	}
+
+	if index >= len(v) {
+		v = append(v, make([]string, index)...)
+	}
+
+	if index >= 0 {
+		v[index] = value
+	}
+
+	p.value = v
 }
 
 func (p *parameter) HasIndex(index int) bool {

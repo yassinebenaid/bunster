@@ -69,3 +69,15 @@ cases:
         11:xoo--fox-
         12:foo-x-foo-x
         13:foo-x-foo-x--
+
+  - name: assigning to index on non-array variables causes it to be casted to an array
+    script: |
+      var=bar
+      var2=bar
+
+      echo ${var[0]:=foo}-${var[0]}
+      echo ${var2[0]=foo}-${var2[0]}
+    expect:
+      stdout: |
+        foo-foo
+        foo-foo
