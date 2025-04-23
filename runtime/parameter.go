@@ -98,16 +98,8 @@ func (shell *Shell) readVar(name string) (*parameter, bool) {
 }
 
 func (shell *Shell) VarIsSet(name string) bool {
-	if _, ok := shell.getLocalVar(name); ok {
-		return true
-	}
-	if _, ok := shell.vars.get(name); ok {
-		return true
-	}
-	if _, ok := shell.env.get(name); ok {
-		return true
-	}
-	return false
+	_, ok := shell.readVar(name)
+	return ok
 }
 
 func (shell *Shell) VarIndexIsSet(name string, index int) bool {
@@ -136,7 +128,7 @@ func (shell *Shell) getLocalVar(name string) (*parameter, bool) {
 	if shell.parent != nil {
 		return shell.parent.getLocalVar(name)
 	}
-	return &parameter{}, false
+	return nil, false
 }
 
 func (shell *Shell) SetVar(name string, value any) {
