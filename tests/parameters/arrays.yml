@@ -81,3 +81,10 @@ cases:
       stdout: |
         foo-foo
         foo-foo
+
+  - name: assigning to undefined variable causes it to be set to an array
+    script: |
+      echo ${var[0]:=foo}-${var[0]}-${var}
+    expect:
+      stdout: |
+        foo-foo-foo

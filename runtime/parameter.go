@@ -22,7 +22,7 @@ func (p *parameter) String() string {
 	return ""
 }
 
-func (p *parameter) AtIndex(index int) string {
+func (p *parameter) atIndex(index int) string {
 	switch v := p.value.(type) {
 	case []string:
 		if len(v) == 0 {
@@ -52,7 +52,7 @@ func (p *parameter) setIndex(index int, value string) {
 	p.value = v
 }
 
-func (p *parameter) HasIndex(index int) bool {
+func (p *parameter) hasIndex(index int) bool {
 	switch v := p.value.(type) {
 	case []string:
 		if len(v) == 0 {
@@ -66,31 +66,35 @@ func (p *parameter) HasIndex(index int) bool {
 }
 
 func (shell *Shell) ReadVar(name string) string {
-	p := shell.readVar(name)
-
+	p, ok := shell.readVar(name)
+	if !ok {
+		return ""
+	}
 	return p.String()
 }
 
 func (shell *Shell) ReadArrayVar(name string, index int) string {
-	p := shell.readVar(name)
-
-	return p.AtIndex(index)
+	p, ok := shell.readVar(name)
+	if !ok {
+		return ""
+	}
+	return p.atIndex(index)
 }
 
-func (shell *Shell) readVar(name string) *parameter {
+func (shell *Shell) readVar(name string) (*parameter, bool) {
 	if value, ok := shell.getLocalVar(name); ok {
-		return value
+		return value, true
 	}
 	if value, ok := shell.vars.get(name); ok {
-		return value
+		return value, true
 	}
 	if value, ok := shell.env.get(name); ok {
-		return value
+		return value, true
 	}
 	if shell.parent != nil {
 		return shell.parent.readVar(name)
 	}
-	return &parameter{}
+	return nil, false
 }
 
 func (shell *Shell) VarIsSet(name string) bool {
@@ -107,16 +111,11 @@ func (shell *Shell) VarIsSet(name string) bool {
 }
 
 func (shell *Shell) VarIndexIsSet(name string, index int) bool {
-	if v, ok := shell.getLocalVar(name); ok {
-		return v.HasIndex(index)
+	p, ok := shell.readVar(name)
+	if !ok {
+		return false
 	}
-	if v, ok := shell.vars.get(name); ok {
-		return v.HasIndex(index)
-	}
-	if v, ok := shell.env.get(name); ok {
-		return v.HasIndex(index)
-	}
-	return false
+	return p.hasIndex(index)
 }
 
 func (shell *Shell) setLocalVar(name string, value any) bool {
@@ -147,15 +146,14 @@ func (shell *Shell) SetVar(name string, value any) {
 }
 
 func (shell *Shell) SetArrayVar(name string, index int, value string) {
-	if p, ok := shell.getLocalVar(name); ok {
+	p, ok := shell.readVar(name)
+	if ok {
 		p.setIndex(index, value)
-	} else if p, ok := shell.vars.get(name); ok {
-		p.setIndex(index, value)
-	} else if p, ok := shell.env.get(name); ok {
-		p.setIndex(index, value)
-	} else if shell.parent != nil {
-		shell.parent.SetArrayVar(name, index, value)
+		return
 	}
+	v := make([]string, index+1)
+	v[index] = value
+	shell.SetVar(name, v)
 
 }
 
