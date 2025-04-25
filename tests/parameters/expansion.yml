@@ -329,11 +329,9 @@ cases:
       echo 6:${1^}-${10^}-${1^^}-${10^^}
       echo 7:${2,}-${10,}-${2,,}-${10,,}
       echo 8:${4#*b}-${10#*b}-${4##*b}-${10##*b}
-      # echo 9:${var[4]%b*}-${var[10]%b*}-${var[4]%%b*}-${var[10]%%b*}
-      # echo 10:${var[0]/o/x}-${var[10]/o/x}-${var[0]//o/x}-${var[10]//o/x}
-      # echo 11:${var[0]/#?/x}-${var[10]/#?/x}-${var[0]/%?/x}-${var[10]/%?/x}
-      # echo 12:${var[0]:=x}-${var[5]:=x}-${var[0]}-${var[5]}
-      # echo 13:${var[0]=x}-${var[50]=x}-${var[0]}-${var[50]}-${var[6]=x}-${var[6]}
+      echo 9:${4%c*}-${40%c*}-${4%%c*}-${40%%c*}
+      echo 10:${4/c/x}-${40/c/x}-${4//c/x}-${40//c/x}
+      echo 11:${4/#?/x}-${40/#?/x}-${4/%?/x}-${40/%?/x}
     expect:
       stdout: |
         1:foo-BAR-
@@ -344,3 +342,6 @@ cases:
         6:Foo--FOO-
         7:bAR--bar-
         8:bccdd--ccdd-
+        9:aabb--aabb-
+        10:aabbxcdd--aabbxxdd-
+        11:xabbccdd--aabbccdx-
