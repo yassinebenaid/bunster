@@ -252,8 +252,15 @@ loop:
 }
 
 func (p *parser) parseParameter() ast.Parameter {
-	if p.curr.Type != token.WORD {
+	switch p.curr.Type {
+	case token.INT:
+		param := ast.SpecialVar(p.curr.Literal)
+		p.proceed()
+		return param
+	case token.WORD:
+	default:
 		p.error("couldn't find a valid parameter name, found `%s`", p.curr)
+		return nil
 	}
 
 	name := p.curr.Literal

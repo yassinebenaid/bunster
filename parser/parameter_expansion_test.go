@@ -3,7 +3,7 @@ package parser_test
 import "github.com/yassinebenaid/bunster/ast"
 
 var parameterExpansionTests = []testCase{
-	{`cmd ${var} ${var[123]} `, ast.Script{
+	{`cmd ${var} ${var[123]} ${123}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -12,6 +12,7 @@ var parameterExpansionTests = []testCase{
 					Name:  "var",
 					Index: ast.Arithmetic{ast.Number("123")},
 				},
+				ast.SpecialVar("123"),
 			},
 		},
 	}},
