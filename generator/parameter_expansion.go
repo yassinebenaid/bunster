@@ -35,6 +35,8 @@ func (g *generator) handleParameterExpansionVarOrDefault(buf *InstructionBuffer,
 
 	if expression.UnsetOnly {
 		switch v := expression.Parameter.(type) {
+		case ast.SpecialVar:
+			_if.Condition = ir.TestVarIsSet{Name: ir.Literal(v), Positional: true}
 		case ast.Var:
 			_if.Condition = ir.TestVarIsSet{Name: ir.String(v)}
 		case ast.ArrayAccess:
@@ -106,6 +108,8 @@ func (g *generator) handleParameterExpansionCheckAndUse(buf *InstructionBuffer, 
 
 	if expression.UnsetOnly {
 		switch v := expression.Parameter.(type) {
+		case ast.SpecialVar:
+			_if.Condition = ir.TestVarIsSet{Name: ir.Literal(v), Positional: true}
 		case ast.Var:
 			_if.Condition = ir.TestVarIsSet{Name: ir.String(v)}
 		case ast.ArrayAccess:
@@ -221,6 +225,8 @@ func (g *generator) handleParameterExpansionMatchAndReplace(buf *InstructionBuff
 
 func (g *generator) handleParameter(buf *InstructionBuffer, param ast.Parameter) ir.Instruction {
 	switch v := param.(type) {
+	case ast.SpecialVar:
+		return ir.ReadSpecialVar(v)
 	case ast.Var:
 		return ir.ReadVar(v)
 	case ast.ArrayAccess:
@@ -230,5 +236,5 @@ func (g *generator) handleParameter(buf *InstructionBuffer, param ast.Parameter)
 		}
 	}
 
-	return nil
+	panic("unknown parameter kind")
 }
