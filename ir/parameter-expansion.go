@@ -3,13 +3,17 @@ package ir
 import "fmt"
 
 type VarLength struct {
-	Name  string
-	Index Instruction
+	Name    string
+	Index   Instruction
+	Special bool
 }
 
 func (d VarLength) togo() string {
 	if d.Index != nil {
 		return fmt.Sprintf("runtime.FormatInt(len([]rune(shell.ReadArrayVar(%q, %s))))", d.Name, d.Index.togo())
+	}
+	if d.Special {
+		return fmt.Sprintf("runtime.FormatInt(len([]rune(shell.ReadSpecialVar(%q))))", d.Name)
 	}
 	return fmt.Sprintf("runtime.FormatInt(len([]rune(shell.ReadVar(%q))))", d.Name)
 }

@@ -9,6 +9,8 @@ import (
 
 func (g *generator) handleParameterExpansionVarLength(buf *InstructionBuffer, expression ast.VarLength) ir.Instruction {
 	switch v := expression.Parameter.(type) {
+	case ast.SpecialVar:
+		return ir.VarLength{Name: string(v), Special: true}
 	case ast.Var:
 		return ir.VarLength{Name: string(v)}
 	case ast.ArrayAccess:
