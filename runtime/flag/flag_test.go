@@ -161,12 +161,15 @@ func TestParser_Parse(t *testing.T) {
 			flagSetup: func(p *Parser) {
 				p.AddLongFlag("foo-bar", String, true)
 				p.AddLongFlag("baz", String, true)
+				p.AddLongFlag("xyz", String, true)
 			},
-			args: []string{"--foo-bar", "boo", "--baz", "pie"},
+			args: []string{"--foo-bar", "boo", "--baz", "pie", "--xyz=pop", "booyah"},
 			expectedFlags: map[string]any{
 				"foo-bar": "boo",
 				"baz":     "pie",
+				"xyz":     "pop",
 			},
+			expectedArgs: []string{"booyah"},
 		},
 		{
 			name: "string long flags require an argument",
@@ -224,6 +227,48 @@ func TestParser_Parse(t *testing.T) {
 				p.AddLongFlag("abc", String, true)
 			},
 			expectErr: "required flag not provided: abc",
+		},
+		{
+			name:      "an error occurs when pasing unknown short flags",
+			flagSetup: func(p *Parser) {},
+			args:      []string{"-x"},
+			expectErr: "unknown short flag: x",
+		},
+		{
+			name:      "an error occurs when pasing unknown long flags",
+			flagSetup: func(p *Parser) {},
+			args:      []string{"--foo"},
+			expectErr: "unknown long flag: foo",
+		},
+		{
+			name:      "an error occurs when passing unknown long flags with value",
+			flagSetup: func(p *Parser) {},
+			args:      []string{"--foo=bar"},
+			expectErr: "unknown long flag: foo",
+		},
+		{
+			name: "an error occurs when passing a value to boolean long flags",
+			flagSetup: func(p *Parser) {
+				p.AddLongFlag("foo", Boolean, false)
+			},
+			args:      []string{"--foo=bar"},
+			expectErr: "passing value to a flag that doesn't expect it: foo",
+		},
+		{
+			name:      "an error occurs when passing a single dash",
+			flagSetup: func(p *Parser) {},
+			args:      []string{"c", "-", "a"},
+			expectErr: "invalid short flag format: -",
+		},
+		{
+			name: "double dash indicate end of flags",
+			flagSetup: func(p *Parser) {
+				p.AddLongFlag("foo", String, false)
+				p.AddLongFlag("bar", String, false)
+			},
+			args:          []string{"foo", "--", "--foo", "--bar", "--baz"},
+			expectedFlags: map[string]any{},
+			expectedArgs:  []string{"foo", "--foo", "--bar", "--baz"},
 		},
 	}
 

@@ -107,10 +107,33 @@ func (p *Parser) Parse(args []string) (*ParseResult, error) {
 		// Check if it's a long flag (--flag)
 		if strings.HasPrefix(arg, "--") {
 			if len(arg) <= 2 {
-				return nil, fmt.Errorf("invalid long flag format: %s", arg)
+				result.Args = append(result.Args, args[i:]...)
+				break
 			}
 
-			flagName := arg[2:]
+			flagName := arg[2:] // trim the -- from the beginning
+
+			// if it's value is associated, like --flag=value
+			if strings.Contains(flagName, "=") {
+				fields := strings.SplitN(flagName, "=", 2)
+				flag, exists := p.longFlags[fields[0]]
+
+				if !exists {
+					return nil, fmt.Errorf("unknown long flag: %s", fields[0])
+				}
+
+				if flag.Type == Boolean {
+					return nil, fmt.Errorf("passing value to a flag that doesn't expect it: %s", fields[0])
+				} else { // String flag
+					if len(fields) != 2 {
+						return nil, fmt.Errorf("missing value for flag: %s", fields[0])
+					}
+
+					result.Flags[fields[0]] = fields[1]
+				}
+				continue
+			}
+
 			flag, exists := p.longFlags[flagName]
 
 			if !exists {
