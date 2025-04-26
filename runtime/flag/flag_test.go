@@ -263,9 +263,4 @@ func TestParser_AddFlags(t *testing.T) {
 		t.Error("AddLongFlag() expected error for single-character flag")
 	}
 
-	// Legacy AddFlag method should work as AddShortFlag
-	err = p.AddFlag("z", Boolean, false)
-	if err != nil {
-		t.Errorf("AddFlag() (legacy) unexpected error = %v", err)
-	}
 }

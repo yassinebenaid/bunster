@@ -218,8 +218,3 @@ func (p *Parser) GetValue(name string) (interface{}, bool) {
 
 	return nil, false
 }
-
-// For backward compatibility
-func (p *Parser) AddFlag(name string, flagType FlagType, required bool) error {
-	return p.AddShortFlag(name, flagType, required)
-}
