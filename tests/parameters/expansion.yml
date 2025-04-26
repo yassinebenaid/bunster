@@ -345,3 +345,12 @@ cases:
         9:aabb--aabb-
         10:aabbxcdd--aabbxxdd-
         11:xabbccdd--aabbccdx-
+
+  - name: can expand spread positional arguments
+    args: [foo, BAR, "", aabbccdd]
+    script: |
+
+      echo 1:${*}-${@}
+    expect:
+      stdout: |
+        1:foo BAR  aabbccdd-foo BAR  aabbccdd

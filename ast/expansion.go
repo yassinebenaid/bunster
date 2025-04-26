@@ -106,6 +106,7 @@ func (MatchAndReplace) string() string { return "" }
 func (Transform) string() string       { return "" }
 func (Slice) string() string           { return "" }
 
-func (Var) param()         {}
-func (ArrayAccess) param() {}
-func (SpecialVar) param()  {}
+func (Var) param()              {}
+func (ArrayAccess) param()      {}
+func (SpecialVar) param()       {}
+func (PositionalSpread) param() {}

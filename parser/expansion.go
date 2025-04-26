@@ -262,6 +262,9 @@ func (p *parser) parseParameter() (ast.Parameter, bool) {
 		param := ast.SpecialVar(p.curr.Literal)
 		p.proceed()
 		return param, true
+	case token.AT, token.STAR:
+		p.proceed()
+		return ast.PositionalSpread{}, true
 	case token.WORD:
 	default:
 		p.error("couldn't find a valid parameter name, found `%s`", p.curr)

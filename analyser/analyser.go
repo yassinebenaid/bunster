@@ -207,7 +207,7 @@ func (a *analyser) analyseStatement(s ast.Statement) {
 
 func (a *analyser) analyseExpression(s ast.Expression) {
 	switch v := s.(type) {
-	case ast.Word, ast.Var, ast.SpecialVar, ast.Number:
+	case ast.Word, ast.Var, ast.SpecialVar, ast.Number, ast.PositionalSpread:
 	case ast.VarLength:
 		a.analyseParameter(v.Parameter)
 	case ast.VarOrDefault:
