@@ -351,6 +351,11 @@ cases:
     script: |
 
       echo 1:${*}-${@}
+
+      func() {
+        echo 2:${#@}-$#
+      }; func foo bar baz
     expect:
       stdout: |
         1:foo BAR  aabbccdd-foo BAR  aabbccdd
+        2:3-3

@@ -11,6 +11,8 @@ func (g *generator) handleParameterExpansionVarLength(buf *InstructionBuffer, ex
 	switch v := expression.Parameter.(type) {
 	case ast.SpecialVar:
 		return ir.VarLength{Name: string(v), Special: true}
+	case ast.PositionalSpread:
+		return ir.ReadSpecialVar("#")
 	case ast.Var:
 		return ir.VarLength{Name: string(v)}
 	case ast.ArrayAccess:
@@ -227,6 +229,8 @@ func (g *generator) handleParameter(buf *InstructionBuffer, param ast.Parameter)
 	switch v := param.(type) {
 	case ast.SpecialVar:
 		return ir.ReadSpecialVar(v)
+	case ast.PositionalSpread:
+		return ir.ReadSpecialVar("@")
 	case ast.Var:
 		return ir.ReadVar(v)
 	case ast.ArrayAccess:

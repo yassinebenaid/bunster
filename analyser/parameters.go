@@ -45,7 +45,7 @@ loop:
 
 func (a *analyser) analyseParameter(param ast.Parameter) {
 	switch v := param.(type) {
-	case ast.Var, ast.SpecialVar:
+	case ast.Var, ast.SpecialVar, ast.PositionalSpread:
 	case ast.ArrayAccess:
 		a.analyseExpression(v.Index)
 	default:
