@@ -21,7 +21,6 @@ type Flag struct {
 	Name     string
 	Type     FlagType
 	Required bool
-	Value    interface{}
 }
 
 // ParseResult contains the parsed flags and remaining arguments
@@ -198,23 +197,4 @@ func (p *Parser) Parse(args []string) (*ParseResult, error) {
 	}
 
 	return result, nil
-}
-
-// GetValue returns the parsed value for a flag
-func (p *Parser) GetValue(name string) (interface{}, bool) {
-	// Check short flags
-	if len(name) == 1 {
-		flag, exists := p.shortFlags[name]
-		if exists {
-			return flag.Value, true
-		}
-	}
-
-	// Check long flags
-	flag, exists := p.longFlags[name]
-	if exists {
-		return flag.Value, true
-	}
-
-	return nil, false
 }
