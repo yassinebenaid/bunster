@@ -183,7 +183,7 @@ func (p *Parser) Parse(args []string) (*ParseResult, error) {
 	for name, flag := range p.shortFlags {
 		if flag.Required {
 			if _, exists := result.Flags[name]; !exists {
-				return nil, fmt.Errorf("required short flag not provided: %s", name)
+				return nil, fmt.Errorf("required flag not provided: %s", name)
 			}
 		}
 	}
@@ -191,7 +191,7 @@ func (p *Parser) Parse(args []string) (*ParseResult, error) {
 	for name, flag := range p.longFlags {
 		if flag.Required {
 			if _, exists := result.Flags[name]; !exists {
-				return nil, fmt.Errorf("required long flag not provided: %s", name)
+				return nil, fmt.Errorf("required flag not provided: %s", name)
 			}
 		}
 	}
