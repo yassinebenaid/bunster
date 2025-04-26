@@ -27,8 +27,6 @@ func TestParser_Parse(t *testing.T) {
 				"b": false,
 				"c": true,
 			},
-			expectedArgs: []string{},
-			expectErr:    false,
 		},
 		{
 			name: "Short boolean flags with grouping",
@@ -43,8 +41,6 @@ func TestParser_Parse(t *testing.T) {
 				"b": true,
 				"c": true,
 			},
-			expectedArgs: []string{},
-			expectErr:    false,
 		},
 		{
 			name: "Short string flags",
@@ -59,8 +55,6 @@ func TestParser_Parse(t *testing.T) {
 				"b": true,
 				"c": "bar",
 			},
-			expectedArgs: []string{},
-			expectErr:    false,
 		},
 		{
 			name: "Mixed short flags with grouping",
@@ -75,8 +69,6 @@ func TestParser_Parse(t *testing.T) {
 				"b": true,
 				"c": "bar",
 			},
-			expectedArgs: []string{},
-			expectErr:    false,
 		},
 		{
 			name: "Basic long boolean flags",
@@ -91,8 +83,6 @@ func TestParser_Parse(t *testing.T) {
 				"bar": false,
 				"baz": true,
 			},
-			expectedArgs: []string{},
-			expectErr:    false,
 		},
 		{
 			name: "Long string flags",
@@ -107,8 +97,6 @@ func TestParser_Parse(t *testing.T) {
 				"verbose": true,
 				"output":  "file.txt",
 			},
-			expectedArgs: []string{},
-			expectErr:    false,
 		},
 		{
 			name: "Mixed short and long flags",
@@ -125,8 +113,6 @@ func TestParser_Parse(t *testing.T) {
 				"verbose": true,
 				"name":    "John",
 			},
-			expectedArgs: []string{},
-			expectErr:    false,
 		},
 		{
 			name: "Long flags with dashes",
@@ -139,8 +125,6 @@ func TestParser_Parse(t *testing.T) {
 				"flag-with-dashes": true,
 				"another-flag":     "value",
 			},
-			expectedArgs: []string{},
-			expectErr:    false,
 		},
 		{
 			name: "Required flags mix",
@@ -154,8 +138,6 @@ func TestParser_Parse(t *testing.T) {
 				"a":        "foo",
 				"required": true,
 			},
-			expectedArgs: []string{},
-			expectErr:    false,
 		},
 		{
 			name: "Missing required long flag",
@@ -200,7 +182,6 @@ func TestParser_Parse(t *testing.T) {
 				"name": "value",
 			},
 			expectedArgs: []string{"file1.txt", "file2.txt", "file3.txt"},
-			expectErr:    false,
 		},
 		{
 			name: "All non-flag arguments",
@@ -214,7 +195,6 @@ func TestParser_Parse(t *testing.T) {
 				"verbose": false,
 			},
 			expectedArgs: []string{"file1.txt", "file2.txt", "file3.txt"},
-			expectErr:    false,
 		},
 		{
 			name: "Flags and non-flags mixed",
@@ -228,7 +208,6 @@ func TestParser_Parse(t *testing.T) {
 				"verbose": true,
 			},
 			expectedArgs: []string{"command", "arg1", "arg2"},
-			expectErr:    false,
 		},
 	}
 

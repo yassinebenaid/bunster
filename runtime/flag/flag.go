@@ -78,7 +78,6 @@ func (p *Parser) AddLongFlag(name string, flagType FlagType, required bool) erro
 func (p *Parser) Parse(args []string) (*ParseResult, error) {
 	result := &ParseResult{
 		Flags: make(map[string]interface{}),
-		Args:  []string{},
 	}
 
 	// Initialize all Boolean flags to false
