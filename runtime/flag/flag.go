@@ -124,6 +124,10 @@ func (p *Parser) Parse(args []string) (*ParseResult, error) {
 					return nil, fmt.Errorf("missing value for flag: %s", flagName)
 				}
 
+				if strings.HasPrefix(args[i], "-") {
+					return nil, fmt.Errorf("missing value for flag: %s", flagName)
+				}
+
 				result.Flags[flagName] = args[i]
 				i++ // Consume the next argument as the value
 			}
@@ -159,7 +163,7 @@ func (p *Parser) Parse(args []string) (*ParseResult, error) {
 
 		// Check if we have enough remaining arguments for the string flags
 		if i+stringArgsNeeded > len(args) {
-			return nil, fmt.Errorf("not enough arguments for flags in group: %s", arg)
+			return nil, fmt.Errorf("missing value for flag: %s", arg)
 		}
 
 		// Second pass: set the values
@@ -170,6 +174,10 @@ func (p *Parser) Parse(args []string) (*ParseResult, error) {
 				result.Flags[name] = true
 			} else { // String flag
 				if i >= len(args) {
+					return nil, fmt.Errorf("missing value for flag: %s", name)
+				}
+
+				if strings.HasPrefix(args[i], "-") {
 					return nil, fmt.Errorf("missing value for flag: %s", name)
 				}
 
