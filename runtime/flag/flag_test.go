@@ -10,7 +10,7 @@ func TestParser_Parse(t *testing.T) {
 		name          string
 		flagSetup     func(*Parser)
 		args          []string
-		expectedFlags map[string]interface{}
+		expectedFlags map[string]any
 		expectedArgs  []string
 		expectErr     string
 	}{
@@ -22,7 +22,7 @@ func TestParser_Parse(t *testing.T) {
 				p.AddShortFlag("c", Boolean, false)
 			},
 			args: []string{"-a", "-c"},
-			expectedFlags: map[string]interface{}{
+			expectedFlags: map[string]any{
 				"a": true,
 				"b": false,
 				"c": true,
@@ -36,7 +36,7 @@ func TestParser_Parse(t *testing.T) {
 				p.AddShortFlag("c", Boolean, true)
 			},
 			args: []string{"-a", "-c"},
-			expectedFlags: map[string]interface{}{
+			expectedFlags: map[string]any{
 				"a": true,
 				"b": false,
 				"c": true,
@@ -51,7 +51,7 @@ func TestParser_Parse(t *testing.T) {
 				p.AddShortFlag("d", Boolean, true)
 			},
 			args: []string{"-abd"},
-			expectedFlags: map[string]interface{}{
+			expectedFlags: map[string]any{
 				"a": true,
 				"b": true,
 				"c": false,
@@ -65,7 +65,7 @@ func TestParser_Parse(t *testing.T) {
 				p.AddShortFlag("b", String, false)
 			},
 			args: []string{"-a", "foo", "-b", "bar"},
-			expectedFlags: map[string]interface{}{
+			expectedFlags: map[string]any{
 				"a": "foo",
 				"b": "bar",
 			},
@@ -77,7 +77,7 @@ func TestParser_Parse(t *testing.T) {
 				p.AddShortFlag("b", String, false)
 			},
 			args: []string{"-b", "bar"},
-			expectedFlags: map[string]interface{}{
+			expectedFlags: map[string]any{
 				"b": "bar",
 			},
 		},
@@ -99,7 +99,7 @@ func TestParser_Parse(t *testing.T) {
 				p.AddShortFlag("c", String, true)
 			},
 			args: []string{"-cba", "foo", "bar", "baz"},
-			expectedFlags: map[string]interface{}{
+			expectedFlags: map[string]any{
 				"a": "baz",
 				"b": "bar",
 				"c": "foo",
@@ -113,7 +113,7 @@ func TestParser_Parse(t *testing.T) {
 				p.AddShortFlag("c", String, true)
 			},
 			args: []string{"-cba", "foo", "bar"},
-			expectedFlags: map[string]interface{}{
+			expectedFlags: map[string]any{
 				"a": "bar",
 				"b": true,
 				"c": "foo",
@@ -127,6 +127,94 @@ func TestParser_Parse(t *testing.T) {
 			},
 			args:      []string{"-a", "foo", "-b"},
 			expectErr: "not enough arguments for flags in group: -b",
+		},
+		{
+			name: "basic boolean long flags",
+			flagSetup: func(p *Parser) {
+				p.AddLongFlag("foo", Boolean, true)
+				p.AddLongFlag("bar", Boolean, true)
+				p.AddLongFlag("baz", Boolean, true)
+			},
+			args: []string{"--foo", "--bar", "--baz"},
+			expectedFlags: map[string]any{
+				"foo": true,
+				"bar": true,
+				"baz": true,
+			},
+		},
+		{
+			name: "boolean long flags are optional",
+			flagSetup: func(p *Parser) {
+				p.AddLongFlag("foo", Boolean, true)
+				p.AddLongFlag("bar", Boolean, true)
+				p.AddLongFlag("baz", Boolean, true)
+			},
+			args: []string{"--bar"},
+			expectedFlags: map[string]any{
+				"foo": false,
+				"bar": true,
+				"baz": false,
+			},
+		},
+		{
+			name: "basic string long flags",
+			flagSetup: func(p *Parser) {
+				p.AddLongFlag("foo-bar", String, true)
+				p.AddLongFlag("baz", String, true)
+			},
+			args: []string{"--foo-bar", "boo", "--baz", "pie"},
+			expectedFlags: map[string]any{
+				"foo-bar": "boo",
+				"baz":     "pie",
+			},
+		},
+		{
+			name: "string long flags require an argument",
+			flagSetup: func(p *Parser) {
+				p.AddLongFlag("foo", String, true)
+				p.AddLongFlag("bar", String, true)
+			},
+			args:      []string{"--foo", "boo", "--bar"},
+			expectErr: "missing value for flag: bar",
+		},
+		{
+			name: "mixed short and long flags",
+			flagSetup: func(p *Parser) {
+				p.AddLongFlag("foo", String, true)
+				p.AddLongFlag("baz", Boolean, true)
+				p.AddShortFlag("a", Boolean, true)
+				p.AddShortFlag("c", String, true)
+			},
+			args: []string{"-a", "--foo", "bar", "-c", "zik", "--baz"},
+			expectedFlags: map[string]any{
+				"foo": "bar",
+				"baz": true,
+				"a":   true,
+				"c":   "zik",
+			},
+		},
+		{
+			name:          "arguments are returned back",
+			flagSetup:     func(p *Parser) {},
+			args:          []string{"foo", "bar", "baz"},
+			expectedFlags: map[string]any{},
+			expectedArgs:  []string{"foo", "bar", "baz"},
+		},
+		{
+			name: "mixed flags and arguments",
+			flagSetup: func(p *Parser) {
+				p.AddLongFlag("foo", String, true)
+				p.AddLongFlag("baz", Boolean, true)
+				p.AddShortFlag("a", Boolean, true)
+				p.AddShortFlag("c", String, true)
+			},
+			args: []string{"-a", "abc", "--foo", "bar", "xyz", "-c", "zik", "vbn", "--baz", "pop"},
+			expectedFlags: map[string]any{
+				"foo": "bar",
+				"baz": true,
+				"a":   true,
+				"c":   "zik",
+			}, expectedArgs: []string{"abc", "xyz", "vbn", "pop"},
 		},
 	}
 
@@ -196,7 +284,7 @@ func TestParser_AddFlags(t *testing.T) {
 // 		p.AddShortFlag("c", Boolean, false)
 // 	},
 // 	args: []string{"-a", "-c"},
-// 	expectedFlags: map[string]interface{}{
+// 	expectedFlags: map[string]any{
 // 		"a": true,
 // 		"b": false,
 // 		"c": true,
@@ -210,7 +298,7 @@ func TestParser_AddFlags(t *testing.T) {
 // 		p.AddShortFlag("c", Boolean, false)
 // 	},
 // 	args: []string{"-abc"},
-// 	expectedFlags: map[string]interface{}{
+// 	expectedFlags: map[string]any{
 // 		"a": true,
 // 		"b": true,
 // 		"c": true,
@@ -224,7 +312,7 @@ func TestParser_AddFlags(t *testing.T) {
 // 		p.AddShortFlag("c", String, false)
 // 	},
 // 	args: []string{"-a", "foo", "-b", "-c", "bar"},
-// 	expectedFlags: map[string]interface{}{
+// 	expectedFlags: map[string]any{
 // 		"a": "foo",
 // 		"b": true,
 // 		"c": "bar",
@@ -238,7 +326,7 @@ func TestParser_AddFlags(t *testing.T) {
 // 		p.AddShortFlag("c", String, false)
 // 	},
 // 	args: []string{"-abc", "foo", "bar"},
-// 	expectedFlags: map[string]interface{}{
+// 	expectedFlags: map[string]any{
 // 		"a": "foo",
 // 		"b": true,
 // 		"c": "bar",
@@ -252,7 +340,7 @@ func TestParser_AddFlags(t *testing.T) {
 // 		p.AddLongFlag("baz", Boolean, false)
 // 	},
 // 	args: []string{"--foo", "--baz"},
-// 	expectedFlags: map[string]interface{}{
+// 	expectedFlags: map[string]any{
 // 		"foo": true,
 // 		"bar": false,
 // 		"baz": true,
@@ -266,7 +354,7 @@ func TestParser_AddFlags(t *testing.T) {
 // 		p.AddLongFlag("output", String, false)
 // 	},
 // 	args: []string{"--name", "John", "--verbose", "--output", "file.txt"},
-// 	expectedFlags: map[string]interface{}{
+// 	expectedFlags: map[string]any{
 // 		"name":    "John",
 // 		"verbose": true,
 // 		"output":  "file.txt",
@@ -281,7 +369,7 @@ func TestParser_AddFlags(t *testing.T) {
 // 		p.AddLongFlag("name", String, false)
 // 	},
 // 	args: []string{"-a", "foo", "--verbose", "-b", "--name", "John"},
-// 	expectedFlags: map[string]interface{}{
+// 	expectedFlags: map[string]any{
 // 		"a":       "foo",
 // 		"b":       true,
 // 		"verbose": true,
@@ -295,7 +383,7 @@ func TestParser_AddFlags(t *testing.T) {
 // 		p.AddLongFlag("another-flag", String, false)
 // 	},
 // 	args: []string{"--flag-with-dashes", "--another-flag", "value"},
-// 	expectedFlags: map[string]interface{}{
+// 	expectedFlags: map[string]any{
 // 		"flag-with-dashes": true,
 // 		"another-flag":     "value",
 // 	},
@@ -308,7 +396,7 @@ func TestParser_AddFlags(t *testing.T) {
 // 		p.AddLongFlag("optional", String, false)
 // 	},
 // 	args: []string{"-a", "foo", "--required"},
-// 	expectedFlags: map[string]interface{}{
+// 	expectedFlags: map[string]any{
 // 		"a":        "foo",
 // 		"required": true,
 // 	},
@@ -351,7 +439,7 @@ func TestParser_AddFlags(t *testing.T) {
 // 		p.AddLongFlag("name", String, false)
 // 	},
 // 	args: []string{"file1.txt", "-a", "--name", "value", "file2.txt", "file3.txt"},
-// 	expectedFlags: map[string]interface{}{
+// 	expectedFlags: map[string]any{
 // 		"a":    true,
 // 		"name": "value",
 // 	},
@@ -364,7 +452,7 @@ func TestParser_AddFlags(t *testing.T) {
 // 		p.AddLongFlag("verbose", Boolean, false)
 // 	},
 // 	args: []string{"file1.txt", "file2.txt", "file3.txt"},
-// 	expectedFlags: map[string]interface{}{
+// 	expectedFlags: map[string]any{
 // 		"a":       false,
 // 		"verbose": false,
 // 	},
@@ -377,7 +465,7 @@ func TestParser_AddFlags(t *testing.T) {
 // 		p.AddLongFlag("verbose", Boolean, false)
 // 	},
 // 	args: []string{"-a", "foo", "command", "--verbose", "arg1", "arg2"},
-// 	expectedFlags: map[string]interface{}{
+// 	expectedFlags: map[string]any{
 // 		"a":       "foo",
 // 		"verbose": true,
 // 	},
