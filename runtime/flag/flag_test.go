@@ -194,8 +194,10 @@ func TestParser_Parse(t *testing.T) {
 			},
 		},
 		{
-			name:          "arguments are returned back",
-			flagSetup:     func(p *Parser) {},
+			name: "arguments are returned back",
+			flagSetup: func(p *Parser) {
+				p.AddLongFlag("foo", String, false)
+			},
 			args:          []string{"foo", "bar", "baz"},
 			expectedFlags: map[string]any{},
 			expectedArgs:  []string{"foo", "bar", "baz"},
@@ -215,6 +217,13 @@ func TestParser_Parse(t *testing.T) {
 				"a":   true,
 				"c":   "zik",
 			}, expectedArgs: []string{"abc", "xyz", "vbn", "pop"},
+		},
+		{
+			name: "missing required flags throws an error",
+			flagSetup: func(p *Parser) {
+				p.AddLongFlag("abc", String, true)
+			},
+			expectErr: "required flag not provided: abc",
 		},
 	}
 
