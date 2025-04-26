@@ -12,6 +12,7 @@ type LocalParameterAssignement []Assignement
 type ExportParameterAssignement []Assignement
 
 type ArrayLiteral []Expression
+type PositionalSpread struct{}
 
 func (ParameterAssignement) node()       {}
 func (ParameterAssignement) stmt()       {}
@@ -23,3 +24,7 @@ func (ExportParameterAssignement) stmt() {}
 func (ArrayLiteral) node()          {}
 func (ArrayLiteral) expr()          {}
 func (ArrayLiteral) string() string { return "" }
+
+func (PositionalSpread) node()          {}
+func (PositionalSpread) expr()          {}
+func (PositionalSpread) string() string { return "" }

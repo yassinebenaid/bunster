@@ -3,7 +3,7 @@ package parser_test
 import "github.com/yassinebenaid/bunster/ast"
 
 var parameterExpansionTests = []testCase{
-	{`cmd ${var} ${var[123]} `, ast.Script{
+	{`cmd ${var} ${var[123]} ${123} ${*} ${@}`, ast.Script{
 		ast.Command{
 			Name: ast.Word("cmd"),
 			Args: []ast.Expression{
@@ -12,6 +12,9 @@ var parameterExpansionTests = []testCase{
 					Name:  "var",
 					Index: ast.Arithmetic{ast.Number("123")},
 				},
+				ast.SpecialVar("123"),
+				ast.PositionalSpread{},
+				ast.PositionalSpread{},
 			},
 		},
 	}},
@@ -597,4 +600,8 @@ var parameterExpansionErrorHandlingCases = []errorHandlingTestCase{
 	{"${var[]}", "syntax error: bad arithmetic expression, unexpected token `]`. (line: 1, column: 7)"},
 	{"${var[}", "syntax error: bad arithmetic expression, unexpected token `}`. (line: 1, column: 7)"},
 	{"${var[1}", "syntax error: expected a closing bracket `]`, found `}`. (line: 1, column: 8)"},
+	{"${1:=foo}", "syntax error: unexpected token `:=`. (line: 1, column: 4)"},
+	{"${1=foo}", "syntax error: unexpected token `=`. (line: 1, column: 4)"},
+	{"${@:=foo}", "syntax error: unexpected token `:=`. (line: 1, column: 4)"},
+	{"${*=foo}", "syntax error: couldn't find a valid parameter name, found `*=`. (line: 1, column: 3)"},
 }

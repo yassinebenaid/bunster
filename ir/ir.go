@@ -220,10 +220,14 @@ func (rv ReadArrayVar) togo() string {
 
 type SetVar struct {
 	Key   string
+	Index Instruction
 	Value Instruction
 }
 
 func (s SetVar) togo() string {
+	if s.Index != nil {
+		return fmt.Sprintf("shell.SetArrayVar(%q,%s, %v)\n", s.Key, s.Index.togo(), s.Value.togo())
+	}
 	return fmt.Sprintf("shell.SetVar(%q, %v)\n", s.Key, s.Value.togo())
 }
 

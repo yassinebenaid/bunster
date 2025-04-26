@@ -11,7 +11,7 @@ type Compare struct {
 }
 
 func (c Compare) togo() string {
-	return fmt.Sprintf("%s %s %s", c.Left.togo(), c.Operator, c.Right.togo())
+	return fmt.Sprintf("(%s %s %s)", c.Left.togo(), c.Operator, c.Right.togo())
 }
 
 type CompareArithmetics struct {
@@ -53,7 +53,7 @@ func (c TestAgainsStringLength) togo() string {
 		operator = "!="
 	}
 
-	return fmt.Sprintf("len(%s) %s 0", c.String.togo(), operator)
+	return fmt.Sprintf("(len(%s) %s 0)", c.String.togo(), operator)
 }
 
 type TestFileExists struct {
@@ -209,9 +209,17 @@ func (c TestFileIsSocket) togo() string {
 }
 
 type TestVarIsSet struct {
-	Name Instruction
+	Name       Instruction
+	Index      Instruction
+	Positional bool
 }
 
 func (c TestVarIsSet) togo() string {
+	if c.Index != nil {
+		return fmt.Sprintf("shell.VarIndexIsSet(%s, %s)", c.Name.togo(), c.Index.togo())
+	}
+	if c.Positional {
+		return fmt.Sprintf("(%s <= len(shell.Args))", c.Name.togo())
+	}
 	return fmt.Sprintf("shell.VarIsSet(%s)", c.Name.togo())
 }

@@ -60,7 +60,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -348,7 +348,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") == 0
+		testResult = (len("expr") == 0)
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -360,7 +360,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -408,7 +408,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = "expr" == "expr"
+		testResult = ("expr" == "expr")
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -420,7 +420,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = "expr" == "expr"
+		testResult = ("expr" == "expr")
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -432,7 +432,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = "expr" != "expr"
+		testResult = ("expr" != "expr")
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -444,7 +444,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = "expr" > "expr"
+		testResult = ("expr" > "expr")
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -456,7 +456,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = "expr" < "expr"
+		testResult = ("expr" < "expr")
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -540,9 +540,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
-			testResult = len("expr") != 0
+			testResult = (len("expr") != 0)
 		}
 		if testResult {
 			shell.ExitCode = 0
@@ -555,9 +555,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if !testResult {
-			testResult = len("expr") != 0
+			testResult = (len("expr") != 0)
 		}
 		if testResult {
 			shell.ExitCode = 0
@@ -570,7 +570,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		testResult = !testResult
 		if testResult {
 			shell.ExitCode = 0
@@ -583,7 +583,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -595,9 +595,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
-			testResult = len("expr") != 0
+			testResult = (len("expr") != 0)
 		}
 		if testResult {
 			shell.ExitCode = 0
@@ -674,7 +674,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -962,7 +962,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") == 0
+		testResult = (len("expr") == 0)
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -974,7 +974,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1022,7 +1022,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = "expr" == "expr"
+		testResult = ("expr" == "expr")
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1034,7 +1034,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = "expr" == "expr"
+		testResult = ("expr" == "expr")
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1046,7 +1046,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = "expr" != "expr"
+		testResult = ("expr" != "expr")
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1058,7 +1058,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = "expr" > "expr"
+		testResult = ("expr" > "expr")
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1070,7 +1070,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = "expr" < "expr"
+		testResult = ("expr" < "expr")
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1154,9 +1154,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
-			testResult = len("expr") != 0
+			testResult = (len("expr") != 0)
 		}
 		if testResult {
 			shell.ExitCode = 0
@@ -1169,9 +1169,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if !testResult {
-			testResult = len("expr") != 0
+			testResult = (len("expr") != 0)
 		}
 		if testResult {
 			shell.ExitCode = 0
@@ -1184,7 +1184,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		testResult = !testResult
 		if testResult {
 			shell.ExitCode = 0
@@ -1197,7 +1197,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1209,9 +1209,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
-			testResult = len("expr") != 0
+			testResult = (len("expr") != 0)
 		}
 		if testResult {
 			shell.ExitCode = 0
@@ -1288,7 +1288,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1576,7 +1576,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") == 0
+		testResult = (len("expr") == 0)
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1588,7 +1588,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1636,7 +1636,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = "expr" == "expr"
+		testResult = ("expr" == "expr")
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1648,7 +1648,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = "expr" == "expr"
+		testResult = ("expr" == "expr")
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1660,7 +1660,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = "expr" != "expr"
+		testResult = ("expr" != "expr")
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1672,7 +1672,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = "expr" > "expr"
+		testResult = ("expr" > "expr")
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1684,7 +1684,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = "expr" < "expr"
+		testResult = ("expr" < "expr")
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1768,9 +1768,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
-			testResult = len("expr") != 0
+			testResult = (len("expr") != 0)
 		}
 		if testResult {
 			shell.ExitCode = 0
@@ -1783,9 +1783,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if !testResult {
-			testResult = len("expr") != 0
+			testResult = (len("expr") != 0)
 		}
 		if testResult {
 			shell.ExitCode = 0
@@ -1798,7 +1798,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		testResult = !testResult
 		if testResult {
 			shell.ExitCode = 0
@@ -1811,7 +1811,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1823,9 +1823,9 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		streamManager := streamManager.Clone()
 		defer streamManager.Destroy()
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
-			testResult = len("expr") != 0
+			testResult = (len("expr") != 0)
 		}
 		if testResult {
 			shell.ExitCode = 0
@@ -1865,7 +1865,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		}
 		streamManager.Add("1", stream1)
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1906,7 +1906,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		}
 		streamManager.Add("1", stream1)
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
 			shell.ExitCode = 0
 		} else {
@@ -1947,7 +1947,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		}
 		streamManager.Add("1", stream1)
 		var testResult = false
-		testResult = len("expr") != 0
+		testResult = (len("expr") != 0)
 		if testResult {
 			shell.ExitCode = 0
 		} else {

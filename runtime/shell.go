@@ -12,18 +12,18 @@ import (
 )
 
 func NewShell() *Shell {
-	shell := &Shell{}
-
-	shell.vars = newRepository[parameter]()
-	shell.env = newRepository[parameter]()
-	shell.localVars = newRepository[parameter]()
-	shell.exportedVars = newRepository[struct{}]()
-	shell.functions = newRepository[Function]()
-	shell.builtins = newRepository[Builtin]()
+	shell := &Shell{
+		vars:         newRepository[*parameter](),
+		env:          newRepository[*parameter](),
+		localVars:    newRepository[*parameter](),
+		exportedVars: newRepository[struct{}](),
+		functions:    newRepository[Function](),
+		builtins:     newRepository[Builtin](),
+	}
 
 	for _, env := range os.Environ() {
 		envs := strings.SplitN(env, "=", 2)
-		shell.env.set(envs[0], parameter{value: envs[1]})
+		shell.env.set(envs[0], &parameter{value: envs[1]})
 	}
 
 	return shell
@@ -42,9 +42,9 @@ type Shell struct {
 	WaitGroup sync.WaitGroup
 	Embed     fs.FS
 
-	vars         *repository[parameter]
-	env          *repository[parameter]
-	localVars    *repository[parameter]
+	vars         *repository[*parameter]
+	env          *repository[*parameter]
+	localVars    *repository[*parameter]
 	exportedVars *repository[struct{}]
 	functions    *repository[Function]
 	builtins     *repository[Builtin]
@@ -85,132 +85,9 @@ func (shell *Shell) Exit(ecode string) error {
 	return nil
 }
 
-func (shell *Shell) ReadVar(name string) string {
-	p := shell.readVar(name)
-
-	return p.String()
-}
-
-func (shell *Shell) ReadArrayVar(name string, index int) string {
-	p := shell.readVar(name)
-
-	return p.AtIndex(index)
-}
-
-func (shell *Shell) readVar(name string) parameter {
-	if value, ok := shell.getLocalVar(name); ok {
-		return value
-	}
-	if value, ok := shell.vars.get(name); ok {
-		return value
-	}
-	if value, ok := shell.env.get(name); ok {
-		return value
-	}
-	if shell.parent != nil {
-		return shell.parent.readVar(name)
-	}
-	return parameter{}
-}
-
-func (shell *Shell) VarIsSet(name string) bool {
-	if _, ok := shell.getLocalVar(name); ok {
-		return true
-	}
-	if _, ok := shell.vars.get(name); ok {
-		return true
-	}
-	if _, ok := shell.env.get(name); ok {
-		return true
-	}
-	return false
-}
-
-func (shell *Shell) setLocalVar(name string, value any) bool {
-	if _, ok := shell.localVars.get(name); ok {
-		shell.localVars.set(name, parameter{value: value})
-		return true
-	}
-	if shell.parent != nil {
-		return shell.parent.setLocalVar(name, value)
-	}
-	return false
-}
-
-func (shell *Shell) getLocalVar(name string) (parameter, bool) {
-	if value, ok := shell.localVars.get(name); ok {
-		return value, true
-	}
-	if shell.parent != nil {
-		return shell.parent.getLocalVar(name)
-	}
-	return parameter{}, false
-}
-
-func (shell *Shell) SetVar(name string, value any) {
-	if !shell.setLocalVar(name, value) {
-		shell.vars.set(name, parameter{value: value})
-	}
-}
-
-func (shell *Shell) SetLocalVar(name string, value string) {
-	shell.localVars.set(name, parameter{value: value})
-}
-
-func (shell *Shell) SetExportVar(name string, value string) {
-	shell.exportedVars.set(name, struct{}{})
-	shell.vars.set(name, parameter{value: value})
-}
-
-func (shell *Shell) MarkVarAsExported(name string) {
-	shell.exportedVars.set(name, struct{}{})
-}
-
-func (shell *Shell) Unset(vars_only bool, names ...string) {
-	for _, name := range names {
-		if shell.localVars.forget(name) ||
-			shell.vars.forget(name) ||
-			shell.env.forget(name) {
-			continue
-		}
-
-		if !vars_only && shell.functions.forget(name) {
-			continue
-		}
-
-		if shell.parent != nil {
-			shell.parent.Unset(vars_only, name)
-		}
-	}
-}
-
 func (shell *Shell) UnsetFunctions(names ...string) {
 	for _, name := range names {
 		shell.functions.forget(name)
-	}
-}
-
-func (shell *Shell) ReadSpecialVar(name string) string {
-	switch name {
-	case "0":
-		return shell.Arg0
-	case "$":
-		return strconv.FormatInt(int64(shell.PID), 10)
-	case "#":
-		return strconv.FormatInt(int64(len(shell.Args)), 10)
-	case "?":
-		return strconv.FormatInt(int64(shell.ExitCode), 10)
-	case "*", "@":
-		return strings.Join(shell.Args, " ")
-	default:
-		index, err := strconv.ParseUint(name, 10, 64)
-		if err != nil {
-			return ""
-		}
-		if index <= uint64(len(shell.Args)) {
-			return shell.Args[index-1]
-		}
-		return ""
 	}
 }
 
@@ -299,13 +176,13 @@ func (shell *Shell) Exec(streamManager *StreamManager, name string, args []strin
 			builtins:     shell.builtins,
 			vars:         shell.vars,
 			env:          shell.env.clone(),
-			localVars:    newRepository[parameter](),
+			localVars:    newRepository[*parameter](),
 			ExitCode:     shell.ExitCode,
 			exportedVars: shell.exportedVars,
 		}
 
 		for key, value := range env {
-			childShell.env.set(key, parameter{value: value})
+			childShell.env.set(key, &parameter{value: value})
 		}
 	}
 
@@ -340,7 +217,7 @@ func (shell *Shell) Exec(streamManager *StreamManager, name string, args []strin
 	execCmd.Stderr = stderr
 	execCmd.Dir = shell.CWD
 
-	shell.env.foreach(func(key string, p parameter) bool {
+	shell.env.foreach(func(key string, p *parameter) bool {
 		execCmd.Env = append(execCmd.Env, key+"="+p.String())
 		return true
 	})
@@ -358,87 +235,4 @@ func (shell *Shell) Exec(streamManager *StreamManager, name string, args []strin
 
 	shell.ExitCode = execCmd.ProcessState.ExitCode()
 	return nil
-}
-
-type repository[T any] struct {
-	mx   sync.RWMutex
-	data map[string]T
-}
-
-func newRepository[T any]() *repository[T] {
-	return &repository[T]{
-		data: make(map[string]T),
-	}
-}
-
-func (r *repository[T]) get(key string) (T, bool) {
-	r.mx.RLock()
-	defer r.mx.RUnlock()
-	v, ok := r.data[key]
-	return v, ok
-}
-
-func (r *repository[T]) set(key string, value T) {
-	r.mx.Lock()
-	defer r.mx.Unlock()
-	r.data[key] = value
-}
-
-func (r *repository[T]) forget(key string) bool {
-	r.mx.Lock()
-	defer r.mx.Unlock()
-	_, ok := r.data[key]
-	if !ok {
-		return false
-	}
-	delete(r.data, key)
-	return true
-}
-
-func (r *repository[T]) clone() *repository[T] {
-	var repo = newRepository[T]()
-	for key, value := range r.data {
-		repo.set(key, value)
-	}
-	return repo
-}
-
-func (r *repository[T]) foreach(fn func(key string, value T) bool) {
-	r.mx.RLock()
-	defer r.mx.RUnlock()
-	for key, value := range r.data {
-		if !fn(key, value) {
-			break
-		}
-	}
-}
-
-type parameter struct {
-	value any
-}
-
-func (p parameter) String() string {
-	switch v := p.value.(type) {
-	case string:
-		return v
-	case []string:
-		if len(v) == 0 {
-			return ""
-		}
-		return v[0]
-	}
-	return ""
-}
-
-func (p parameter) AtIndex(index int) string {
-	switch v := p.value.(type) {
-	case []string:
-		if len(v) == 0 {
-			return ""
-		}
-		if index >= 0 && index <= len(v)-1 {
-			return v[index]
-		}
-	}
-	return ""
 }

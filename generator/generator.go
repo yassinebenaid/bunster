@@ -199,6 +199,8 @@ func (g *generator) handleExpression(buf *InstructionBuffer, expression ast.Expr
 		return ir.ReadArrayVar{Name: v.Name, Index: ir.ParseInt{Value: g.handleExpression(buf, v.Index)}}
 	case ast.SpecialVar:
 		return ir.ReadSpecialVar(v)
+	case ast.PositionalSpread:
+		return ir.ReadSpecialVar("@")
 	case ast.QuotedString:
 		var concat ir.Concat
 		for _, expr := range v {

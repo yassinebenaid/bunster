@@ -98,7 +98,8 @@ func (p *parser) parseParameterExpansion() ast.Expression {
 
 	if p.curr.Type == token.HASH {
 		p.proceed()
-		exp = ast.VarLength{Parameter: p.parseParameter()}
+		param, _ := p.parseParameter()
+		exp = ast.VarLength{Parameter: param}
 
 		if p.curr.Type != token.RIGHT_BRACE {
 			p.error("expected closing brace `}`, found `%s`", p.curr)
@@ -107,7 +108,7 @@ func (p *parser) parseParameterExpansion() ast.Expression {
 		return exp
 	}
 
-	param := p.parseParameter()
+	param, readonly := p.parseParameter()
 
 	switch p.curr.Type {
 	case token.RIGHT_BRACE:
@@ -122,6 +123,10 @@ func (p *parser) parseParameterExpansion() ast.Expression {
 			UnsetOnly: unsetOnly,
 		}
 	case token.ASSIGN, token.COLON_ASSIGN:
+		if readonly {
+			p.error("unexpected token `%s`", p.curr)
+		}
+
 		unsetOnly := p.curr.Type != token.COLON_ASSIGN
 		p.proceed()
 		exp = ast.VarOrSet{
@@ -251,16 +256,26 @@ loop:
 	return concat(exprs, false)
 }
 
-func (p *parser) parseParameter() ast.Parameter {
-	if p.curr.Type != token.WORD {
+func (p *parser) parseParameter() (ast.Parameter, bool) {
+	switch p.curr.Type {
+	case token.INT:
+		param := ast.SpecialVar(p.curr.Literal)
+		p.proceed()
+		return param, true
+	case token.AT, token.STAR:
+		p.proceed()
+		return ast.PositionalSpread{}, true
+	case token.WORD:
+	default:
 		p.error("couldn't find a valid parameter name, found `%s`", p.curr)
+		return nil, false
 	}
 
 	name := p.curr.Literal
 	p.proceed()
 
 	if p.curr.Type != token.LEFT_BRACKET {
-		return ast.Var(name)
+		return ast.Var(name), false
 	}
 
 	var param = ast.ArrayAccess{
@@ -274,5 +289,5 @@ func (p *parser) parseParameter() ast.Parameter {
 	}
 	p.proceed()
 
-	return param
+	return param, false
 }
