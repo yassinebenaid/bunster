@@ -112,6 +112,23 @@ func (p *parser) parseFunctionFlags() []ast.Flag {
 	var flags []ast.Flag
 
 	for p.curr.Type != token.RIGHT_PAREN && p.curr.Type != token.EOF {
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+		for {
+			if p.curr.Type != token.HASH {
+				break
+			}
+			for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+				p.proceed()
+			}
+			for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+				p.proceed()
+			}
+		}
+		if p.curr.Type == token.BLANK {
+			p.proceed()
+		}
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
 		}
@@ -152,6 +169,21 @@ func (p *parser) parseFunctionFlags() []ast.Flag {
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
 		}
+		for {
+			if p.curr.Type != token.HASH {
+				break
+			}
+			for p.curr.Type != token.NEWLINE && p.curr.Type != token.EOF {
+				p.proceed()
+			}
+			for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+				p.proceed()
+			}
+		}
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+			p.proceed()
+		}
+
 		flags = append(flags, flag)
 	}
 
