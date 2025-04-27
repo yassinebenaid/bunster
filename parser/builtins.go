@@ -112,6 +112,10 @@ func (p *parser) parseFunctionFlags() []ast.Flag {
 	var flags []ast.Flag
 
 	for p.curr.Type != token.RIGHT_PAREN && p.curr.Type != token.EOF {
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
+			p.proceed()
+		}
+
 		if p.curr.Type != token.MINUS && p.curr.Type != token.DECREMENT {
 			p.error("unexpected token `%s`", p.curr)
 		}
@@ -145,7 +149,7 @@ func (p *parser) parseFunctionFlags() []ast.Flag {
 			p.proceed()
 		}
 
-		for p.curr.Type == token.BLANK {
+		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
 		}
 		flags = append(flags, flag)
