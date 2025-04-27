@@ -91,8 +91,12 @@ func (shell *Shell) UnsetFunctions(names ...string) {
 	}
 }
 
-func (shell *Shell) HandleError(sm *StreamManager, err error) {
+func (shell *Shell) HandleError(sm *StreamManager, err error, ctx ...string) {
 	shell.ExitCode = 1
+	var context string
+	if len(ctx) != 0 {
+		context = ctx[0] + ": "
+	}
 
 	stderr, _err := sm.Get("2")
 	if _err != nil {
@@ -101,13 +105,13 @@ func (shell *Shell) HandleError(sm *StreamManager, err error) {
 
 	switch e := err.(type) {
 	case *exec.Error:
-		fmt.Fprintf(stderr, "%q: %v\n", e.Name, e.Err)
+		fmt.Fprintf(stderr, "%s%q: %v\n", context, e.Name, e.Err)
 	case *fs.PathError:
-		fmt.Fprintf(stderr, "%q: %v\n", e.Path, e.Err)
+		fmt.Fprintf(stderr, "%s%q: %v\n", context, e.Path, e.Err)
 	case *exec.ExitError:
 		shell.ExitCode = e.ExitCode()
 	default:
-		fmt.Fprintln(stderr, err)
+		fmt.Fprintf(stderr, "%s%s\n", context, err)
 	}
 }
 

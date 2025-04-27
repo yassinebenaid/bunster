@@ -553,12 +553,15 @@ type Flag struct {
 	Optional     bool
 }
 
-type FlagSet []Flag
+type FlagSet struct {
+	Name  string
+	FLags []Flag
+}
 
 func (f FlagSet) togo() string {
 	body := `flagParser := runtime.NewFlagParser();`
 
-	for _, flag := range f {
+	for _, flag := range f.FLags {
 		ftype := `runtime.BooleanFlag`
 		if flag.AcceptsValue {
 			ftype = `runtime.StringFlag`
@@ -573,14 +576,14 @@ func (f FlagSet) togo() string {
 		}
 	}
 
-	body += `results, err := flagParser.Parse(shell.Args)
+	body += fmt.Sprintf(`results, err := flagParser.Parse(shell.Args)
 		if err != nil {
-			shell.HandleError(streamManager, err)
+			shell.HandleError(streamManager, err, %q)
 			return
 		}
 		shell.LoadMap("fflags_", results.Flags)
 		shell.Args = results.Args
-	`
+	`, f.Name)
 
 	return body
 }
