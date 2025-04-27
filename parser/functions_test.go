@@ -507,4 +507,10 @@ var functionsErrorHandlingCases = []errorHandlingTestCase{
 	{`function func() {cmd;} | cat`, "syntax error: unexpected token `|`. (line: 1, column: 24)"},
 	{`func() {cmd;} | cat`, "syntax error: unexpected token `|`. (line: 1, column: 15)"},
 	{`function func() if true; then cmd;fi`, "syntax error: function body is expected to be a group or subshell. (line: 1, column: 37)"},
+
+	{`function func( ; ){ cmd; }`, "syntax error: unexpected token `;`. (line: 1, column: 16)"},
+	{`function func( -; ){ cmd; }`, "syntax error: expected a valid flag name, found `;`. (line: 1, column: 17)"},
+	{`function func( --; ){ cmd; }`, "syntax error: expected a valid flag name, found `;`. (line: 1, column: 18)"},
+	{`function func( -abc ){ cmd; }`, "syntax error: short flags can only be one character long, found `abc`. (line: 1, column: 17)"},
+	{`function func( -a[ ){ cmd; }`, "syntax error: expected [=] to indicate optional value, found `[blank)`. (line: 1, column: 18)"},
 }

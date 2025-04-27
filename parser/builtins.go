@@ -65,7 +65,7 @@ func (p *parser) parseFunction() ast.Statement {
 
 	if p.curr.Type == token.LEFT_PAREN {
 		p.proceed()
-		if p.curr.Type == token.BLANK {
+		for p.curr.Type == token.BLANK {
 			p.proceed()
 		}
 		function.Flags = p.parseFunctionFlags()
@@ -112,9 +112,6 @@ func (p *parser) parseFunctionFlags() []ast.Flag {
 	var flags []ast.Flag
 
 	for p.curr.Type != token.RIGHT_PAREN && p.curr.Type != token.EOF {
-		if p.curr.Type == token.BLANK {
-			p.proceed()
-		}
 		for {
 			if p.curr.Type != token.HASH {
 				break
@@ -125,9 +122,6 @@ func (p *parser) parseFunctionFlags() []ast.Flag {
 			for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 				p.proceed()
 			}
-		}
-		if p.curr.Type == token.BLANK {
-			p.proceed()
 		}
 		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 			p.proceed()
@@ -179,9 +173,6 @@ func (p *parser) parseFunctionFlags() []ast.Flag {
 			for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
 				p.proceed()
 			}
-		}
-		for p.curr.Type == token.BLANK || p.curr.Type == token.NEWLINE {
-			p.proceed()
 		}
 
 		flags = append(flags, flag)
