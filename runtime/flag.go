@@ -1,4 +1,4 @@
-package flag
+package runtime
 
 import (
 	"errors"
@@ -10,10 +10,10 @@ import (
 type FlagType int
 
 const (
-	// Boolean flags don't require an argument
-	Boolean FlagType = iota
-	// String flags require an argument
-	String
+	// BooleanFlag flags don't require an argument
+	BooleanFlag FlagType = iota
+	// StringFlag flags require an argument
+	StringFlag
 )
 
 // Flag represents a command line flag
@@ -29,22 +29,22 @@ type ParseResult struct {
 	Args  []string
 }
 
-// Parser contains the flag definitions and parsing logic
-type Parser struct {
+// FlagParser contains the flag definitions and parsing logic
+type FlagParser struct {
 	shortFlags map[string]*Flag
 	longFlags  map[string]*Flag
 }
 
 // NewParser creates a new flag parser
-func NewParser() *Parser {
-	return &Parser{
+func NewFlagParser() *FlagParser {
+	return &FlagParser{
 		shortFlags: make(map[string]*Flag),
 		longFlags:  make(map[string]*Flag),
 	}
 }
 
 // AddShortFlag adds a new single-character flag to the parser
-func (p *Parser) AddShortFlag(name string, flagType FlagType, required bool) error {
+func (p *FlagParser) AddShortFlag(name string, flagType FlagType, required bool) error {
 	if len(name) != 1 {
 		return errors.New("short flag name must be exactly one character")
 	}
@@ -59,7 +59,7 @@ func (p *Parser) AddShortFlag(name string, flagType FlagType, required bool) err
 }
 
 // AddLongFlag adds a new multi-character flag to the parser
-func (p *Parser) AddLongFlag(name string, flagType FlagType, required bool) error {
+func (p *FlagParser) AddLongFlag(name string, flagType FlagType, required bool) error {
 	if len(name) <= 1 {
 		return errors.New("long flag name must be more than one character")
 	}
@@ -74,20 +74,20 @@ func (p *Parser) AddLongFlag(name string, flagType FlagType, required bool) erro
 }
 
 // Parse parses the command line arguments
-func (p *Parser) Parse(args []string) (*ParseResult, error) {
+func (p *FlagParser) Parse(args []string) (*ParseResult, error) {
 	result := &ParseResult{
 		Flags: make(map[string]interface{}),
 	}
 
 	// Initialize all Boolean flags to false
 	for name, flag := range p.shortFlags {
-		if flag.Type == Boolean {
+		if flag.Type == BooleanFlag {
 			result.Flags[name] = false
 		}
 	}
 
 	for name, flag := range p.longFlags {
-		if flag.Type == Boolean {
+		if flag.Type == BooleanFlag {
 			result.Flags[name] = false
 		}
 	}
@@ -122,7 +122,7 @@ func (p *Parser) Parse(args []string) (*ParseResult, error) {
 					return nil, fmt.Errorf("unknown long flag: %s", fields[0])
 				}
 
-				if flag.Type == Boolean {
+				if flag.Type == BooleanFlag {
 					return nil, fmt.Errorf("passing value to a flag that doesn't expect it: %s", fields[0])
 				} else { // String flag
 					if len(fields) != 2 || fields[1] == "" {
@@ -140,7 +140,7 @@ func (p *Parser) Parse(args []string) (*ParseResult, error) {
 				return nil, fmt.Errorf("unknown long flag: %s", flagName)
 			}
 
-			if flag.Type == Boolean {
+			if flag.Type == BooleanFlag {
 				result.Flags[flagName] = true
 			} else { // String flag
 				if i >= len(args) {
@@ -179,7 +179,7 @@ func (p *Parser) Parse(args []string) (*ParseResult, error) {
 				return nil, fmt.Errorf("unknown short flag: %s", name)
 			}
 
-			if flag.Type == String {
+			if flag.Type == StringFlag {
 				stringArgsNeeded++
 			}
 		}
@@ -188,7 +188,7 @@ func (p *Parser) Parse(args []string) (*ParseResult, error) {
 		for _, name := range flagsInGroup {
 			flag := p.shortFlags[name]
 
-			if flag.Type == Boolean {
+			if flag.Type == BooleanFlag {
 				result.Flags[name] = true
 			} else { // String flag
 				if i >= len(args) {

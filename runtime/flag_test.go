@@ -1,14 +1,16 @@
-package flag
+package runtime_test
 
 import (
 	"reflect"
 	"testing"
+
+	"github.com/yassinebenaid/bunster/runtime"
 )
 
 func TestParser_Parse(t *testing.T) {
 	tests := []struct {
 		name          string
-		flagSetup     func(*Parser)
+		flagSetup     func(*runtime.FlagParser)
 		args          []string
 		expectedFlags map[string]any
 		expectedArgs  []string
@@ -16,10 +18,10 @@ func TestParser_Parse(t *testing.T) {
 	}{
 		{
 			name: "basic short boolean flags",
-			flagSetup: func(p *Parser) {
-				p.AddShortFlag("a", Boolean, false)
-				p.AddShortFlag("b", Boolean, false)
-				p.AddShortFlag("c", Boolean, false)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddShortFlag("a", runtime.BooleanFlag, false)
+				p.AddShortFlag("b", runtime.BooleanFlag, false)
+				p.AddShortFlag("c", runtime.BooleanFlag, false)
 			},
 			args: []string{"-a", "-c"},
 			expectedFlags: map[string]any{
@@ -30,10 +32,10 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "boolean short flags are optional",
-			flagSetup: func(p *Parser) {
-				p.AddShortFlag("a", Boolean, true)
-				p.AddShortFlag("b", Boolean, true)
-				p.AddShortFlag("c", Boolean, true)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddShortFlag("a", runtime.BooleanFlag, true)
+				p.AddShortFlag("b", runtime.BooleanFlag, true)
+				p.AddShortFlag("c", runtime.BooleanFlag, true)
 			},
 			args: []string{"-a", "-c"},
 			expectedFlags: map[string]any{
@@ -44,11 +46,11 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "can group boolean flags",
-			flagSetup: func(p *Parser) {
-				p.AddShortFlag("a", Boolean, true)
-				p.AddShortFlag("b", Boolean, true)
-				p.AddShortFlag("c", Boolean, true)
-				p.AddShortFlag("d", Boolean, true)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddShortFlag("a", runtime.BooleanFlag, true)
+				p.AddShortFlag("b", runtime.BooleanFlag, true)
+				p.AddShortFlag("c", runtime.BooleanFlag, true)
+				p.AddShortFlag("d", runtime.BooleanFlag, true)
 			},
 			args: []string{"-abd"},
 			expectedFlags: map[string]any{
@@ -60,9 +62,9 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "short string flags",
-			flagSetup: func(p *Parser) {
-				p.AddShortFlag("a", String, false)
-				p.AddShortFlag("b", String, false)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddShortFlag("a", runtime.StringFlag, false)
+				p.AddShortFlag("b", runtime.StringFlag, false)
 			},
 			args: []string{"-a", "foo", "-b", "bar"},
 			expectedFlags: map[string]any{
@@ -72,9 +74,9 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "optional string flags can be omited",
-			flagSetup: func(p *Parser) {
-				p.AddShortFlag("a", String, false)
-				p.AddShortFlag("b", String, false)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddShortFlag("a", runtime.StringFlag, false)
+				p.AddShortFlag("b", runtime.StringFlag, false)
 			},
 			args: []string{"-b", "bar"},
 			expectedFlags: map[string]any{
@@ -83,20 +85,20 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "missing required flags throws an error",
-			flagSetup: func(p *Parser) {
-				p.AddShortFlag("a", String, false)
-				p.AddShortFlag("b", String, true)
-				p.AddShortFlag("c", String, false)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddShortFlag("a", runtime.StringFlag, false)
+				p.AddShortFlag("b", runtime.StringFlag, true)
+				p.AddShortFlag("c", runtime.StringFlag, false)
 			},
 			args:      []string{},
 			expectErr: "required flag not provided: b",
 		},
 		{
 			name: "can group string flags",
-			flagSetup: func(p *Parser) {
-				p.AddShortFlag("a", String, true)
-				p.AddShortFlag("b", String, true)
-				p.AddShortFlag("c", String, true)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddShortFlag("a", runtime.StringFlag, true)
+				p.AddShortFlag("b", runtime.StringFlag, true)
+				p.AddShortFlag("c", runtime.StringFlag, true)
 			},
 			args: []string{"-cba", "foo", "bar", "baz"},
 			expectedFlags: map[string]any{
@@ -107,10 +109,10 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "can group string and boolean flags",
-			flagSetup: func(p *Parser) {
-				p.AddShortFlag("a", String, true)
-				p.AddShortFlag("b", Boolean, true)
-				p.AddShortFlag("c", String, true)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddShortFlag("a", runtime.StringFlag, true)
+				p.AddShortFlag("b", runtime.BooleanFlag, true)
+				p.AddShortFlag("c", runtime.StringFlag, true)
 			},
 			args: []string{"-cba", "foo", "bar"},
 			expectedFlags: map[string]any{
@@ -121,29 +123,29 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "missing arguments to flags throws an error",
-			flagSetup: func(p *Parser) {
-				p.AddShortFlag("a", String, false)
-				p.AddShortFlag("b", String, false)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddShortFlag("a", runtime.StringFlag, false)
+				p.AddShortFlag("b", runtime.StringFlag, false)
 			},
 			args:      []string{"-b", "-a", "foo"},
 			expectErr: "missing value for flag: b",
 		},
 		{
 			name: "missing arguments to flags that show last throws an error",
-			flagSetup: func(p *Parser) {
-				p.AddShortFlag("a", String, false)
-				p.AddShortFlag("b", String, false)
-				p.AddShortFlag("c", String, false)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddShortFlag("a", runtime.StringFlag, false)
+				p.AddShortFlag("b", runtime.StringFlag, false)
+				p.AddShortFlag("c", runtime.StringFlag, false)
 			},
 			args:      []string{"-abc"},
 			expectErr: "missing value for flag: a",
 		},
 		{
 			name: "basic boolean long flags",
-			flagSetup: func(p *Parser) {
-				p.AddLongFlag("foo", Boolean, true)
-				p.AddLongFlag("bar", Boolean, true)
-				p.AddLongFlag("baz", Boolean, true)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddLongFlag("foo", runtime.BooleanFlag, true)
+				p.AddLongFlag("bar", runtime.BooleanFlag, true)
+				p.AddLongFlag("baz", runtime.BooleanFlag, true)
 			},
 			args: []string{"--foo", "--bar", "--baz"},
 			expectedFlags: map[string]any{
@@ -154,10 +156,10 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "boolean long flags are optional",
-			flagSetup: func(p *Parser) {
-				p.AddLongFlag("foo", Boolean, true)
-				p.AddLongFlag("bar", Boolean, true)
-				p.AddLongFlag("baz", Boolean, true)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddLongFlag("foo", runtime.BooleanFlag, true)
+				p.AddLongFlag("bar", runtime.BooleanFlag, true)
+				p.AddLongFlag("baz", runtime.BooleanFlag, true)
 			},
 			args: []string{"--bar"},
 			expectedFlags: map[string]any{
@@ -168,10 +170,10 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "basic string long flags",
-			flagSetup: func(p *Parser) {
-				p.AddLongFlag("foo-bar", String, true)
-				p.AddLongFlag("baz", String, true)
-				p.AddLongFlag("xyz", String, true)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddLongFlag("foo-bar", runtime.StringFlag, true)
+				p.AddLongFlag("baz", runtime.StringFlag, true)
+				p.AddLongFlag("xyz", runtime.StringFlag, true)
 			},
 			args: []string{"--foo-bar", "boo", "--baz", "pie", "--xyz=pop", "booyah"},
 			expectedFlags: map[string]any{
@@ -183,37 +185,37 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "string long flags require an argument",
-			flagSetup: func(p *Parser) {
-				p.AddLongFlag("foo", String, true)
-				p.AddLongFlag("bar", String, true)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddLongFlag("foo", runtime.StringFlag, true)
+				p.AddLongFlag("bar", runtime.StringFlag, true)
 			},
 			args:      []string{"--bar", "--foo", "boo"},
 			expectErr: "missing value for flag: bar",
 		},
 		{
 			name: "inline string long flags require an argument",
-			flagSetup: func(p *Parser) {
-				p.AddLongFlag("foo", String, true)
-				p.AddLongFlag("bar", String, true)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddLongFlag("foo", runtime.StringFlag, true)
+				p.AddLongFlag("bar", runtime.StringFlag, true)
 			},
 			args:      []string{"--bar=", "--foo", "boo"},
 			expectErr: "missing value for flag: bar",
 		},
 		{
 			name: "string long flags require an argument when appeare at end",
-			flagSetup: func(p *Parser) {
-				p.AddLongFlag("bar", String, true)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddLongFlag("bar", runtime.StringFlag, true)
 			},
 			args:      []string{"--bar"},
 			expectErr: "missing value for flag: bar",
 		},
 		{
 			name: "mixed short and long flags",
-			flagSetup: func(p *Parser) {
-				p.AddLongFlag("foo", String, true)
-				p.AddLongFlag("baz", Boolean, true)
-				p.AddShortFlag("a", Boolean, true)
-				p.AddShortFlag("c", String, true)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddLongFlag("foo", runtime.StringFlag, true)
+				p.AddLongFlag("baz", runtime.BooleanFlag, true)
+				p.AddShortFlag("a", runtime.BooleanFlag, true)
+				p.AddShortFlag("c", runtime.StringFlag, true)
 			},
 			args: []string{"-a", "--foo", "bar", "-c", "zik", "--baz"},
 			expectedFlags: map[string]any{
@@ -225,8 +227,8 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "arguments are returned back",
-			flagSetup: func(p *Parser) {
-				p.AddLongFlag("foo", String, false)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddLongFlag("foo", runtime.StringFlag, false)
 			},
 			args:          []string{"foo", "bar", "baz"},
 			expectedFlags: map[string]any{},
@@ -234,11 +236,11 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "mixed flags and arguments",
-			flagSetup: func(p *Parser) {
-				p.AddLongFlag("foo", String, true)
-				p.AddLongFlag("baz", Boolean, true)
-				p.AddShortFlag("a", Boolean, true)
-				p.AddShortFlag("c", String, true)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddLongFlag("foo", runtime.StringFlag, true)
+				p.AddLongFlag("baz", runtime.BooleanFlag, true)
+				p.AddShortFlag("a", runtime.BooleanFlag, true)
+				p.AddShortFlag("c", runtime.StringFlag, true)
 			},
 			args: []string{"-a", "abc", "--foo", "bar", "xyz", "-c", "zik", "vbn", "--baz", "pop"},
 			expectedFlags: map[string]any{
@@ -250,48 +252,48 @@ func TestParser_Parse(t *testing.T) {
 		},
 		{
 			name: "missing required flags throws an error",
-			flagSetup: func(p *Parser) {
-				p.AddLongFlag("abc", String, true)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddLongFlag("abc", runtime.StringFlag, true)
 			},
 			expectErr: "required flag not provided: abc",
 		},
 		{
 			name:      "an error occurs when pasing unknown short flags",
-			flagSetup: func(p *Parser) {},
+			flagSetup: func(p *runtime.FlagParser) {},
 			args:      []string{"-x"},
 			expectErr: "unknown short flag: x",
 		},
 		{
 			name:      "an error occurs when pasing unknown long flags",
-			flagSetup: func(p *Parser) {},
+			flagSetup: func(p *runtime.FlagParser) {},
 			args:      []string{"--foo"},
 			expectErr: "unknown long flag: foo",
 		},
 		{
 			name:      "an error occurs when passing unknown long flags with value",
-			flagSetup: func(p *Parser) {},
+			flagSetup: func(p *runtime.FlagParser) {},
 			args:      []string{"--foo=bar"},
 			expectErr: "unknown long flag: foo",
 		},
 		{
 			name: "an error occurs when passing a value to boolean long flags",
-			flagSetup: func(p *Parser) {
-				p.AddLongFlag("foo", Boolean, false)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddLongFlag("foo", runtime.BooleanFlag, false)
 			},
 			args:      []string{"--foo=bar"},
 			expectErr: "passing value to a flag that doesn't expect it: foo",
 		},
 		{
 			name:      "an error occurs when passing a single dash",
-			flagSetup: func(p *Parser) {},
+			flagSetup: func(p *runtime.FlagParser) {},
 			args:      []string{"c", "-", "a"},
 			expectErr: "invalid short flag format: -",
 		},
 		{
 			name: "double dash indicate end of flags",
-			flagSetup: func(p *Parser) {
-				p.AddLongFlag("foo", String, false)
-				p.AddLongFlag("bar", String, false)
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddLongFlag("foo", runtime.StringFlag, false)
+				p.AddLongFlag("bar", runtime.StringFlag, false)
 			},
 			args:          []string{"foo", "--", "--foo", "--bar", "--baz"},
 			expectedFlags: map[string]any{},
@@ -301,7 +303,7 @@ func TestParser_Parse(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := NewParser()
+			p := runtime.NewFlagParser()
 			tt.flagSetup(p)
 
 			result, err := p.Parse(tt.args)
@@ -329,28 +331,28 @@ func TestParser_Parse(t *testing.T) {
 }
 
 func TestParser_AddFlags(t *testing.T) {
-	p := NewParser()
+	p := runtime.NewFlagParser()
 
 	// Valid short flag
-	err := p.AddShortFlag("a", Boolean, false)
+	err := p.AddShortFlag("a", runtime.BooleanFlag, false)
 	if err != nil {
 		t.Errorf("AddShortFlag() unexpected error = %v", err)
 	}
 
 	// Invalid short flag (more than one character)
-	err = p.AddShortFlag("abc", Boolean, false)
+	err = p.AddShortFlag("abc", runtime.BooleanFlag, false)
 	if err == nil {
 		t.Error("AddShortFlag() expected error for multi-character flag")
 	}
 
 	// Valid long flag
-	err = p.AddLongFlag("verbose", Boolean, false)
+	err = p.AddLongFlag("verbose", runtime.BooleanFlag, false)
 	if err != nil {
 		t.Errorf("AddLongFlag() unexpected error = %v", err)
 	}
 
 	// Invalid long flag (only one character)
-	err = p.AddLongFlag("v", Boolean, false)
+	err = p.AddLongFlag("v", runtime.BooleanFlag, false)
 	if err == nil {
 		t.Error("AddLongFlag() expected error for single-character flag")
 	}

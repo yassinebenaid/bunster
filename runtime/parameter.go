@@ -203,3 +203,18 @@ func (shell *Shell) ReadSpecialVar(name string) string {
 		return ""
 	}
 }
+
+func (shell *Shell) LoadMap(prefix string, m map[string]any) {
+	for key, value := range m {
+		switch v := value.(type) {
+		case bool:
+			if v {
+				shell.SetLocalVar(prefix+key, "1")
+			} else {
+				shell.SetLocalVar(prefix+key, "0")
+			}
+		case string:
+			shell.SetLocalVar(prefix+key, v)
+		}
+	}
+}
