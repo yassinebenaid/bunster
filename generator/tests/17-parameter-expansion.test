@@ -816,3 +816,691 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 }
 
 #(ENDTEST)
+
+
+#(TEST: parameter expansion on arrays)
+
+echo ${varname[123]} \
+	${#varname[123]} \
+\
+	${varname[123]:-} \
+	${varname[123]:-word} \
+	${varname[123]-word} \
+	${varname[123]-} \
+\
+	${varname[123]:=} \
+	${varname[123]:=word} \
+	${varname[123]=word} \
+	${varname[123]=} \
+\
+	${varname[123]:+} \
+	${varname[123]:+word} \
+	${varname[123]+word} \
+	${varname[123]+} \
+\
+	${varname[123]:3} \
+	${varname[123]:3:8} \
+\
+	${varname[123]^} \
+	${varname[123]^word} \
+	${varname[123]^^word} \
+	${varname[123]^^} \
+\
+	${varname[123],} \
+	${varname[123],word} \
+	${varname[123],,word} \
+	${varname[123],,} \
+\
+	${varname[123]#} \
+	${varname[123]#word} \
+	${varname[123]##word} \
+	${varname[123]##} \
+\
+	${varname[123]%} \
+	${varname[123]%word} \
+	${varname[123]%%word} \
+	${varname[123]%%} \
+\
+	${varname[123]/} \
+	${varname[123]/pattern} \
+	${varname[123]/pattern/word} \
+	${varname[123]//} \
+	${varname[123]//pattern} \
+	${varname[123]//pattern/word} \
+	${varname[123]/#} \
+	${varname[123]/#pattern} \
+	${varname[123]/#pattern/word} \
+	${varname[123]/%} \
+	${varname[123]/%pattern} \
+	${varname[123]/%pattern/word} \
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		streamManager := streamManager.Clone()
+		defer streamManager.Destroy()
+		var commandName = "echo"
+		var arguments []string
+		var env = make(map[string]string)
+		expr3, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, shell.ReadArrayVar("varname", runtime.ParseInt(expr3)))
+		expr5, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.FormatInt(len([]rune(shell.ReadArrayVar("varname", runtime.ParseInt(expr5))))))
+		var expr6 = ""
+		expr7, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		expr8, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		if len(shell.ReadArrayVar("varname", runtime.ParseInt(expr8))) != 0 {
+			expr6 = shell.ReadArrayVar("varname", runtime.ParseInt(expr7))
+		} else {
+			expr6 = ""
+		}
+		arguments = append(arguments, expr6)
+		var expr9 = ""
+		expr11, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		expr12, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		if len(shell.ReadArrayVar("varname", runtime.ParseInt(expr12))) != 0 {
+			expr9 = shell.ReadArrayVar("varname", runtime.ParseInt(expr11))
+		} else {
+			expr9 = "word"
+		}
+		arguments = append(arguments, expr9)
+		var expr13 = ""
+		expr15, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		expr16, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		if shell.VarIndexIsSet("varname", runtime.ParseInt(expr16)) {
+			expr13 = shell.ReadArrayVar("varname", runtime.ParseInt(expr15))
+		} else {
+			expr13 = "word"
+		}
+		arguments = append(arguments, expr13)
+		var expr17 = ""
+		expr18, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		expr19, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		if shell.VarIndexIsSet("varname", runtime.ParseInt(expr19)) {
+			expr17 = shell.ReadArrayVar("varname", runtime.ParseInt(expr18))
+		} else {
+			expr17 = ""
+		}
+		arguments = append(arguments, expr17)
+		expr21, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		expr22, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		if !(len(shell.ReadArrayVar("varname", runtime.ParseInt(expr22))) != 0) {
+			shell.SetArrayVar("varname", runtime.ParseInt(expr21), "")
+		}
+		expr23, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, shell.ReadArrayVar("varname", runtime.ParseInt(expr23)))
+		expr26, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		expr27, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		if !(len(shell.ReadArrayVar("varname", runtime.ParseInt(expr27))) != 0) {
+			shell.SetArrayVar("varname", runtime.ParseInt(expr26), "word")
+		}
+		expr28, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, shell.ReadArrayVar("varname", runtime.ParseInt(expr28)))
+		expr31, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		expr32, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		if !(shell.VarIndexIsSet("varname", runtime.ParseInt(expr32))) {
+			shell.SetArrayVar("varname", runtime.ParseInt(expr31), "word")
+		}
+		expr33, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, shell.ReadArrayVar("varname", runtime.ParseInt(expr33)))
+		expr35, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		expr36, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		if !(shell.VarIndexIsSet("varname", runtime.ParseInt(expr36))) {
+			shell.SetArrayVar("varname", runtime.ParseInt(expr35), "")
+		}
+		expr37, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, shell.ReadArrayVar("varname", runtime.ParseInt(expr37)))
+		var expr38 = ""
+		expr39, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		if len(shell.ReadArrayVar("varname", runtime.ParseInt(expr39))) != 0 {
+			expr38 = ""
+		}
+		arguments = append(arguments, expr38)
+		var expr40 = ""
+		expr42, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		if len(shell.ReadArrayVar("varname", runtime.ParseInt(expr42))) != 0 {
+			expr40 = "word"
+		}
+		arguments = append(arguments, expr40)
+		var expr43 = ""
+		expr45, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		if shell.VarIndexIsSet("varname", runtime.ParseInt(expr45)) {
+			expr43 = "word"
+		}
+		arguments = append(arguments, expr43)
+		var expr46 = ""
+		expr47, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		if shell.VarIndexIsSet("varname", runtime.ParseInt(expr47)) {
+			expr46 = ""
+		}
+		arguments = append(arguments, expr46)
+		var offset48 = 0
+		var length48 = int(^uint32(0))
+		offset48 = 3
+		expr49, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.Substring(shell.ReadArrayVar("varname", runtime.ParseInt(expr49)), offset48, length48))
+		var offset50 = 0
+		var length50 = int(^uint32(0))
+		offset50 = 3
+		length50 = 8
+		expr51, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.Substring(shell.ReadArrayVar("varname", runtime.ParseInt(expr51)), offset50, length50))
+		expr53, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ChangeStringCase(true, shell.ReadArrayVar("varname", runtime.ParseInt(expr53)), "?", false))
+		expr56, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ChangeStringCase(true, shell.ReadArrayVar("varname", runtime.ParseInt(expr56)), "word", false))
+		expr59, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ChangeStringCase(true, shell.ReadArrayVar("varname", runtime.ParseInt(expr59)), "word", true))
+		expr61, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ChangeStringCase(true, shell.ReadArrayVar("varname", runtime.ParseInt(expr61)), "?", true))
+		expr63, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ChangeStringCase(false, shell.ReadArrayVar("varname", runtime.ParseInt(expr63)), "?", false))
+		expr66, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ChangeStringCase(false, shell.ReadArrayVar("varname", runtime.ParseInt(expr66)), "word", false))
+		expr69, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ChangeStringCase(false, shell.ReadArrayVar("varname", runtime.ParseInt(expr69)), "word", true))
+		expr71, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ChangeStringCase(false, shell.ReadArrayVar("varname", runtime.ParseInt(expr71)), "?", true))
+		expr73, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.RemoveMatchingPrefix(shell.ReadArrayVar("varname", runtime.ParseInt(expr73)), "", false))
+		expr76, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.RemoveMatchingPrefix(shell.ReadArrayVar("varname", runtime.ParseInt(expr76)), "word", false))
+		expr79, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.RemoveMatchingPrefix(shell.ReadArrayVar("varname", runtime.ParseInt(expr79)), "word", true))
+		expr81, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.RemoveMatchingPrefix(shell.ReadArrayVar("varname", runtime.ParseInt(expr81)), "", true))
+		expr83, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.RemoveMatchingSuffix(shell.ReadArrayVar("varname", runtime.ParseInt(expr83)), "", false))
+		expr86, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.RemoveMatchingSuffix(shell.ReadArrayVar("varname", runtime.ParseInt(expr86)), "word", false))
+		expr89, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.RemoveMatchingSuffix(shell.ReadArrayVar("varname", runtime.ParseInt(expr89)), "word", true))
+		expr91, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.RemoveMatchingSuffix(shell.ReadArrayVar("varname", runtime.ParseInt(expr91)), "", true))
+		expr93, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ReplaceMatching(shell.ReadArrayVar("varname", runtime.ParseInt(expr93)), "", "", false))
+		expr96, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ReplaceMatching(shell.ReadArrayVar("varname", runtime.ParseInt(expr96)), "pattern", "", false))
+		expr100, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ReplaceMatching(shell.ReadArrayVar("varname", runtime.ParseInt(expr100)), "pattern", "word", false))
+		expr102, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ReplaceMatching(shell.ReadArrayVar("varname", runtime.ParseInt(expr102)), "", "", true))
+		expr105, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ReplaceMatching(shell.ReadArrayVar("varname", runtime.ParseInt(expr105)), "pattern", "", true))
+		expr109, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ReplaceMatching(shell.ReadArrayVar("varname", runtime.ParseInt(expr109)), "pattern", "word", true))
+		expr111, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ReplaceMatchingPrefix(shell.ReadArrayVar("varname", runtime.ParseInt(expr111)), "", ""))
+		expr114, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ReplaceMatchingPrefix(shell.ReadArrayVar("varname", runtime.ParseInt(expr114)), "pattern", ""))
+		expr118, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ReplaceMatchingPrefix(shell.ReadArrayVar("varname", runtime.ParseInt(expr118)), "pattern", "word"))
+		expr120, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ReplaceMatchingSuffix(shell.ReadArrayVar("varname", runtime.ParseInt(expr120)), "", ""))
+		expr123, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ReplaceMatchingSuffix(shell.ReadArrayVar("varname", runtime.ParseInt(expr123)), "pattern", ""))
+		expr127, exitCode := func() (string, int) {
+			var arithmeticResult = 0
+			arithmeticResult = 123
+			return runtime.FormatInt(arithmeticResult), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		arguments = append(arguments, runtime.ReplaceMatchingSuffix(shell.ReadArrayVar("varname", runtime.ParseInt(expr127)), "pattern", "word"))
+		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+			shell.HandleError(streamManager, err)
+			return
+		}
+
+	}()
+}
+
+#(ENDTEST)
