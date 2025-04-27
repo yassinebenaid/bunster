@@ -110,6 +110,7 @@ func (p *parser) parseFunction() ast.Statement {
 
 func (p *parser) parseFunctionFlags() []ast.Flag {
 	var flags []ast.Flag
+	definedFlags := map[string]struct{}{}
 
 	for p.curr.Type != token.RIGHT_PAREN && p.curr.Type != token.EOF {
 		for {
@@ -175,6 +176,11 @@ func (p *parser) parseFunctionFlags() []ast.Flag {
 			}
 		}
 
+		if _, defined := definedFlags[flag.Name]; defined {
+			p.error("flag declared twice: `%s`", flag.Name)
+		}
+
+		definedFlags[flag.Name] = struct{}{}
 		flags = append(flags, flag)
 	}
 
