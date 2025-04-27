@@ -125,7 +125,7 @@ func (p *Parser) Parse(args []string) (*ParseResult, error) {
 				if flag.Type == Boolean {
 					return nil, fmt.Errorf("passing value to a flag that doesn't expect it: %s", fields[0])
 				} else { // String flag
-					if len(fields) != 2 {
+					if len(fields) != 2 || fields[1] == "" {
 						return nil, fmt.Errorf("missing value for flag: %s", fields[0])
 					}
 
@@ -182,11 +182,6 @@ func (p *Parser) Parse(args []string) (*ParseResult, error) {
 			if flag.Type == String {
 				stringArgsNeeded++
 			}
-		}
-
-		// Check if we have enough remaining arguments for the string flags
-		if i+stringArgsNeeded > len(args) {
-			return nil, fmt.Errorf("missing value for flag: %s", arg)
 		}
 
 		// Second pass: set the values

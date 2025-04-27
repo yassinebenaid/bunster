@@ -129,6 +129,16 @@ func TestParser_Parse(t *testing.T) {
 			expectErr: "missing value for flag: b",
 		},
 		{
+			name: "missing arguments to flags that show last throws an error",
+			flagSetup: func(p *Parser) {
+				p.AddShortFlag("a", String, false)
+				p.AddShortFlag("b", String, false)
+				p.AddShortFlag("c", String, false)
+			},
+			args:      []string{"-abc"},
+			expectErr: "missing value for flag: a",
+		},
+		{
 			name: "basic boolean long flags",
 			flagSetup: func(p *Parser) {
 				p.AddLongFlag("foo", Boolean, true)
@@ -178,6 +188,23 @@ func TestParser_Parse(t *testing.T) {
 				p.AddLongFlag("bar", String, true)
 			},
 			args:      []string{"--bar", "--foo", "boo"},
+			expectErr: "missing value for flag: bar",
+		},
+		{
+			name: "inline string long flags require an argument",
+			flagSetup: func(p *Parser) {
+				p.AddLongFlag("foo", String, true)
+				p.AddLongFlag("bar", String, true)
+			},
+			args:      []string{"--bar=", "--foo", "boo"},
+			expectErr: "missing value for flag: bar",
+		},
+		{
+			name: "string long flags require an argument when appeare at end",
+			flagSetup: func(p *Parser) {
+				p.AddLongFlag("bar", String, true)
+			},
+			args:      []string{"--bar"},
 			expectErr: "missing value for flag: bar",
 		},
 		{
