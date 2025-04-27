@@ -45,4 +45,8 @@ features:
     icon:
       src: /assets/static-assets.svg
     details: You can embed files and directories within your compiled program. And use them as if they were normal files in the system at runtime.
+  - title: Builtin flags parsing
+    icon:
+      src: /assets/cli.png
+    details: You no longer have to bother your self parsing flags manually. Just declare what flags you expect, and let bunster do the rest.
 ---

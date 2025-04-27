@@ -1,0 +1,214 @@
+cases:
+  - name: basic short boolean flags
+    script: |
+      function myFunc(-a -b -c){
+        echo -a:$fflags_a -b:$fflags_b -c:$fflags_c
+      } 
+
+      myFunc -a -c
+      myFunc -cba
+      myFunc -b
+    expect:
+      stdout: |
+        -a:1 -b:0 -c:1
+        -a:1 -b:1 -c:1
+        -a:0 -b:1 -c:0
+
+  - name: basic short string flags
+    script: |
+      function myFunc(-a= -b= -c=){
+        echo -a:$fflags_a -b:$fflags_b -c:$fflags_c
+      } 
+
+      myFunc -a foo -b bar -c baz
+      myFunc -cba foo bar baz
+    expect:
+      stdout: |
+        -a:foo -b:bar -c:baz
+        -a:baz -b:bar -c:foo
+
+  - name: missing required short string flags throws an error
+    script: |
+      function myFunc(-a= -b= -c=){
+        echo -a:$fflags_a -b:$fflags_b -c:$fflags_c
+      } 
+
+      myFunc -a foo -b bar
+      myFunc -ca foo bar baz
+    expect:
+      exit_code: 1
+      stderr: |
+        myFunc: required flag not provided: c
+        myFunc: required flag not provided: b
+
+  - name: can mark short string flags as optional
+    script: |
+      function myFunc(-a= -b[=] -c[=]){
+        echo -a:$fflags_a -b:$fflags_b -c:$fflags_c
+      } 
+
+      myFunc -a foo -b bar
+      myFunc -ca foo bar baz
+    expect:
+      stdout: |
+        -a:foo -b:bar -c:
+        -a:bar -b: -c:foo
+
+  - name: missing an argument to short string flags throws an error
+    script: |
+      function myFunc(-a= -b[=]){
+        echo -a:$fflags_a -b:$fflags_b
+      } 
+
+      myFunc -a foo -b
+      myFunc -a -b foo
+      myFunc -ab
+    expect:
+      exit_code: 1
+      stderr: |
+        myFunc: missing value for flag: b
+        myFunc: missing value for flag: a
+        myFunc: missing value for flag: a
+
+  - name: basic long boolean flags
+    script: |
+      function myFunc(--foo --bar --baz){
+        echo --foo:$fflags_foo --bar:$fflags_bar --baz:$fflags_baz
+      } 
+
+      myFunc --foo --bar --baz
+      myFunc --foo --baz
+    expect:
+      stdout: |
+        --foo:1 --bar:1 --baz:1
+        --foo:1 --bar:0 --baz:1
+
+  - name: basic long string flags
+    script: |
+      function myFunc(--foo= --bar= --baz=){
+        echo --foo:$fflags_foo --bar:$fflags_bar --baz:$fflags_baz
+      } 
+
+      myFunc --foo abc --bar def --baz egh
+      myFunc --foo=abc --bar=def --baz=egh
+    expect:
+      stdout: |
+        --foo:abc --bar:def --baz:egh
+        --foo:abc --bar:def --baz:egh
+
+  - name: missing long string flags throws an error
+    script: |
+      function myFunc(--foo= --bar= --baz=){
+        echo --foo:$fflags_foo --bar:$fflags_bar --baz:$fflags_baz
+      } 
+
+      myFunc --foo abc --bar def 
+      myFunc --foo abc --baz egh
+    expect:
+      exit_code: 1
+      stderr: |
+        myFunc: required flag not provided: baz
+        myFunc: required flag not provided: bar
+
+  - name: can mark long string flags as optional
+    script: |
+      function myFunc(--foo= --bar[=] --baz[=]){
+        echo --foo:$fflags_foo --bar:$fflags_bar --baz:$fflags_baz
+      } 
+
+      myFunc --foo abc --bar def 
+      myFunc --foo abc --baz egh
+    expect:
+      stdout: |
+        --foo:abc --bar:def --baz:
+        --foo:abc --bar: --baz:egh
+
+  - name: missing arguments for long string flags throws an error
+    script: |
+      function myFunc(--foo= --bar[=]){
+        echo --foo:$fflags_foo --bar:$fflags_bar 
+      } 
+
+      myFunc --foo --bar def 
+      myFunc --foo abc --bar
+      myFunc --foo abc --bar=
+    expect:
+      exit_code: 1
+      stderr: |
+        myFunc: missing value for flag: foo
+        myFunc: missing value for flag: bar
+        myFunc: missing value for flag: bar
+
+  - name: cannot pass unknown flags
+    script: |
+      function myFunc(--foo --bar){
+        echo --foo:$fflags_foo --bar:$fflags_bar 
+      } 
+
+      myFunc --bad
+      myFunc --bad=something
+      myFunc -x
+    expect:
+      exit_code: 1
+      stderr: |
+        myFunc: unknown long flag: bad
+        myFunc: unknown long flag: bad
+        myFunc: unknown short flag: x
+
+  - name: cannot pass value to boolean flags
+    script: |
+      function myFunc(--foo){
+        return
+      } 
+
+      myFunc --foo=something
+    expect:
+      exit_code: 1
+      stderr: |
+        myFunc: passing value to a flag that doesn't expect it: foo
+
+  - name: cannot pass same flag twice
+    script: |
+      function myFunc(--foo){
+        return
+      } 
+
+      myFunc --foo --foo
+    expect:
+      exit_code: 1
+      stderr: |
+        myFunc: flag supplied too many times: foo
+
+  - name: cannot pass dash as an argument
+    script: |
+      function myFunc(--foo){
+        return
+      } 
+
+      myFunc -
+    expect:
+      exit_code: 1
+      stderr: |
+        myFunc: invalid short flag format: -
+
+  - name: known flags are available as positionals
+    script: |
+      function myFunc(--foo --bar= --baz -a -b= -c){
+        echo $@
+      } 
+
+      myFunc --foo arg --bar arg2 --baz -a arg3 -b arg4 -c arg5
+    expect:
+      stdout: |
+        arg arg3 arg5
+
+  - name: blouble dash (--) indicate end of flags
+    script: |
+      function myFunc(--foo --bar --baz -a -b -c){
+        echo $@
+      } 
+
+      myFunc arg -- --foo arg --bar arg2 --baz -a arg3 -b arg4 -c arg5
+    expect:
+      stdout: |
+        arg --foo arg --bar arg2 --baz -a arg3 -b arg4 -c arg5

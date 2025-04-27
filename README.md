@@ -35,6 +35,8 @@ In addition to being compatible with bash. bunster offers a lot of additional fe
 
 - **Static assets embedding**: bunster allows you to embed files and directories within your compiled program at compile time. And use them as if they were normal files in the system at runtime. [learn more](https://bunster.netlify.app/features/embedding)
 
+- **Builtin flags parsing**: You no longer have to bother your self parsing flags manually. Just declare what flags you expect, and let bunster do the rest. [learn more](https://bunster.netlify.app/features/functions#flags)
+
 - **Static analysis**: bunster statically analizes your scripts and reports potential bugs at compile time. (_wip_)
 
 ## Get Started
@@ -61,38 +63,6 @@ curl -f https://bunster.netlify.app/install.sh | GLOBAL=1 bash
 > Do not trust scripts downloaded from the internet. A quick look at the code before running it won't hurt.
 
 Checkout the [documentation](https://bunster.netlify.app/installation) for different ways of installation.
-
-## FAQ
-
-### How does bunster make your scripts more secure?
-
-It does not. Bunster does not make your script more secure. Instead, it makes your environment more secure. Bunster builds programs that can run in environments where the shell doesn't exist, for example in a cloud server. By eliminating the shell, you remain safe from a variety of security risks (examples include: [RCE](https://www.invicti.com/learn/remote-code-execution-rce/), [Command Injection](https://www.imperva.com/learn/application-security/command-injection/#:~:text=Code%20injection%20is%20a%20generic,proper%20input%2Foutput%20data%20validation.), [Reverse Shell](https://www.wiz.io/academy/reverse-shell-attacks), ...).
-
-_more about this topic on this discussion:_ https://github.com/yassinebenaid/bunster/discussions/126.
-
-### Does bunster replace the programs in my script?
-
-No, bunster replaces the shell, but you still need to have the programs available in `$PATH` to use them. Later we might add first-class support for a subset of commands builtin.
-
-### Is bunster a drop-in replacement for bash?
-
-Yes and No.
-
-Yes because bunster aims to be compatible with bash, with a lot of additional features. Bunster is worth being your primary tool for shell scripting.
-
-No because bunster programs are binary. They're cool if they're yours, but very bad if downloaded from the internet. Also, if you only have a short script that runs a few commands, it doesn't worth installing an entire toolchain. You can use the shell.
-
-- Use bunster for long, complex scripts or to run scripts in security-critical environments.
-- Don't use bunster for short, simple scripts.
-
-### Why would I choose bunster over classic shells?
-
-You don't have to. If you're happy with your favorite shell, just stick with it. **Bunster** is just another option. However, there are a lot of motivators worth consideration.
-
-- **Unique goals:** Bunster brings a [lot of features](https://github.com/yassinebenaid/bunster/blob/master/README.md#vision) that are not present in any of the shells out there.
-- **Implementation differences:** Bunster is built differently. A lot of implementation details have been adopted to improve efficiency of your scripts.
-- **Portability**: How many times you wrote a script for `bash` in one machine, and it didn't work in another machine just because `bash` version was different. Well, bunster programs are statically linked, compile once, run everywhere (with respect to arch/os).
-- **Security**: A lot of security risks are brought just by having the shell installed on your web server, (or wherever else). if your programs are statically linked. you can eliminate the shell at all. Additionally, in some cases you might want to hide the content of the script for any reason. Well, is it easy to read `binary` files ?
 
 ## Versioning
 

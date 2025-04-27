@@ -12,6 +12,20 @@ func (g *generator) handleFunction(buf *InstructionBuffer, function *ast.Functio
 
 	g.handleBreakPoints(&body, function.BreakPoints)
 
+	if function.Flags != nil {
+		var flagSet = ir.FlagSet{Name: function.Name}
+
+		for _, flag := range function.Flags {
+			flagSet.FLags = append(flagSet.FLags, ir.Flag{
+				Name:         flag.Name,
+				Long:         flag.Long,
+				AcceptsValue: flag.AcceptsValue,
+				Optional:     flag.Optional,
+			})
+		}
+		body.add(flagSet)
+	}
+
 	g.handleRedirections(&body, function.Redirections)
 
 	for _, cmd := range function.Body {

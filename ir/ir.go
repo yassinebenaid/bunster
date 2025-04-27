@@ -545,3 +545,45 @@ func (al ArrayLiteral) togo() string {
 
 	return fmt.Sprintf(`[]string{%s}`, strings.Join(arr, ", "))
 }
+
+type Flag struct {
+	Name         string
+	Long         bool
+	AcceptsValue bool
+	Optional     bool
+}
+
+type FlagSet struct {
+	Name  string
+	FLags []Flag
+}
+
+func (f FlagSet) togo() string {
+	body := `flagParser := runtime.NewFlagParser();`
+
+	for _, flag := range f.FLags {
+		ftype := `runtime.BooleanFlag`
+		if flag.AcceptsValue {
+			ftype = `runtime.StringFlag`
+		}
+
+		required := flag.AcceptsValue && !flag.Optional
+
+		if flag.Long {
+			body += fmt.Sprintf(`flagParser.AddLongFlag(%q, %s, %t);`, flag.Name, ftype, required)
+		} else {
+			body += fmt.Sprintf(`flagParser.AddShortFlag(%q, %s, %t);`, flag.Name, ftype, required)
+		}
+	}
+
+	body += fmt.Sprintf(`results, err := flagParser.Parse(shell.Args)
+		if err != nil {
+			shell.HandleError(streamManager, err, %q)
+			return
+		}
+		shell.LoadMap("fflags_", results.Flags)
+		shell.Args = results.Args
+	`, f.Name)
+
+	return body
+}

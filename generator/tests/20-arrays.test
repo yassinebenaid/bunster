@@ -1,0 +1,67 @@
+#(TEST: arrays declaration)
+
+var=(foo bar baz)
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		shell.SetVar("var", []string{"foo", "bar", "baz"})
+
+	}()
+}
+
+#(ENDTEST)
+
+#(TEST: arrays declaration can have any expression)
+
+var=($foo $(cmd) ${#var})
+
+#(RESULT)
+
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	func() {
+		expr4, exitCode := func() (string, int) {
+			streamManager := streamManager.Clone()
+			defer streamManager.Destroy()
+			shell := shell.Clone()
+			defer shell.Terminate(streamManager)
+			var buffer = runtime.NewBuffer("", false)
+			streamManager.Add("1", buffer)
+			func() {
+				streamManager := streamManager.Clone()
+				defer streamManager.Destroy()
+				var commandName = "cmd"
+				var arguments []string
+				var env = make(map[string]string)
+				if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
+					shell.HandleError(streamManager, err)
+					return
+				}
+
+			}()
+			return buffer.String(true), shell.ExitCode
+		}()
+		if exitCode != 0 {
+			shell.ExitCode = exitCode
+			return
+		}
+		shell.SetVar("var", []string{shell.ReadVar("foo"), expr4, runtime.FormatInt(len([]rune(shell.ReadVar("var"))))})
+
+	}()
+}
+
+#(ENDTEST)
+
+
+
