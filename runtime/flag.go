@@ -78,6 +78,7 @@ func (p *FlagParser) Parse(args []string) (*ParseResult, error) {
 	result := &ParseResult{
 		Flags: make(map[string]interface{}),
 	}
+	flagsSeen := map[string]struct{}{}
 
 	// Initialize all Boolean flags to false
 	for name, flag := range p.shortFlags {
@@ -116,20 +117,27 @@ func (p *FlagParser) Parse(args []string) (*ParseResult, error) {
 			// if it's value is associated, like --flag=value
 			if strings.Contains(flagName, "=") {
 				fields := strings.SplitN(flagName, "=", 2)
-				flag, exists := p.longFlags[fields[0]]
+				flagName = fields[0]
+
+				flag, exists := p.longFlags[flagName]
 
 				if !exists {
-					return nil, fmt.Errorf("unknown long flag: %s", fields[0])
+					return nil, fmt.Errorf("unknown long flag: %s", flagName)
 				}
 
+				if _, parsed := flagsSeen[flagName]; parsed {
+					return nil, fmt.Errorf("flag supplied too many times: %s", flagName)
+				}
+				flagsSeen[flagName] = struct{}{}
+
 				if flag.Type == BooleanFlag {
-					return nil, fmt.Errorf("passing value to a flag that doesn't expect it: %s", fields[0])
+					return nil, fmt.Errorf("passing value to a flag that doesn't expect it: %s", flagName)
 				} else { // String flag
 					if len(fields) != 2 || fields[1] == "" {
-						return nil, fmt.Errorf("missing value for flag: %s", fields[0])
+						return nil, fmt.Errorf("missing value for flag: %s", flagName)
 					}
 
-					result.Flags[fields[0]] = fields[1]
+					result.Flags[flagName] = fields[1]
 				}
 				continue
 			}
@@ -139,6 +147,11 @@ func (p *FlagParser) Parse(args []string) (*ParseResult, error) {
 			if !exists {
 				return nil, fmt.Errorf("unknown long flag: %s", flagName)
 			}
+
+			if _, parsed := flagsSeen[flagName]; parsed {
+				return nil, fmt.Errorf("flag supplied too many times: %s", flagName)
+			}
+			flagsSeen[flagName] = struct{}{}
 
 			if flag.Type == BooleanFlag {
 				result.Flags[flagName] = true
@@ -167,25 +180,25 @@ func (p *FlagParser) Parse(args []string) (*ParseResult, error) {
 		flagGroup := arg[1:]
 
 		// First pass: count how many string arguments we need
-		stringArgsNeeded := 0
 		flagsInGroup := make([]string, 0, len(flagGroup))
 
 		for _, ch := range flagGroup {
 			name := string(ch)
 			flagsInGroup = append(flagsInGroup, name)
 
-			flag, exists := p.shortFlags[name]
+			_, exists := p.shortFlags[name]
 			if !exists {
 				return nil, fmt.Errorf("unknown short flag: %s", name)
-			}
-
-			if flag.Type == StringFlag {
-				stringArgsNeeded++
 			}
 		}
 
 		// Second pass: set the values
 		for _, name := range flagsInGroup {
+			if _, parsed := flagsSeen[name]; parsed {
+				return nil, fmt.Errorf("flag supplied too many times: %s", name)
+			}
+			flagsSeen[name] = struct{}{}
+
 			flag := p.shortFlags[name]
 
 			if flag.Type == BooleanFlag {

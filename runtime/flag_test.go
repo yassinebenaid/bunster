@@ -299,6 +299,46 @@ func TestParser_Parse(t *testing.T) {
 			expectedFlags: map[string]any{},
 			expectedArgs:  []string{"foo", "--foo", "--bar", "--baz"},
 		},
+		{
+			name: "an error occurs when the same short flag appears too many times",
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddShortFlag("a", runtime.BooleanFlag, false)
+			},
+			args:      []string{"-a", "-a"},
+			expectErr: "flag supplied too many times: a",
+		},
+		{
+			name: "an error occurs when the same short string flag appears too many times",
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddShortFlag("a", runtime.StringFlag, false)
+			},
+			args:      []string{"-a", "vv", "-a", "xx"},
+			expectErr: "flag supplied too many times: a",
+		},
+		{
+			name: "an error occurs when the same long flag appears too many times",
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddLongFlag("abc", runtime.BooleanFlag, false)
+			},
+			args:      []string{"--abc", "--abc"},
+			expectErr: "flag supplied too many times: abc",
+		},
+		{
+			name: "an error occurs when the same long string flag appears too many times",
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddLongFlag("abc", runtime.StringFlag, false)
+			},
+			args:      []string{"--abc", "vv", "--abc", "xx"},
+			expectErr: "flag supplied too many times: abc",
+		},
+		{
+			name: "an error occurs when the same long inline string flag appears too many times",
+			flagSetup: func(p *runtime.FlagParser) {
+				p.AddLongFlag("abc", runtime.StringFlag, false)
+			},
+			args:      []string{"--abc=vv", "--abc=xx"},
+			expectErr: "flag supplied too many times: abc",
+		},
 	}
 
 	for _, tt := range tests {
