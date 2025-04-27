@@ -655,3 +655,51 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 
 #(ENDTEST)
 
+
+
+#(TEST: can define flags)
+
+function foo(
+	-a 
+	-b=
+	-c[=]
+	--abc 
+	--efg=
+	--hij[=]
+) {
+	return;
+}
+
+#(RESULT)
+package main
+
+import "github.com/yassinebenaid/bunster/runtime"
+
+func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+	defer shell.Terminate(streamManager)
+	shell.RegisterFunction("foo", func(shell *runtime.Shell, streamManager *runtime.StreamManager) {
+		defer shell.Terminate(streamManager)
+		var breakpoint1 = false
+		_ = breakpoint1
+		flagParser := runtime.NewFlagParser()
+		flagParser.AddShortFlag("a", runtime.BooleanFlag, false)
+		flagParser.AddShortFlag("b", runtime.StringFlag, true)
+		flagParser.AddShortFlag("c", runtime.StringFlag, false)
+		flagParser.AddLongFlag("abc", runtime.BooleanFlag, false)
+		flagParser.AddLongFlag("efg", runtime.StringFlag, true)
+		flagParser.AddLongFlag("hij", runtime.StringFlag, false)
+		results, err := flagParser.Parse(shell.Args)
+		if err != nil {
+			shell.HandleError(streamManager, err, "foo")
+			return
+		}
+		shell.LoadMap("fflags_", results.Flags)
+		shell.Args = results.Args
+		breakpoint1 = true
+		shell.ExitCode = runtime.ParseInt("0")
+		return
+	})
+}
+
+#(ENDTEST)
+
