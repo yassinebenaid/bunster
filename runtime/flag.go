@@ -31,6 +31,7 @@ type ParseResult struct {
 
 // FlagParser contains the flag definitions and parsing logic
 type FlagParser struct {
+	err        error
 	shortFlags map[string]*Flag
 	longFlags  map[string]*Flag
 }
@@ -44,9 +45,9 @@ func NewFlagParser() *FlagParser {
 }
 
 // AddShortFlag adds a new single-character flag to the parser
-func (p *FlagParser) AddShortFlag(name string, flagType FlagType, required bool) error {
-	if len(name) != 1 {
-		return errors.New("short flag name must be exactly one character")
+func (p *FlagParser) AddShortFlag(name string, flagType FlagType, required bool) *FlagParser {
+	if len(name) != 1 && p.err == nil {
+		p.err = errors.New("short flag name must be exactly one character")
 	}
 
 	p.shortFlags[name] = &Flag{
@@ -54,14 +55,13 @@ func (p *FlagParser) AddShortFlag(name string, flagType FlagType, required bool)
 		Type:     flagType,
 		Required: required,
 	}
-
-	return nil
+	return p
 }
 
 // AddLongFlag adds a new multi-character flag to the parser
-func (p *FlagParser) AddLongFlag(name string, flagType FlagType, required bool) error {
-	if len(name) <= 1 {
-		return errors.New("long flag name must be more than one character")
+func (p *FlagParser) AddLongFlag(name string, flagType FlagType, required bool) *FlagParser {
+	if len(name) <= 1 && p.err == nil {
+		p.err = errors.New("long flag name must be more than one character")
 	}
 
 	p.longFlags[name] = &Flag{
@@ -69,12 +69,15 @@ func (p *FlagParser) AddLongFlag(name string, flagType FlagType, required bool) 
 		Type:     flagType,
 		Required: required,
 	}
-
-	return nil
+	return p
 }
 
 // Parse parses the command line arguments
 func (p *FlagParser) Parse(args []string) (*ParseResult, error) {
+	if p.err != nil {
+		return nil, p.err
+	}
+
 	result := &ParseResult{
 		Flags: make(map[string]interface{}),
 	}

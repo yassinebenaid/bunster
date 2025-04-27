@@ -371,28 +371,26 @@ func TestParser_Parse(t *testing.T) {
 }
 
 func TestParser_AddFlags(t *testing.T) {
-	p := runtime.NewFlagParser()
-
 	// Valid short flag
-	err := p.AddShortFlag("a", runtime.BooleanFlag, false)
+	_, err := runtime.NewFlagParser().AddShortFlag("a", runtime.BooleanFlag, false).Parse(nil)
 	if err != nil {
 		t.Errorf("AddShortFlag() unexpected error = %v", err)
 	}
 
 	// Invalid short flag (more than one character)
-	err = p.AddShortFlag("abc", runtime.BooleanFlag, false)
+	_, err = runtime.NewFlagParser().AddShortFlag("abc", runtime.BooleanFlag, false).Parse(nil)
 	if err == nil {
 		t.Error("AddShortFlag() expected error for multi-character flag")
 	}
 
 	// Valid long flag
-	err = p.AddLongFlag("verbose", runtime.BooleanFlag, false)
+	_, err = runtime.NewFlagParser().AddLongFlag("verbose", runtime.BooleanFlag, false).Parse(nil)
 	if err != nil {
 		t.Errorf("AddLongFlag() unexpected error = %v", err)
 	}
 
 	// Invalid long flag (only one character)
-	err = p.AddLongFlag("v", runtime.BooleanFlag, false)
+	_, err = runtime.NewFlagParser().AddLongFlag("v", runtime.BooleanFlag, false).Parse(nil)
 	if err == nil {
 		t.Error("AddLongFlag() expected error for single-character flag")
 	}
