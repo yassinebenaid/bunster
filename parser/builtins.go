@@ -61,11 +61,14 @@ func (p *parser) parseFunction() ast.Statement {
 		p.proceed()
 	}
 
+	var function ast.Function
+
 	if p.curr.Type == token.LEFT_PAREN {
 		p.proceed()
 		if p.curr.Type == token.BLANK {
 			p.proceed()
 		}
+		function.Flags = p.parseFunctionFlags()
 		if p.curr.Type != token.RIGHT_PAREN {
 			p.error("expected `)`, found `%s`", p.curr)
 			return nil
@@ -83,13 +86,13 @@ func (p *parser) parseFunction() ast.Statement {
 		return nil
 	}
 	body := compound()
-	fn := ast.Function{Name: string(name)}
+	function.Name = string(name)
 
 	switch v := body.(type) {
 	case ast.Group:
-		fn.Body, fn.Redirections = v.Body, v.Redirections
+		function.Body, function.Redirections = v.Body, v.Redirections
 	case ast.SubShell:
-		fn.Body, fn.Redirections, fn.SubShell = v.Body, v.Redirections, true
+		function.Body, function.Redirections, function.SubShell = v.Body, v.Redirections, true
 	default:
 		p.error("function body is expected to be a group or subshell")
 		return nil
@@ -102,7 +105,53 @@ func (p *parser) parseFunction() ast.Statement {
 		return nil
 	}
 
-	return &fn
+	return &function
+}
+
+func (p *parser) parseFunctionFlags() []ast.Flag {
+	var flags []ast.Flag
+
+	for p.curr.Type != token.RIGHT_PAREN && p.curr.Type != token.EOF {
+		if p.curr.Type != token.MINUS && p.curr.Type != token.DECREMENT {
+			p.error("unexpected token `%s`", p.curr)
+		}
+		var flag = ast.Flag{
+			Long: p.curr.Type == token.DECREMENT,
+		}
+		p.proceed()
+
+		if p.curr.Type != token.WORD {
+			p.error("expected a valid flag name, found `%s`", p.curr)
+		}
+
+		if !flag.Long && len(p.curr.Literal) != 1 {
+			p.error("short flags can only be one character long, found `%s`", p.curr)
+		}
+		flag.Name = p.curr.Literal
+		p.proceed()
+
+		if p.curr.Type == token.ASSIGN {
+			flag.AcceptsValue = true
+			p.proceed()
+		} else if p.curr.Type == token.LEFT_BRACKET {
+			flag.AcceptsValue = true
+			flag.Optional = true
+
+			if !(p.curr.Type == token.LEFT_BRACKET && p.next.Type == token.ASSIGN && p.next2.Type == token.RIGHT_BRACKET) {
+				p.error("expected [=] to indicate optional value, found `%s%s%s`", p.curr, p.next, p.next2)
+			}
+			p.proceed()
+			p.proceed()
+			p.proceed()
+		}
+
+		for p.curr.Type == token.BLANK {
+			p.proceed()
+		}
+		flags = append(flags, flag)
+	}
+
+	return flags
 }
 
 func (p *parser) parseDefer() ast.Statement {

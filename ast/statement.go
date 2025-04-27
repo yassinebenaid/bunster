@@ -192,8 +192,15 @@ type ProcessSubstitution struct {
 	Body      []Statement
 }
 
+type Flag struct {
+	Name         string
+	Long         bool
+	AcceptsValue bool
+	Optional     bool
+}
 type Function struct {
 	Name         string
+	Flags        []Flag
 	SubShell     bool
 	Body         []Statement
 	Redirections []Redirection

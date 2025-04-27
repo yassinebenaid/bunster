@@ -402,6 +402,25 @@ var functionsTests = []testCase{
 			},
 		},
 	}},
+
+	// flags
+	{`function foo(-a -b -c -e= -f[=] --abc --def --igk= --lmn[=]){ cmd; }`, ast.Script{
+		&ast.Function{
+			Name: "foo",
+			Flags: []ast.Flag{
+				{Name: "a"},
+				{Name: "b"},
+				{Name: "c"},
+				{Name: "e", AcceptsValue: true},
+				{Name: "f", AcceptsValue: true, Optional: true},
+				{Name: "abc", Long: true},
+				{Name: "def", Long: true},
+				{Name: "igk", Long: true, AcceptsValue: true},
+				{Name: "lmn", Long: true, AcceptsValue: true, Optional: true},
+			},
+			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+		},
+	}},
 }
 
 var functionsErrorHandlingCases = []errorHandlingTestCase{
