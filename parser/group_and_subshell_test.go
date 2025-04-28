@@ -307,22 +307,22 @@ var groupAndSubshellTests = []testCase{
 }
 
 var groupAndSubshellErrorHandlingCases = []errorHandlingTestCase{
-	{`{`, "syntax error: expeceted a command list after `{`. (line: 1, column: 2)"},
-	{`{}`, "syntax error: expeceted a command list after `{`. (line: 1, column: 2)"},
-	{`{cmd`, "syntax error: expected `}`, found `end of file`. (line: 1, column: 5)"},
-	{`{cmd}`, "syntax error: expected `}`, found `end of file`. (line: 1, column: 6)"},
-	{`{cmd |;}`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 7)"},
-	{`{cmd | |}`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 8)"},
+	{`{`, "main.sh(1:2): syntax error: expected a command list after `{`."},
+	{`{}`, "main.sh(1:2): syntax error: expected a command list after `{`."},
+	{`{cmd`, "main.sh(1:5): syntax error: expected `}`, found `end of file`."},
+	{`{cmd}`, "main.sh(1:6): syntax error: expected `}`, found `end of file`."},
+	{`{cmd |;}`, "main.sh(1:7): syntax error: expected a valid command name, found `;`."},
+	{`{cmd | |}`, "main.sh(1:8): syntax error: expected a valid command name, found `|`."},
 
-	{`{cmd;} arg`, "syntax error: unexpected token `arg`. (line: 1, column: 8)"},
-	{`{cmd;} <in >out <<<etc arg`, "syntax error: unexpected token `arg`. (line: 1, column: 24)"},
+	{`{cmd;} arg`, "main.sh(1:8): syntax error: unexpected token `arg`."},
+	{`{cmd;} <in >out <<<etc arg`, "main.sh(1:24): syntax error: unexpected token `arg`."},
 
-	{`(`, "syntax error: expeceted a command list after `(`. (line: 1, column: 2)"},
-	{`()`, "syntax error: expeceted a command list after `(`. (line: 1, column: 2)"},
-	{`(cmd`, "syntax error: expected `)`, found `end of file`. (line: 1, column: 5)"},
-	{`(cmd |)`, "syntax error: expected a valid command name, found `)`. (line: 1, column: 7)"},
-	{`(cmd | |)`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 8)"},
+	{`(`, "main.sh(1:2): syntax error: expected a command list after `(`."},
+	{`()`, "main.sh(1:2): syntax error: expected a command list after `(`."},
+	{`(cmd`, "main.sh(1:5): syntax error: expected `)`, found `end of file`."},
+	{`(cmd |)`, "main.sh(1:7): syntax error: expected a valid command name, found `)`."},
+	{`(cmd | |)`, "main.sh(1:8): syntax error: expected a valid command name, found `|`."},
 
-	{`(cmd) arg`, "syntax error: unexpected token `arg`. (line: 1, column: 7)"},
-	{`(cmd) <in >out <<<etc arg`, "syntax error: unexpected token `arg`. (line: 1, column: 23)"},
+	{`(cmd) arg`, "main.sh(1:7): syntax error: unexpected token `arg`."},
+	{`(cmd) <in >out <<<etc arg`, "main.sh(1:23): syntax error: unexpected token `arg`."},
 }

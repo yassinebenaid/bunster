@@ -89,9 +89,9 @@ var pipesTests = []testCase{
 }
 
 var pipesErrorHandlingCases = []errorHandlingTestCase{
-	{`cmd |`, "syntax error: expected a valid command name, found `end of file`. (line: 1, column: 6)"},
-	{`cmd | foo |&`, "syntax error: expected a valid command name, found `end of file`. (line: 1, column: 13)"},
-	{`cmd foo | cmd >foo| |&`, "syntax error: expected a valid command name, found `|&`. (line: 1, column: 21)"},
-	{"cmd |\n\n\t <foo", "syntax error: expected a valid command name, found `<`. (line: 3, column: 3)"},
-	{"!\n", "syntax error: expected a valid command name, found `newline`. (line: 2, column: 0)"},
+	{`cmd |`, "main.sh(1:6): syntax error: expected a valid command name, found `end of file`."},
+	{`cmd | foo |&`, "main.sh(1:13): syntax error: expected a valid command name, found `end of file`."},
+	{`cmd foo | cmd >foo| |&`, "main.sh(1:21): syntax error: expected a valid command name, found `|&`."},
+	{"cmd |\n\n\t <foo", "main.sh(3:3): syntax error: expected a valid command name, found `<`."},
+	{"!\n", "main.sh(2:0): syntax error: expected a valid command name, found `newline`."},
 }

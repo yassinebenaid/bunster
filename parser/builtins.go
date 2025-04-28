@@ -35,7 +35,7 @@ func (p *parser) getBuiltinParser() func() ast.Statement {
 		}
 		return p.parseEmbedDirective
 	case token.THEN, token.ELIF, token.ELSE, token.FI, token.DO, token.DONE, token.ESAC:
-		p.error("`%s` is a reserved keyword, cannot be used a command name", p.curr)
+		p.error("`%s` is a reserved keyword, cannot be used as a command name", p.curr)
 	}
 	return nil
 }

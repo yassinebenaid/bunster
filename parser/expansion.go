@@ -33,12 +33,12 @@ func (p *parser) parseCommandSubstitution() ast.Expression {
 	}
 
 	if len(cmds) == 0 {
-		p.error("expeceted a command list after `$(`")
+		p.error("expected a command list after `$(`")
 		return nil
 	}
 
 	if p.curr.Type != token.RIGHT_PAREN {
-		p.error("unexpected end of file, expeceted `)`")
+		p.error("unexpected end of file, expected `)`")
 		return nil
 	}
 
@@ -80,12 +80,12 @@ func (p *parser) parseProcessSubstitution() ast.Expression {
 	}
 
 	if len(process.Body) == 0 {
-		p.error("expeceted a command list after `%s`", tok)
+		p.error("expected a command list after `%s`", tok)
 		return nil
 	}
 
 	if p.curr.Type != token.RIGHT_PAREN {
-		p.error("unexpected end of file, expeceted `)`")
+		p.error("unexpected end of file, expected `)`")
 		return nil
 	}
 

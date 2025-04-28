@@ -329,7 +329,7 @@ func TestParser(t *testing.T) {
 			}
 
 			script, err := parser.Parse(
-				lexer.New([]rune(tc.input)),
+				lexer.New("main.sh", []rune(tc.input)),
 			)
 
 			if err != nil {
@@ -353,52 +353,49 @@ var errorHandlingTestCases = []struct {
 	cases []errorHandlingTestCase
 }{
 	{"Simple Commands", []errorHandlingTestCase{
-		{`)`, "syntax error: expected a valid command name, found `)`. (line: 1, column: 1)"},
-		{`cmd arg (`, "syntax error: token `(` cannot be placed here. (line: 1, column: 9)"},
-		{`|`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 1)"},
-		{`>`, "syntax error: expected a valid command name, found `>`. (line: 1, column: 1)"},
-		{`>>`, "syntax error: expected a valid command name, found `>>`. (line: 1, column: 1)"},
-		{`1>>`, "syntax error: expected a valid command name, found `1`. (line: 1, column: 1)"},
-		{`<<<`, "syntax error: expected a valid command name, found `<<<`. (line: 1, column: 1)"},
-		{`1<<<`, "syntax error: expected a valid command name, found `1`. (line: 1, column: 1)"},
-		{`1>`, "syntax error: expected a valid command name, found `1`. (line: 1, column: 1)"},
-		{`1<`, "syntax error: expected a valid command name, found `1`. (line: 1, column: 1)"},
-		{`1>&`, "syntax error: expected a valid command name, found `1`. (line: 1, column: 1)"},
-		{`1<&`, "syntax error: expected a valid command name, found `1`. (line: 1, column: 1)"},
-		{`&& cmd2`, "syntax error: expected a valid command name, found `&&`. (line: 1, column: 1)"},
-		{`|| cmd2`, "syntax error: expected a valid command name, found `||`. (line: 1, column: 1)"},
-
-		{`& cmd2`, "syntax error: expected a valid command name, found `&`. (line: 1, column: 1)"},
-		{`cmd & || cmd2`, "syntax error: expected a valid command name, found `||`. (line: 1, column: 7)"},
-		{`cmd & && cmd2`, "syntax error: expected a valid command name, found `&&`. (line: 1, column: 7)"},
-		{`cmd & | cmd2`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 7)"},
-		{`cmd || & cmd2`, "syntax error: expected a valid command name, found `&`. (line: 1, column: 8)"},
-		{`cmd && & cmd2`, "syntax error: expected a valid command name, found `&`. (line: 1, column: 8)"},
-		{`cmd | & cmd2`, "syntax error: expected a valid command name, found `&`. (line: 1, column: 7)"},
-
-		{"cmd \n || cmd2", "syntax error: expected a valid command name, found `||`. (line: 2, column: 2)"},
-		{"cmd \n && cmd2", "syntax error: expected a valid command name, found `&&`. (line: 2, column: 2)"},
-		{"cmd \n | cmd2", "syntax error: expected a valid command name, found `|`. (line: 2, column: 2)"},
-
-		{`; cmd2`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 1)"},
-		{`cmd ; || cmd2`, "syntax error: expected a valid command name, found `||`. (line: 1, column: 7)"},
-		{`cmd ; && cmd2`, "syntax error: expected a valid command name, found `&&`. (line: 1, column: 7)"},
-		{`cmd ; | cmd2`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 7)"},
-		{`cmd || ; cmd2`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 8)"},
-		{`cmd && ; cmd2`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 8)"},
-		{`cmd | ; cmd2`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 7)"},
-		{`cmd ;;`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 6)"},
+		{`)`, "main.sh(1:1): syntax error: expected a valid command name, found `)`."},
+		{`cmd arg (`, "main.sh(1:9): syntax error: token `(` cannot be placed here."},
+		{`|`, "main.sh(1:1): syntax error: expected a valid command name, found `|`."},
+		{`>`, "main.sh(1:1): syntax error: expected a valid command name, found `>`."},
+		{`>>`, "main.sh(1:1): syntax error: expected a valid command name, found `>>`."},
+		{`1>>`, "main.sh(1:1): syntax error: expected a valid command name, found `1`."},
+		{`<<<`, "main.sh(1:1): syntax error: expected a valid command name, found `<<<`."},
+		{`1<<<`, "main.sh(1:1): syntax error: expected a valid command name, found `1`."},
+		{`1>`, "main.sh(1:1): syntax error: expected a valid command name, found `1`."},
+		{`1<`, "main.sh(1:1): syntax error: expected a valid command name, found `1`."},
+		{`1>&`, "main.sh(1:1): syntax error: expected a valid command name, found `1`."},
+		{`1<&`, "main.sh(1:1): syntax error: expected a valid command name, found `1`."},
+		{`&& cmd2`, "main.sh(1:1): syntax error: expected a valid command name, found `&&`."},
+		{`|| cmd2`, "main.sh(1:1): syntax error: expected a valid command name, found `||`."},
+		{`& cmd2`, "main.sh(1:1): syntax error: expected a valid command name, found `&`."},
+		{`cmd & || cmd2`, "main.sh(1:7): syntax error: expected a valid command name, found `||`."},
+		{`cmd & && cmd2`, "main.sh(1:7): syntax error: expected a valid command name, found `&&`."},
+		{`cmd & | cmd2`, "main.sh(1:7): syntax error: expected a valid command name, found `|`."},
+		{`cmd || & cmd2`, "main.sh(1:8): syntax error: expected a valid command name, found `&`."},
+		{`cmd && & cmd2`, "main.sh(1:8): syntax error: expected a valid command name, found `&`."},
+		{`cmd | & cmd2`, "main.sh(1:7): syntax error: expected a valid command name, found `&`."},
+		{"cmd \n || cmd2", "main.sh(2:2): syntax error: expected a valid command name, found `||`."},
+		{"cmd \n && cmd2", "main.sh(2:2): syntax error: expected a valid command name, found `&&`."},
+		{"cmd \n | cmd2", "main.sh(2:2): syntax error: expected a valid command name, found `|`."},
+		{`; cmd2`, "main.sh(1:1): syntax error: expected a valid command name, found `;`."},
+		{`cmd ; || cmd2`, "main.sh(1:7): syntax error: expected a valid command name, found `||`."},
+		{`cmd ; && cmd2`, "main.sh(1:7): syntax error: expected a valid command name, found `&&`."},
+		{`cmd ; | cmd2`, "main.sh(1:7): syntax error: expected a valid command name, found `|`."},
+		{`cmd || ; cmd2`, "main.sh(1:8): syntax error: expected a valid command name, found `;`."},
+		{`cmd && ; cmd2`, "main.sh(1:8): syntax error: expected a valid command name, found `;`."},
+		{`cmd | ; cmd2`, "main.sh(1:7): syntax error: expected a valid command name, found `;`."},
+		{`cmd ;;`, "main.sh(1:6): syntax error: expected a valid command name, found `;`."},
 	}},
 	{"Quotes", []errorHandlingTestCase{
-		0: {`cmd 'foo bar`, `syntax error: a closing single quote is missing. (line: 1, column: 13)`},
-		1: {`cmd "foo bar'`, `syntax error: a closing double quote is missing. (line: 1, column: 14)`},
+		0: {`cmd 'foo bar`, "main.sh(1:13): syntax error: a closing single quote is missing."},
+		1: {`cmd "foo bar'`, "main.sh(1:14): syntax error: a closing double quote is missing."},
 	}},
 	{"Async commands", []errorHandlingTestCase{
-		0: {`wait arg`, "syntax error: unexpected token `arg`. (line: 1, column: 6)"},
+		0: {`wait arg`, "main.sh(1:6): syntax error: unexpected token `arg`."},
 	}},
 	{"Redirections", redirectionErrorHandlingCases},
 	{"Pipes", pipesErrorHandlingCases},
-	{"Conditional Commands", commandListErrorHandlingCases},
+	{"Lists", commandListErrorHandlingCases},
 	{"Loops", loopsErrorHandlingCases},
 	{"If Command", ifCommandErrorHandlingCases},
 	{"Case", caseErrorHandlingCases},
@@ -428,7 +425,7 @@ func TestParserErrorHandling(t *testing.T) {
 			}
 
 			_, err := parser.Parse(
-				lexer.New([]rune(tc.input)),
+				lexer.New("main.sh", []rune(tc.input)),
 			)
 
 			if err == nil {

@@ -101,9 +101,9 @@ var builtinTests = []testCase{
 }
 
 var builtinsErrorHandlingCases = []errorHandlingTestCase{
-	{`exit <foo`, "syntax error: unexpected token `<`. (line: 1, column: 6)"},
-	{`return <foo`, "syntax error: unexpected token `<`. (line: 1, column: 8)"},
-	{`unset`, "syntax error: unexpected token `end of file`. (line: 1, column: 6)"},
-	{`unset -`, "syntax error: expected a valid flag character after `-`, found `end of file`. (line: 1, column: 8)"},
-	{`unset -k`, "syntax error: expected a valid flag character after `-`, found `k`. (line: 1, column: 8)"},
+	{`exit <foo`, "main.sh(1:6): syntax error: unexpected token `<`."},
+	{`return <foo`, "main.sh(1:8): syntax error: unexpected token `<`."},
+	{`unset`, "main.sh(1:6): syntax error: unexpected token `end of file`."},
+	{`unset -`, "main.sh(1:8): syntax error: expected a valid flag character after `-`, found `end of file`."},
+	{`unset -k`, "main.sh(1:8): syntax error: expected a valid flag character after `-`, found `k`."},
 }

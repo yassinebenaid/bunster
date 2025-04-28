@@ -479,21 +479,21 @@ var commandAndProcessSubstitutionTests = []testCase{
 }
 
 var CommandAndProcessSubstitutionErrorHandlingCases = []errorHandlingTestCase{
-	{`$(`, "syntax error: expeceted a command list after `$(`. (line: 1, column: 3)"},
-	{`$()`, "syntax error: expeceted a command list after `$(`. (line: 1, column: 3)"},
-	{`$(cmd`, "syntax error: unexpected end of file, expeceted `)`. (line: 1, column: 6)"},
-	{`$(cmd |)`, "syntax error: expected a valid command name, found `)`. (line: 1, column: 8)"},
-	{`$(cmd | |)`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 9)"},
+	{`$(`, "main.sh(1:3): syntax error: expected a command list after `$(`."},
+	{`()`, "main.sh(1:2): syntax error: expected a command list after `(`."},
+	{`$(cmd`, "main.sh(1:6): syntax error: unexpected end of file, expected `)`."},
+	{`$(cmd |)`, "main.sh(1:8): syntax error: expected a valid command name, found `)`."},
+	{`$(cmd | |)`, "main.sh(1:9): syntax error: expected a valid command name, found `|`."},
 
-	{`<(`, "syntax error: expeceted a command list after `<(`. (line: 1, column: 3)"},
-	{`<()`, "syntax error: expeceted a command list after `<(`. (line: 1, column: 3)"},
-	{`<(cmd`, "syntax error: unexpected end of file, expeceted `)`. (line: 1, column: 6)"},
-	{`<(cmd |)`, "syntax error: expected a valid command name, found `)`. (line: 1, column: 8)"},
-	{`<(cmd | |)`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 9)"},
+	{`<(`, "main.sh(1:3): syntax error: expected a command list after `<(`."},
+	{`<()`, "main.sh(1:3): syntax error: expected a command list after `<(`."},
+	{`<(cmd`, "main.sh(1:6): syntax error: unexpected end of file, expected `)`."},
+	{`<(cmd |)`, "main.sh(1:8): syntax error: expected a valid command name, found `)`."},
+	{`<(cmd | |)`, "main.sh(1:9): syntax error: expected a valid command name, found `|`."},
 
-	{`>(`, "syntax error: expeceted a command list after `>(`. (line: 1, column: 3)"},
-	{`>()`, "syntax error: expeceted a command list after `>(`. (line: 1, column: 3)"},
-	{`>(cmd`, "syntax error: unexpected end of file, expeceted `)`. (line: 1, column: 6)"},
-	{`>(cmd |)`, "syntax error: expected a valid command name, found `)`. (line: 1, column: 8)"},
-	{`>(cmd | |)`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 9)"},
+	{`>(`, "main.sh(1:3): syntax error: expected a command list after `>(`."},
+	{`>()`, "main.sh(1:3): syntax error: expected a command list after `>(`."},
+	{`>(cmd`, "main.sh(1:6): syntax error: unexpected end of file, expected `)`."},
+	{`>(cmd |)`, "main.sh(1:8): syntax error: expected a valid command name, found `)`."},
+	{`>(cmd | |)`, "main.sh(1:9): syntax error: expected a valid command name, found `|`."},
 }

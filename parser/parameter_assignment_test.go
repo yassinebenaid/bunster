@@ -151,9 +151,9 @@ var parameterAssignmentTests = []testCase{
 }
 
 var parameterAssignmentErrorHandlingCases = []errorHandlingTestCase{
-	{`var=(`, "syntax error: expected a closing parenthese `)`, found `end of file`. (line: 1, column: 6)"},
-	{`local`, "syntax error: unexpected token `end of file`. (line: 1, column: 6)"},
-	{`local # variable`, "syntax error: unexpected token `end of file`. (line: 1, column: 17)"},
-	{`export`, "syntax error: unexpected token `end of file`. (line: 1, column: 7)"},
-	{`export # variable`, "syntax error: unexpected token `end of file`. (line: 1, column: 18)"},
+	{`var=(`, "main.sh(1:6): syntax error: expected a closing parenthese `)`, found `end of file`."},
+	{`local`, "main.sh(1:6): syntax error: unexpected token `end of file`."},
+	{`local # variable`, "main.sh(1:17): syntax error: unexpected token `end of file`."},
+	{`export`, "main.sh(1:7): syntax error: unexpected token `end of file`."},
+	{`export # variable`, "main.sh(1:18): syntax error: unexpected token `end of file`."},
 }

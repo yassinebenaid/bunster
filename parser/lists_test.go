@@ -289,8 +289,8 @@ var commandListTests = []testCase{
 }
 
 var commandListErrorHandlingCases = []errorHandlingTestCase{
-	{`cmd &&`, "syntax error: expected a valid command name, found `end of file`. (line: 1, column: 7)"},
-	{`cmd ||`, "syntax error: expected a valid command name, found `end of file`. (line: 1, column: 7)"},
-	{`cmd || cmd && cmd ||`, "syntax error: expected a valid command name, found `end of file`. (line: 1, column: 21)"},
-	{`cmd && cmd || cmd &&`, "syntax error: expected a valid command name, found `end of file`. (line: 1, column: 21)"},
+	{`cmd &&`, "main.sh(1:7): syntax error: expected a valid command name, found `end of file`."},
+	{`cmd ||`, "main.sh(1:7): syntax error: expected a valid command name, found `end of file`."},
+	{`cmd || cmd && cmd ||`, "main.sh(1:21): syntax error: expected a valid command name, found `end of file`."},
+	{`cmd && cmd || cmd &&`, "main.sh(1:21): syntax error: expected a valid command name, found `end of file`."},
 }

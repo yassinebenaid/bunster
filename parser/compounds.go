@@ -717,7 +717,7 @@ func (p *parser) parseGroup() ast.Statement {
 	}
 
 	if len(group.Body) == 0 {
-		p.error("expeceted a command list after `{`")
+		p.error("expected a command list after `{`")
 		return nil
 	}
 
@@ -772,7 +772,7 @@ func (p *parser) parseSubShell() ast.Statement {
 	}
 
 	if len(shell.Body) == 0 {
-		p.error("expeceted a command list after `(`")
+		p.error("expected a command list after `(`")
 		return nil
 	}
 

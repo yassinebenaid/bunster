@@ -261,7 +261,7 @@ func TestLexer(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		l := lexer.New([]rune(tc.input))
+		l := lexer.New("main.sh", []rune(tc.input))
 
 		for j, tn := range tc.tokens {
 			result := l.NextToken()
@@ -278,7 +278,7 @@ func TestLexer(t *testing.T) {
 }
 
 func TestCanReadUntilACharacter(t *testing.T) {
-	l := lexer.New([]rune(`foo bar baz boo fish zinc`))
+	l := lexer.New("main.sh", []rune(`foo bar baz boo fish zinc`))
 
 	if n := l.NextToken(); n.String() != "foo" {
 		t.Fatalf("Unexpected: %q", n.String())
