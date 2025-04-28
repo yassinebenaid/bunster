@@ -22,7 +22,7 @@ func main() {
 		Usage:     "compile shell scripts to static binaries",
 		Version:   strings.TrimSpace(bunster.Version),
 		Authors:   []any{"Yassine Benaid <yassinebenaide3@gmail.com>"},
-		Copyright: "2024, Yassine Benaid",
+		Copyright: "2024-2025, Yassine Benaid",
 		Suggest:   true,
 		Commands: []*cli.Command{
 			{
