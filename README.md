@@ -66,9 +66,6 @@ brew tap yassinebenaid/bunster
 brew install bunster
 ```
 
-> [!WARNING]
-> Do not trust scripts downloaded from the internet. A quick look at the code before running it won't hurt.
-
 Checkout the [documentation](https://bunster.netlify.app/installation) for different ways of installation.
 
 ## Versioning
