@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -14,11 +15,15 @@ type Config struct {
 	Require map[string]string `yaml:"require"`
 }
 
+type ModuleFile struct {
+	Path         string
+	OriginalPath string
+}
 type Module struct {
 	Path    string
 	Version string
 	Require []Module
-	Tree    []string
+	Tree    []ModuleFile
 }
 
 func (b *Builder) globModule(c *Config) (*Module, error) {
@@ -31,7 +36,7 @@ func (b *Builder) globModule(c *Config) (*Module, error) {
 
 	for _, file := range files {
 		if file != b.MainScript {
-			module.Tree = append(module.Tree, file)
+			module.Tree = append(module.Tree, ModuleFile{OriginalPath: file, Path: file})
 		}
 	}
 
@@ -49,7 +54,13 @@ func (b *Builder) globModule(c *Config) (*Module, error) {
 		if err != nil {
 			return nil, err
 		}
-		submodule.Tree = files
+
+		for _, file := range files {
+			submodule.Tree = append(submodule.Tree, ModuleFile{
+				OriginalPath: file,
+				Path:         strings.Replace(file, filepath.Join(b.Home, "pkg", path, version), path, 1),
+			})
+		}
 
 		module.Require = append(module.Require, submodule)
 	}
