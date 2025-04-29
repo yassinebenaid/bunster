@@ -59,8 +59,12 @@ The script will install bunster at `~/.local/bin/bunster` on linux. And `~/bin/b
 curl -f https://bunster.netlify.app/install.sh | GLOBAL=1 bash
 ```
 
-> [!WARNING]
-> Do not trust scripts downloaded from the internet. A quick look at the code before running it won't hurt.
+### Homebrew
+
+```sh
+brew tap yassinebenaid/bunster
+brew install bunster
+```
 
 Checkout the [documentation](https://bunster.netlify.app/installation) for different ways of installation.
 
