@@ -1,5 +1,9 @@
 package ast
 
+import (
+	"github.com/yassinebenaid/bunster/token"
+)
+
 type Node interface {
 	node()
 }
@@ -84,6 +88,7 @@ type Redirection struct {
 }
 
 type Command struct {
+	token.Token
 	Name         Expression
 	Args         []Expression
 	Redirections []Redirection

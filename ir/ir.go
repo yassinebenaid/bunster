@@ -262,18 +262,19 @@ func (rv ReadSpecialVar) togo() string {
 }
 
 type Exec struct {
-	Name string
-	Args string
-	Env  string
+	Name          string
+	Args          string
+	Env           string
+	ErrorLocation string
 }
 
 func (e Exec) togo() string {
 	return fmt.Sprintf(
 		`if err := shell.Exec(streamManager, %s, %s, %s); err != nil {
-			shell.HandleError(streamManager, err)
+			shell.HandleError(streamManager, err, %q)
 			return
 		}
-		`, e.Name, e.Args, e.Env,
+		`, e.Name, e.Args, e.Env, e.ErrorLocation,
 	)
 }
 

@@ -104,7 +104,7 @@ cases:
     expect:
       exit_code: 1
       stderr: |
-        "foo-bar": executable file not found in $PATH
+        main.sh(9:1): "foo-bar": executable file not found in $PATH
       stdout: |
         foo
 
@@ -141,7 +141,7 @@ cases:
       echo var:$var
     expect:
       stderr: |
-        "foobar": executable file not found in $PATH
+        main.sh(10:1): "foobar": executable file not found in $PATH
       stdout: |
         var:baz
 

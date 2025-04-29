@@ -209,7 +209,7 @@ func (p *parser) parseCommand() ast.Statement {
 		return env
 	}
 
-	var cmd ast.Command
+	var cmd = ast.Command{Token: p.curr}
 	cmd.Name = p.parseExpression()
 	if cmd.Name == nil {
 		p.error("expected a valid command name, found `%s`", p.curr)
