@@ -265,6 +265,7 @@ func TestLexer(t *testing.T) {
 
 		for j, tn := range tc.tokens {
 			result := l.NextToken()
+			tn.File = "main.sh"
 			if tn != result {
 				t.Fatalf("\nCase: %d:%d\nInput: %s\nWant:\n%s\nGot:\n%s", i, j, dump(tc.input), dump(tn), dump(result))
 			}
