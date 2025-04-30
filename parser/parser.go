@@ -76,6 +76,14 @@ func (p *parser) proceed(until ...rune) {
 	p.lexerState[4] = p.l.State
 }
 
+func (p *parser) tokenPosition() ast.Position {
+	return ast.Position{
+		File: p.curr.File,
+		Line: p.curr.Line,
+		Col:  p.curr.Position,
+	}
+}
+
 func (p *parser) ParseScript() ast.Script {
 	var script ast.Script
 
@@ -209,7 +217,7 @@ func (p *parser) parseCommand() ast.Statement {
 		return env
 	}
 
-	var cmd = ast.Command{Token: p.curr}
+	var cmd = ast.Command{Position: p.tokenPosition()}
 	cmd.Name = p.parseExpression()
 	if cmd.Name == nil {
 		p.error("expected a valid command name, found `%s`", p.curr)

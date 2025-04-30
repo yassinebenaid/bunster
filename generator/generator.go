@@ -186,7 +186,7 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command)
 		Name:          "commandName",
 		Args:          "arguments",
 		Env:           "env",
-		ErrorLocation: cmd.Location(),
+		ErrorLocation: cmd.Position.String(),
 	})
 
 	*buf = append(*buf, ir.Closure(cmdbuf))

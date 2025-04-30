@@ -1,11 +1,21 @@
 package ast
 
 import (
-	"github.com/yassinebenaid/bunster/token"
+	"fmt"
 )
 
 type Node interface {
 	node()
+}
+
+type Position struct {
+	File string
+	Line int
+	Col  int
+}
+
+func (t Position) String() string {
+	return fmt.Sprintf("%s(%d:%d)", t.File, t.Line, t.Col)
 }
 
 type Statement interface {
@@ -88,7 +98,7 @@ type Redirection struct {
 }
 
 type Command struct {
-	token.Token
+	Position
 	Name         Expression
 	Args         []Expression
 	Redirections []Redirection

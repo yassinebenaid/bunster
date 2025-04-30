@@ -1,7 +1,5 @@
 package token
 
-import "fmt"
-
 type TokenType byte
 
 type Token struct {
@@ -182,8 +180,4 @@ func (t Token) String() string {
 	default:
 		return t.Literal
 	}
-}
-
-func (t Token) Location() string {
-	return fmt.Sprintf("%s(%d:%d)", t.File, t.Line, t.Position)
 }

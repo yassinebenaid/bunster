@@ -31,16 +31,21 @@ var testCases = []struct {
 		{``, nil},
 		{`	 	`, nil},
 		{"\n	\n \n ", nil},
-		{`git`, ast.Script{ast.Command{Name: ast.Word("git")}}},
+		{`git`, ast.Script{ast.Command{
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("git"),
+		}}},
 		{`foo bar baz`, ast.Script{
 			ast.Command{
-				Name: ast.Word("foo"),
-				Args: []ast.Expression{ast.Word("bar"), ast.Word("baz")},
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+				Name:     ast.Word("foo"),
+				Args:     []ast.Expression{ast.Word("bar"), ast.Word("baz")},
 			},
 		}},
 		{`foo $bar $FOO_BAR_1234567890`, ast.Script{
 			ast.Command{
-				Name: ast.Word("foo"),
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+				Name:     ast.Word("foo"),
 				Args: []ast.Expression{
 					ast.Var("bar"),
 					ast.Var("FOO_BAR_1234567890"),
@@ -49,7 +54,8 @@ var testCases = []struct {
 		}},
 		{`/usr/bin/foo bar baz`, ast.Script{
 			ast.Command{
-				Name: ast.Word("/usr/bin/foo"),
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+				Name:     ast.Word("/usr/bin/foo"),
 				Args: []ast.Expression{
 					ast.Word("bar"),
 					ast.Word("baz"),
@@ -58,31 +64,37 @@ var testCases = []struct {
 		}},
 		{`/usr/bin/foo-bar baz`, ast.Script{
 			ast.Command{
-				Name: ast.Word("/usr/bin/foo-bar"),
-				Args: []ast.Expression{ast.Word("baz")},
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+				Name:     ast.Word("/usr/bin/foo-bar"),
+				Args:     []ast.Expression{ast.Word("baz")},
 			},
 		}},
 		{"cmd1 \n cmd2", ast.Script{
-			ast.Command{Name: ast.Word("cmd1")},
-			ast.Command{Name: ast.Word("cmd2")},
+			ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd1")},
+			ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 2}, Name: ast.Word("cmd2")},
 		}},
 		{"cmd1\n cmd2\ncmd3\n cmd4 arg1 arg2\ncmd5", ast.Script{
-			ast.Command{Name: ast.Word("cmd1")},
-			ast.Command{Name: ast.Word("cmd2")},
-			ast.Command{Name: ast.Word("cmd3")},
-			ast.Command{Name: ast.Word("cmd4"), Args: []ast.Expression{ast.Word("arg1"), ast.Word("arg2")}},
-			ast.Command{Name: ast.Word("cmd5")},
+			ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd1")},
+			ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 2}, Name: ast.Word("cmd2")},
+			ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 1}, Name: ast.Word("cmd3")},
+			ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 2}, Name: ast.Word("cmd4"), Args: []ast.Expression{ast.Word("arg1"), ast.Word("arg2")}},
+			ast.Command{Position: ast.Position{File: "main.sh", Line: 5, Col: 1}, Name: ast.Word("cmd5")},
 		}},
 		{"cmd1; cmd2;cmd3; cmd4 arg1 arg2;cmd5", ast.Script{
-			ast.Command{Name: ast.Word("cmd1")},
-			ast.Command{Name: ast.Word("cmd2")},
-			ast.Command{Name: ast.Word("cmd3")},
-			ast.Command{Name: ast.Word("cmd4"), Args: []ast.Expression{ast.Word("arg1"), ast.Word("arg2")}},
-			ast.Command{Name: ast.Word("cmd5")},
+			ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd1")},
+			ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd2")},
+			ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 12}, Name: ast.Word("cmd3")},
+			ast.Command{
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 18},
+				Name:     ast.Word("cmd4"),
+				Args:     []ast.Expression{ast.Word("arg1"), ast.Word("arg2")},
+			},
+			ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 33}, Name: ast.Word("cmd5")},
 		}},
 		{`$1 $$ $@ $? $# $! $* "$1$$$@$?$#$!$*"`, ast.Script{
 			ast.Command{
-				Name: ast.SpecialVar("1"),
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+				Name:     ast.SpecialVar("1"),
 				Args: []ast.Expression{
 					ast.SpecialVar("$"),
 					ast.SpecialVar("@"),
@@ -106,7 +118,8 @@ var testCases = []struct {
 	{"Strings", []testCase{
 		{`cmd 'hello world'`, ast.Script{
 			ast.Command{
-				Name: ast.Word("cmd"),
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+				Name:     ast.Word("cmd"),
 				Args: []ast.Expression{
 					ast.Word("hello world"),
 				},
@@ -114,7 +127,8 @@ var testCases = []struct {
 		}},
 		{`cmd 'if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset'`, ast.Script{
 			ast.Command{
-				Name: ast.Word("cmd"),
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+				Name:     ast.Word("cmd"),
 				Args: []ast.Expression{
 					ast.Word("if then else elif fi for in do done while until case esac function select trap return exit break continue declare local export readonly unset"),
 				},
@@ -122,7 +136,8 @@ var testCases = []struct {
 		}},
 		{`cmd '+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~'`, ast.Script{
 			ast.Command{
-				Name: ast.Word("cmd"),
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+				Name:     ast.Word("cmd"),
 				Args: []ast.Expression{
 					ast.Word(`+ - * / % %% = += -= *= /= == != < <= > >= =~ && || | & >> << <<- <<< >& <& |& &> >| <> ; ;; ( ) (( )) [ ] [[ ]] { } , ,, : " ? ! # ${ $( $(( >( <( ^ ^^ := :- :+ :? // .. ++ -- ~`),
 				},
@@ -130,7 +145,8 @@ var testCases = []struct {
 		}},
 		{`cmd '' '\' '$foo' "let's go"`, ast.Script{
 			ast.Command{
-				Name: ast.Word("cmd"),
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+				Name:     ast.Word("cmd"),
 				Args: []ast.Expression{
 					ast.Word(""),
 					ast.Word(`\`),
@@ -141,7 +157,8 @@ var testCases = []struct {
 		}},
 		{`cmd ""`, ast.Script{
 			ast.Command{
-				Name: ast.Word("cmd"),
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+				Name:     ast.Word("cmd"),
 				Args: []ast.Expression{
 					ast.Word(""),
 				},
@@ -149,7 +166,8 @@ var testCases = []struct {
 		}},
 		{`cmd "Hello World" "name is: $NAME and path is $DIR/$FILE"`, ast.Script{
 			ast.Command{
-				Name: ast.Word("cmd"),
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+				Name:     ast.Word("cmd"),
 				Args: []ast.Expression{
 					ast.Word("Hello World"),
 					ast.QuotedString{
@@ -165,7 +183,8 @@ var testCases = []struct {
 		}},
 		{`cmd "\"" "\$ESCAPED_VAR" "\foo\bar\\" \$var \" \foo`, ast.Script{
 			ast.Command{
-				Name: ast.Word("cmd"),
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+				Name:     ast.Word("cmd"),
 				Args: []ast.Expression{
 					ast.Word(`"`),
 					ast.Word(`$ESCAPED_VAR`),
@@ -177,10 +196,15 @@ var testCases = []struct {
 			},
 		}},
 		{"cmd \"\\\nfoo\"", ast.Script{
-			ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word(`foo`)}},
+			ast.Command{
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+				Name:     ast.Word("cmd"),
+				Args:     []ast.Expression{ast.Word(`foo`)},
+			},
 		}},
 		{`/usr/bin/$BINARY_NAME --path=/home/$USER/dir --option -f --do=something $HOME$DIR_NAME$PKG_NAME/foo`, ast.Script{
 			ast.Command{
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
 				Name: ast.UnquotedString{
 					ast.Word("/usr/bin/"),
 					ast.Var("BINARY_NAME"),
@@ -205,7 +229,8 @@ var testCases = []struct {
 		}},
 		{`cmd 'foo''bar' "foo""bar" "foo"'bar' "'foo'"`, ast.Script{
 			ast.Command{
-				Name: ast.Word("cmd"),
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+				Name:     ast.Word("cmd"),
 				Args: []ast.Expression{
 					ast.Word("foobar"),
 					ast.Word("foobar"),
@@ -216,22 +241,32 @@ var testCases = []struct {
 		}},
 		{"cmd \"\n\"", ast.Script{
 			ast.Command{
-				Name: ast.Word("cmd"),
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+				Name:     ast.Word("cmd"),
 				Args: []ast.Expression{
 					ast.Word("\n"),
 				},
 			},
 		}},
-		{`"${var}"`, ast.Script{ast.Command{Name: ast.QuotedString{ast.Var("var")}}}},
+		{`"${var}"`, ast.Script{ast.Command{
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.QuotedString{ast.Var("var")},
+		}}},
 		{`"$(cmd)"`, ast.Script{
 			ast.Command{
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
 				Name: ast.QuotedString{
-					ast.CommandSubstitution{ast.Command{Name: ast.Word("cmd")}},
+					ast.CommandSubstitution{
+						ast.Command{
+							Position: ast.Position{File: "main.sh", Line: 1, Col: 4},
+							Name:     ast.Word("cmd"),
+						},
+					},
 				},
 			},
 		}},
 		{`"$((var))"`, ast.Script{
-			ast.Command{
+			ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
 				Name: ast.QuotedString{
 					ast.Arithmetic{ast.Var("var")},
 				},
@@ -245,11 +280,11 @@ var testCases = []struct {
 		{"# foo bar    \n    \t # baz", nil},
 		{"cmd # comment", ast.Script{
 
-			ast.Command{Name: ast.Word("cmd")},
+			ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
 		}},
 		{"cmd#not-comment arg#not-comment", ast.Script{
 
-			ast.Command{Name: ast.Word("cmd#not-comment"), Args: []ast.Expression{ast.Word("arg#not-comment")}},
+			ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd#not-comment"), Args: []ast.Expression{ast.Word("arg#not-comment")}},
 		}},
 	}},
 	{"Redirections", redirectionTests},
@@ -259,42 +294,42 @@ var testCases = []struct {
 		{`cmd & cmd2`, ast.Script{
 
 			ast.BackgroundConstruction{
-				Statement: ast.Command{Name: ast.Word("cmd")},
+				Statement: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
 			},
-			ast.Command{Name: ast.Word("cmd2")},
+			ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd2")},
 		}},
 		{`cmd && cmd2 & cmd3 && cmd4&`, ast.Script{
 			ast.BackgroundConstruction{
 				Statement: ast.List{
-					Left:     ast.Command{Name: ast.Word("cmd")},
+					Left:     ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
 					Operator: "&&",
-					Right:    ast.Command{Name: ast.Word("cmd2")},
+					Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd2")},
 				},
 			},
 			ast.BackgroundConstruction{
 				Statement: ast.List{
-					Left:     ast.Command{Name: ast.Word("cmd3")},
+					Left:     ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd3")},
 					Operator: "&&",
-					Right:    ast.Command{Name: ast.Word("cmd4")},
+					Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd4")},
 				},
 			},
 		}},
 		{` cmd | cmd2 |& cmd3 | cmd4 |& cmd5 foo& cmd | cmd2 |& cmd3 | cmd4 |& cmd5`, ast.Script{
 			ast.BackgroundConstruction{
 				Statement: ast.Pipeline{
-					{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
-					{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: true},
-					{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: false},
-					{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: true},
-					{Command: ast.Command{Name: ast.Word("cmd5"), Args: []ast.Expression{ast.Word("foo")}}, Stderr: false},
+					{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")}, Stderr: false},
+					{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd2")}, Stderr: true},
+					{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd3")}, Stderr: false},
+					{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd4")}, Stderr: true},
+					{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd5"), Args: []ast.Expression{ast.Word("foo")}}, Stderr: false},
 				},
 			},
 			ast.Pipeline{
-				{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: false},
-				{Command: ast.Command{Name: ast.Word("cmd2")}, Stderr: true},
-				{Command: ast.Command{Name: ast.Word("cmd3")}, Stderr: false},
-				{Command: ast.Command{Name: ast.Word("cmd4")}, Stderr: true},
-				{Command: ast.Command{Name: ast.Word("cmd5")}, Stderr: false},
+				{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")}, Stderr: false},
+				{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd2")}, Stderr: true},
+				{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd3")}, Stderr: false},
+				{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd4")}, Stderr: true},
+				{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd5")}, Stderr: false},
 			},
 		}},
 		{`wait # comment`, ast.Script{ast.Wait{}}},
