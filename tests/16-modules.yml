@@ -58,3 +58,21 @@ cases:
         foo
     expect:
       build_error: the module "github.com/user/module" is not locally available
+
+  - name: errors respect external modules path
+    external_modules:
+      github.com/user/module/v123/.bunster.lock: "" # we use this to ensure module is available
+      github.com/user/module/v123/script.sh: |
+        function foo {
+          unknown-command
+        }
+    module:
+      bunster.yml: |
+        require:
+          github.com/user/module: v123
+      main.sh: |
+        foo
+    expect:
+      exit_code: 1
+      stderr: |
+        github.com/user/module/script.sh(2:3): "unknown-command": executable file not found in $PATH
