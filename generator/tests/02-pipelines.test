@@ -37,7 +37,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					var env = make(map[string]string)
 					arguments = append(arguments, "file.txt")
 					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-						shell.HandleError(streamManager, err)
+						shell.HandleError(streamManager, err, "main.sh(2:1)")
 						return
 					}
 
@@ -67,7 +67,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					var env = make(map[string]string)
 					arguments = append(arguments, "foobar")
 					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-						shell.HandleError(streamManager, err)
+						shell.HandleError(streamManager, err, "main.sh(2:16)")
 						return
 					}
 
@@ -129,7 +129,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					var env = make(map[string]string)
 					arguments = append(arguments, "file.txt")
 					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-						shell.HandleError(streamManager, err)
+						shell.HandleError(streamManager, err, "main.sh(2:1)")
 						return
 					}
 
@@ -165,7 +165,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					var env = make(map[string]string)
 					arguments = append(arguments, "foobar")
 					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-						shell.HandleError(streamManager, err)
+						shell.HandleError(streamManager, err, "main.sh(3:5)")
 						return
 					}
 
@@ -202,7 +202,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					arguments = append(arguments, "[o]+")
 					arguments = append(arguments, "o")
 					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-						shell.HandleError(streamManager, err)
+						shell.HandleError(streamManager, err, "main.sh(4:5)")
 						return
 					}
 
@@ -232,7 +232,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					var env = make(map[string]string)
 					arguments = append(arguments, ", ")
 					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-						shell.HandleError(streamManager, err)
+						shell.HandleError(streamManager, err, "main.sh(5:5)")
 						return
 					}
 
@@ -292,7 +292,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					var env = make(map[string]string)
 					arguments = append(arguments, "file.txt")
 					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-						shell.HandleError(streamManager, err)
+						shell.HandleError(streamManager, err, "main.sh(2:1)")
 						return
 					}
 
@@ -322,7 +322,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 					var env = make(map[string]string)
 					arguments = append(arguments, "foobar")
 					if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-						shell.HandleError(streamManager, err)
+						shell.HandleError(streamManager, err, "main.sh(2:17)")
 						return
 					}
 
@@ -361,7 +361,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		var arguments []string
 		var env = make(map[string]string)
 		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-			shell.HandleError(streamManager, err)
+			shell.HandleError(streamManager, err, "main.sh(2:3)")
 			return
 		}
 
@@ -396,7 +396,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		var arguments []string
 		var env = make(map[string]string)
 		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-			shell.HandleError(streamManager, err)
+			shell.HandleError(streamManager, err, "main.sh(2:5)")
 			return
 		}
 
