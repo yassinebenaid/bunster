@@ -10,7 +10,7 @@ var caseTests = []testCase{
 				{
 					Patterns: []ast.Expression{ast.Word("bar")},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 18}, Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -26,7 +26,7 @@ var caseTests = []testCase{
 				{
 					Patterns: []ast.Expression{ast.Word("bar")},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 8}, Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -45,9 +45,9 @@ var caseTests = []testCase{
 				{
 					Patterns: []ast.Expression{ast.Word("bar")},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 4}, Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 5, Col: 4}, Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 6, Col: 4}, Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 					},
 				},
 			},
@@ -78,36 +78,36 @@ var caseTests = []testCase{
 				{
 					Patterns: []ast.Expression{ast.Word("bar")},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 4}, Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 5, Col: 4}, Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 6, Col: 4}, Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 					},
 					Terminator: ";;",
 				},
 				{
 					Patterns: []ast.Expression{ast.Word("baz")},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 8, Col: 4}, Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 9, Col: 4}, Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 10, Col: 4}, Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 					},
 					Terminator: ";&",
 				},
 				{
 					Patterns: []ast.Expression{ast.Word("boo")},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 12, Col: 4}, Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 13, Col: 4}, Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 14, Col: 4}, Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 					},
 					Terminator: ";;&",
 				},
 				{
 					Patterns: []ast.Expression{ast.Word("fab")},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
-						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 16, Col: 4}, Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 17, Col: 4}, Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 18, Col: 4}, Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 					},
 				},
 			},
@@ -127,7 +127,7 @@ var caseTests = []testCase{
 						ast.Var("var"),
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 20}, Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 					},
 					Terminator: ";;",
 				},
@@ -138,7 +138,7 @@ var caseTests = []testCase{
 						ast.Var("var"),
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 35}, Name: ast.Word("cmd"), Args: []ast.Expression{ast.Word("arg"), ast.Word("arg")}},
 					},
 					Terminator: ";;",
 				},
@@ -155,7 +155,7 @@ var caseTests = []testCase{
 				{
 					Patterns: []ast.Expression{ast.Word("bar")},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 9}, Name: ast.Word("cmd")},
 					},
 					Terminator: ";;",
 				},
@@ -165,7 +165,7 @@ var caseTests = []testCase{
 						ast.Word("foo"),
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 17}, Name: ast.Word("cmd")},
 					},
 					Terminator: ";;",
 				},
@@ -179,7 +179,7 @@ var caseTests = []testCase{
 				{
 					Patterns: []ast.Expression{ast.Word("bar")},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 20}, Name: ast.Word("cmd")},
 					},
 					Terminator: ";;",
 				},
@@ -189,7 +189,7 @@ var caseTests = []testCase{
 						ast.Word("foo"),
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 40}, Name: ast.Word("cmd")},
 					},
 					Terminator: ";;",
 				},
@@ -204,7 +204,7 @@ var caseTests = []testCase{
 					{
 						Patterns: []ast.Expression{ast.Word("bar")},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd")},
+							ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 19}, Name: ast.Word("cmd")},
 						},
 						Terminator: ";;",
 					},
@@ -218,14 +218,14 @@ var caseTests = []testCase{
 					{
 						Patterns: []ast.Expression{ast.Word("bar")},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd")},
+							ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 50}, Name: ast.Word("cmd")},
 						},
 						Terminator: ";;",
 					},
 				},
 			},
 		},
-		ast.Command{Name: ast.Word("cmd")},
+		ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 63}, Name: ast.Word("cmd")},
 	}},
 	{`case $foo in bar) cmd;; esac | case $foo in bar) cmd;; esac |& cmd`, ast.Script{
 		ast.Pipeline{
@@ -236,7 +236,7 @@ var caseTests = []testCase{
 						{
 							Patterns: []ast.Expression{ast.Word("bar")},
 							Body: []ast.Statement{
-								ast.Command{Name: ast.Word("cmd")},
+								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 19}, Name: ast.Word("cmd")},
 							},
 							Terminator: ";;",
 						},
@@ -250,7 +250,7 @@ var caseTests = []testCase{
 						{
 							Patterns: []ast.Expression{ast.Word("bar")},
 							Body: []ast.Statement{
-								ast.Command{Name: ast.Word("cmd")},
+								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 50}, Name: ast.Word("cmd")},
 							},
 							Terminator: ";;",
 						},
@@ -259,7 +259,7 @@ var caseTests = []testCase{
 				Stderr: true,
 			},
 			ast.PipelineCommand{
-				Command: ast.Command{Name: ast.Word("cmd")},
+				Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 64}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -271,7 +271,7 @@ var caseTests = []testCase{
 					{
 						Patterns: []ast.Expression{ast.Word("bar")},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd")},
+							ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 19}, Name: ast.Word("cmd")},
 						},
 						Terminator: ";;",
 					},
@@ -284,7 +284,7 @@ var caseTests = []testCase{
 					{
 						Patterns: []ast.Expression{ast.Word("bar")},
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd")},
+							ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 51}, Name: ast.Word("cmd")},
 						},
 						Terminator: ";;",
 					},
@@ -311,7 +311,7 @@ var caseTests = []testCase{
 								{
 									Patterns: []ast.Expression{ast.Word("bar")},
 									Body: []ast.Statement{
-										ast.Command{Name: ast.Word("cmd")},
+										ast.Command{Position: ast.Position{File: "main.sh", Line: 5, Col: 6}, Name: ast.Word("cmd")},
 									},
 									Terminator: ";;",
 								},
@@ -335,7 +335,7 @@ var caseTests = []testCase{
 				{
 					Patterns: []ast.Expression{ast.Word("bar")},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 4}, Name: ast.Word("cmd")},
 					},
 					Terminator: ";;",
 				},
@@ -364,7 +364,7 @@ var caseTests = []testCase{
 			Cases: []ast.CaseItem{
 				{
 					Patterns:   []ast.Expression{ast.Word("bar")},
-					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Body:       []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 21}, Name: ast.Word("cmd")}},
 					Terminator: ";;",
 				},
 			},
@@ -374,7 +374,7 @@ var caseTests = []testCase{
 			Cases: []ast.CaseItem{
 				{
 					Patterns:   []ast.Expression{ast.Word("bar")},
-					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Body:       []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 21}, Name: ast.Word("cmd")}},
 					Terminator: ";;",
 				},
 			},
@@ -384,7 +384,7 @@ var caseTests = []testCase{
 			Cases: []ast.CaseItem{
 				{
 					Patterns:   []ast.Expression{ast.Word("bar")},
-					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Body:       []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 50}, Name: ast.Word("cmd")}},
 					Terminator: ";;",
 				},
 			},
@@ -397,7 +397,7 @@ var caseTests = []testCase{
 			Cases: []ast.CaseItem{
 				{
 					Patterns:   []ast.Expression{ast.Word("bar")},
-					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Body:       []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 17}, Name: ast.Word("cmd")}},
 					Terminator: ";;",
 				},
 			},
@@ -410,7 +410,7 @@ var caseTests = []testCase{
 			Cases: []ast.CaseItem{
 				{
 					Patterns:   []ast.Expression{ast.Word("bar")},
-					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Body:       []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 19}, Name: ast.Word("cmd")}},
 					Terminator: ";;",
 				},
 			},
@@ -427,17 +427,17 @@ var caseTests = []testCase{
 			Cases: []ast.CaseItem{
 				{
 					Patterns:   []ast.Expression{ast.Word("pattern")},
-					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Body:       []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 14}, Name: ast.Word("cmd")}},
 					Terminator: ";;",
 				},
 				{
 					Patterns:   []ast.Expression{ast.Word("pattern")},
-					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Body:       []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 16}, Name: ast.Word("cmd")}},
 					Terminator: ";&",
 				},
 				{
 					Patterns:   []ast.Expression{ast.Word("pattern")},
-					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Body:       []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 14}, Name: ast.Word("cmd")}},
 					Terminator: ";;&",
 				},
 			},
@@ -476,17 +476,17 @@ var caseTests = []testCase{
 			Cases: []ast.CaseItem{
 				{
 					Patterns:   []ast.Expression{ast.Word("pattern")},
-					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Body:       []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 13, Col: 6}, Name: ast.Word("cmd")}},
 					Terminator: ";;",
 				},
 				{
 					Patterns:   []ast.Expression{ast.Word("pattern")},
-					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Body:       []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 20, Col: 16}, Name: ast.Word("cmd")}},
 					Terminator: ";&",
 				},
 				{
 					Patterns:   []ast.Expression{ast.Word("pattern")},
-					Body:       []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+					Body:       []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 23, Col: 13}, Name: ast.Word("cmd")}},
 					Terminator: ";;&",
 				},
 			},
