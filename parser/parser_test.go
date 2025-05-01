@@ -292,44 +292,43 @@ var testCases = []struct {
 	{"Conditional Commands", commandListTests},
 	{"Background Constructions", []testCase{
 		{`cmd & cmd2`, ast.Script{
-
 			ast.BackgroundConstruction{
 				Statement: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
 			},
-			ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd2")},
+			ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd2")},
 		}},
 		{`cmd && cmd2 & cmd3 && cmd4&`, ast.Script{
 			ast.BackgroundConstruction{
 				Statement: ast.List{
 					Left:     ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
 					Operator: "&&",
-					Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd2")},
+					Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 8}, Name: ast.Word("cmd2")},
 				},
 			},
 			ast.BackgroundConstruction{
 				Statement: ast.List{
-					Left:     ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd3")},
+					Left:     ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 15}, Name: ast.Word("cmd3")},
 					Operator: "&&",
-					Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd4")},
+					Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 23}, Name: ast.Word("cmd4")},
 				},
 			},
 		}},
 		{` cmd | cmd2 |& cmd3 | cmd4 |& cmd5 foo& cmd | cmd2 |& cmd3 | cmd4 |& cmd5`, ast.Script{
 			ast.BackgroundConstruction{
 				Statement: ast.Pipeline{
-					{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")}, Stderr: false},
-					{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd2")}, Stderr: true},
-					{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd3")}, Stderr: false},
-					{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd4")}, Stderr: true},
-					{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd5"), Args: []ast.Expression{ast.Word("foo")}}, Stderr: false},
+					{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 2}, Name: ast.Word("cmd")}, Stderr: false},
+					{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 8}, Name: ast.Word("cmd2")}, Stderr: true},
+					{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 16}, Name: ast.Word("cmd3")}, Stderr: false},
+					{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 23}, Name: ast.Word("cmd4")}, Stderr: true},
+					{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 31}, Name: ast.Word("cmd5"), Args: []ast.Expression{ast.Word("foo")}}, Stderr: false},
 				},
 			},
 			ast.Pipeline{
-				{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")}, Stderr: false},
-				{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd2")}, Stderr: true},
-				{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd3")}, Stderr: false},
-				{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd4")}, Stderr: true},
-				{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd5")}, Stderr: false},
+				{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 41}, Name: ast.Word("cmd")}, Stderr: false},
+				{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 47}, Name: ast.Word("cmd2")}, Stderr: true},
+				{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 55}, Name: ast.Word("cmd3")}, Stderr: false},
+				{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 62}, Name: ast.Word("cmd4")}, Stderr: true},
+				{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 70}, Name: ast.Word("cmd5")}, Stderr: false},
 			},
 		}},
 		{`wait # comment`, ast.Script{ast.Wait{}}},

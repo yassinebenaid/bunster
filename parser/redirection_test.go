@@ -5,7 +5,8 @@ import "github.com/yassinebenaid/bunster/ast"
 var redirectionTests = []testCase{
 	{`cmd>'file.ext' arg > file>/foo/bar arg2 >"$var" arg345>xyz 645 >file 3>foo.bar 45> /foo/bar 12.34>baz`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg2"),
@@ -28,7 +29,8 @@ var redirectionTests = []testCase{
 	{`cmd>|'file.ext' arg >| file>|/foo/bar arg2 >|"$var" arg345>|xyz 645 >|file 3>|foo.bar 45>| /foo/bar 12.34>|baz`, ast.Script{
 
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg2"),
@@ -51,7 +53,8 @@ var redirectionTests = []testCase{
 	{`cmd>>'file.ext' arg >> file>>/foo/bar arg2 >>"$var" arg345>>xyz 123 >>file 3>>foo.bar 12.34>>baz`, ast.Script{
 
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg2"),
@@ -73,7 +76,8 @@ var redirectionTests = []testCase{
 	{`cmd&>'file.ext' arg &> file&>/foo/bar arg2 &>"$var" 3&>xyz`, ast.Script{
 
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg2"),
@@ -90,7 +94,8 @@ var redirectionTests = []testCase{
 	{`cmd&>>'file.ext' arg &>> file&>>/foo/bar arg2 &>>"$var" 3&>>xyz`, ast.Script{
 
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg2"),
@@ -107,7 +112,8 @@ var redirectionTests = []testCase{
 	{`cmd>&1 arg >&2 arg>&3 arg345>&4 5>&6 985 >&19 12.34>& 7 8>& 9 >& $FD 3>&$FD`, ast.Script{
 
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg"),
@@ -131,7 +137,8 @@ var redirectionTests = []testCase{
 	{`cmd<'file.ext' arg < file</foo/bar arg123<foo 3<bar 928 <bar 282 <&123 <&3 4<&5 6<& 7 <& "$var" <&'9'`, ast.Script{
 
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg123"),
@@ -156,7 +163,8 @@ var redirectionTests = []testCase{
 	{`cmd<<<'foo bar' arg <<< foo<<<foo-bar arg2 <<<"$var" 3<<<foobar <<<123 4<<<123 5<<< 	776`, ast.Script{
 
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg2"),
@@ -175,7 +183,8 @@ var redirectionTests = []testCase{
 	{`cmd<>'file.ext' arg <> file<>/foo/bar arg123<>foo 3<>bar 928 <>bar 282`, ast.Script{
 
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg123"),
@@ -194,7 +203,8 @@ var redirectionTests = []testCase{
 	// Duplicating/Closing file descriptors
 	{`cmd <&- 2<&- >&- 2>&- <&5- 6<&5- >&5- 6>&5-`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Redirections: []ast.Redirection{
 				{Src: "0", Method: "<&", Close: true},
 				{Src: "2", Method: "<&", Close: true},
@@ -209,7 +219,8 @@ var redirectionTests = []testCase{
 	}},
 	{`cmd<&-2<&->&-2>&-<&5-6<&5->&5-6>&5-`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Redirections: []ast.Redirection{
 				{Src: "0", Method: "<&", Close: true},
 				{Src: "2", Method: "<&", Close: true},
