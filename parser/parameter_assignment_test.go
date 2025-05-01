@@ -26,7 +26,8 @@ var parameterAssignmentTests = []testCase{
 	}},
 	{`var= var2=value var3= cmd var=value`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 23},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("var=value"),
 			},

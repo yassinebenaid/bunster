@@ -140,8 +140,8 @@ var commandAndProcessSubstitutionTests = []testCase{
 		)`, ast.Script{
 		ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
 			Name: ast.CommandSubstitution{
-				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
-				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 5, Col: 3}, Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 8, Col: 3}, Name: ast.Word("cmd2")},
 			},
 		},
 	}},
@@ -150,7 +150,7 @@ var commandAndProcessSubstitutionTests = []testCase{
 		ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
 			Name: ast.ProcessSubstitution{
 				Body: []ast.Statement{
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4}, Name: ast.Word("cmd")},
 				},
 				Direction: '<',
 			},
@@ -160,8 +160,8 @@ var commandAndProcessSubstitutionTests = []testCase{
 		ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
 			Name: ast.ProcessSubstitution{
 				Body: []ast.Statement{
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4}, Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 9}, Name: ast.Word("cmd")},
 				},
 				Direction: '<',
 			},
@@ -171,8 +171,8 @@ var commandAndProcessSubstitutionTests = []testCase{
 		ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
 			Name: ast.ProcessSubstitution{
 				Body: []ast.Statement{
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4}, Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 9}, Name: ast.Word("cmd")},
 				},
 				Direction: '<',
 			},
@@ -185,8 +185,8 @@ var commandAndProcessSubstitutionTests = []testCase{
 		ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
 			Name: ast.ProcessSubstitution{
 				Body: []ast.Statement{
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3}, Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 4}, Name: ast.Word("cmd")},
 				},
 				Direction: '<',
 			},
@@ -196,8 +196,8 @@ var commandAndProcessSubstitutionTests = []testCase{
 		ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
 			Name: ast.ProcessSubstitution{
 				Body: []ast.Statement{
-					ast.BackgroundConstruction{Statement: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")}},
-					ast.BackgroundConstruction{Statement: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")}},
+					ast.BackgroundConstruction{Statement: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 3}, Name: ast.Word("cmd")}},
+					ast.BackgroundConstruction{Statement: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")}},
 				},
 				Direction: '<',
 			},
@@ -209,19 +209,19 @@ var commandAndProcessSubstitutionTests = []testCase{
 				Body: []ast.Statement{
 					ast.List{
 						Left: ast.Pipeline{
-							{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd1")}},
-							{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd2")}},
+							{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 3}, Name: ast.Word("cmd1")}},
+							{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 10}, Name: ast.Word("cmd2")}},
 						},
 						Operator: "&&",
-						Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd3")},
+						Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 18}, Name: ast.Word("cmd3")},
 					},
 					ast.List{
 						Left: ast.Pipeline{
-							{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd1")}},
-							{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd2")}},
+							{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 24}, Name: ast.Word("cmd1")}},
+							{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 31}, Name: ast.Word("cmd2")}},
 						},
 						Operator: "&&",
-						Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd3")},
+						Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 39}, Name: ast.Word("cmd3")},
 					},
 				},
 				Direction: '<',
@@ -235,8 +235,8 @@ var commandAndProcessSubstitutionTests = []testCase{
 					Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
 						Name: ast.ProcessSubstitution{
 							Body: []ast.Statement{
-								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
-								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 3}, Name: ast.Word("cmd")},
+								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 8}, Name: ast.Word("cmd")},
 							},
 							Direction: '<',
 						},
@@ -246,11 +246,11 @@ var commandAndProcessSubstitutionTests = []testCase{
 					},
 				},
 				{
-					Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+					Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 19},
 						Name: ast.ProcessSubstitution{
 							Body: []ast.Statement{
-								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
-								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 21}, Name: ast.Word("cmd")},
+								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 26}, Name: ast.Word("cmd")},
 							},
 							Direction: '<',
 						},
@@ -258,11 +258,11 @@ var commandAndProcessSubstitutionTests = []testCase{
 				},
 			},
 			Operator: "&&",
-			Right: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Right: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 33},
 				Name: ast.ProcessSubstitution{
 					Body: []ast.Statement{
-						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
-						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 35}, Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 40}, Name: ast.Word("cmd")},
 					},
 					Direction: '<',
 				},
@@ -274,11 +274,11 @@ var commandAndProcessSubstitutionTests = []testCase{
 			Name: ast.ProcessSubstitution{
 				Direction: '<',
 				Body: []ast.Statement{
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4},
 						Name: ast.ProcessSubstitution{
 							Direction: '<',
 							Body: []ast.Statement{
-								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 6}, Name: ast.Word("cmd")},
 							},
 						},
 					},
@@ -291,11 +291,11 @@ var commandAndProcessSubstitutionTests = []testCase{
 			Name: ast.ProcessSubstitution{
 				Direction: '<',
 				Body: []ast.Statement{
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 3},
 						Name: ast.ProcessSubstitution{
 							Direction: '<',
 							Body: []ast.Statement{
-								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 5}, Name: ast.Word("cmd")},
 							},
 						},
 					},
@@ -308,7 +308,7 @@ var commandAndProcessSubstitutionTests = []testCase{
 		ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
 			Name: ast.ProcessSubstitution{
 				Body: []ast.Statement{
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4}, Name: ast.Word("cmd")},
 				},
 				Direction: '>',
 			},
@@ -318,8 +318,8 @@ var commandAndProcessSubstitutionTests = []testCase{
 		ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
 			Name: ast.ProcessSubstitution{
 				Body: []ast.Statement{
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4}, Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 9}, Name: ast.Word("cmd")},
 				},
 				Direction: '>',
 			},
@@ -329,8 +329,8 @@ var commandAndProcessSubstitutionTests = []testCase{
 		ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
 			Name: ast.ProcessSubstitution{
 				Body: []ast.Statement{
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4}, Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 9}, Name: ast.Word("cmd")},
 				},
 				Direction: '>',
 			},
@@ -343,8 +343,8 @@ var commandAndProcessSubstitutionTests = []testCase{
 		ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
 			Name: ast.ProcessSubstitution{
 				Body: []ast.Statement{
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3}, Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 4}, Name: ast.Word("cmd")},
 				},
 				Direction: '>',
 			},
@@ -354,8 +354,8 @@ var commandAndProcessSubstitutionTests = []testCase{
 		ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
 			Name: ast.ProcessSubstitution{
 				Body: []ast.Statement{
-					ast.BackgroundConstruction{Statement: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")}},
-					ast.BackgroundConstruction{Statement: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")}},
+					ast.BackgroundConstruction{Statement: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 3}, Name: ast.Word("cmd")}},
+					ast.BackgroundConstruction{Statement: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")}},
 				},
 				Direction: '>',
 			},
@@ -367,19 +367,19 @@ var commandAndProcessSubstitutionTests = []testCase{
 				Body: []ast.Statement{
 					ast.List{
 						Left: ast.Pipeline{
-							{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd1")}},
-							{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd2")}},
+							{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 3}, Name: ast.Word("cmd1")}},
+							{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 10}, Name: ast.Word("cmd2")}},
 						},
 						Operator: "&&",
-						Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd3")},
+						Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 18}, Name: ast.Word("cmd3")},
 					},
 					ast.List{
 						Left: ast.Pipeline{
-							{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd1")}},
-							{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd2")}},
+							{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 24}, Name: ast.Word("cmd1")}},
+							{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 31}, Name: ast.Word("cmd2")}},
 						},
 						Operator: "&&",
-						Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd3")},
+						Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 39}, Name: ast.Word("cmd3")},
 					},
 				},
 				Direction: '>',
@@ -393,8 +393,8 @@ var commandAndProcessSubstitutionTests = []testCase{
 					Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
 						Name: ast.ProcessSubstitution{
 							Body: []ast.Statement{
-								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
-								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 3}, Name: ast.Word("cmd")},
+								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 8}, Name: ast.Word("cmd")},
 							},
 							Direction: '>',
 						},
@@ -404,11 +404,11 @@ var commandAndProcessSubstitutionTests = []testCase{
 					},
 				},
 				{
-					Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+					Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 19},
 						Name: ast.ProcessSubstitution{
 							Body: []ast.Statement{
-								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
-								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 21}, Name: ast.Word("cmd")},
+								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 26}, Name: ast.Word("cmd")},
 							},
 							Direction: '>',
 						},
@@ -416,11 +416,11 @@ var commandAndProcessSubstitutionTests = []testCase{
 				},
 			},
 			Operator: "&&",
-			Right: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Right: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 33},
 				Name: ast.ProcessSubstitution{
 					Body: []ast.Statement{
-						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
-						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 35}, Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 40}, Name: ast.Word("cmd")},
 					},
 					Direction: '>',
 				},
@@ -432,11 +432,11 @@ var commandAndProcessSubstitutionTests = []testCase{
 			Name: ast.ProcessSubstitution{
 				Direction: '>',
 				Body: []ast.Statement{
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4},
 						Name: ast.ProcessSubstitution{
 							Direction: '>',
 							Body: []ast.Statement{
-								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 6}, Name: ast.Word("cmd")},
 							},
 						},
 					},
@@ -449,11 +449,11 @@ var commandAndProcessSubstitutionTests = []testCase{
 			Name: ast.ProcessSubstitution{
 				Direction: '>',
 				Body: []ast.Statement{
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 3},
 						Name: ast.ProcessSubstitution{
 							Direction: '>',
 							Body: []ast.Statement{
-								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
+								ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 5}, Name: ast.Word("cmd")},
 							},
 						},
 					},
@@ -476,8 +476,8 @@ var commandAndProcessSubstitutionTests = []testCase{
 			Name: ast.ProcessSubstitution{
 				Direction: '<',
 				Body: []ast.Statement{
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd")},
-					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 1}, Name: ast.Word("cmd2")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 5, Col: 3}, Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 8, Col: 3}, Name: ast.Word("cmd2")},
 				},
 			},
 		},

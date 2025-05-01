@@ -9,7 +9,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 8}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -17,7 +17,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 18}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -25,7 +25,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 20}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -33,7 +33,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 24}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -41,7 +41,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 10}, Name: ast.Word("cmd")},
 			},
 			Redirections: []ast.Redirection{
 				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -55,7 +55,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 3}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -65,14 +65,14 @@ var functionsTests = []testCase{
 				Left: &ast.Function{
 					Name: "foo",
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 					},
 				},
 				Operator: "&&",
 				Right: &ast.Function{
 					Name: "foo",
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 20}, Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -80,7 +80,7 @@ var functionsTests = []testCase{
 			Right: &ast.Function{
 				Name: "foo",
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 35}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -90,7 +90,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 17}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -98,7 +98,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 27}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -106,7 +106,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 29}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -114,7 +114,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 33}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -122,7 +122,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 19}, Name: ast.Word("cmd")},
 			},
 			Redirections: []ast.Redirection{
 				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -136,7 +136,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 3}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -146,7 +146,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -156,14 +156,14 @@ var functionsTests = []testCase{
 				Left: &ast.Function{
 					Name: "foo",
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 16}, Name: ast.Word("cmd")},
 					},
 				},
 				Operator: "&&",
 				Right: &ast.Function{
 					Name: "foo",
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 37}, Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -171,7 +171,7 @@ var functionsTests = []testCase{
 			Right: &ast.Function{
 				Name: "foo",
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 61}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -180,7 +180,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 9}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -188,7 +188,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 18}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -198,7 +198,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 8}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -207,7 +207,7 @@ var functionsTests = []testCase{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 18}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -216,7 +216,7 @@ var functionsTests = []testCase{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 20}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -225,7 +225,7 @@ var functionsTests = []testCase{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 24}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -234,7 +234,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 10}, Name: ast.Word("cmd")},
 			},
 			Redirections: []ast.Redirection{
 				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -249,7 +249,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 3}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -260,7 +260,7 @@ var functionsTests = []testCase{
 					Name:     "foo",
 					SubShell: true,
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 					},
 				},
 				Operator: "&&",
@@ -268,7 +268,7 @@ var functionsTests = []testCase{
 					Name:     "foo",
 					SubShell: true,
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 19}, Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -277,7 +277,7 @@ var functionsTests = []testCase{
 				Name:     "foo",
 				SubShell: true,
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 33}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -288,7 +288,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 17}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -297,7 +297,7 @@ var functionsTests = []testCase{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 27}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -306,7 +306,7 @@ var functionsTests = []testCase{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 29}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -315,7 +315,7 @@ var functionsTests = []testCase{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 33}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -324,7 +324,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 19}, Name: ast.Word("cmd")},
 			},
 			Redirections: []ast.Redirection{
 				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -339,7 +339,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 3}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -351,7 +351,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 3}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -362,7 +362,7 @@ var functionsTests = []testCase{
 					Name:     "foo",
 					SubShell: true,
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 16}, Name: ast.Word("cmd")},
 					},
 				},
 				Operator: "&&",
@@ -370,7 +370,7 @@ var functionsTests = []testCase{
 					Name:     "foo",
 					SubShell: true,
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 38}, Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -379,7 +379,7 @@ var functionsTests = []testCase{
 				Name:     "foo",
 				SubShell: true,
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 61}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -389,7 +389,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 9}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -398,7 +398,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 18}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -418,7 +418,7 @@ var functionsTests = []testCase{
 				{Name: "igk", Long: true, AcceptsValue: true},
 				{Name: "lmn", Long: true, AcceptsValue: true, Optional: true},
 			},
-			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+			Body: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 63}, Name: ast.Word("cmd")}},
 		},
 	}},
 	{`function foo(
@@ -445,7 +445,7 @@ var functionsTests = []testCase{
 				{Name: "igk", Long: true, AcceptsValue: true},
 				{Name: "lmn", Long: true, AcceptsValue: true, Optional: true},
 			},
-			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+			Body: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 11, Col: 5}, Name: ast.Word("cmd")}},
 		},
 	}},
 	{`function foo(# comment
@@ -480,7 +480,7 @@ var functionsTests = []testCase{
 				{Name: "igk", Long: true, AcceptsValue: true},
 				{Name: "lmn", Long: true, AcceptsValue: true, Optional: true},
 			},
-			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+			Body: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 19, Col: 5}, Name: ast.Word("cmd")}},
 		},
 	}},
 }

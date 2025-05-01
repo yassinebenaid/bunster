@@ -856,17 +856,17 @@ var conditionalsTests = []testCase{
 	}}}},
 	{`[[ str =~ $(cmd) ]]`, ast.Script{ast.Test{Expr: ast.Binary{
 		Left: ast.Word("str"), Operator: "=~", Right: ast.CommandSubstitution{
-			ast.Command{Name: ast.Word("cmd")},
+			ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 13}, Name: ast.Word("cmd")},
 		},
 	}}}},
 	{`[[ str =~ <(cmd) ]]`, ast.Script{ast.Test{Expr: ast.Binary{
 		Left: ast.Word("str"), Operator: "=~", Right: ast.ProcessSubstitution{
-			Direction: '<', Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+			Direction: '<', Body: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 13}, Name: ast.Word("cmd")}},
 		},
 	}}}},
 	{`[[ str =~ >(cmd) ]]`, ast.Script{ast.Test{Expr: ast.Binary{
 		Left: ast.Word("str"), Operator: "=~", Right: ast.ProcessSubstitution{
-			Direction: '>', Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+			Direction: '>', Body: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 13}, Name: ast.Word("cmd")}},
 		},
 	}}}},
 	{`[[ str =~ "str" ]]`, ast.Script{ast.Test{Expr: ast.Binary{

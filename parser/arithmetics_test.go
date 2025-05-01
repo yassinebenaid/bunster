@@ -11,7 +11,8 @@ import (
 var arithmeticsTests = []testCase{
 	{`$((1)) $(( variable_name )) $(( $VARIABLE_NAME ))`, ast.Script{
 		ast.Command{
-			Name: ast.Arithmetic{ast.Number("1")},
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Arithmetic{ast.Number("1")},
 			Args: []ast.Expression{
 				ast.Arithmetic{ast.Var("variable_name")},
 				ast.Arithmetic{ast.Var("VARIABLE_NAME")},
@@ -20,7 +21,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 + 2	, 	2 ,	 3 ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -36,7 +38,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( $((123)) )) $(( ${var} ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Arithmetic{ast.Number("123")},
@@ -47,7 +50,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1+2 - 3 + 4-5))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -73,7 +77,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( var++ )) $(( var-- )) $(( ++var )) $(( --var )) $(( var ++ ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.PostIncDecArithmetic{
@@ -110,7 +115,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( +var )) $(( -var )) $(( + - var )) $(( - + var ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Unary{
@@ -147,7 +153,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( !var )) $(( !$var ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{ast.Negation{Operand: ast.Var("var")}},
 				ast.Arithmetic{ast.Negation{Operand: ast.Var("var")}},
@@ -156,7 +163,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( ~var )) $(( ~$var ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{ast.BitFlip{Operand: ast.Var("var")}},
 				ast.Arithmetic{ast.BitFlip{Operand: ast.Var("var")}},
@@ -165,7 +173,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 ** 2 )) $(( $var ** var ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -186,7 +195,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 * 2 )) $(( 1 / 2 )) $(( 1 % 2 ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -214,7 +224,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 << 2 )) $(( 1 >> 2 ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -235,7 +246,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 < 2 )) $(( 1 > 2 )) $(( 1 <= 2 )) $(( 1 >= 2 ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -270,7 +282,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 == 2 )) $(( 1 != 2 ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -291,7 +304,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 & 2 )) $(( 1 ^ 2 )) $(( 1 | 2 ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -319,7 +333,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 && 2 )) $(( 1 || 2 ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -340,7 +355,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 ? 2 : 3 )) $(( 1 ? 2 ? 3 : 4 : 5 ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Conditional{
@@ -366,7 +382,8 @@ var arithmeticsTests = []testCase{
 	{`cmd $(( x = y )) $(( x *= y )) $(( x /= y )) $(( x %= y )) $(( x += y )) $(( x -= y )) \
 		$(( x <<= y )) $(( x >>= y )) $(( x &= y )) $(( x ^= y )) $(( x |= y ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{Left: ast.Var("x"), Operator: "=", Right: ast.Var("y")},
@@ -406,7 +423,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( x = y, x + y ,x*y ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{Left: ast.Var("x"), Operator: "=", Right: ast.Var("y")},
@@ -418,7 +436,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( (x), (x+y) ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Var("x"),

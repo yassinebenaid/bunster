@@ -23,9 +23,9 @@ var embeddingTests = []testCase{
 	`, ast.Script{
 		ast.Embed{"file"},
 		ast.Embed{"file"},
-		ast.Command{Name: ast.Word("command")},
-		ast.Command{Name: ast.Word("@"), Args: []ast.Expression{ast.Word("embed")}},
-		ast.Command{Name: ast.Word("@embed")},
+		ast.Command{Position: ast.Position{File: "main.sh", Line: 5, Col: 3}, Name: ast.Word("command")},
+		ast.Command{Position: ast.Position{File: "main.sh", Line: 6, Col: 3}, Name: ast.Word("@"), Args: []ast.Expression{ast.Word("embed")}},
+		ast.Command{Position: ast.Position{File: "main.sh", Line: 7, Col: 3}, Name: ast.Word("@embed")},
 	}},
 	{`
 		@embed file; @embed file;
