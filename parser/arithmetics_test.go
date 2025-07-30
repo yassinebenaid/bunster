@@ -11,7 +11,8 @@ import (
 var arithmeticsTests = []testCase{
 	{`$((1)) $(( variable_name )) $(( $VARIABLE_NAME ))`, ast.Script{
 		ast.Command{
-			Name: ast.Arithmetic{ast.Number("1")},
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Arithmetic{ast.Number("1")},
 			Args: []ast.Expression{
 				ast.Arithmetic{ast.Var("variable_name")},
 				ast.Arithmetic{ast.Var("VARIABLE_NAME")},
@@ -20,7 +21,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 + 2	, 	2 ,	 3 ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -36,7 +38,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( $((123)) )) $(( ${var} ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Arithmetic{ast.Number("123")},
@@ -47,7 +50,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1+2 - 3 + 4-5))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -73,7 +77,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( var++ )) $(( var-- )) $(( ++var )) $(( --var )) $(( var ++ ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.PostIncDecArithmetic{
@@ -110,7 +115,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( +var )) $(( -var )) $(( + - var )) $(( - + var ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Unary{
@@ -147,7 +153,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( !var )) $(( !$var ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{ast.Negation{Operand: ast.Var("var")}},
 				ast.Arithmetic{ast.Negation{Operand: ast.Var("var")}},
@@ -156,7 +163,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( ~var )) $(( ~$var ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{ast.BitFlip{Operand: ast.Var("var")}},
 				ast.Arithmetic{ast.BitFlip{Operand: ast.Var("var")}},
@@ -165,7 +173,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 ** 2 )) $(( $var ** var ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -186,7 +195,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 * 2 )) $(( 1 / 2 )) $(( 1 % 2 ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -214,7 +224,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 << 2 )) $(( 1 >> 2 ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -235,7 +246,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 < 2 )) $(( 1 > 2 )) $(( 1 <= 2 )) $(( 1 >= 2 ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -270,7 +282,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 == 2 )) $(( 1 != 2 ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -291,7 +304,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 & 2 )) $(( 1 ^ 2 )) $(( 1 | 2 ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -319,7 +333,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 && 2 )) $(( 1 || 2 ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{
@@ -340,7 +355,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( 1 ? 2 : 3 )) $(( 1 ? 2 ? 3 : 4 : 5 ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Conditional{
@@ -366,7 +382,8 @@ var arithmeticsTests = []testCase{
 	{`cmd $(( x = y )) $(( x *= y )) $(( x /= y )) $(( x %= y )) $(( x += y )) $(( x -= y )) \
 		$(( x <<= y )) $(( x >>= y )) $(( x &= y )) $(( x ^= y )) $(( x |= y ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{Left: ast.Var("x"), Operator: "=", Right: ast.Var("y")},
@@ -406,7 +423,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( x = y, x + y ,x*y ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Binary{Left: ast.Var("x"), Operator: "=", Right: ast.Var("y")},
@@ -418,7 +436,8 @@ var arithmeticsTests = []testCase{
 	}},
 	{`cmd $(( (x), (x+y) ))`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Arithmetic{
 					ast.Var("x"),
@@ -604,8 +623,7 @@ var arithmeticsPrecedenceTests = []struct {
 func TestArithmeticsPrecedence(t *testing.T) {
 	for i, tc := range arithmeticsPrecedenceTests {
 		script, err := parser.Parse(
-			lexer.New([]rune(tc.input)),
-		)
+			lexer.New("main.sh", []rune(tc.input)))
 
 		if err != nil {
 			t.Fatalf("\nCase: %s\nInput: %s\nUnexpected Error: %s\n", dump(i), dump(tc.input), dump(err.Error()))
@@ -633,46 +651,46 @@ func TestArithmeticsPrecedence(t *testing.T) {
 }
 
 var arithmeticsErrorHandlingCases = []errorHandlingTestCase{
-	{`$((`, "syntax error: bad arithmetic expression, unexpected end of file. (line: 1, column: 4)"},
-	{`$(())`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 4)"},
-	{`$(( ))`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 5)"},
-	{`$((,))`, "syntax error: bad arithmetic expression, unexpected token `,`. (line: 1, column: 4)"},
-	{`$((1 `, "syntax error: expected `))` to close arithmetic expression, found `end of file`. (line: 1, column: 6)"},
-	{`$((1++))`, "syntax error: expected `))` to close arithmetic expression, found `++`. (line: 1, column: 5)"},
-	{`$((--))`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 6)"},
-	{`$((--1))`, "syntax error: expected a variable name after `--`. (line: 1, column: 7)"},
-	{`$((-))`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 5)"},
-	{`$((1+))`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 6)"},
-	{`$(( (1 x))`, "syntax error: expected a closing `)`, found `x`. (line: 1, column: 8)"},
-	{`$(( 1 ? 2 x))`, "syntax error: expected a colon `:`, found `x`. (line: 1, column: 11)"},
+	{`$((`, "main.sh(1:4): syntax error: bad arithmetic expression, unexpected end of file."},
+	{`$(())`, "main.sh(1:4): syntax error: bad arithmetic expression, unexpected token `)`."},
+	{`$(( ))`, "main.sh(1:5): syntax error: bad arithmetic expression, unexpected token `)`."},
+	{`$((,))`, "main.sh(1:4): syntax error: bad arithmetic expression, unexpected token `,`."},
+	{`$((1 `, "main.sh(1:6): syntax error: expected `))` to close arithmetic expression, found `end of file`."},
+	{`$((1++))`, "main.sh(1:5): syntax error: expected `))` to close arithmetic expression, found `++`."},
+	{`$((--))`, "main.sh(1:6): syntax error: bad arithmetic expression, unexpected token `)`."},
+	{`$((--1))`, "main.sh(1:7): syntax error: expected a variable name after `--`."},
+	{`$((-))`, "main.sh(1:5): syntax error: bad arithmetic expression, unexpected token `)`."},
+	{`$((1+))`, "main.sh(1:6): syntax error: bad arithmetic expression, unexpected token `)`."},
+	{`$(( (1 x))`, "main.sh(1:8): syntax error: expected a closing `)`, found `x`."},
+	{`$(( 1 ? 2 x))`, "main.sh(1:11): syntax error: expected a colon `:`, found `x`."},
 
-	{`((`, "syntax error: bad arithmetic expression, unexpected end of file. (line: 1, column: 3)"},
-	{`(())`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 3)"},
-	{`(( ))`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 4)"},
-	{`((,))`, "syntax error: bad arithmetic expression, unexpected token `,`. (line: 1, column: 3)"},
-	{`((1 `, "syntax error: expected `))` to close arithmetic expression, found `end of file`. (line: 1, column: 5)"},
-	{`((1++))`, "syntax error: expected `))` to close arithmetic expression, found `++`. (line: 1, column: 4)"},
-	{`((--1))`, "syntax error: expected a variable name after `--`. (line: 1, column: 6)"},
-	{`((--))`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 5)"},
-	{`((-))`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 4)"},
-	{`((1+))`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 5)"},
-	{`(( (1 x))`, "syntax error: expected a closing `)`, found `x`. (line: 1, column: 7)"},
-	{`(( 1 ? 2 x))`, "syntax error: expected a colon `:`, found `x`. (line: 1, column: 10)"},
+	{`((`, "main.sh(1:3): syntax error: bad arithmetic expression, unexpected end of file."},
+	{`(())`, "main.sh(1:3): syntax error: bad arithmetic expression, unexpected token `)`."},
+	{`(( ))`, "main.sh(1:4): syntax error: bad arithmetic expression, unexpected token `)`."},
+	{`((,))`, "main.sh(1:3): syntax error: bad arithmetic expression, unexpected token `,`."},
+	{`((1 `, "main.sh(1:5): syntax error: expected `))` to close arithmetic expression, found `end of file`."},
+	{`((1++))`, "main.sh(1:4): syntax error: expected `))` to close arithmetic expression, found `++`."},
+	{`((--1))`, "main.sh(1:6): syntax error: expected a variable name after `--`."},
+	{`((--))`, "main.sh(1:5): syntax error: bad arithmetic expression, unexpected token `)`."},
+	{`((-))`, "main.sh(1:4): syntax error: bad arithmetic expression, unexpected token `)`."},
+	{`((1+))`, "main.sh(1:5): syntax error: bad arithmetic expression, unexpected token `)`."},
+	{`(( (1 x))`, "main.sh(1:7): syntax error: expected a closing `)`, found `x`."},
+	{`(( 1 ? 2 x))`, "main.sh(1:10): syntax error: expected a colon `:`, found `x`."},
 
-	{`(( x )) arg`, "syntax error: unexpected token `arg`. (line: 1, column: 9)"},
-	{`(( x )) <in >out <<<etc arg`, "syntax error: unexpected token `arg`. (line: 1, column: 25)"},
+	{`(( x )) arg`, "main.sh(1:9): syntax error: unexpected token `arg`."},
+	{`(( x )) <in >out <<<etc arg`, "main.sh(1:25): syntax error: unexpected token `arg`."},
 
-	{`(( 1 = foo ))`, `syntax error: the operator "=" expects a variable name on the left. (line: 1, column: 6)`},
-	{`(( 1 += foo ))`, `syntax error: the operator "+=" expects a variable name on the left. (line: 1, column: 6)`},
-	{`(( 1 -= foo ))`, `syntax error: the operator "-=" expects a variable name on the left. (line: 1, column: 6)`},
-	{`(( 1 *= foo ))`, `syntax error: the operator "*=" expects a variable name on the left. (line: 1, column: 6)`},
-	{`(( 1 /= foo ))`, `syntax error: the operator "/=" expects a variable name on the left. (line: 1, column: 6)`},
-	{`(( 1 <<= foo ))`, `syntax error: the operator "<<=" expects a variable name on the left. (line: 1, column: 6)`},
-	{`(( 1 >>= foo ))`, `syntax error: the operator ">>=" expects a variable name on the left. (line: 1, column: 6)`},
-	{`(( 1 |= foo ))`, `syntax error: the operator "|=" expects a variable name on the left. (line: 1, column: 6)`},
-	{`(( 1 &= foo ))`, `syntax error: the operator "&=" expects a variable name on the left. (line: 1, column: 6)`},
-	{`(( 1 ^= foo ))`, `syntax error: the operator "^=" expects a variable name on the left. (line: 1, column: 6)`},
-	{`(( 1 %= foo ))`, `syntax error: the operator "%=" expects a variable name on the left. (line: 1, column: 6)`},
+	{`(( 1 = foo ))`, "main.sh(1:6): syntax error: the operator \"=\" expects a variable name on the left."},
+	{`(( 1 += foo ))`, "main.sh(1:6): syntax error: the operator \"+=\" expects a variable name on the left."},
+	{`(( 1 -= foo ))`, "main.sh(1:6): syntax error: the operator \"-=\" expects a variable name on the left."},
+	{`(( 1 *= foo ))`, "main.sh(1:6): syntax error: the operator \"*=\" expects a variable name on the left."},
+	{`(( 1 /= foo ))`, "main.sh(1:6): syntax error: the operator \"/=\" expects a variable name on the left."},
+	{`(( 1 <<= foo ))`, "main.sh(1:6): syntax error: the operator \"<<=\" expects a variable name on the left."},
+	{`(( 1 >>= foo ))`, "main.sh(1:6): syntax error: the operator \">>=\" expects a variable name on the left."},
+	{`(( 1 |= foo ))`, "main.sh(1:6): syntax error: the operator \"|=\" expects a variable name on the left."},
+	{`(( 1 &= foo ))`, "main.sh(1:6): syntax error: the operator \"&=\" expects a variable name on the left."},
+	{`(( 1 ^= foo ))`, "main.sh(1:6): syntax error: the operator \"^=\" expects a variable name on the left."},
+	{`(( 1 %= foo ))`, "main.sh(1:6): syntax error: the operator \"%=\" expects a variable name on the left."},
 
-	{`let x-- y`, "syntax error: unexpected token `y`. (line: 1, column: 9)"},
+	{`let x-- y`, "main.sh(1:9): syntax error: unexpected token `y`."},
 }

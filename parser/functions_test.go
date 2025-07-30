@@ -9,7 +9,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 8}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -17,7 +17,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 18}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -25,7 +25,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 20}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -33,7 +33,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 24}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -41,7 +41,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 10}, Name: ast.Word("cmd")},
 			},
 			Redirections: []ast.Redirection{
 				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -55,7 +55,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 3}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -65,14 +65,14 @@ var functionsTests = []testCase{
 				Left: &ast.Function{
 					Name: "foo",
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 					},
 				},
 				Operator: "&&",
 				Right: &ast.Function{
 					Name: "foo",
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 20}, Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -80,7 +80,7 @@ var functionsTests = []testCase{
 			Right: &ast.Function{
 				Name: "foo",
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 35}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -90,7 +90,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 17}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -98,7 +98,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 27}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -106,7 +106,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 29}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -114,7 +114,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo-bar-baz",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 33}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -122,7 +122,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 19}, Name: ast.Word("cmd")},
 			},
 			Redirections: []ast.Redirection{
 				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -136,7 +136,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 3}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -146,7 +146,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -156,14 +156,14 @@ var functionsTests = []testCase{
 				Left: &ast.Function{
 					Name: "foo",
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 16}, Name: ast.Word("cmd")},
 					},
 				},
 				Operator: "&&",
 				Right: &ast.Function{
 					Name: "foo",
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 37}, Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -171,7 +171,7 @@ var functionsTests = []testCase{
 			Right: &ast.Function{
 				Name: "foo",
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 61}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -180,7 +180,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 9}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -188,7 +188,7 @@ var functionsTests = []testCase{
 		&ast.Function{
 			Name: "foo",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 18}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -198,7 +198,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 8}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -207,7 +207,7 @@ var functionsTests = []testCase{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 18}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -216,7 +216,7 @@ var functionsTests = []testCase{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 20}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -225,7 +225,7 @@ var functionsTests = []testCase{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 24}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -234,7 +234,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 10}, Name: ast.Word("cmd")},
 			},
 			Redirections: []ast.Redirection{
 				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -249,7 +249,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 3}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -260,7 +260,7 @@ var functionsTests = []testCase{
 					Name:     "foo",
 					SubShell: true,
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 					},
 				},
 				Operator: "&&",
@@ -268,7 +268,7 @@ var functionsTests = []testCase{
 					Name:     "foo",
 					SubShell: true,
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 19}, Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -277,7 +277,7 @@ var functionsTests = []testCase{
 				Name:     "foo",
 				SubShell: true,
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 33}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -288,7 +288,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 17}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -297,7 +297,7 @@ var functionsTests = []testCase{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 27}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -306,7 +306,7 @@ var functionsTests = []testCase{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 29}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -315,7 +315,7 @@ var functionsTests = []testCase{
 			Name:     "foo-bar-baz",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 33}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -324,7 +324,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 19}, Name: ast.Word("cmd")},
 			},
 			Redirections: []ast.Redirection{
 				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -339,7 +339,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 3}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -351,7 +351,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 3}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -362,7 +362,7 @@ var functionsTests = []testCase{
 					Name:     "foo",
 					SubShell: true,
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 16}, Name: ast.Word("cmd")},
 					},
 				},
 				Operator: "&&",
@@ -370,7 +370,7 @@ var functionsTests = []testCase{
 					Name:     "foo",
 					SubShell: true,
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 38}, Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -379,7 +379,7 @@ var functionsTests = []testCase{
 				Name:     "foo",
 				SubShell: true,
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 61}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -389,7 +389,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 9}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -398,7 +398,7 @@ var functionsTests = []testCase{
 			Name:     "foo",
 			SubShell: true,
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 18}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -418,7 +418,7 @@ var functionsTests = []testCase{
 				{Name: "igk", Long: true, AcceptsValue: true},
 				{Name: "lmn", Long: true, AcceptsValue: true, Optional: true},
 			},
-			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+			Body: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 63}, Name: ast.Word("cmd")}},
 		},
 	}},
 	{`function foo(
@@ -445,7 +445,7 @@ var functionsTests = []testCase{
 				{Name: "igk", Long: true, AcceptsValue: true},
 				{Name: "lmn", Long: true, AcceptsValue: true, Optional: true},
 			},
-			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+			Body: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 11, Col: 5}, Name: ast.Word("cmd")}},
 		},
 	}},
 	{`function foo(# comment
@@ -480,40 +480,40 @@ var functionsTests = []testCase{
 				{Name: "igk", Long: true, AcceptsValue: true},
 				{Name: "lmn", Long: true, AcceptsValue: true, Optional: true},
 			},
-			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+			Body: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 19, Col: 5}, Name: ast.Word("cmd")}},
 		},
 	}},
 }
 
 var functionsErrorHandlingCases = []errorHandlingTestCase{
-	{`foo ()`, "syntax error: function body is expected, found `end of file`. (line: 1, column: 7)"},
-	{`foo () simple_command`, "syntax error: function body is expected, found `simple_command`. (line: 1, column: 8)"},
-	{`$foo () {cmd;}`, "syntax error: invalid function name was supplied. (line: 1, column: 6)"},
-	{`cmd (`, "syntax error: expected `)`, found `end of file`. (line: 1, column: 6)"},
-	{`cmd )`, "syntax error: token `)` cannot be placed here. (line: 1, column: 5)"},
-	{`cmd arg (`, "syntax error: token `(` cannot be placed here. (line: 1, column: 9)"},
-	{`cmd arg )`, "syntax error: token `)` cannot be placed here. (line: 1, column: 9)"},
-	{`cmd arg(arg`, "syntax error: token `(` cannot be placed here. (line: 1, column: 8)"},
-	{`cmd arg)arg`, "syntax error: token `)` cannot be placed here. (line: 1, column: 8)"},
-	{`func() if true; then cmd;fi`, "syntax error: function body is expected to be a group or subshell. (line: 1, column: 28)"},
+	{`foo ()`, "main.sh(1:7): syntax error: function body is expected, found `end of file`."},
+	{`foo () simple_command`, "main.sh(1:8): syntax error: function body is expected, found `simple_command`."},
+	{`$foo () {cmd;}`, "main.sh(1:6): syntax error: invalid function name was supplied."},
+	{`cmd (`, "main.sh(1:6): syntax error: expected `)`, found `end of file`."},
+	{`cmd )`, "main.sh(1:5): syntax error: token `)` cannot be placed here."},
+	{`cmd arg (`, "main.sh(1:9): syntax error: token `(` cannot be placed here."},
+	{`cmd arg )`, "main.sh(1:9): syntax error: token `)` cannot be placed here."},
+	{`cmd arg(arg`, "main.sh(1:8): syntax error: token `(` cannot be placed here."},
+	{`cmd arg)arg`, "main.sh(1:8): syntax error: token `)` cannot be placed here."},
+	{`func() if true; then cmd;fi`, "main.sh(1:28): syntax error: function body is expected to be a group or subshell."},
 
-	{`function`, "syntax error: function name is required. (line: 1, column: 9)"},
-	{`function foo ()`, "syntax error: function body is expected, found `end of file`. (line: 1, column: 16)"},
-	{`function foo () simple_command`, "syntax error: function body is expected, found `simple_command`. (line: 1, column: 17)"},
-	{`function $foo () {cmd;}`, "syntax error: invalid function name was supplied. (line: 1, column: 14)"},
-	{`function cmd (`, "syntax error: expected `)`, found `end of file`. (line: 1, column: 15)"},
-	{`function cmd )`, "syntax error: function body is expected, found `)`. (line: 1, column: 14)"},
-	{`function cmd () function foo() {cmd;}`, "syntax error: function body is expected, found `function`. (line: 1, column: 17)"},
-	{`function func() {cmd;} | cat`, "syntax error: unexpected token `|`. (line: 1, column: 24)"},
-	{`func() {cmd;} | cat`, "syntax error: unexpected token `|`. (line: 1, column: 15)"},
-	{`function func() if true; then cmd;fi`, "syntax error: function body is expected to be a group or subshell. (line: 1, column: 37)"},
+	{`function`, "main.sh(1:9): syntax error: function name is required."},
+	{`function foo ()`, "main.sh(1:16): syntax error: function body is expected, found `end of file`."},
+	{`function foo () simple_command`, "main.sh(1:17): syntax error: function body is expected, found `simple_command`."},
+	{`function $foo () {cmd;}`, "main.sh(1:14): syntax error: invalid function name was supplied."},
+	{`function cmd (`, "main.sh(1:15): syntax error: expected `)`, found `end of file`."},
+	{`function cmd )`, "main.sh(1:14): syntax error: function body is expected, found `)`."},
+	{`function cmd () function foo() {cmd;}`, "main.sh(1:17): syntax error: function body is expected, found `function`."},
+	{`function func() {cmd;} | cat`, "main.sh(1:24): syntax error: unexpected token `|`."},
+	{`func() {cmd;} | cat`, "main.sh(1:15): syntax error: unexpected token `|`."},
+	{`function func() if true; then cmd;fi`, "main.sh(1:37): syntax error: function body is expected to be a group or subshell."},
 
-	{`function func( ; ){ cmd; }`, "syntax error: unexpected token `;`. (line: 1, column: 16)"},
-	{`function func( -; ){ cmd; }`, "syntax error: expected a valid flag name, found `;`. (line: 1, column: 17)"},
-	{`function func( --; ){ cmd; }`, "syntax error: expected a valid flag name, found `;`. (line: 1, column: 18)"},
-	{`function func( -abc ){ cmd; }`, "syntax error: short flags can only be one character long, found `abc`. (line: 1, column: 17)"},
-	{`function func( -a[ ){ cmd; }`, "syntax error: expected [=] to indicate optional value, found `[blank)`. (line: 1, column: 18)"},
-	{`function func( -a -a ){ cmd; }`, "syntax error: flag declared twice: `a`. (line: 1, column: 22)"},
-	{`function func( --foo --foo ){ cmd; }`, "syntax error: flag declared twice: `foo`. (line: 1, column: 28)"},
-	{`function func( -a --a ){ cmd; }`, "syntax error: flag declared twice: `a`. (line: 1, column: 23)"},
+	{`function func( ; ){ cmd; }`, "main.sh(1:16): syntax error: unexpected token `;`."},
+	{`function func( -; ){ cmd; }`, "main.sh(1:17): syntax error: expected a valid flag name, found `;`."},
+	{`function func( --; ){ cmd; }`, "main.sh(1:18): syntax error: expected a valid flag name, found `;`."},
+	{`function func( -abc ){ cmd; }`, "main.sh(1:17): syntax error: short flags can only be one character long, found `abc`."},
+	{`function func( -a[ ){ cmd; }`, "main.sh(1:18): syntax error: expected [=] to indicate optional value, found `[blank)`."},
+	{`function func( -a -a ){ cmd; }`, "main.sh(1:22): syntax error: flag declared twice: `a`."},
+	{`function func( --foo --foo ){ cmd; }`, "main.sh(1:28): syntax error: flag declared twice: `foo`."},
+	{`function func( -a --a ){ cmd; }`, "main.sh(1:23): syntax error: flag declared twice: `a`."},
 }

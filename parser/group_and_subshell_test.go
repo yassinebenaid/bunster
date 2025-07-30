@@ -6,15 +6,15 @@ var groupAndSubshellTests = []testCase{
 	{`{ cmd; }`, ast.Script{
 		ast.Group{
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 3}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
 	{`{ cmd; cmd; }`, ast.Script{
 		ast.Group{
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 3}, Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 8}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -22,8 +22,8 @@ var groupAndSubshellTests = []testCase{
 	{`{cmd;cmd;}`, ast.Script{
 		ast.Group{
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 2}, Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 6}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -35,16 +35,16 @@ var groupAndSubshellTests = []testCase{
 	}`, ast.Script{
 		ast.Group{
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3}, Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 4}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
 	{`{cmd&cmd&}`, ast.Script{
 		ast.Group{
 			Body: []ast.Statement{
-				ast.BackgroundConstruction{Statement: ast.Command{Name: ast.Word("cmd")}},
-				ast.BackgroundConstruction{Statement: ast.Command{Name: ast.Word("cmd")}},
+				ast.BackgroundConstruction{Statement: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 2}, Name: ast.Word("cmd")}},
+				ast.BackgroundConstruction{Statement: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 6}, Name: ast.Word("cmd")}},
 			},
 		},
 	}},
@@ -53,19 +53,19 @@ var groupAndSubshellTests = []testCase{
 			Body: []ast.Statement{
 				ast.List{
 					Left: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd1")}},
-						{Command: ast.Command{Name: ast.Word("cmd2")}},
+						{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 2}, Name: ast.Word("cmd1")}},
+						{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 9}, Name: ast.Word("cmd2")}},
 					},
 					Operator: "&&",
-					Right:    ast.Command{Name: ast.Word("cmd3")},
+					Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 17}, Name: ast.Word("cmd3")},
 				},
 				ast.List{
 					Left: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd1")}},
-						{Command: ast.Command{Name: ast.Word("cmd2")}},
+						{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 23}, Name: ast.Word("cmd1")}},
+						{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 30}, Name: ast.Word("cmd2")}},
 					},
 					Operator: "&&",
-					Right:    ast.Command{Name: ast.Word("cmd3")},
+					Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 38}, Name: ast.Word("cmd3")},
 				},
 			},
 		},
@@ -76,22 +76,22 @@ var groupAndSubshellTests = []testCase{
 			Left: ast.Pipeline{
 				{Command: ast.Group{
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 2}, Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 					},
 				}},
 				{Command: ast.Group{
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 16}, Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 21}, Name: ast.Word("cmd")},
 					},
 				}},
 			},
 			Operator: "&&",
 			Right: ast.Group{
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 30}, Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 35}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -99,7 +99,7 @@ var groupAndSubshellTests = []testCase{
 	{`{cmd};}`, ast.Script{
 		ast.Group{
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd}")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 2}, Name: ast.Word("cmd}")},
 			},
 		},
 	}},
@@ -107,7 +107,7 @@ var groupAndSubshellTests = []testCase{
 		 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6 >&- 3<&4-`, ast.Script{
 		ast.Group{
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 2}, Name: ast.Word("cmd")},
 			},
 			Redirections: []ast.Redirection{
 				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -131,7 +131,7 @@ var groupAndSubshellTests = []testCase{
 			Body: []ast.Statement{
 				ast.Group{
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 3}, Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -147,8 +147,8 @@ var groupAndSubshellTests = []testCase{
 		} #comment`, ast.Script{
 		ast.Group{
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 3}, Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 6, Col: 3}, Name: ast.Word("cmd2")},
 			},
 		},
 	}},
@@ -156,23 +156,23 @@ var groupAndSubshellTests = []testCase{
 	{`( cmd )`, ast.Script{
 		ast.SubShell{
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 3}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
 	{`( cmd; cmd )`, ast.Script{
 		ast.SubShell{
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 3}, Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 8}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
 	{`( cmd; cmd; )`, ast.Script{
 		ast.SubShell{
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 3}, Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 8}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -180,8 +180,8 @@ var groupAndSubshellTests = []testCase{
 	{`(cmd;cmd)`, ast.Script{
 		ast.SubShell{
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 2}, Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 6}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -192,16 +192,16 @@ var groupAndSubshellTests = []testCase{
 	)`, ast.Script{
 		ast.SubShell{
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3}, Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 4}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
 	{`(cmd&cmd&)`, ast.Script{
 		ast.SubShell{
 			Body: []ast.Statement{
-				ast.BackgroundConstruction{Statement: ast.Command{Name: ast.Word("cmd")}},
-				ast.BackgroundConstruction{Statement: ast.Command{Name: ast.Word("cmd")}},
+				ast.BackgroundConstruction{Statement: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 2}, Name: ast.Word("cmd")}},
+				ast.BackgroundConstruction{Statement: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 6}, Name: ast.Word("cmd")}},
 			},
 		},
 	}},
@@ -210,19 +210,19 @@ var groupAndSubshellTests = []testCase{
 			Body: []ast.Statement{
 				ast.List{
 					Left: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd1")}},
-						{Command: ast.Command{Name: ast.Word("cmd2")}},
+						{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 2}, Name: ast.Word("cmd1")}},
+						{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 9}, Name: ast.Word("cmd2")}},
 					},
 					Operator: "&&",
-					Right:    ast.Command{Name: ast.Word("cmd3")},
+					Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 17}, Name: ast.Word("cmd3")},
 				},
 				ast.List{
 					Left: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd1")}},
-						{Command: ast.Command{Name: ast.Word("cmd2")}},
+						{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 23}, Name: ast.Word("cmd1")}},
+						{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 30}, Name: ast.Word("cmd2")}},
 					},
 					Operator: "&&",
-					Right:    ast.Command{Name: ast.Word("cmd3")},
+					Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 38}, Name: ast.Word("cmd3")},
 				},
 			},
 		},
@@ -233,22 +233,22 @@ var groupAndSubshellTests = []testCase{
 			Left: ast.Pipeline{
 				{Command: ast.SubShell{
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 2}, Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 					},
 				}},
 				{Command: ast.SubShell{
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 15}, Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 20}, Name: ast.Word("cmd")},
 					},
 				}},
 			},
 			Operator: "&&",
 			Right: ast.SubShell{
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 28}, Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 33}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -257,7 +257,7 @@ var groupAndSubshellTests = []testCase{
 		 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6 >&- 3<&4-`, ast.Script{
 		ast.SubShell{
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 2}, Name: ast.Word("cmd")},
 			},
 			Redirections: []ast.Redirection{
 				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -281,7 +281,7 @@ var groupAndSubshellTests = []testCase{
 			Body: []ast.Statement{
 				ast.SubShell{
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4}, Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -299,30 +299,30 @@ var groupAndSubshellTests = []testCase{
 		) #comment`, ast.Script{
 		ast.SubShell{
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 3}, Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 7, Col: 3}, Name: ast.Word("cmd2")},
 			},
 		},
 	}},
 }
 
 var groupAndSubshellErrorHandlingCases = []errorHandlingTestCase{
-	{`{`, "syntax error: expeceted a command list after `{`. (line: 1, column: 2)"},
-	{`{}`, "syntax error: expeceted a command list after `{`. (line: 1, column: 2)"},
-	{`{cmd`, "syntax error: expected `}`, found `end of file`. (line: 1, column: 5)"},
-	{`{cmd}`, "syntax error: expected `}`, found `end of file`. (line: 1, column: 6)"},
-	{`{cmd |;}`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 7)"},
-	{`{cmd | |}`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 8)"},
+	{`{`, "main.sh(1:2): syntax error: expected a command list after `{`."},
+	{`{}`, "main.sh(1:2): syntax error: expected a command list after `{`."},
+	{`{cmd`, "main.sh(1:5): syntax error: expected `}`, found `end of file`."},
+	{`{cmd}`, "main.sh(1:6): syntax error: expected `}`, found `end of file`."},
+	{`{cmd |;}`, "main.sh(1:7): syntax error: expected a valid command name, found `;`."},
+	{`{cmd | |}`, "main.sh(1:8): syntax error: expected a valid command name, found `|`."},
 
-	{`{cmd;} arg`, "syntax error: unexpected token `arg`. (line: 1, column: 8)"},
-	{`{cmd;} <in >out <<<etc arg`, "syntax error: unexpected token `arg`. (line: 1, column: 24)"},
+	{`{cmd;} arg`, "main.sh(1:8): syntax error: unexpected token `arg`."},
+	{`{cmd;} <in >out <<<etc arg`, "main.sh(1:24): syntax error: unexpected token `arg`."},
 
-	{`(`, "syntax error: expeceted a command list after `(`. (line: 1, column: 2)"},
-	{`()`, "syntax error: expeceted a command list after `(`. (line: 1, column: 2)"},
-	{`(cmd`, "syntax error: expected `)`, found `end of file`. (line: 1, column: 5)"},
-	{`(cmd |)`, "syntax error: expected a valid command name, found `)`. (line: 1, column: 7)"},
-	{`(cmd | |)`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 8)"},
+	{`(`, "main.sh(1:2): syntax error: expected a command list after `(`."},
+	{`()`, "main.sh(1:2): syntax error: expected a command list after `(`."},
+	{`(cmd`, "main.sh(1:5): syntax error: expected `)`, found `end of file`."},
+	{`(cmd |)`, "main.sh(1:7): syntax error: expected a valid command name, found `)`."},
+	{`(cmd | |)`, "main.sh(1:8): syntax error: expected a valid command name, found `|`."},
 
-	{`(cmd) arg`, "syntax error: unexpected token `arg`. (line: 1, column: 7)"},
-	{`(cmd) <in >out <<<etc arg`, "syntax error: unexpected token `arg`. (line: 1, column: 23)"},
+	{`(cmd) arg`, "main.sh(1:7): syntax error: unexpected token `arg`."},
+	{`(cmd) <in >out <<<etc arg`, "main.sh(1:23): syntax error: unexpected token `arg`."},
 }

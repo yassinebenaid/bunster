@@ -37,18 +37,20 @@ type parser struct {
 }
 
 type ParserError struct {
+	File     string
 	Line     int
 	Position int
 	Message  string
 }
 
 func (err *ParserError) Error() string {
-	return fmt.Sprintf("syntax error: %s. (line: %d, column: %d)", err.Message, err.Line, err.Position)
+	return fmt.Sprintf("%s(%d:%d): syntax error: %s.", err.File, err.Line, err.Position, err.Message)
 }
 
 func (p *parser) error(msg string, args ...any) {
 	if p.Error == nil {
 		p.Error = &ParserError{
+			File:     p.curr.File,
 			Line:     p.curr.Line,
 			Position: p.curr.Position,
 			Message:  fmt.Sprintf(msg, args...),
@@ -72,6 +74,14 @@ func (p *parser) proceed(until ...rune) {
 	p.lexerState[2] = p.lexerState[3]
 	p.lexerState[3] = p.lexerState[4]
 	p.lexerState[4] = p.l.State
+}
+
+func (p *parser) tokenPosition() ast.Position {
+	return ast.Position{
+		File: p.curr.File,
+		Line: p.curr.Line,
+		Col:  p.curr.Position,
+	}
 }
 
 func (p *parser) ParseScript() ast.Script {
@@ -207,7 +217,7 @@ func (p *parser) parseCommand() ast.Statement {
 		return env
 	}
 
-	var cmd ast.Command
+	var cmd = ast.Command{Position: p.tokenPosition()}
 	cmd.Name = p.parseExpression()
 	if cmd.Name == nil {
 		p.error("expected a valid command name, found `%s`", p.curr)

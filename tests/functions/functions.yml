@@ -137,7 +137,7 @@ cases:
       inner
     expect:
       stderr: |
-        "inner": executable file not found in $PATH
+        main.sh(1:1): "inner": executable file not found in $PATH
       stdout: "from inner\n"
 
   - name: "function declaration in subshell do not affect global shell"
@@ -156,8 +156,8 @@ cases:
     expect:
       exit_code: 1
       stderr: |
-        "func": executable file not found in $PATH
-        "func": executable file not found in $PATH
+        main.sh(1:1): "func": executable file not found in $PATH
+        main.sh(11:1): "func": executable file not found in $PATH
       stdout: "from func\n"
 
   - name: "function runs in same outer context"

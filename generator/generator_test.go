@@ -24,52 +24,57 @@ var dump = (&godump.Dumper{
 }).Sprintln
 
 func TestGenerator(t *testing.T) {
+	filter := os.Getenv("FILTER")
+
 	testFiles, err := globFiles("./tests")
 	if err != nil {
 		t.Fatalf("Failed to `Glob` test files, %v", err)
 	}
 
 	for _, testFile := range testFiles {
-		t.Run(testFile, func(t *testing.T) {
-			testContent, err := os.ReadFile(testFile)
+		if !strings.Contains(testFile, filter) {
+			// we support filtering, someone would want to run specific tests.
+			continue
+		}
+
+		testContent, err := os.ReadFile(testFile)
+		if err != nil {
+			t.Fatalf("Failed to open test file, %v", err)
+		}
+
+		tests, err := dottest.Parse(string(testContent))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		for i, test := range tests {
+			script, err := parser.Parse(lexer.New("main.sh", []rune(test.Input)))
 			if err != nil {
-				t.Fatalf("Failed to open test file, %v", err)
+				t.Fatalf("\nTest: %sError: %s", dump(test.Label), dump(err.Error()))
 			}
 
-			tests, err := dottest.Parse(string(testContent))
+			if err := analyser.Analyse(script, true); err != nil {
+				t.Fatalf("\nTest: %sError: %s", dump(test.Label), dump(err.Error()))
+			}
+
+			program := generator.Generate(script)
+			formattedProgram, gofmtErr, err := gofmt(program.String())
 			if err != nil {
-				t.Fatal(err)
+				t.Fatalf("gofmt error in generated program -- #%sError: %sStderr: %s", dump(i), dump(err.Error()), dump(gofmtErr))
 			}
 
-			for i, test := range tests {
-				script, err := parser.Parse(lexer.New([]rune(test.Input)))
-				if err != nil {
-					t.Fatalf("\nTest: %sError: %s", dump(test.Label), dump(err.Error()))
-				}
-
-				if err := analyser.Analyse(script, true); err != nil {
-					t.Fatalf("\nTest: %sError: %s", dump(test.Label), dump(err.Error()))
-				}
-
-				program := generator.Generate(script)
-				formattedProgram, gofmtErr, err := gofmt(program.String())
-				if err != nil {
-					t.Fatalf("gofmt error in generated program -- #%sError: %sStderr: %s", dump(i), dump(err.Error()), dump(gofmtErr))
-				}
-
-				formattedTestOutput, gofmtErr, err := gofmt(test.Output)
-				if err != nil {
-					t.Fatalf("gofmt error in test program -- #%sError: %sStderr: %s", dump(i), dump(err.Error()), dump(gofmtErr))
-				}
-
-				if formattedProgram != formattedTestOutput {
-					t.Fatalf(
-						"\n#%d: The generated program doesn't match the expected output.\nTest: %s\n Program:\n%s",
-						i, test.Label, diff.Diff(formattedTestOutput, formattedProgram),
-					)
-				}
+			formattedTestOutput, gofmtErr, err := gofmt(test.Output)
+			if err != nil {
+				t.Fatalf("gofmt error in test program -- #%sError: %sStderr: %s", dump(i), dump(err.Error()), dump(gofmtErr))
 			}
-		})
+
+			if formattedProgram != formattedTestOutput {
+				t.Fatalf(
+					"\n#%d: The generated program doesn't match the expected output.\nTest: %s\n Program:\n%s",
+					i, test.Label, diff.Diff(formattedTestOutput, formattedProgram),
+				)
+			}
+		}
 	}
 }
 

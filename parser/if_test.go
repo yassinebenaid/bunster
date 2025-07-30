@@ -6,10 +6,10 @@ var ifCommandTests = []testCase{
 	{`if cmd; then cmd2; fi`, ast.Script{
 		&ast.If{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 14}, Name: ast.Word("cmd2")},
 			},
 		},
 	}},
@@ -20,10 +20,10 @@ var ifCommandTests = []testCase{
 	fi`, ast.Script{
 		&ast.If{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 3}, Name: ast.Word("cmd2")},
 			},
 		},
 	}},
@@ -36,15 +36,15 @@ var ifCommandTests = []testCase{
 			Head: []ast.Statement{
 				ast.List{
 					Left: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd1")}},
-						{Command: ast.Command{Name: ast.Word("cmd2")}},
+						{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3}, Name: ast.Word("cmd1")}},
+						{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 10}, Name: ast.Word("cmd2")}},
 					},
 					Operator: "&&",
-					Right:    ast.Command{Name: ast.Word("cmd3")},
+					Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 18}, Name: ast.Word("cmd3")},
 				},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 3}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
 			},
 		},
 	}},
@@ -64,7 +64,7 @@ var ifCommandTests = []testCase{
 				ast.List{
 					Left: ast.Pipeline{
 						{
-							Command: ast.Command{
+							Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3},
 								Name: ast.Word("cmd"),
 								Args: []ast.Expression{ast.Word("arg")},
 								Redirections: []ast.Redirection{
@@ -75,7 +75,7 @@ var ifCommandTests = []testCase{
 							Stderr: false,
 						},
 						{
-							Command: ast.Command{
+							Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 3},
 								Name: ast.Word("cmd2"),
 								Args: []ast.Expression{ast.Word("foo bar baz")},
 								Redirections: []ast.Redirection{
@@ -88,7 +88,7 @@ var ifCommandTests = []testCase{
 					Operator: "&&",
 					Right: ast.Pipeline{
 						{
-							Command: ast.Command{
+							Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 3},
 								Name: ast.Word("cmd"),
 								Args: []ast.Expression{ast.Var("var")},
 								Redirections: []ast.Redirection{
@@ -99,7 +99,7 @@ var ifCommandTests = []testCase{
 							Stderr: true,
 						},
 						{
-							Command: ast.Command{
+							Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 5, Col: 3},
 								Name: ast.Word("cmd2"),
 								Args: []ast.Expression{ast.Word("foo bar baz")},
 								Redirections: []ast.Redirection{
@@ -116,7 +116,7 @@ var ifCommandTests = []testCase{
 					Statement: ast.List{
 						Left: ast.Pipeline{
 							{
-								Command: ast.Command{
+								Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 7, Col: 3},
 									Name: ast.Word("cmd"),
 									Args: []ast.Expression{ast.Word("arg")},
 									Redirections: []ast.Redirection{
@@ -127,7 +127,7 @@ var ifCommandTests = []testCase{
 								Stderr: false,
 							},
 							{
-								Command: ast.Command{
+								Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 8, Col: 3},
 									Name: ast.Word("cmd2"),
 									Args: []ast.Expression{ast.Word("foo bar baz")},
 									Redirections: []ast.Redirection{
@@ -140,7 +140,7 @@ var ifCommandTests = []testCase{
 						Operator: "&&",
 						Right: ast.Pipeline{
 							{
-								Command: ast.Command{
+								Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 9, Col: 3},
 									Name: ast.Word("cmd"),
 									Args: []ast.Expression{ast.Var("var")},
 									Redirections: []ast.Redirection{
@@ -151,7 +151,7 @@ var ifCommandTests = []testCase{
 								Stderr: true,
 							},
 							{
-								Command: ast.Command{
+								Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 10, Col: 3},
 									Name: ast.Word("cmd2"),
 									Args: []ast.Expression{ast.Word("foo bar baz")},
 									Redirections: []ast.Redirection{
@@ -170,44 +170,44 @@ var ifCommandTests = []testCase{
 		ast.BackgroundConstruction{
 			Statement: &ast.If{
 				Head: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4}, Name: ast.Word("cmd")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 14}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 				},
 			},
 		},
 		ast.BackgroundConstruction{
 			Statement: &ast.If{
 				Head: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 34}, Name: ast.Word("cmd")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 44}, Name: ast.Word("cmd")},
 				},
 			},
 		},
-		ast.Command{Name: ast.Word("cmd")},
+		ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 54}, Name: ast.Word("cmd")},
 	}},
 	{`if cmd; then echo "foo"; fi | if cmd; then echo "foo"; fi |& if cmd; then echo "foo"; fi `, ast.Script{
 		ast.Pipeline{
 			ast.PipelineCommand{
 				Command: &ast.If{
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 14}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 			},
 			ast.PipelineCommand{
 				Command: &ast.If{
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 34}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 44}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 				Stderr: true,
@@ -215,10 +215,10 @@ var ifCommandTests = []testCase{
 			ast.PipelineCommand{
 				Command: &ast.If{
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 65}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 75}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 			},
@@ -228,19 +228,19 @@ var ifCommandTests = []testCase{
 		ast.List{
 			Left: &ast.If{
 				Head: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4}, Name: ast.Word("cmd")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 14}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 				},
 			},
 			Operator: "&&",
 			Right: &ast.If{
 				Head: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 35}, Name: ast.Word("cmd")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 45}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 				},
 			},
 		},
@@ -255,20 +255,20 @@ var ifCommandTests = []testCase{
 			Head: []ast.Statement{
 				&ast.If{
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 6}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 16}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 			},
 			Body: []ast.Statement{
 				&ast.If{
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 6}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 16}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 			},
@@ -278,10 +278,10 @@ var ifCommandTests = []testCase{
 	 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6`, ast.Script{
 		&ast.If{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 14}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 			},
 			Redirections: []ast.Redirection{
 				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -301,26 +301,26 @@ var ifCommandTests = []testCase{
 	{"if cmd; then cmd2; fi; if cmd; then cmd2; fi \n  if cmd; then cmd2; fi", ast.Script{
 		&ast.If{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 14}, Name: ast.Word("cmd2")},
 			},
 		},
 		&ast.If{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 27}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 37}, Name: ast.Word("cmd2")},
 			},
 		},
 		&ast.If{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 6}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 16}, Name: ast.Word("cmd2")},
 			},
 		},
 	}},
@@ -328,13 +328,13 @@ var ifCommandTests = []testCase{
 	{`if cmd; then cmd2; else cmd3; fi`, ast.Script{
 		&ast.If{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 14}, Name: ast.Word("cmd2")},
 			},
 			Alternate: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd3")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 25}, Name: ast.Word("cmd3")},
 			},
 		},
 	}},
@@ -347,31 +347,31 @@ var ifCommandTests = []testCase{
 	fi`, ast.Script{
 		&ast.If{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 3}, Name: ast.Word("cmd2")},
 			},
 			Alternate: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd3")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 6, Col: 3}, Name: ast.Word("cmd3")},
 			},
 		},
 	}},
 	{`if cmd; then cmd2; elif cmd3; then cmd4; fi`, ast.Script{
 		&ast.If{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 14}, Name: ast.Word("cmd2")},
 			},
 			Elifs: []ast.Elif{
 				{
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd3")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 25}, Name: ast.Word("cmd3")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd4")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 36}, Name: ast.Word("cmd4")},
 					},
 				},
 			},
@@ -390,39 +390,39 @@ var ifCommandTests = []testCase{
 	fi`, ast.Script{
 		&ast.If{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 4}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3}, Name: ast.Word("cmd")},
 			},
 			Elifs: []ast.Elif{
 				{
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 7}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 3}, Name: ast.Word("cmd")},
 					},
 				},
 				{
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 5, Col: 7}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 6, Col: 3}, Name: ast.Word("cmd")},
 					},
 				},
 				{
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 7, Col: 7}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 8, Col: 3}, Name: ast.Word("cmd")},
 					},
 				},
 			},
 			Alternate: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 10, Col: 3}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -460,60 +460,60 @@ var ifCommandTests = []testCase{
 	`, ast.Script{
 		&ast.If{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 3}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 10, Col: 3}, Name: ast.Word("cmd")},
 			},
 			Elifs: []ast.Elif{
 				{
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 16, Col: 3}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 22, Col: 3}, Name: ast.Word("cmd")},
 					},
 				},
 			},
 			Alternate: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 28, Col: 3}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
 }
 
 var ifCommandErrorHandlingCases = []errorHandlingTestCase{
-	{`if`, "syntax error: expected command list after `if`. (line: 1, column: 3)"},
-	{`if then`, "syntax error: expected command list after `if`. (line: 1, column: 4)"},
-	{`if; then`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 3)"},
-	{`if cmd; fi`, "syntax error: expected `then`, found `fi`. (line: 1, column: 9)"},
-	{`if fi`, "syntax error: expected command list after `if`. (line: 1, column: 4)"},
-	{`if; fi`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 3)"},
-	{`if cmd;then fi`, "syntax error: expected command list after `then`. (line: 1, column: 13)"},
-	{`if cmd;then cmd`, "syntax error: expected `fi` to close `if` command. (line: 1, column: 16)"},
-	{`if cmd;then cmd; fi arg`, "syntax error: unexpected token `arg`. (line: 1, column: 21)"},
-	{`if cmd;then cmd; fi <in >out <<<etc arg`, "syntax error: unexpected token `arg`. (line: 1, column: 37)"},
+	{`if`, "main.sh(1:3): syntax error: expected command list after `if`."},
+	{`if then`, "main.sh(1:4): syntax error: expected command list after `if`."},
+	{`if; then`, "main.sh(1:3): syntax error: expected a valid command name, found `;`."},
+	{`if cmd; fi`, "main.sh(1:9): syntax error: expected `then`, found `fi`."},
+	{`if fi`, "main.sh(1:4): syntax error: expected command list after `if`."},
+	{`if; fi`, "main.sh(1:3): syntax error: expected a valid command name, found `;`."},
+	{`if cmd;then fi`, "main.sh(1:13): syntax error: expected command list after `then`."},
+	{`if cmd;then cmd`, "main.sh(1:16): syntax error: expected `fi` to close `if` command."},
+	{`if cmd;then cmd; fi arg`, "main.sh(1:21): syntax error: unexpected token `arg`."},
+	{`if cmd;then cmd; fi <in >out <<<etc arg`, "main.sh(1:37): syntax error: unexpected token `arg`."},
 
-	{`if cmd; then cmd;elif fi`, "syntax error: expected command list after `elif`. (line: 1, column: 23)"},
-	{`if cmd; then cmd;elif cmd; fi`, "syntax error: expected `then`, found `fi`. (line: 1, column: 28)"},
-	{`if cmd; then cmd;elif cmd; then fi`, "syntax error: expected command list after `then`. (line: 1, column: 33)"},
+	{`if cmd; then cmd;elif fi`, "main.sh(1:23): syntax error: expected command list after `elif`."},
+	{`if cmd; then cmd;elif cmd; fi`, "main.sh(1:28): syntax error: expected `then`, found `fi`."},
+	{`if cmd; then cmd;elif cmd; then fi`, "main.sh(1:33): syntax error: expected command list after `then`."},
 
-	{`if cmd;then cmd;else fi`, "syntax error: expected command list after `else`. (line: 1, column: 22)"},
-	{`if cmd;then cmd;else; fi`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 21)"},
+	{`if cmd;then cmd;else fi`, "main.sh(1:22): syntax error: expected command list after `else`."},
+	{`if cmd;then cmd;else; fi`, "main.sh(1:21): syntax error: expected a valid command name, found `;`."},
 
-	{`if cmd|;then cmd; fi`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 8)"},
-	{`if cmd| |;then cmd; fi`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 9)"},
-	{`if cmd;then cmd|; fi`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 17)"},
-	{`if cmd;then cmd| |; fi`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 18)"},
-	{`if cmd; then cmd; elif cmd|;then cmd; fi`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 28)"},
-	{`if cmd; then cmd; elif cmd| |;then cmd; fi`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 29)"},
-	{`if cmd; then cmd; elif cmd;then cmd|; fi`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 37)"},
-	{`if cmd; then cmd; elif cmd;then cmd| |; fi`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 38)"},
-	{`if cmd; then cmd; else cmd|; fi`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 28)"},
-	{`if cmd; then cmd; else cmd| |; fi`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 29)"},
+	{`if cmd|;then cmd; fi`, "main.sh(1:8): syntax error: expected a valid command name, found `;`."},
+	{`if cmd| |;then cmd; fi`, "main.sh(1:9): syntax error: expected a valid command name, found `|`."},
+	{`if cmd;then cmd|; fi`, "main.sh(1:17): syntax error: expected a valid command name, found `;`."},
+	{`if cmd;then cmd| |; fi`, "main.sh(1:18): syntax error: expected a valid command name, found `|`."},
+	{`if cmd; then cmd; elif cmd|;then cmd; fi`, "main.sh(1:28): syntax error: expected a valid command name, found `;`."},
+	{`if cmd; then cmd; elif cmd| |;then cmd; fi`, "main.sh(1:29): syntax error: expected a valid command name, found `|`."},
+	{`if cmd; then cmd; elif cmd;then cmd|; fi`, "main.sh(1:37): syntax error: expected a valid command name, found `;`."},
+	{`if cmd; then cmd; elif cmd;then cmd| |; fi`, "main.sh(1:38): syntax error: expected a valid command name, found `|`."},
+	{`if cmd; then cmd; else cmd|; fi`, "main.sh(1:28): syntax error: expected a valid command name, found `;`."},
+	{`if cmd; then cmd; else cmd| |; fi`, "main.sh(1:29): syntax error: expected a valid command name, found `|`."},
 
-	{`then`, "syntax error: `then` is a reserved keyword, cannot be used a command name. (line: 1, column: 1)"},
-	{`elif`, "syntax error: `elif` is a reserved keyword, cannot be used a command name. (line: 1, column: 1)"},
-	{`else`, "syntax error: `else` is a reserved keyword, cannot be used a command name. (line: 1, column: 1)"},
-	{`fi`, "syntax error: `fi` is a reserved keyword, cannot be used a command name. (line: 1, column: 1)"},
+	{`then`, "main.sh(1:1): syntax error: `then` is a reserved keyword, cannot be used as a command name."},
+	{`elif`, "main.sh(1:1): syntax error: `elif` is a reserved keyword, cannot be used as a command name."},
+	{`else`, "main.sh(1:1): syntax error: `else` is a reserved keyword, cannot be used as a command name."},
+	{`fi`, "main.sh(1:1): syntax error: `fi` is a reserved keyword, cannot be used as a command name."},
 }

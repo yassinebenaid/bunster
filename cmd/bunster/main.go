@@ -60,7 +60,7 @@ func main() {
 
 	err := app.Run(context.Background(), os.Args)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error: ", err)
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 }
@@ -73,7 +73,7 @@ func ast(_ context.Context, cmd *cli.Command) error {
 	}
 
 	script, err := parser.Parse(
-		lexer.New([]rune(string(v))),
+		lexer.New(filename, []rune(string(v))),
 	)
 
 	if err != nil {

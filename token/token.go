@@ -4,6 +4,7 @@ type TokenType byte
 
 type Token struct {
 	Type     TokenType
+	File     string
 	Line     int
 	Position int
 	Literal  string

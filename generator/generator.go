@@ -182,7 +182,13 @@ func (g *generator) handleSimpleCommand(buf *InstructionBuffer, cmd ast.Command)
 		cmdbuf.add(ir.SetMap{Name: "env", Key: env.Name, Value: value})
 	}
 
-	cmdbuf.add(ir.Exec{Name: "commandName", Args: "arguments", Env: "env"})
+	cmdbuf.add(ir.Exec{
+		Name:          "commandName",
+		Args:          "arguments",
+		Env:           "env",
+		ErrorLocation: cmd.Position.String(),
+	})
+
 	*buf = append(*buf, ir.Closure(cmdbuf))
 }
 

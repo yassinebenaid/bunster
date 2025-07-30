@@ -81,8 +81,8 @@ cases:
     expect:
       exit_code: 1
       stderr: |
-        "foobar": executable file not found in $PATH
-        "/path/to/foobar": no such file or directory
+        main.sh(1:1): "foobar": executable file not found in $PATH
+        main.sh(2:1): "/path/to/foobar": no such file or directory
 
   - name: UTF-8 is supported
     script: |

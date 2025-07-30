@@ -19,7 +19,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		arguments = append(arguments, "key=value")
 		env["key"] = "value"
 		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-			shell.HandleError(streamManager, err)
+			shell.HandleError(streamManager, err, "main.sh(2:11)")
 			return
 		}
 
@@ -55,7 +55,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		env["key3"] = "value"
 		env["key4"] = "value"
 		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-			shell.HandleError(streamManager, err)
+			shell.HandleError(streamManager, err, "main.sh(3:16)")
 			return
 		}
 
@@ -87,7 +87,7 @@ func Main(shell *runtime.Shell, streamManager *runtime.StreamManager) {
 		var env = make(map[string]string)
 		env["key"] = ""
 		if err := shell.Exec(streamManager, commandName, arguments, env); err != nil {
-			shell.HandleError(streamManager, err)
+			shell.HandleError(streamManager, err, "main.sh(2:6)")
 			return
 		}
 

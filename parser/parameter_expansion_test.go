@@ -5,7 +5,8 @@ import "github.com/yassinebenaid/bunster/ast"
 var parameterExpansionTests = []testCase{
 	{`cmd ${var} ${var[123]} ${123} ${*} ${@}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Var("var"),
 				ast.ArrayAccess{
@@ -20,7 +21,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${#var} ${#var} ${#var[123]}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.VarLength{Parameter: ast.Var("var")},
 				ast.VarLength{Parameter: ast.Var("var")},
@@ -33,7 +35,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var-default} ${var-'default'} ${var-${default}} ${var- $foo bar "baz" | & ; 2> < } ${var-}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.VarOrDefault{Parameter: ast.Var("var"), Default: ast.Word("default"), UnsetOnly: true},
 				ast.VarOrDefault{Parameter: ast.Var("var"), Default: ast.Word("default"), UnsetOnly: true},
@@ -53,7 +56,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var:-default} ${var:-${default}} ${var:- $foo bar "baz" | & ; 2> < } ${var:-}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.VarOrDefault{Parameter: ast.Var("var"), Default: ast.Word("default")},
 				ast.VarOrDefault{Parameter: ast.Var("var"), Default: ast.Var("default")},
@@ -71,7 +75,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var=default} ${var=${default}} ${var= $foo bar "baz" | & ; 2> < } ${var=}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.VarOrSet{Parameter: ast.Var("var"), Default: ast.Word("default"), UnsetOnly: true},
 				ast.VarOrSet{Parameter: ast.Var("var"), Default: ast.Var("default"), UnsetOnly: true},
@@ -90,7 +95,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var:=default} ${var:=${default}} ${var:= $foo bar "baz" | & ; 2> < } ${var:=}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.VarOrSet{Parameter: ast.Var("var"), Default: ast.Word("default")},
 				ast.VarOrSet{Parameter: ast.Var("var"), Default: ast.Var("default")},
@@ -108,7 +114,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var:?error} ${var:?${error}} ${var:? $foo bar "baz" | & ; 2> < } ${var:?}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.VarOrFail{Parameter: ast.Var("var"), Error: ast.Word("error")},
 				ast.VarOrFail{Parameter: ast.Var("var"), Error: ast.Var("error")},
@@ -126,7 +133,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var+alternate} ${var+${alternate}} ${var+ $foo bar "baz" | & ; 2> < } ${var+}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.CheckAndUse{Parameter: ast.Var("var"), Value: ast.Word("alternate"), UnsetOnly: true},
 				ast.CheckAndUse{Parameter: ast.Var("var"), Value: ast.Var("alternate"), UnsetOnly: true},
@@ -144,7 +152,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var:+alternate} ${var:+${alternate}} ${var:+ $foo bar "baz" | & ; 2> < } ${var:+}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.CheckAndUse{Parameter: ast.Var("var"), Value: ast.Word("alternate")},
 				ast.CheckAndUse{Parameter: ast.Var("var"), Value: ast.Var("alternate")},
@@ -162,7 +171,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var^pattern} ${var^${pattern}} ${var^ $foo bar "baz" | & ; 2> < } ${var^}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.ChangeCase{Parameter: ast.Var("var"), Operator: "^", Pattern: ast.Word("pattern")},
 				ast.ChangeCase{Parameter: ast.Var("var"), Operator: "^", Pattern: ast.Var("pattern")},
@@ -181,7 +191,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var^^pattern} ${var^^${pattern}} ${var^^ $foo bar "baz" | & ; 2> < } ${var^^}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.ChangeCase{Parameter: ast.Var("var"), Operator: "^^", Pattern: ast.Word("pattern")},
 				ast.ChangeCase{Parameter: ast.Var("var"), Operator: "^^", Pattern: ast.Var("pattern")},
@@ -200,7 +211,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var,pattern} ${var,${pattern}} ${var, $foo bar "baz" | & ; 2> < } ${var,}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.ChangeCase{Parameter: ast.Var("var"), Operator: ",", Pattern: ast.Word("pattern")},
 				ast.ChangeCase{Parameter: ast.Var("var"), Operator: ",", Pattern: ast.Var("pattern")},
@@ -219,7 +231,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var,,pattern} ${var,,${pattern}} ${var,, $foo bar "baz" | & ; 2> < } ${var,,}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.ChangeCase{Parameter: ast.Var("var"), Operator: ",,", Pattern: ast.Word("pattern")},
 				ast.ChangeCase{Parameter: ast.Var("var"), Operator: ",,", Pattern: ast.Var("pattern")},
@@ -238,7 +251,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var#pattern} ${var#${pattern}} ${var# $foo bar "baz" | & ; 2> < } ${var#}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.MatchAndRemove{Parameter: ast.Var("var"), Operator: "#", Pattern: ast.Word("pattern")},
 				ast.MatchAndRemove{Parameter: ast.Var("var"), Operator: "#", Pattern: ast.Var("pattern")},
@@ -257,7 +271,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var##pattern} ${var##${pattern}} ${var## $foo bar "baz" | & ; 2> < # } ${var##}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.MatchAndRemove{Parameter: ast.Var("var"), Operator: "##", Pattern: ast.Word("pattern")},
 				ast.MatchAndRemove{Parameter: ast.Var("var"), Operator: "##", Pattern: ast.Var("pattern")},
@@ -276,7 +291,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var%pattern} ${var%${pattern}} ${var% $foo bar "baz" | & ; 2> < # } ${var%}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.MatchAndRemove{Parameter: ast.Var("var"), Operator: "%", Pattern: ast.Word("pattern")},
 				ast.MatchAndRemove{Parameter: ast.Var("var"), Operator: "%", Pattern: ast.Var("pattern")},
@@ -295,7 +311,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var%%pattern} ${var%%${pattern}} ${var%% $foo bar "baz" | & ; 2> < # } ${var%%}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.MatchAndRemove{Parameter: ast.Var("var"), Operator: "%%", Pattern: ast.Word("pattern")},
 				ast.MatchAndRemove{Parameter: ast.Var("var"), Operator: "%%", Pattern: ast.Var("pattern")},
@@ -312,12 +329,12 @@ var parameterExpansionTests = []testCase{
 			},
 		},
 	}},
-	{`
-		cmd ${var/pattern/value} ${var/${pattern}/${value}} \
+	{`cmd ${var/pattern/value} ${var/${pattern}/${value}} \
 		${var/ $foo bar "baz" | & ; 2> < # / $foo bar "baz" | & ; 2> < #////} \
 		${var/pattern/} ${var/pattern} ${var/}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.MatchAndReplace{
 					Parameter: ast.Var("var"),
@@ -362,12 +379,12 @@ var parameterExpansionTests = []testCase{
 			},
 		},
 	}},
-	{`
-		cmd ${var//pattern/value} ${var//${pattern}/${value}} \
+	{`cmd ${var//pattern/value} ${var//${pattern}/${value}} \
 		${var// $foo bar "baz" | & ; 2> < # / $foo bar "baz" | & ; 2> < #////} \
 		${var//pattern/} ${var//pattern} ${var//} ${var///} ${var//////}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.MatchAndReplace{
 					Parameter: ast.Var("var"),
@@ -423,12 +440,12 @@ var parameterExpansionTests = []testCase{
 			},
 		},
 	}},
-	{`
-		cmd ${var/#pattern/value} ${var/#${pattern}/${value}} \
+	{`cmd ${var/#pattern/value} ${var/#${pattern}/${value}} \
 		${var/# $foo bar "baz" | & ; 2> < # / $foo bar "baz" | & ; 2> < #////} \
 		${var/#pattern/} ${var/#pattern} ${var/#}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.MatchAndReplace{
 					Parameter: ast.Var("var"),
@@ -473,12 +490,12 @@ var parameterExpansionTests = []testCase{
 			},
 		},
 	}},
-	{`
-		cmd ${var/%pattern/value} ${var/%${pattern}/${value}} \
+	{`cmd ${var/%pattern/value} ${var/%${pattern}/${value}} \
 		${var/% $foo bar "baz" | & ; 2> < # / $foo bar "baz" | & ; 2> < #////} \
 		${var/%pattern/} ${var/%pattern} ${var/%}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.MatchAndReplace{
 					Parameter: ast.Var("var"),
@@ -525,7 +542,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var@U} ${var@u} ${var@L} ${var@Q} ${var@E} ${var@P} ${var@A} ${var@K} ${var@a} ${var@k}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Transform{Parameter: ast.Var("var"), Operator: "U"},
 				ast.Transform{Parameter: ast.Var("var"), Operator: "u"},
@@ -542,7 +560,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var:x:y} ${var:x} `, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Slice{
 					Parameter: ast.Var("var"),
@@ -558,7 +577,8 @@ var parameterExpansionTests = []testCase{
 	}},
 	{`cmd ${var/<(ls)/$(ls)}`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.MatchAndReplace{
 					Parameter: ast.Var("var"),
@@ -567,6 +587,7 @@ var parameterExpansionTests = []testCase{
 						Direction: 60,
 						Body: []ast.Statement{
 							ast.Command{
+								Position:     ast.Position{File: "main.sh", Line: 1, Col: 13},
 								Name:         ast.Word("ls"),
 								Args:         []ast.Expression(nil),
 								Redirections: []ast.Redirection(nil),
@@ -575,6 +596,7 @@ var parameterExpansionTests = []testCase{
 					},
 					Value: ast.CommandSubstitution{
 						ast.Command{
+							Position:     ast.Position{File: "main.sh", Line: 1, Col: 19},
 							Name:         ast.Word("ls"),
 							Args:         []ast.Expression(nil),
 							Redirections: []ast.Redirection(nil),
@@ -587,21 +609,21 @@ var parameterExpansionTests = []testCase{
 }
 
 var parameterExpansionErrorHandlingCases = []errorHandlingTestCase{
-	{"${", "syntax error: couldn't find a valid parameter name, found `end of file`. (line: 1, column: 3)"},
-	{"${}", "syntax error: couldn't find a valid parameter name, found `}`. (line: 1, column: 3)"},
-	{"${!", "syntax error: couldn't find a valid parameter name, found `!`. (line: 1, column: 3)"},
-	{"${var", "syntax error: expected closing brace `}`, found `end of file`. (line: 1, column: 6)"},
-	{"${#var", "syntax error: expected closing brace `}`, found `end of file`. (line: 1, column: 7)"},
-	{"${#var:-default}", "syntax error: expected closing brace `}`, found `:-`. (line: 1, column: 7)"},
-	{"${var:}", "syntax error: bad arithmetic expression, unexpected token `}`. (line: 1, column: 7)"},
-	{"${var:x:}", "syntax error: bad arithmetic expression, unexpected token `}`. (line: 1, column: 9)"},
-	{"${var@}", "syntax error: bad substitution operator `}`, possible operators are (U, u, L, Q, E, P, A, K, a, k). (line: 1, column: 7)"},
+	{"${", "main.sh(1:3): syntax error: couldn't find a valid parameter name, found `end of file`."},
+	{"${}", "main.sh(1:3): syntax error: couldn't find a valid parameter name, found `}`."},
+	{"${!", "main.sh(1:3): syntax error: couldn't find a valid parameter name, found `!`."},
+	{"${var", "main.sh(1:6): syntax error: expected closing brace `}`, found `end of file`."},
+	{"${#var", "main.sh(1:7): syntax error: expected closing brace `}`, found `end of file`."},
+	{"${#var:-default}", "main.sh(1:7): syntax error: expected closing brace `}`, found `:-`."},
+	{"${var:}", "main.sh(1:7): syntax error: bad arithmetic expression, unexpected token `}`."},
+	{"${var:x:}", "main.sh(1:9): syntax error: bad arithmetic expression, unexpected token `}`."},
+	{"${var@}", "main.sh(1:7): syntax error: bad substitution operator `}`, possible operators are (U, u, L, Q, E, P, A, K, a, k)."},
 
-	{"${var[]}", "syntax error: bad arithmetic expression, unexpected token `]`. (line: 1, column: 7)"},
-	{"${var[}", "syntax error: bad arithmetic expression, unexpected token `}`. (line: 1, column: 7)"},
-	{"${var[1}", "syntax error: expected a closing bracket `]`, found `}`. (line: 1, column: 8)"},
-	{"${1:=foo}", "syntax error: unexpected token `:=`. (line: 1, column: 4)"},
-	{"${1=foo}", "syntax error: unexpected token `=`. (line: 1, column: 4)"},
-	{"${@:=foo}", "syntax error: unexpected token `:=`. (line: 1, column: 4)"},
-	{"${*=foo}", "syntax error: couldn't find a valid parameter name, found `*=`. (line: 1, column: 3)"},
+	{"${var[]}", "main.sh(1:7): syntax error: bad arithmetic expression, unexpected token `]`."},
+	{"${var[}", "main.sh(1:7): syntax error: bad arithmetic expression, unexpected token `}`."},
+	{"${var[1}", "main.sh(1:8): syntax error: expected a closing bracket `]`, found `}`."},
+	{"${1:=foo}", "main.sh(1:4): syntax error: unexpected token `:=`."},
+	{"${1=foo}", "main.sh(1:4): syntax error: unexpected token `=`."},
+	{"${@:=foo}", "main.sh(1:4): syntax error: unexpected token `:=`."},
+	{"${*=foo}", "main.sh(1:3): syntax error: couldn't find a valid parameter name, found `*=`."},
 }

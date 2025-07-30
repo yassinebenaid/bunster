@@ -12,12 +12,17 @@ type State struct {
 	position int
 }
 type Lexer struct {
+	file  string
 	input []rune
 	State
 }
 
-func New(in []rune) Lexer {
-	l := Lexer{input: in, State: State{line: 1}}
+func New(filename string, in []rune) Lexer {
+	l := Lexer{
+		input: in,
+		State: State{line: 1},
+		file:  filename,
+	}
 
 	// read twice so that 'curr' and 'next' get initialized
 	l.proceed()
@@ -27,9 +32,11 @@ func New(in []rune) Lexer {
 }
 
 func (l *Lexer) NextToken() token.Token {
-	var tok token.Token
-	tok.Line = l.line
-	tok.Position = l.position - 1
+	var tok = token.Token{
+		File:     l.file,
+		Line:     l.line,
+		Position: l.position - 1,
+	}
 
 switch_beginning:
 	switch {
@@ -390,6 +397,7 @@ func (l *Lexer) proceed() {
 func (l *Lexer) ReadUntil(at rune) token.Token {
 	var t = token.Token{
 		Type:     token.OTHER,
+		File:     l.file,
 		Literal:  string(l.curr),
 		Line:     l.line,
 		Position: l.position - 1,

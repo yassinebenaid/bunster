@@ -81,7 +81,7 @@ func (b *Builder) Generate() (err error) {
 		return err
 	}
 
-	mainSh, err := parser.Parse(lexer.New([]rune(string(v))))
+	mainSh, err := parser.Parse(lexer.New(b.MainScript, []rune(string(v))))
 	if err != nil {
 		return err
 	}
@@ -101,12 +101,12 @@ func (b *Builder) Generate() (err error) {
 	}
 
 	for _, f := range module.Tree {
-		v, err := os.ReadFile(f)
+		v, err := os.ReadFile(f.OriginalPath)
 		if err != nil {
 			return err
 		}
 
-		script, err := parser.Parse(lexer.New([]rune(string(v))))
+		script, err := parser.Parse(lexer.New(f.Path, []rune(string(v))))
 		if err != nil {
 			return err
 		}
@@ -120,12 +120,12 @@ func (b *Builder) Generate() (err error) {
 
 	for _, submodule := range module.Require {
 		for _, f := range submodule.Tree {
-			v, err := os.ReadFile(f)
+			v, err := os.ReadFile(f.OriginalPath)
 			if err != nil {
 				return err
 			}
 
-			script, err := parser.Parse(lexer.New([]rune(string(v))))
+			script, err := parser.Parse(lexer.New(f.Path, []rune(string(v))))
 			if err != nil {
 				return err
 			}

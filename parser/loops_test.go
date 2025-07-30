@@ -9,14 +9,14 @@ var loopsTests = []testCase{
 	{`while cmd1; cmd2; cmd3; do echo "foo"; echo bar; echo 'baz'; done;`, ast.Script{
 		&ast.Loop{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd1")},
-				ast.Command{Name: ast.Word("cmd2")},
-				ast.Command{Name: ast.Word("cmd3")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd1")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 13}, Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 19}, Name: ast.Word("cmd3")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 28}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 40}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 50}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
 			},
 		},
 	}},
@@ -31,14 +31,14 @@ var loopsTests = []testCase{
 	done;`, ast.Script{
 		&ast.Loop{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd1")},
-				ast.Command{Name: ast.Word("cmd2")},
-				ast.Command{Name: ast.Word("cmd3")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3}, Name: ast.Word("cmd1")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 3}, Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 3}, Name: ast.Word("cmd3")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 6, Col: 3}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 7, Col: 3}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 8, Col: 3}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
 			},
 		},
 	}},
@@ -51,15 +51,15 @@ var loopsTests = []testCase{
 			Head: []ast.Statement{
 				ast.List{
 					Left: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd1")}},
-						{Command: ast.Command{Name: ast.Word("cmd2")}},
+						{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3}, Name: ast.Word("cmd1")}},
+						{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 10}, Name: ast.Word("cmd2")}},
 					},
 					Operator: "&&",
-					Right:    ast.Command{Name: ast.Word("cmd3")},
+					Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 18}, Name: ast.Word("cmd3")},
 				},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 3}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
 			},
 		},
 	}},
@@ -79,7 +79,7 @@ var loopsTests = []testCase{
 				ast.List{
 					Left: ast.Pipeline{
 						{
-							Command: ast.Command{
+							Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3},
 								Name: ast.Word("cmd"),
 								Args: []ast.Expression{ast.Word("arg")},
 								Redirections: []ast.Redirection{
@@ -90,7 +90,7 @@ var loopsTests = []testCase{
 							Stderr: false,
 						},
 						{
-							Command: ast.Command{
+							Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 3},
 								Name: ast.Word("cmd2"),
 								Args: []ast.Expression{ast.Word("foo bar baz")},
 								Redirections: []ast.Redirection{
@@ -103,7 +103,7 @@ var loopsTests = []testCase{
 					Operator: "&&",
 					Right: ast.Pipeline{
 						{
-							Command: ast.Command{
+							Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 3},
 								Name: ast.Word("cmd"),
 								Args: []ast.Expression{ast.Var("var")},
 								Redirections: []ast.Redirection{
@@ -114,7 +114,7 @@ var loopsTests = []testCase{
 							Stderr: true,
 						},
 						{
-							Command: ast.Command{
+							Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 5, Col: 3},
 								Name: ast.Word("cmd2"),
 								Args: []ast.Expression{ast.Word("foo bar baz")},
 								Redirections: []ast.Redirection{
@@ -131,7 +131,7 @@ var loopsTests = []testCase{
 					Statement: ast.List{
 						Left: ast.Pipeline{
 							{
-								Command: ast.Command{
+								Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 7, Col: 3},
 									Name: ast.Word("cmd"),
 									Args: []ast.Expression{ast.Word("arg")},
 									Redirections: []ast.Redirection{
@@ -142,7 +142,7 @@ var loopsTests = []testCase{
 								Stderr: false,
 							},
 							{
-								Command: ast.Command{
+								Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 8, Col: 3},
 									Name: ast.Word("cmd2"),
 									Args: []ast.Expression{ast.Word("foo bar baz")},
 									Redirections: []ast.Redirection{
@@ -155,7 +155,7 @@ var loopsTests = []testCase{
 						Operator: "&&",
 						Right: ast.Pipeline{
 							{
-								Command: ast.Command{
+								Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 9, Col: 3},
 									Name: ast.Word("cmd"),
 									Args: []ast.Expression{ast.Var("var")},
 									Redirections: []ast.Redirection{
@@ -166,7 +166,7 @@ var loopsTests = []testCase{
 								Stderr: true,
 							},
 							{
-								Command: ast.Command{
+								Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 10, Col: 3},
 									Name: ast.Word("cmd2"),
 									Args: []ast.Expression{ast.Word("foo bar baz")},
 									Redirections: []ast.Redirection{
@@ -185,44 +185,44 @@ var loopsTests = []testCase{
 		ast.BackgroundConstruction{
 			Statement: &ast.Loop{
 				Head: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 15}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 				},
 			},
 		},
 		ast.BackgroundConstruction{
 			Statement: &ast.Loop{
 				Head: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 40}, Name: ast.Word("cmd")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 48}, Name: ast.Word("cmd")},
 				},
 			},
 		},
-		ast.Command{Name: ast.Word("cmd")},
+		ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 60}, Name: ast.Word("cmd")},
 	}},
 	{`while cmd; do echo "foo"; done | while cmd; do echo "foo"; done |& while cmd; do echo "foo"; done `, ast.Script{
 		ast.Pipeline{
 			ast.PipelineCommand{
 				Command: &ast.Loop{
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 15}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 			},
 			ast.PipelineCommand{
 				Command: &ast.Loop{
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 40}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 48}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 				Stderr: true,
@@ -230,10 +230,10 @@ var loopsTests = []testCase{
 			ast.PipelineCommand{
 				Command: &ast.Loop{
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 74}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 82}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 			},
@@ -243,19 +243,19 @@ var loopsTests = []testCase{
 		ast.List{
 			Left: &ast.Loop{
 				Head: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 15}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 				},
 			},
 			Operator: "&&",
 			Right: &ast.Loop{
 				Head: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 41}, Name: ast.Word("cmd")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 49}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 				},
 			},
 		},
@@ -271,20 +271,20 @@ var loopsTests = []testCase{
 			Head: []ast.Statement{
 				&ast.Loop{
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 9}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 17}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 			},
 			Body: []ast.Statement{
 				&ast.Loop{
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 9}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 17}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 			},
@@ -294,10 +294,10 @@ var loopsTests = []testCase{
 	 	>>output.txt <<<input.txt 2>>error.txt &>all.txt &>>all.txt <&4 5<&6`, ast.Script{
 		&ast.Loop{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 15}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 			},
 			Redirections: []ast.Redirection{
 				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -317,38 +317,38 @@ var loopsTests = []testCase{
 	{`while cmd; \do; do echo "foo"; \done; done`, ast.Script{
 		&ast.Loop{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
-				ast.Command{Name: ast.Word("do")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 12}, Name: ast.Word("do")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
-				ast.Command{Name: ast.Word("done")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 20}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 32}, Name: ast.Word("done")},
 			},
 		},
 	}},
 	{"while cmd; do cmd2; done; while cmd; do cmd2; done \n  while cmd; do cmd2; done", ast.Script{
 		&ast.Loop{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 15}, Name: ast.Word("cmd2")},
 			},
 		},
 		&ast.Loop{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 33}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 41}, Name: ast.Word("cmd2")},
 			},
 		},
 		&ast.Loop{
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 9}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 17}, Name: ast.Word("cmd2")},
 			},
 		},
 	}},
@@ -360,14 +360,14 @@ var loopsTests = []testCase{
 		&ast.Loop{
 			Negate: true,
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd1")},
-				ast.Command{Name: ast.Word("cmd2")},
-				ast.Command{Name: ast.Word("cmd3")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd1")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 13}, Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 19}, Name: ast.Word("cmd3")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 28}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 40}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 50}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
 			},
 		},
 	}},
@@ -383,14 +383,14 @@ var loopsTests = []testCase{
 		&ast.Loop{
 			Negate: true,
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd1")},
-				ast.Command{Name: ast.Word("cmd2")},
-				ast.Command{Name: ast.Word("cmd3")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3}, Name: ast.Word("cmd1")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 3}, Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 3}, Name: ast.Word("cmd3")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 6, Col: 3}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 7, Col: 3}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 8, Col: 3}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
 			},
 		},
 	}},
@@ -404,15 +404,15 @@ var loopsTests = []testCase{
 			Head: []ast.Statement{
 				ast.List{
 					Left: ast.Pipeline{
-						{Command: ast.Command{Name: ast.Word("cmd1")}},
-						{Command: ast.Command{Name: ast.Word("cmd2")}},
+						{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3}, Name: ast.Word("cmd1")}},
+						{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 10}, Name: ast.Word("cmd2")}},
 					},
 					Operator: "&&",
-					Right:    ast.Command{Name: ast.Word("cmd3")},
+					Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 18}, Name: ast.Word("cmd3")},
 				},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 3}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
 			},
 		},
 	}},
@@ -433,7 +433,7 @@ var loopsTests = []testCase{
 				ast.List{
 					Left: ast.Pipeline{
 						{
-							Command: ast.Command{
+							Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3},
 								Name: ast.Word("cmd"),
 								Args: []ast.Expression{ast.Word("arg")},
 								Redirections: []ast.Redirection{
@@ -444,7 +444,7 @@ var loopsTests = []testCase{
 							Stderr: false,
 						},
 						{
-							Command: ast.Command{
+							Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 3},
 								Name: ast.Word("cmd2"),
 								Args: []ast.Expression{ast.Word("foo bar baz")},
 								Redirections: []ast.Redirection{
@@ -457,7 +457,7 @@ var loopsTests = []testCase{
 					Operator: "&&",
 					Right: ast.Pipeline{
 						{
-							Command: ast.Command{
+							Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 3},
 								Name: ast.Word("cmd"),
 								Args: []ast.Expression{ast.Var("var")},
 								Redirections: []ast.Redirection{
@@ -468,7 +468,7 @@ var loopsTests = []testCase{
 							Stderr: true,
 						},
 						{
-							Command: ast.Command{
+							Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 5, Col: 3},
 								Name: ast.Word("cmd2"),
 								Args: []ast.Expression{ast.Word("foo bar baz")},
 								Redirections: []ast.Redirection{
@@ -485,7 +485,7 @@ var loopsTests = []testCase{
 					Statement: ast.List{
 						Left: ast.Pipeline{
 							{
-								Command: ast.Command{
+								Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 7, Col: 3},
 									Name: ast.Word("cmd"),
 									Args: []ast.Expression{ast.Word("arg")},
 									Redirections: []ast.Redirection{
@@ -496,7 +496,7 @@ var loopsTests = []testCase{
 								Stderr: false,
 							},
 							{
-								Command: ast.Command{
+								Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 8, Col: 3},
 									Name: ast.Word("cmd2"),
 									Args: []ast.Expression{ast.Word("foo bar baz")},
 									Redirections: []ast.Redirection{
@@ -509,7 +509,7 @@ var loopsTests = []testCase{
 						Operator: "&&",
 						Right: ast.Pipeline{
 							{
-								Command: ast.Command{
+								Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 9, Col: 3},
 									Name: ast.Word("cmd"),
 									Args: []ast.Expression{ast.Var("var")},
 									Redirections: []ast.Redirection{
@@ -520,7 +520,7 @@ var loopsTests = []testCase{
 								Stderr: true,
 							},
 							{
-								Command: ast.Command{
+								Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 10, Col: 3},
 									Name: ast.Word("cmd2"),
 									Args: []ast.Expression{ast.Word("foo bar baz")},
 									Redirections: []ast.Redirection{
@@ -540,10 +540,10 @@ var loopsTests = []testCase{
 			Statement: &ast.Loop{
 				Negate: true,
 				Head: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 15}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 				},
 			},
 		},
@@ -551,14 +551,14 @@ var loopsTests = []testCase{
 			Statement: &ast.Loop{
 				Negate: true,
 				Head: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 40}, Name: ast.Word("cmd")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 48}, Name: ast.Word("cmd")},
 				},
 			},
 		},
-		ast.Command{Name: ast.Word("cmd")},
+		ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 60}, Name: ast.Word("cmd")},
 	}},
 	{`until cmd; do echo "foo"; done | until cmd; do echo "foo"; done |& until cmd; do echo "foo"; done `, ast.Script{
 		ast.Pipeline{
@@ -566,10 +566,10 @@ var loopsTests = []testCase{
 				Command: &ast.Loop{
 					Negate: true,
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 15}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 			},
@@ -577,10 +577,10 @@ var loopsTests = []testCase{
 				Command: &ast.Loop{
 					Negate: true,
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 40}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 48}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 				Stderr: true,
@@ -589,10 +589,10 @@ var loopsTests = []testCase{
 				Command: &ast.Loop{
 					Negate: true,
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 74}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 82}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 			},
@@ -603,20 +603,20 @@ var loopsTests = []testCase{
 			Left: &ast.Loop{
 				Negate: true,
 				Head: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 15}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 				},
 			},
 			Operator: "&&",
 			Right: &ast.Loop{
 				Negate: true,
 				Head: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 41}, Name: ast.Word("cmd")},
 				},
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 49}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 				},
 			},
 		},
@@ -634,10 +634,10 @@ var loopsTests = []testCase{
 				&ast.Loop{
 					Negate: true,
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 9}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 17}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 			},
@@ -645,10 +645,10 @@ var loopsTests = []testCase{
 				&ast.Loop{
 					Negate: true,
 					Head: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 9}, Name: ast.Word("cmd")},
 					},
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 17}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 					},
 				},
 			},
@@ -659,10 +659,10 @@ var loopsTests = []testCase{
 		&ast.Loop{
 			Negate: true,
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 15}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
 			},
 			Redirections: []ast.Redirection{
 				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -683,12 +683,12 @@ var loopsTests = []testCase{
 		&ast.Loop{
 			Negate: true,
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
-				ast.Command{Name: ast.Word("do")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 12}, Name: ast.Word("do")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
-				ast.Command{Name: ast.Word("done")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 20}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 32}, Name: ast.Word("done")},
 			},
 		},
 	}},
@@ -696,28 +696,28 @@ var loopsTests = []testCase{
 		&ast.Loop{
 			Negate: true,
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 15}, Name: ast.Word("cmd2")},
 			},
 		},
 		&ast.Loop{
 			Negate: true,
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 33}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 41}, Name: ast.Word("cmd2")},
 			},
 		},
 		&ast.Loop{
 			Negate: true,
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 9}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 17}, Name: ast.Word("cmd2")},
 			},
 		},
 	}},
@@ -748,19 +748,19 @@ var loopsTests = []testCase{
 		&ast.Loop{
 			Negate: false,
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 5, Col: 3}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 11, Col: 3}, Name: ast.Word("cmd2")},
 			},
 		},
 		&ast.Loop{
 			Negate: true,
 			Head: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 17, Col: 3}, Name: ast.Word("cmd")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd2")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 20, Col: 3}, Name: ast.Word("cmd2")},
 			},
 		},
 	}},
@@ -772,9 +772,9 @@ var loopsTests = []testCase{
 		&ast.RangeLoop{
 			Var: "varname",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 17}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 29}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 39}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
 			},
 		},
 	}},
@@ -789,9 +789,9 @@ var loopsTests = []testCase{
 		&ast.RangeLoop{
 			Var: "varname",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
-				ast.Command{Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 4, Col: 3}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("foo")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 5, Col: 4}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("bar")}},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 6, Col: 3}, Name: ast.Word("echo"), Args: []ast.Expression{ast.Word("baz")}},
 			},
 		},
 	}},
@@ -799,7 +799,7 @@ var loopsTests = []testCase{
 		&ast.RangeLoop{
 			Var: "varname",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 16}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -808,7 +808,7 @@ var loopsTests = []testCase{
 			Statement: &ast.RangeLoop{
 				Var: "varname",
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 16}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -819,16 +819,16 @@ var loopsTests = []testCase{
 				Command: &ast.RangeLoop{
 					Var: "varname",
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 16}, Name: ast.Word("cmd")},
 					},
 				},
 			},
-			{Command: ast.Command{Name: ast.Word("cmd")}, Stderr: true},
+			{Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 28}, Name: ast.Word("cmd")}, Stderr: true},
 			{
 				Command: &ast.RangeLoop{
 					Var: "varname",
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 50}, Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -840,17 +840,17 @@ var loopsTests = []testCase{
 				Left: &ast.RangeLoop{
 					Var: "varname",
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 16}, Name: ast.Word("cmd")},
 					},
 				},
 				Operator: "&&",
-				Right:    ast.Command{Name: ast.Word("cmd")},
+				Right:    ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 29}, Name: ast.Word("cmd")},
 			},
 			Operator: "||",
 			Right: &ast.RangeLoop{
 				Var: "varname",
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 51}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -863,7 +863,7 @@ var loopsTests = []testCase{
 				&ast.RangeLoop{
 					Var: "varname",
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 31}, Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -874,7 +874,7 @@ var loopsTests = []testCase{
 		&ast.RangeLoop{
 			Var: "varname",
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 16}, Name: ast.Word("cmd")},
 			},
 			Redirections: []ast.Redirection{
 				{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -898,7 +898,7 @@ var loopsTests = []testCase{
 				ast.Word("foo"),
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 20}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -913,7 +913,7 @@ var loopsTests = []testCase{
 				ast.Word("bar-baz"),
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 48}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -931,7 +931,7 @@ var loopsTests = []testCase{
 				ast.Word("bar-baz"),
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 3, Col: 3}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -945,7 +945,7 @@ var loopsTests = []testCase{
 				Update: ast.Arithmetic{ast.Var("c")},
 			},
 			Body: []ast.Statement{
-				ast.Command{Name: ast.Word("cmd")},
+				ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 24}, Name: ast.Word("cmd")},
 			},
 		},
 	}},
@@ -956,7 +956,7 @@ var loopsTests = []testCase{
 				Test:   ast.Arithmetic{ast.Var("b")},
 				Update: ast.Arithmetic{ast.Var("c")},
 			},
-			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+			Body: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 19}, Name: ast.Word("cmd")}},
 		},
 	}},
 	{`for (( ; b ; c )) do cmd;done`, ast.Script{
@@ -966,7 +966,7 @@ var loopsTests = []testCase{
 				Test:   ast.Arithmetic{ast.Var("b")},
 				Update: ast.Arithmetic{ast.Var("c")},
 			},
-			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+			Body: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 22}, Name: ast.Word("cmd")}},
 		},
 	}},
 	{`for (( a ; ; c )) do cmd;done`, ast.Script{
@@ -976,7 +976,7 @@ var loopsTests = []testCase{
 				Test:   nil,
 				Update: ast.Arithmetic{ast.Var("c")},
 			},
-			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+			Body: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 22}, Name: ast.Word("cmd")}},
 		},
 	}},
 	{`for (( a ; b ; )) do cmd;done`, ast.Script{
@@ -986,19 +986,19 @@ var loopsTests = []testCase{
 				Test:   ast.Arithmetic{ast.Var("b")},
 				Update: nil,
 			},
-			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+			Body: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 22}, Name: ast.Word("cmd")}},
 		},
 	}},
 	{`for ((  ;  ; )) do cmd;done`, ast.Script{
 		&ast.For{
 			Head: ast.ForHead{},
-			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+			Body: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 20}, Name: ast.Word("cmd")}},
 		},
 	}},
 	{`for ((;;)) do cmd;done`, ast.Script{
 		&ast.For{
 			Head: ast.ForHead{},
-			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+			Body: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 15}, Name: ast.Word("cmd")}},
 		},
 	}},
 	{`
@@ -1012,11 +1012,11 @@ var loopsTests = []testCase{
 	 `, ast.Script{
 		&ast.For{
 			Head: ast.ForHead{},
-			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+			Body: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 5, Col: 6}, Name: ast.Word("cmd")}},
 		},
 		&ast.For{
 			Head: ast.ForHead{},
-			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+			Body: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 8, Col: 6}, Name: ast.Word("cmd")}},
 		},
 	}},
 	{`for arg # comment
@@ -1031,14 +1031,14 @@ var loopsTests = []testCase{
 	done # comment`, ast.Script{
 		&ast.RangeLoop{
 			Var:  "arg",
-			Body: []ast.Statement{ast.Command{Name: ast.Word("cmd")}},
+			Body: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 7, Col: 3}, Name: ast.Word("cmd")}},
 		},
 	}},
 
 	// Break
 	{`while true;do break;done`, ast.Script{
 		&ast.Loop{
-			Head: []ast.Statement{ast.Command{Name: ast.Word("true")}},
+			Head: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("true")}},
 			Body: []ast.Statement{&ast.Break{}},
 		},
 	}},
@@ -1048,10 +1048,10 @@ var loopsTests = []testCase{
 		done
 	done`, ast.Script{
 		&ast.Loop{
-			Head: []ast.Statement{ast.Command{Name: ast.Word("true")}},
+			Head: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("true")}},
 			Body: []ast.Statement{
 				&ast.Loop{
-					Head: []ast.Statement{ast.Command{Name: ast.Word("true")}},
+					Head: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 9}, Name: ast.Word("true")}},
 					Body: []ast.Statement{&ast.Break{}},
 				},
 			},
@@ -1060,7 +1060,7 @@ var loopsTests = []testCase{
 	{`until true;do break;done`, ast.Script{
 		&ast.Loop{
 			Negate: true,
-			Head:   []ast.Statement{ast.Command{Name: ast.Word("true")}},
+			Head:   []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("true")}},
 			Body:   []ast.Statement{&ast.Break{}},
 		},
 	}},
@@ -1071,11 +1071,11 @@ var loopsTests = []testCase{
 	done`, ast.Script{
 		&ast.Loop{
 			Negate: true,
-			Head:   []ast.Statement{ast.Command{Name: ast.Word("true")}},
+			Head:   []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("true")}},
 			Body: []ast.Statement{
 				&ast.Loop{
 					Negate: true,
-					Head:   []ast.Statement{ast.Command{Name: ast.Word("true")}},
+					Head:   []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 9}, Name: ast.Word("true")}},
 					Body:   []ast.Statement{&ast.Break{}},
 				},
 			},
@@ -1088,7 +1088,7 @@ var loopsTests = []testCase{
 	// Continue
 	{`while true;do continue;done`, ast.Script{
 		&ast.Loop{
-			Head: []ast.Statement{ast.Command{Name: ast.Word("true")}},
+			Head: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("true")}},
 			Body: []ast.Statement{&ast.Continue{}},
 		},
 	}},
@@ -1098,10 +1098,10 @@ var loopsTests = []testCase{
 		done
 	done`, ast.Script{
 		&ast.Loop{
-			Head: []ast.Statement{ast.Command{Name: ast.Word("true")}},
+			Head: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("true")}},
 			Body: []ast.Statement{
 				&ast.Loop{
-					Head: []ast.Statement{ast.Command{Name: ast.Word("true")}},
+					Head: []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 9}, Name: ast.Word("true")}},
 					Body: []ast.Statement{&ast.Continue{}},
 				},
 			},
@@ -1110,7 +1110,7 @@ var loopsTests = []testCase{
 	{`until true;do continue;done`, ast.Script{
 		&ast.Loop{
 			Negate: true,
-			Head:   []ast.Statement{ast.Command{Name: ast.Word("true")}},
+			Head:   []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("true")}},
 			Body:   []ast.Statement{&ast.Continue{}},
 		},
 	}},
@@ -1121,11 +1121,11 @@ var loopsTests = []testCase{
 	done`, ast.Script{
 		&ast.Loop{
 			Negate: true,
-			Head:   []ast.Statement{ast.Command{Name: ast.Word("true")}},
+			Head:   []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("true")}},
 			Body: []ast.Statement{
 				&ast.Loop{
 					Negate: true,
-					Head:   []ast.Statement{ast.Command{Name: ast.Word("true")}},
+					Head:   []ast.Statement{ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 9}, Name: ast.Word("true")}},
 					Body:   []ast.Statement{&ast.Continue{}},
 				},
 			},
@@ -1135,73 +1135,73 @@ var loopsTests = []testCase{
 		&ast.Continue{},
 	}},
 }
-
 var loopsErrorHandlingCases = []errorHandlingTestCase{
 	// WHILE LOOPS
-	{`while`, "syntax error: expected command list after `while`. (line: 1, column: 6)"},
-	{`while do`, "syntax error: expected command list after `while`. (line: 1, column: 7)"},
-	{`while; do`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 6)"},
-	{`while cmd; done`, "syntax error: expected `do`, found `done`. (line: 1, column: 12)"},
-	{`while done`, "syntax error: expected command list after `while`. (line: 1, column: 7)"},
-	{`while; done`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 6)"},
-	{`while cmd;do done`, "syntax error: expected command list after `do`. (line: 1, column: 14)"},
-	{`while cmd;do cmd`, "syntax error: expected `done` to close `while` loop. (line: 1, column: 17)"},
-	{`while cmd;do cmd; done arg`, "syntax error: unexpected token `arg`. (line: 1, column: 24)"},
-	{`while cmd;do cmd; done <in >out <<<etc arg`, "syntax error: unexpected token `arg`. (line: 1, column: 40)"},
-	{`while cmd |;do cmd; done`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 12)"},
-	{`while cmd | &;do cmd; done`, "syntax error: expected a valid command name, found `&`. (line: 1, column: 13)"},
-	{`while cmd;do cmd && | ; done`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 21)"},
-	{`while cmd;do cmd &&; done`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 20)"},
+	{`while`, "main.sh(1:6): syntax error: expected command list after `while`."},
+	{`while do`, "main.sh(1:7): syntax error: expected command list after `while`."},
+	{`while; do`, "main.sh(1:6): syntax error: expected a valid command name, found `;`."},
+	{`while cmd; done`, "main.sh(1:12): syntax error: expected `do`, found `done`."},
+	{`while done`, "main.sh(1:7): syntax error: expected command list after `while`."},
+	{`while; done`, "main.sh(1:6): syntax error: expected a valid command name, found `;`."},
+	{`while cmd;do done`, "main.sh(1:14): syntax error: expected command list after `do`."},
+	{`while cmd;do cmd`, "main.sh(1:17): syntax error: expected `done` to close `while` loop."},
+	{`while cmd;do cmd; done arg`, "main.sh(1:24): syntax error: unexpected token `arg`."},
+	{`while cmd;do cmd; done <in >out <<<etc arg`, "main.sh(1:40): syntax error: unexpected token `arg`."},
+	{`while cmd |;do cmd; done`, "main.sh(1:12): syntax error: expected a valid command name, found `;`."},
+	{`while cmd | &;do cmd; done`, "main.sh(1:13): syntax error: expected a valid command name, found `&`."},
+	{`while cmd;do cmd && | ; done`, "main.sh(1:21): syntax error: expected a valid command name, found `|`."},
+	{`while cmd;do cmd &&; done`, "main.sh(1:20): syntax error: expected a valid command name, found `;`."},
 
 	// UNTIL LOOPS
-	{`until`, "syntax error: expected command list after `until`. (line: 1, column: 6)"},
-	{`until do`, "syntax error: expected command list after `until`. (line: 1, column: 7)"},
-	{`until; do`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 6)"},
-	{`until cmd; done`, "syntax error: expected `do`, found `done`. (line: 1, column: 12)"},
-	{`until done`, "syntax error: expected command list after `until`. (line: 1, column: 7)"},
-	{`until; done`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 6)"},
-	{`until cmd;do done`, "syntax error: expected command list after `do`. (line: 1, column: 14)"},
-	{`until cmd;do cmd`, "syntax error: expected `done` to close `until` loop. (line: 1, column: 17)"},
-	{`until cmd;do cmd; done arg`, "syntax error: unexpected token `arg`. (line: 1, column: 24)"},
-	{`until cmd;do cmd; done <in >out <<<etc arg`, "syntax error: unexpected token `arg`. (line: 1, column: 40)"},
-	{`until cmd |;do cmd; done`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 12)"},
-	{`until cmd | &;do cmd; done`, "syntax error: expected a valid command name, found `&`. (line: 1, column: 13)"},
-	{`until cmd;do cmd && | ; done`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 21)"},
-	{`until cmd;do cmd &&; done`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 20)"},
+	{`until`, "main.sh(1:6): syntax error: expected command list after `until`."},
+	{`until do`, "main.sh(1:7): syntax error: expected command list after `until`."},
+	{`until; do`, "main.sh(1:6): syntax error: expected a valid command name, found `;`."},
+	{`until cmd; done`, "main.sh(1:12): syntax error: expected `do`, found `done`."},
+	{`until done`, "main.sh(1:7): syntax error: expected command list after `until`."},
+	{`until; done`, "main.sh(1:6): syntax error: expected a valid command name, found `;`."},
+	{`until cmd;do done`, "main.sh(1:14): syntax error: expected command list after `do`."},
+	{`until cmd;do cmd`, "main.sh(1:17): syntax error: expected `done` to close `until` loop."},
+	{`until cmd;do cmd; done arg`, "main.sh(1:24): syntax error: unexpected token `arg`."},
+	{`until cmd;do cmd; done <in >out <<<etc arg`, "main.sh(1:40): syntax error: unexpected token `arg`."},
+	{`until cmd |;do cmd; done`, "main.sh(1:12): syntax error: expected a valid command name, found `;`."},
+	{`until cmd | &;do cmd; done`, "main.sh(1:13): syntax error: expected a valid command name, found `&`."},
+	{`until cmd;do cmd && | ; done`, "main.sh(1:21): syntax error: expected a valid command name, found `|`."},
+	{`until cmd;do cmd &&; done`, "main.sh(1:20): syntax error: expected a valid command name, found `;`."},
 
 	// FOR LOOPS (over positional arguments)
-	{`for`, "syntax error: expected identifier after `for`. (line: 1, column: 4)"},
-	{"for \n var do done", "syntax error: expected identifier after `for`. (line: 2, column: 0)"},
-	{`for do`, "syntax error: expected identifier after `for`. (line: 1, column: 5)"},
-	{`for; do`, "syntax error: expected identifier after `for`. (line: 1, column: 4)"},
-	{`for var done`, "syntax error: expected `do`, found `done`. (line: 1, column: 9)"},
-	{`for var \do done`, "syntax error: expected `do`, found `\\d`. (line: 1, column: 9)"},
-	{`for done`, "syntax error: expected identifier after `for`. (line: 1, column: 5)"},
-	{`for var do done`, "syntax error: expected command list after `do`. (line: 1, column: 12)"},
-	{`for var do cmd `, "syntax error: expected `done` to close `for` loop. (line: 1, column: 16)"},
-	{`for var do cmd \done`, "syntax error: expected `done` to close `for` loop. (line: 1, column: 22)"},
-	{`for var do cmd; done arg`, "syntax error: unexpected token `arg`. (line: 1, column: 22)"},
-	{`for var do cmd; done <in >out <<<etc arg`, "syntax error: unexpected token `arg`. (line: 1, column: 38)"},
-	{`for \var do cmd; done`, "syntax error: expected identifier after `for`. (line: 1, column: 5)"},
-	{`for var foo do cmd; done`, "syntax error: expected `do`, found `foo`. (line: 1, column: 9)"},
-	{`for invalid-var-name do cmd; done`, "syntax error: expected `do`, found `-`. (line: 1, column: 12)"},
-	{`for n in; do cmd; done`, "syntax error: missing operand after `in`. (line: 1, column: 9)"},
-	{"for n in foo \n bar; do cmd; done", "syntax error: expected `do`, found `bar`. (line: 2, column: 2)"},
-	{"for n in &; do cmd; done", "syntax error: unexpected token `&`. (line: 1, column: 10)"},
-	{"for n in foo &; do cmd; done", "syntax error: unexpected token `&`. (line: 1, column: 14)"},
-	{`for n do cmd |; done`, "syntax error: expected a valid command name, found `;`. (line: 1, column: 15)"},
-	{`for n do cmd | |; done`, "syntax error: expected a valid command name, found `|`. (line: 1, column: 16)"},
+	{`for`, "main.sh(1:4): syntax error: expected identifier after `for`."},
+	{"for \n var do done", "main.sh(2:0): syntax error: expected identifier after `for`."},
+	{`for do`, "main.sh(1:5): syntax error: expected identifier after `for`."},
+	{`for; do`, "main.sh(1:4): syntax error: expected identifier after `for`."},
+	{`for var done`, "main.sh(1:9): syntax error: expected `do`, found `done`."},
+	{`for var \do done`, "main.sh(1:9): syntax error: expected `do`, found `\\d`."},
+	{`for done`, "main.sh(1:5): syntax error: expected identifier after `for`."},
+	{`for var do done`, "main.sh(1:12): syntax error: expected command list after `do`."},
+	{`for var do cmd `, "main.sh(1:16): syntax error: expected `done` to close `for` loop."},
+	{`for var do cmd \done`, "main.sh(1:22): syntax error: expected `done` to close `for` loop."},
+	{`for var do cmd; done arg`, "main.sh(1:22): syntax error: unexpected token `arg`."},
+	{`for var do cmd; done <in >out <<<etc arg`, "main.sh(1:38): syntax error: unexpected token `arg`."},
+	{`for \var do cmd; done`, "main.sh(1:5): syntax error: expected identifier after `for`."},
+	{`for var foo do cmd; done`, "main.sh(1:9): syntax error: expected `do`, found `foo`."},
+	{`for invalid-var-name do cmd; done`, "main.sh(1:12): syntax error: expected `do`, found `-`."},
+	{`for n in; do cmd; done`, "main.sh(1:9): syntax error: missing operand after `in`."},
+	{"for n in foo \n bar; do cmd; done", "main.sh(2:2): syntax error: expected `do`, found `bar`."},
+	{"for n in &; do cmd; done", "main.sh(1:10): syntax error: unexpected token `&`."},
+	{"for n in foo &; do cmd; done", "main.sh(1:14): syntax error: unexpected token `&`."},
+	{`for n do cmd |; done`, "main.sh(1:15): syntax error: expected a valid command name, found `;`."},
+	{`for n do cmd | |; done`, "main.sh(1:16): syntax error: expected a valid command name, found `|`."},
 
 	// C like for loops
-	{`for (()) do cmd;done`, "syntax error: bad arithmetic expression, unexpected token `)`. (line: 1, column: 7)"},
-	{`for ((x)) do cmd;done`, "syntax error: expected a semicolon `;`, found `)`. (line: 1, column: 8)"},
-	{`for ((x;y)) do cmd;done`, "syntax error: expected a semicolon `;`, found `)`. (line: 1, column: 10)"},
-	{`for ((x;y; w z)) do cmd;done`, "syntax error: expected `))` to close loop head, found `z`. (line: 1, column: 14)"},
+	{`for (()) do cmd;done`, "main.sh(1:7): syntax error: bad arithmetic expression, unexpected token `)`."},
+	{`for ((x)) do cmd;done`, "main.sh(1:8): syntax error: expected a semicolon `;`, found `)`."},
+	{`for ((x;y)) do cmd;done`, "main.sh(1:10): syntax error: expected a semicolon `;`, found `)`."},
+	{`for ((x;y; w z)) do cmd;done`, "main.sh(1:14): syntax error: expected `))` to close loop head, found `z`."},
 
-	{`do`, "syntax error: `do` is a reserved keyword, cannot be used a command name. (line: 1, column: 1)"},
-	{`done`, "syntax error: `done` is a reserved keyword, cannot be used a command name. (line: 1, column: 1)"},
-	{`break >redirection`, "syntax error: unexpected token `>`. (line: 1, column: 7)"},
-	{`break arg`, "syntax error: unexpected token `arg`. (line: 1, column: 7)"},
-	{`continue >redirection`, "syntax error: unexpected token `>`. (line: 1, column: 10)"},
-	{`continue arg`, "syntax error: unexpected token `arg`. (line: 1, column: 10)"},
+	// Reserved words and invalid uses
+	{`do`, "main.sh(1:1): syntax error: `do` is a reserved keyword, cannot be used as a command name."},
+	{`done`, "main.sh(1:1): syntax error: `done` is a reserved keyword, cannot be used as a command name."},
+	{`break >redirection`, "main.sh(1:7): syntax error: unexpected token `>`."},
+	{`break arg`, "main.sh(1:7): syntax error: unexpected token `arg`."},
+	{`continue >redirection`, "main.sh(1:10): syntax error: unexpected token `>`."},
+	{`continue arg`, "main.sh(1:10): syntax error: unexpected token `arg`."},
 }

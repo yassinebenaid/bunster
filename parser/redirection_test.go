@@ -5,7 +5,8 @@ import "github.com/yassinebenaid/bunster/ast"
 var redirectionTests = []testCase{
 	{`cmd>'file.ext' arg > file>/foo/bar arg2 >"$var" arg345>xyz 645 >file 3>foo.bar 45> /foo/bar 12.34>baz`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg2"),
@@ -28,7 +29,8 @@ var redirectionTests = []testCase{
 	{`cmd>|'file.ext' arg >| file>|/foo/bar arg2 >|"$var" arg345>|xyz 645 >|file 3>|foo.bar 45>| /foo/bar 12.34>|baz`, ast.Script{
 
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg2"),
@@ -51,7 +53,8 @@ var redirectionTests = []testCase{
 	{`cmd>>'file.ext' arg >> file>>/foo/bar arg2 >>"$var" arg345>>xyz 123 >>file 3>>foo.bar 12.34>>baz`, ast.Script{
 
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg2"),
@@ -73,7 +76,8 @@ var redirectionTests = []testCase{
 	{`cmd&>'file.ext' arg &> file&>/foo/bar arg2 &>"$var" 3&>xyz`, ast.Script{
 
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg2"),
@@ -90,7 +94,8 @@ var redirectionTests = []testCase{
 	{`cmd&>>'file.ext' arg &>> file&>>/foo/bar arg2 &>>"$var" 3&>>xyz`, ast.Script{
 
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg2"),
@@ -107,7 +112,8 @@ var redirectionTests = []testCase{
 	{`cmd>&1 arg >&2 arg>&3 arg345>&4 5>&6 985 >&19 12.34>& 7 8>& 9 >& $FD 3>&$FD`, ast.Script{
 
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg"),
@@ -131,7 +137,8 @@ var redirectionTests = []testCase{
 	{`cmd<'file.ext' arg < file</foo/bar arg123<foo 3<bar 928 <bar 282 <&123 <&3 4<&5 6<& 7 <& "$var" <&'9'`, ast.Script{
 
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg123"),
@@ -156,7 +163,8 @@ var redirectionTests = []testCase{
 	{`cmd<<<'foo bar' arg <<< foo<<<foo-bar arg2 <<<"$var" 3<<<foobar <<<123 4<<<123 5<<< 	776`, ast.Script{
 
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg2"),
@@ -175,7 +183,8 @@ var redirectionTests = []testCase{
 	{`cmd<>'file.ext' arg <> file<>/foo/bar arg123<>foo 3<>bar 928 <>bar 282`, ast.Script{
 
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Args: []ast.Expression{
 				ast.Word("arg"),
 				ast.Word("arg123"),
@@ -194,7 +203,8 @@ var redirectionTests = []testCase{
 	// Duplicating/Closing file descriptors
 	{`cmd <&- 2<&- >&- 2>&- <&5- 6<&5- >&5- 6>&5-`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Redirections: []ast.Redirection{
 				{Src: "0", Method: "<&", Close: true},
 				{Src: "2", Method: "<&", Close: true},
@@ -209,7 +219,8 @@ var redirectionTests = []testCase{
 	}},
 	{`cmd<&-2<&->&-2>&-<&5-6<&5->&5-6>&5-`, ast.Script{
 		ast.Command{
-			Name: ast.Word("cmd"),
+			Position: ast.Position{File: "main.sh", Line: 1, Col: 1},
+			Name:     ast.Word("cmd"),
 			Redirections: []ast.Redirection{
 				{Src: "0", Method: "<&", Close: true},
 				{Src: "2", Method: "<&", Close: true},
@@ -225,37 +236,37 @@ var redirectionTests = []testCase{
 }
 
 var redirectionErrorHandlingCases = []errorHandlingTestCase{
-	{`cmd >`, "syntax error: a redirection operand was not provided after the `>`. (line: 1, column: 6)"},
-	{`cmd > >file.txt`, "syntax error: a redirection operand was not provided after the `>`. (line: 1, column: 7)"},
-	{`cmd >>`, "syntax error: a redirection operand was not provided after the `>>`. (line: 1, column: 7)"},
-	{`cmd >> >>foo`, "syntax error: a redirection operand was not provided after the `>>`. (line: 1, column: 8)"},
-	{`cmd >& `, "syntax error: a redirection operand was not provided after the `>&`. (line: 1, column: 8)"},
-	{`cmd >& >&$foo`, "syntax error: a redirection operand was not provided after the `>&`. (line: 1, column: 8)"},
+	{`cmd >`, "main.sh(1:6): syntax error: a redirection operand was not provided after the `>`."},
+	{`cmd > >file.txt`, "main.sh(1:7): syntax error: a redirection operand was not provided after the `>`."},
+	{`cmd >>`, "main.sh(1:7): syntax error: a redirection operand was not provided after the `>>`."},
+	{`cmd >> >>foo`, "main.sh(1:8): syntax error: a redirection operand was not provided after the `>>`."},
+	{`cmd >& `, "main.sh(1:8): syntax error: a redirection operand was not provided after the `>&`."},
+	{`cmd >& >&$foo`, "main.sh(1:8): syntax error: a redirection operand was not provided after the `>&`."},
 
-	{`cmd 1>`, "syntax error: a redirection operand was not provided after the `>`. (line: 1, column: 7)"},
-	{`cmd 1>1>x`, "syntax error: a redirection operand was not provided after the `>`. (line: 1, column: 7)"},
-	{`cmd 1>>`, "syntax error: a redirection operand was not provided after the `>>`. (line: 1, column: 8)"},
-	{`cmd 1>>1>>x`, "syntax error: a redirection operand was not provided after the `>>`. (line: 1, column: 8)"},
-	{`cmd 1>& `, "syntax error: a redirection operand was not provided after the `>&`. (line: 1, column: 9)"},
-	{`cmd 1>&1>&2`, "syntax error: a redirection operand was not provided after the `>&`. (line: 1, column: 8)"},
+	{`cmd 1>`, "main.sh(1:7): syntax error: a redirection operand was not provided after the `>`."},
+	{`cmd 1>1>x`, "main.sh(1:7): syntax error: a redirection operand was not provided after the `>`."},
+	{`cmd 1>>`, "main.sh(1:8): syntax error: a redirection operand was not provided after the `>>`."},
+	{`cmd 1>>1>>x`, "main.sh(1:8): syntax error: a redirection operand was not provided after the `>>`."},
+	{`cmd 1>& `, "main.sh(1:9): syntax error: a redirection operand was not provided after the `>&`."},
+	{`cmd 1>&1>&2`, "main.sh(1:8): syntax error: a redirection operand was not provided after the `>&`."},
 
-	{`cmd >|`, "syntax error: a redirection operand was not provided after the `>|`. (line: 1, column: 7)"},
-	{`cmd >|>|foo`, "syntax error: a redirection operand was not provided after the `>|`. (line: 1, column: 7)"},
-	{`cmd 1>|`, "syntax error: a redirection operand was not provided after the `>|`. (line: 1, column: 8)"},
-	{`cmd 1>|2>|foo`, "syntax error: a redirection operand was not provided after the `>|`. (line: 1, column: 8)"},
+	{`cmd >|`, "main.sh(1:7): syntax error: a redirection operand was not provided after the `>|`."},
+	{`cmd >|>|foo`, "main.sh(1:7): syntax error: a redirection operand was not provided after the `>|`."},
+	{`cmd 1>|`, "main.sh(1:8): syntax error: a redirection operand was not provided after the `>|`."},
+	{`cmd 1>|2>|foo`, "main.sh(1:8): syntax error: a redirection operand was not provided after the `>|`."},
 
-	{`cmd <`, "syntax error: a redirection operand was not provided after the `<`. (line: 1, column: 6)"},
-	{`cmd < <foo`, "syntax error: a redirection operand was not provided after the `<`. (line: 1, column: 7)"},
-	{`cmd 1<`, "syntax error: a redirection operand was not provided after the `<`. (line: 1, column: 7)"},
-	{`cmd 1<1<`, "syntax error: a redirection operand was not provided after the `<`. (line: 1, column: 7)"},
-	{`cmd 1<&`, "syntax error: a redirection operand was not provided after the `<&`. (line: 1, column: 8)"},
-	{`cmd 1<&2<foo`, "syntax error: a redirection operand was not provided after the `<&`. (line: 1, column: 8)"},
+	{`cmd <`, "main.sh(1:6): syntax error: a redirection operand was not provided after the `<`."},
+	{`cmd < <foo`, "main.sh(1:7): syntax error: a redirection operand was not provided after the `<`."},
+	{`cmd 1<`, "main.sh(1:7): syntax error: a redirection operand was not provided after the `<`."},
+	{`cmd 1<1<`, "main.sh(1:7): syntax error: a redirection operand was not provided after the `<`."},
+	{`cmd 1<&`, "main.sh(1:8): syntax error: a redirection operand was not provided after the `<&`."},
+	{`cmd 1<&2<foo`, "main.sh(1:8): syntax error: a redirection operand was not provided after the `<&`."},
 
-	{`cmd &>`, "syntax error: a redirection operand was not provided after the `&>`. (line: 1, column: 7)"},
-	{`cmd &>12>foo`, "syntax error: a redirection operand was not provided after the `&>`. (line: 1, column: 7)"},
+	{`cmd &>`, "main.sh(1:7): syntax error: a redirection operand was not provided after the `&>`."},
+	{`cmd &>12>foo`, "main.sh(1:7): syntax error: a redirection operand was not provided after the `&>`."},
 
-	{`cmd <<<`, "syntax error: a redirection operand was not provided after the `<<<`. (line: 1, column: 8)"},
-	{`cmd <<<<<<foo`, "syntax error: a redirection operand was not provided after the `<<<`. (line: 1, column: 8)"},
-	{`cmd 2<<<`, "syntax error: a redirection operand was not provided after the `<<<`. (line: 1, column: 9)"},
-	{`cmd <<<2<<<foo`, "syntax error: a redirection operand was not provided after the `<<<`. (line: 1, column: 8)"},
+	{`cmd <<<`, "main.sh(1:8): syntax error: a redirection operand was not provided after the `<<<`."},
+	{`cmd <<<<<<foo`, "main.sh(1:8): syntax error: a redirection operand was not provided after the `<<<`."},
+	{`cmd 2<<<`, "main.sh(1:9): syntax error: a redirection operand was not provided after the `<<<`."},
+	{`cmd <<<2<<<foo`, "main.sh(1:8): syntax error: a redirection operand was not provided after the `<<<`."},
 }

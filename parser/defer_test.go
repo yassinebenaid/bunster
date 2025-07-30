@@ -7,21 +7,23 @@ import (
 var deferTests = []testCase{
 	{`defer cmd`, ast.Script{
 		ast.Defer{
-			Command: ast.Command{Name: ast.Word("cmd")},
+			Command: ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 		},
 	}},
 	{`defer cmd arg`, ast.Script{
 		ast.Defer{
 			Command: ast.Command{
-				Name: ast.Word("cmd"),
-				Args: []ast.Expression{ast.Word("arg")},
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 7},
+				Name:     ast.Word("cmd"),
+				Args:     []ast.Expression{ast.Word("arg")},
 			},
 		},
 	}},
 	{`defer cmd >output.txt`, ast.Script{
 		ast.Defer{
 			Command: ast.Command{
-				Name: ast.Word("cmd"),
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 7},
+				Name:     ast.Word("cmd"),
 				Redirections: []ast.Redirection{
 					{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
 				},
@@ -31,7 +33,8 @@ var deferTests = []testCase{
 	{`defer VAR=value cmd`, ast.Script{
 		ast.Defer{
 			Command: ast.Command{
-				Name: ast.Word("cmd"),
+				Position: ast.Position{File: "main.sh", Line: 1, Col: 17},
+				Name:     ast.Word("cmd"),
 				Env: []ast.Assignement{
 					{Name: "VAR", Value: ast.Word("value")},
 				},
@@ -42,7 +45,7 @@ var deferTests = []testCase{
 		ast.Defer{
 			Command: ast.Group{
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 9}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -51,7 +54,7 @@ var deferTests = []testCase{
 		ast.Defer{
 			Command: ast.Group{
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 9}, Name: ast.Word("cmd")},
 				},
 				Redirections: []ast.Redirection{
 					{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -65,7 +68,7 @@ var deferTests = []testCase{
 		ast.Defer{
 			Command: ast.Group{
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -76,7 +79,7 @@ var deferTests = []testCase{
 				Left: ast.Defer{
 					Command: ast.Group{
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd")},
+							ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 						},
 					},
 				},
@@ -84,7 +87,7 @@ var deferTests = []testCase{
 				Right: ast.Defer{
 					Command: ast.Group{
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd")},
+							ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 20}, Name: ast.Word("cmd")},
 						},
 					},
 				},
@@ -93,7 +96,7 @@ var deferTests = []testCase{
 			Right: ast.Defer{
 				Command: ast.Group{
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 35}, Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -103,7 +106,7 @@ var deferTests = []testCase{
 		ast.Defer{
 			Command: ast.Group{
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 9}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -112,7 +115,7 @@ var deferTests = []testCase{
 		ast.Defer{
 			Command: ast.SubShell{
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 9}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -121,7 +124,7 @@ var deferTests = []testCase{
 		ast.Defer{
 			Command: ast.SubShell{
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 9}, Name: ast.Word("cmd")},
 				},
 				Redirections: []ast.Redirection{
 					{Src: "1", Method: ">", Dst: ast.Word("output.txt")},
@@ -135,7 +138,7 @@ var deferTests = []testCase{
 		ast.Defer{
 			Command: ast.SubShell{
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 2, Col: 3}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -146,7 +149,7 @@ var deferTests = []testCase{
 				Left: ast.Defer{
 					Command: ast.SubShell{
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd")},
+							ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 7}, Name: ast.Word("cmd")},
 						},
 					},
 				},
@@ -154,7 +157,7 @@ var deferTests = []testCase{
 				Right: ast.Defer{
 					Command: ast.SubShell{
 						Body: []ast.Statement{
-							ast.Command{Name: ast.Word("cmd")},
+							ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 19}, Name: ast.Word("cmd")},
 						},
 					},
 				},
@@ -163,7 +166,7 @@ var deferTests = []testCase{
 			Right: ast.Defer{
 				Command: ast.SubShell{
 					Body: []ast.Statement{
-						ast.Command{Name: ast.Word("cmd")},
+						ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 33}, Name: ast.Word("cmd")},
 					},
 				},
 			},
@@ -173,7 +176,7 @@ var deferTests = []testCase{
 		ast.Defer{
 			Command: ast.SubShell{
 				Body: []ast.Statement{
-					ast.Command{Name: ast.Word("cmd")},
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 9}, Name: ast.Word("cmd")},
 				},
 			},
 		},
@@ -181,7 +184,7 @@ var deferTests = []testCase{
 }
 
 var deferErrorHandlingCases = []errorHandlingTestCase{
-	{`defer`, "syntax error: expected a valid command name, found `end of file`. (line: 1, column: 6)"},
-	{`defer name=foobar`, "syntax error: expected a simple command, group or subshell after `defer`. (line: 1, column: 18)"},
-	{`defer {simple_command;} arg`, "syntax error: unexpected token `arg`. (line: 1, column: 25)"},
+	{`defer`, "main.sh(1:6): syntax error: expected a valid command name, found `end of file`."},
+	{`defer name=foobar`, "main.sh(1:18): syntax error: expected a simple command, group or subshell after `defer`."},
+	{`defer {simple_command;} arg`, "main.sh(1:25): syntax error: unexpected token `arg`."},
 }
