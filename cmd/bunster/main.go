@@ -34,8 +34,13 @@ func main() {
 				},
 			},
 			{
-				Name:   "build",
-				Usage:  "Build a module",
+				Name:  "build",
+				Usage: "Build a module",
+				Description: "The build command compiles the source code to Go code, and then uses the go tool-chain\n" +
+					"to build the binary for you.\n\n" +
+					"If no arguments are supplied, the build command assumes that current directory is a bunster module \n" +
+					"and looks for the file [main.sh]. then loads all other .sh files in the curren directory as declaration files.\n\n" +
+					"Otherwise, if a file path is supplied as the first argument. only that file is compiled.",
 				Action: build,
 				Flags: []cli.Flag{
 					&cli.StringFlag{Name: "o", Required: true},
@@ -43,7 +48,7 @@ func main() {
 			},
 			{
 				Name:   "generate",
-				Usage:  "Generate the Go source out of a module",
+				Usage:  "Generate the Go source out of a module, this command adheres to same rules as the build command.",
 				Action: geneate,
 				Flags: []cli.Flag{
 					&cli.StringFlag{Name: "o", Required: true},
