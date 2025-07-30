@@ -20,12 +20,13 @@ import (
 )
 
 type Builder struct {
-	Workdir    string
-	MainScript string
-	Builddir   string
-	OutputFile string
-	Gofmt      bool
-	Home       string
+	Workdir     string
+	MainScript  string
+	Builddir    string
+	OutputFile  string
+	Gofmt       bool
+	Home        string
+	ModulesMode bool
 }
 
 type GoCompileError struct {
@@ -90,36 +91,18 @@ func (b *Builder) Generate() (err error) {
 		return err
 	}
 
-	config, err := b.loadConfig()
-	if err != nil {
-		return err
-	}
-
-	module, err := b.globModule(config)
-	if err != nil {
-		return err
-	}
-
-	for _, f := range module.Tree {
-		v, err := os.ReadFile(f.OriginalPath)
+	if b.ModulesMode {
+		config, err := b.loadConfig()
 		if err != nil {
 			return err
 		}
 
-		script, err := parser.Parse(lexer.New(f.Path, []rune(string(v))))
+		module, err := b.globModule(config)
 		if err != nil {
 			return err
 		}
 
-		if err := analyser.Analyse(script, false); err != nil {
-			return err
-		}
-
-		mainSh = append(script, mainSh...)
-	}
-
-	for _, submodule := range module.Require {
-		for _, f := range submodule.Tree {
+		for _, f := range module.Tree {
 			v, err := os.ReadFile(f.OriginalPath)
 			if err != nil {
 				return err
@@ -135,6 +118,26 @@ func (b *Builder) Generate() (err error) {
 			}
 
 			mainSh = append(script, mainSh...)
+		}
+
+		for _, submodule := range module.Require {
+			for _, f := range submodule.Tree {
+				v, err := os.ReadFile(f.OriginalPath)
+				if err != nil {
+					return err
+				}
+
+				script, err := parser.Parse(lexer.New(f.Path, []rune(string(v))))
+				if err != nil {
+					return err
+				}
+
+				if err := analyser.Analyse(script, false); err != nil {
+					return err
+				}
+
+				mainSh = append(script, mainSh...)
+			}
 		}
 	}
 
@@ -177,6 +180,9 @@ func (b *Builder) prepare() error {
 	if err := os.MkdirAll(path.Join(b.Builddir, ir.EmbedDirectory), 0700); err != nil {
 		return err
 	}
+
+	// if no file is specified, we know this is a module
+	b.ModulesMode = b.MainScript == ""
 
 	if b.MainScript == "" {
 		b.MainScript = "main.sh"
