@@ -11,6 +11,15 @@ error() {
     exit 1
 }
 
+# override sudo command
+sudo(){
+	if [[ "$(id -u)" = "0" ]]; then 
+		$*
+	else 
+		command sudo $*
+	fi 
+}
+
 # Detect OS and Architecture
 detect_system() {
     OS=$(uname -s | tr '[:upper:]' '[:lower:]')
@@ -110,6 +119,7 @@ main() {
 
     if [[ "$GLOBAL" == "1" ]]; then
 		log "Moving binary to /usr/local/bin"
+		sudo mkdir -p /usr/local/bin
 		sudo mv bunster /usr/local/bin/bunster
 		log "Installation complete!"
 		exit 0
@@ -118,12 +128,14 @@ main() {
 	if [[ "$OS" == "darwin" ]]; then
 		mkdir -p "$HOME/bin"
 	    log "Moving binary to $HOME/bin/bunster"
+		mkdir -p "$HOME/bin/bunster"
 		mv bunster "$HOME/bin/bunster"
 		log "Installation complete!"
 		exit 0
 	fi
 
 	log "Moving binary to: $HOME/.local/bin/bunster"
+	mkdir -p "$HOME/.local/bin/bunster"
 	mv bunster "$HOME/.local/bin/bunster"
 	log "Installation complete!"
 }
