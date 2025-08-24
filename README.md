@@ -62,7 +62,6 @@ curl -f https://bunster.netlify.app/install.sh | GLOBAL=1 bash
 ### Homebrew
 
 ```sh
-brew tap yassinebenaid/bunster
 brew install bunster
 ```
 
