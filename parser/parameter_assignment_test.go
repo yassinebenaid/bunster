@@ -149,6 +149,29 @@ var parameterAssignmentTests = []testCase{
 			ast.Assignement{Name: "var"},
 		},
 	}},
+	{`export $(echo "FOO=bar")`, ast.Script{
+		ast.ExportParameterAssignement{
+			ast.Assignement{
+				Substitution: ast.CommandSubstitution{
+					ast.Command{
+						Position: ast.Position{File: "main.sh", Line: 1, Col: 10},
+						Name:     ast.Word("echo"),
+						Args:     []ast.Expression{ast.Word("FOO=bar")},
+					},
+				},
+			},
+		},
+	}},
+	{`export VAR=val $(cmd)`, ast.Script{
+		ast.ExportParameterAssignement{
+			ast.Assignement{Name: "VAR", Value: ast.Word("val")},
+			ast.Assignement{
+				Substitution: ast.CommandSubstitution{
+					ast.Command{Position: ast.Position{File: "main.sh", Line: 1, Col: 18}, Name: ast.Word("cmd")},
+				},
+			},
+		},
+	}},
 }
 
 var parameterAssignmentErrorHandlingCases = []errorHandlingTestCase{

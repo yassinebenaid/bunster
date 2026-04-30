@@ -120,3 +120,13 @@ cases:
       stdout: |
         var:helloworld
         env:helloworld
+
+  - name: "can export variables from command substitution"
+    script: |
+      export $(echo "FOO=bar BAZ=qux")
+      echo FOO:$FOO BAZ:$BAZ
+      bash -c 'echo env_FOO:$FOO env_BAZ:$BAZ'
+    expect:
+      stdout: |
+        FOO:bar BAZ:qux
+        env_FOO:bar env_BAZ:qux

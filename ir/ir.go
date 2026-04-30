@@ -12,6 +12,9 @@ type Instruction interface {
 	togo() string
 }
 
+// InstructionToGo returns the Go code string for an Instruction.
+func InstructionToGo(i Instruction) string { return i.togo() }
+
 type Program struct {
 	Instructions []Instruction
 	Embeds       []string

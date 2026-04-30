@@ -162,6 +162,18 @@ func (shell *Shell) MarkVarAsExported(name string) {
 	shell.exportedVars.set(name, struct{}{})
 }
 
+func (shell *Shell) ExportFromCommandSubstitution(output string) {
+	words := strings.Fields(output)
+	for _, word := range words {
+		if i := strings.Index(word, "="); i >= 0 {
+			name := word[:i]
+			value := word[i+1:]
+			shell.exportedVars.set(name, struct{}{})
+			shell.vars.set(name, &parameter{value: value})
+		}
+	}
+}
+
 func (shell *Shell) Unset(vars_only bool, names ...string) {
 	for _, name := range names {
 		if shell.localVars.forget(name) ||
