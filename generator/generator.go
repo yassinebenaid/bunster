@@ -363,7 +363,10 @@ func (g *generator) handleExportParameterAssignment(buf *InstructionBuffer, p as
 	var scope InstructionBuffer
 
 	for _, assignment := range p {
-		if assignment.Value != nil {
+		if assignment.Substitution != nil {
+			expr := g.handleExpression(&scope, assignment.Substitution)
+			scope.add(ir.Literal(fmt.Sprintf("shell.ExportFromCommandSubstitution(%s)\n", ir.InstructionToGo(expr))))
+		} else if assignment.Value != nil {
 			scope.add(ir.SetExportVar{Key: assignment.Name, Value: g.handleExpression(&scope, assignment.Value)})
 		} else {
 			scope.add(ir.MarkVarAsExported(assignment.Name))

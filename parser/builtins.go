@@ -392,23 +392,41 @@ func (p *parser) parseExport() ast.Statement {
 
 	var assignements ast.ExportParameterAssignement
 
+parseLoop:
 	for {
-		if p.curr.Type != token.WORD {
-			break
-		}
-		assignment := ast.Assignement{Name: p.curr.Literal}
-		p.proceed()
-
-		if p.curr.Type == token.ASSIGN {
+		switch p.curr.Type {
+		case token.WORD:
+			assignment := ast.Assignement{Name: p.curr.Literal}
 			p.proceed()
-			assignment.Value = p.parseExpression()
-		}
 
-		if p.curr.Type == token.BLANK {
-			p.proceed()
-		}
+			if p.curr.Type == token.ASSIGN {
+				p.proceed()
+				assignment.Value = p.parseExpression()
+			}
 
-		assignements = append(assignements, assignment)
+			if p.curr.Type == token.BLANK {
+				p.proceed()
+			}
+
+			assignements = append(assignements, assignment)
+		case token.DOLLAR_PAREN:
+			assignment := ast.Assignement{Substitution: p.parseCommandSubstitution()}
+			p.proceed() // consume closing RIGHT_PAREN
+
+			if p.curr.Type == token.BLANK {
+				p.proceed()
+			}
+
+			assignements = append(assignements, assignment)
+		case token.HASH, token.NEWLINE, token.EOF:
+			break parseLoop
+		default:
+			if p.isControlToken() {
+				break parseLoop
+			}
+			p.error("unexpected token `%s`", p.curr)
+			return nil
+		}
 	}
 
 	if p.curr.Type == token.HASH {
