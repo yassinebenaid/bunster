@@ -1,9 +1,9 @@
 package ast
 
 type Assignement struct {
-	Name          string
-	Value         Expression
-	Substitution  Expression
+	Name         string
+	Value        Expression
+	Substitution Expression
 }
 
 type ParameterAssignement []Assignement
