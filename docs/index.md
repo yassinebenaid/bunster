@@ -22,6 +22,6 @@ features:
       Scripts compiled with Bunster are not just wrappers around your script, nor do they rely on any external shells on your system.
   - title: Write Once, Run Everywhere
     details: Bunster offers static linking. Your scripts are compiled to a statically linked binary that runs on every machine.
-  - title: Module System
-    details: Bunsters's module system makes it easy to shares and consume your scripts as libraries.
+  - title: "Module System 🚧 Planned"
+    details: Bunster's module system will make it easy to share and consume your scripts as libraries. This feature is planned for a future release.
 ---

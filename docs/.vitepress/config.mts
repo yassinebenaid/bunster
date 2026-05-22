@@ -21,6 +21,7 @@ export default defineConfig({
           { text: "Installation", link: "/installation" },
           { text: "Supported Features", link: "/supported-features" },
           { text: "Usage", link: "/usage" },
+          { text: "Module System (Planned)", link: "/module-system" },
           { text: "Contributing", link: "/contributing" },
           { text: "Developers Guideline", link: "/developers" },
         ],
